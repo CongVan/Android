@@ -4,147 +4,114 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center"
     tools:context=".MainActivity">
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <LinearLayout
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="10dp"
-        android:orientation="vertical"
+        android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TableLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:stretchColumns="1">
-
-                <TableRow>
-
-                    <TextView
-                        android:id="@+id/textView8"
-                        android:layout_marginRight="5dp"
-                        android:text="Username"
-                        android:focusable="true"
-                        />
-
-                    <EditText
-
-                        android:id="@+id/txtUserName"
-                        android:layout_width="match_parent"
-                        android:inputType="textPersonName" />
-                </TableRow>
-
-                <TableRow>
-
-                    <TextView
-                        android:id="@+id/textView9"
-                        android:layout_marginRight="5dp"
-                        android:text="Password" />
-
-                    <EditText
-                        android:id="@+id/txtPass"
-                        android:layout_width="match_parent"
-                        android:inputType="textPassword" />
-                </TableRow>
-
-                <TableRow>
-
-                    <TextView
-                        android:id="@+id/textView10"
-                        android:layout_marginRight="5dp"
-                        android:text="Retype" />
-
-                    <EditText
-                        android:id="@+id/txtRepass"
-                        android:layout_width="match_parent"
-                        android:inputType="textPassword" />
-                </TableRow>
-            </TableLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textView12"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Birthdate" />
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/txtBirthdate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="date"
-                    android:autofillHints="" />
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:stretchColumns="1">
 
-                <Button
-                    android:id="@+id/btnSelectDatePicker"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:onClick="selectDatePicker"
-                    android:text="@string/select" />
+                    <TableRow>
+
+                        <TextView
+                            android:id="@+id/textView8"
+                            android:layout_marginRight="5dp"
+                            android:focusable="true"
+                            android:text="Username" />
+
+                        <EditText
+
+                            android:id="@+id/txtUserName"
+                            android:layout_width="match_parent"
+                            android:inputType="textPersonName" />
+                    </TableRow>
+
+                    <TableRow>
+
+                        <TextView
+                            android:id="@+id/textView9"
+                            android:layout_marginRight="5dp"
+                            android:text="Password" />
+
+                        <EditText
+                            android:id="@+id/txtPass"
+                            android:layout_width="match_parent"
+                            android:inputType="textPassword" />
+                    </TableRow>
+
+                    <TableRow>
+
+                        <TextView
+                            android:id="@+id/textView10"
+                            android:layout_marginRight="5dp"
+                            android:text="Retype" />
+
+                        <EditText
+                            android:id="@+id/txtRepass"
+                            android:layout_width="match_parent"
+                            android:inputType="textPassword" />
+                    </TableRow>
+                </TableLayout>
             </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textView13"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/gender" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:orientation="vertical">
 
-                <RadioGroup
-                    android:id="@+id/rdbGender"
+                <TextView
+                    android:id="@+id/textView12"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Birthdate" />
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <RadioButton
-                        android:id="@+id/rdbMale"
+                    <EditText
+                        android:id="@+id/txtBirthdate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:checked="true"
-                        android:text="@string/male" />
+                        android:autofillHints=""
+                        android:ems="10"
+                        android:inputType="date" />
 
-                    <RadioButton
-                        android:id="@+id/rdbFemale"
+                    <Button
+                        android:id="@+id/btnSelectDatePicker"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/female" />
-                </RadioGroup>
+                        android:onClick="selectDatePicker"
+                        android:text="@string/select" />
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -153,83 +120,120 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textView14"
+                    android:id="@+id/textView13"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Hobbies" />
+                    android:text="@string/gender" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_height="wrap_content">
 
-                    <CheckBox
-                        android:id="@+id/chkTennis"
-                        android:layout_width="wrap_content"
+                    <RadioGroup
+                        android:id="@+id/rdbGender"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Tennis" />
+                        android:orientation="horizontal">
 
-                    <CheckBox
-                        android:id="@+id/chkFutbal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Futbal" />
+                        <RadioButton
+                            android:id="@+id/rdbMale"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:text="@string/male" />
 
-                    <CheckBox
-                        android:id="@+id/chkOthers"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Others" />
+                        <RadioButton
+                            android:id="@+id/rdbFemale"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/female" />
+                    </RadioGroup>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="bottom"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView14"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Hobbies" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/chkTennis"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Tennis" />
+
+                        <CheckBox
+                            android:id="@+id/chkFutbal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Futbal" />
+
+                        <CheckBox
+                            android:id="@+id/chkOthers"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Others" />
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="bottom"
-                        android:orientation="horizontal"
-                        android:paddingBottom="2dp">
+                        android:orientation="horizontal">
 
-                        <Button
-                            android:id="@+id/btnReset"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:onClick="Reset"
-                            android:text="Reset"
-                            />
+                            android:gravity="bottom"
+                            android:orientation="horizontal"
+                            android:paddingBottom="2dp">
 
-                        <Button
-                            android:id="@+id/btnSign"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:onClick="SignUp"
-                            android:text="Sign Up" />
+                            <Button
+                                android:id="@+id/btnReset"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:onClick="Reset"
+                                android:text="Reset" />
 
-                        <Button
-                            android:id="@+id/btnExit"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:onClick="Exit"
-                            android:text="Exit" />
+                            <Button
+                                android:id="@+id/btnSign"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:onClick="SignUp"
+                                android:text="Sign Up" />
 
+                            <Button
+                                android:id="@+id/btnExit"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:onClick="Exit"
+                                android:text="Exit" />
+
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>
