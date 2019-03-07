@@ -33,11 +33,14 @@ public class MainActivity extends AppCompatActivity {
         TextView password = findViewById(R.id.txtPass);
         TextView retype = findViewById(R.id.txtRepass);
         TextView birthday = findViewById(R.id.txtBirthdate);
+
         RadioGroup gender = findViewById(R.id.rdbGender);
         RadioButton rdbGenderChecked = findViewById(gender.getCheckedRadioButtonId());
         CheckBox tennis = findViewById(R.id.chkTennis);
         CheckBox futbal = findViewById(R.id.chkFutbal);
         CheckBox other = findViewById(R.id.chkOthers);
+
+
         String txtUserName = userName.getText().toString();
         String txtPassword = password.getText().toString();
         String txtRetype = retype.getText().toString();
@@ -55,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
                     String sToast = new StringBuilder().append("Username: ").append(txtUserName).append("\n")
                             .append("Password: ").append(txtPassword).append("\n")
                             .append("Retype: ").append(txtRetype).append("\n")
+                            .append("Birthday: ").append(txtBirthday).append("\n")
                             .append("Gender: ").append(txtGender).append("\n")
                             .append("Hobbies: ").append(txthobbies)
                             .toString();
@@ -78,10 +82,21 @@ public class MainActivity extends AppCompatActivity {
         TextView userName = findViewById(R.id.txtUserName);
         TextView password = findViewById(R.id.txtPass);
         TextView retype = findViewById(R.id.txtRepass);
+        TextView birthday = findViewById(R.id.txtBirthdate);
+        RadioButton male=findViewById(R.id.rdbMale);
+        CheckBox chbTennis= findViewById(R.id.chkTennis);
+        CheckBox chbFutbal= findViewById(R.id.chkFutbal);
+        CheckBox chbOther= findViewById(R.id.chkOthers);
+
+        chbTennis.setChecked(false);
+        chbFutbal.setChecked(false);
+        chbOther.setChecked(false);
+        male.setChecked(true);
 
         userName.setText("");
         password.setText("");
         retype.setText("");
+        birthday.setText("");
     }
 
     public void selectDatePicker(View view) {
