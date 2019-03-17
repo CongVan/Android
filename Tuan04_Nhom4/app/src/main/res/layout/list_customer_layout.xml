@@ -8,6 +8,7 @@
     android:orientation="horizontal"
     android:stretchColumns="1"
     tools:ignore="UselessParent"
+    android:layout_marginTop="12dp"
 
     >
 
@@ -26,6 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            android:paddingTop="2dp"
             >
             <TextView
                 android:id="@+id/txtFullName"

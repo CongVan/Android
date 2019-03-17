@@ -41,7 +41,8 @@
             android:id="@+id/lsvTest"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            
+            android:choiceMode="singleChoice"
+            android:listSelector="#c5e1a5"
             />
     </LinearLayout>
 </LinearLayout>
