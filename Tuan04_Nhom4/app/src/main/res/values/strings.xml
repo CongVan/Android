@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Tuan04_Nhom4</string>
+    <string name="txtCurrentChose" >You Chose: </string>
+    <string name="txtItemText">123</string>
+    <string name="txtFullName">Full Name</string>
+    <string name="txtPhoneNumber">Phone Number</string>
+    <string name="imgAvata">TODO</string>
+    <string name="imgRole">TODO</string>
+</resources>
