@@ -19,7 +19,7 @@
             android:padding="10dp"
             android:text="@string/txtCurrentChose"
             android:textAlignment="textStart"
-            android:textSize="18sp"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
         <ListView
