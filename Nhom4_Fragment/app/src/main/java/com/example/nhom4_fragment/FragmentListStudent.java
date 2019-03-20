@@ -84,8 +84,8 @@ public class FragmentListStudent extends Fragment implements FragmentCallbacks {
         currentStudent = lstStudent.get(position);
         currentPosition = position;
         //send message to main
-        main.onMsgFromFragmentToMain("LIST_FRAG", "Chọn " + position);
-        main.onChangeSelectionFromFragmentToMain("LIST_FRAG", position, currentStudent);
+//        main.onMsgFromFragmentToMain("LIST_FRAG", "Chọn " + position);
+        main.onChangeSelectionFromFragmentToMain("LIST_FRAG" ,position,lstStudent.size(), currentStudent);
         //
         TextView txtCurrentChose = layoutStudentList.findViewById(R.id.txtCurrentChose);
         txtCurrentChose.setText("Mã số: " + currentStudent.getCode());
@@ -97,7 +97,7 @@ public class FragmentListStudent extends Fragment implements FragmentCallbacks {
     }
 
     @Override
-    public void onChangeSelectionFromMainToFragment(int position, Student student) {
+    public void onChangeSelectionFromMainToFragment(int position,int length, Student student) {
 
     }
 

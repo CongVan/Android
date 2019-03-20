@@ -44,9 +44,9 @@ public class MainActivity extends Activity  implements  MainCallbacks{
     }
 
     @Override
-    public void onChangeSelectionFromFragmentToMain(String sender,int position, Student student) {
+    public void onChangeSelectionFromFragmentToMain(String sender,int position, int length,Student student) {
         if(sender.equals("LIST_FRAG")){
-            fragmentStudentDetail.onChangeSelectionFromMainToFragment(position, student);
+            fragmentStudentDetail.onChangeSelectionFromMainToFragment(position, length,student);
         }
     }
 

@@ -16,6 +16,7 @@ public class FragmentStudentDetail  extends Fragment  implements  FragmentCallba
     Context context;
     LinearLayout layoutDetail;
     int mCurrentPosition;
+    int mLengthListStudent;
     Student mCurrentStudent;
     public  static  FragmentStudentDetail newInstance(){
         FragmentStudentDetail fragmentStudentDetail=new FragmentStudentDetail();
@@ -45,23 +46,25 @@ public class FragmentStudentDetail  extends Fragment  implements  FragmentCallba
 //        txtCode.setText("OKOKOKO");
 
         final Button btnFirst =(Button) layoutDetail.findViewById(R.id.btnFirst);
-        Button btnPrev =(Button) layoutDetail.findViewById(R.id.btnPrev);
-        Button btnNext =(Button) layoutDetail.findViewById(R.id.btnNext);
-        Button btnLast =(Button) layoutDetail.findViewById(R.id.btnLast);
+        final Button btnPrev =(Button) layoutDetail.findViewById(R.id.btnPrev);
+        final Button btnNext =(Button) layoutDetail.findViewById(R.id.btnNext);
+        final Button btnLast =(Button) layoutDetail.findViewById(R.id.btnLast);
         btnFirst.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                Toast.makeText(mainActivity,"CLick FIRST",Toast.LENGTH_SHORT).show();
                 mainActivity.onControlListFromFragmentToMain("DETAIL_FRAG","CONTROL_FIRST");
-
-                btnFirst.setEnabled(false);
+//
+//                btnFirst.setEnabled(false);
+//                btnPrev.setEnabled(false);
+//                btnLast.setEnabled(true);
             }
         });
         btnLast.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mainActivity.onControlListFromFragmentToMain("DETAIL_FRAG","CONTROL_LAST");
-                btnFirst.setEnabled(true);
+//                btnFirst.setEnabled(true);
             }
         });
 
@@ -69,14 +72,16 @@ public class FragmentStudentDetail  extends Fragment  implements  FragmentCallba
             @Override
             public void onClick(View v) {
                 mainActivity.onControlListFromFragmentToMain("DETAIL_FRAG","CONTROL_PREV");
-                btnFirst.setEnabled(true);
             }
         });
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mainActivity.onControlListFromFragmentToMain("DETAIL_FRAG","CONTROL_NEXT");
-                btnFirst.setEnabled(true);
+//                btnFirst.setEnabled(true);
+//                btnLast.setEnabled(false);
+//                btnNext.setEnabled(false);
+
             }
         });
         return layoutDetail;
@@ -89,9 +94,10 @@ public class FragmentStudentDetail  extends Fragment  implements  FragmentCallba
     }
 
     @Override
-    public void onChangeSelectionFromMainToFragment(int position, Student student) {
+    public void onChangeSelectionFromMainToFragment(int position,int length, Student student) {
         mCurrentPosition=position;
         mCurrentStudent=student;
+        mLengthListStudent=length;
         TextView txtCode= layoutDetail.findViewById(R.id.txtCode);
         TextView txtFullName =layoutDetail.findViewById(R.id.txtFullName);
         TextView txtClassName = layoutDetail.findViewById(R.id.txtClass);
@@ -100,8 +106,57 @@ public class FragmentStudentDetail  extends Fragment  implements  FragmentCallba
         txtFullName.setText("Họ tên: " +mCurrentStudent.getFullName());
         txtClassName.setText("Lớp: "+mCurrentStudent.getClassName());
         txtPointAgv.setText("Điểm trung bình: "+mCurrentStudent.getPointAgv());
-
+        resetControl();
 //        Toast.makeText(mainActivity,"Nhận "+position,Toast.LENGTH_SHORT).show();
+    }
+    private  void resetControl(){
+        final Button btnFirst =(Button) layoutDetail.findViewById(R.id.btnFirst);
+        final Button btnPrev =(Button) layoutDetail.findViewById(R.id.btnPrev);
+        final Button btnNext =(Button) layoutDetail.findViewById(R.id.btnNext);
+        final Button btnLast =(Button) layoutDetail.findViewById(R.id.btnLast);
+        if (mCurrentPosition==0){
+            if(btnFirst.isEnabled()){
+                btnFirst.setEnabled(false);
+            }
+            if(btnPrev.isEnabled()){
+                btnPrev.setEnabled(false);
+            }
+            if (!btnLast.isEnabled()){
+                btnLast.setEnabled(true);
+            }
+            if(!btnNext.isEnabled()){
+                btnNext.setEnabled(true);
+            }
+        }else if(mCurrentPosition==mLengthListStudent-1){
+            if (btnLast.isEnabled()){
+                btnLast.setEnabled(false);
+            }
+            if (btnNext.isEnabled()){
+                btnNext.setEnabled(false);
+            }
+            if(!btnFirst.isEnabled()){
+                btnFirst.setEnabled(true);
+            }
+            if(!btnPrev.isEnabled()){
+                btnPrev.setEnabled(true);
+            }
+
+        }else{
+            if (!btnFirst.isEnabled()){
+                btnFirst.setEnabled(true);
+            }
+            if(!btnPrev.isEnabled()){
+                btnPrev.setEnabled(true);
+            }
+            if (!btnNext.isEnabled()){
+                btnNext.setEnabled(true);
+            }
+            if (!btnLast.isEnabled()){
+                btnLast.setEnabled(true);
+            }
+
+        }
+
     }
 
     @Override
