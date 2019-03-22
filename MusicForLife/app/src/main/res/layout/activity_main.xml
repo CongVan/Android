@@ -1,18 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:gravity="center"
+    android:orientation="vertical"
 
-    <fragment
-        android:id="@+id/frgSongs"
+    tools:context=".MainActivity"
+    android:background="@color/colorPrimary"
+    >
+
+    <!--<fragment-->
+    <!--android:id="@+id/frgSongs"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:name="com.example.musicforlife.FragmentListSong"-->
+    <!--&gt;-->
+    <!--</fragment>-->
+    <FrameLayout
+        android:id="@+id/frame_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.example.musicforlife.FragmentListSong"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="?attr/actionBarSize"
+        android:background="@android:color/white"
+        />
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/navigation_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        app:itemBackground="@color/colorPrimary"
+        app:itemIconTint="@color/bottom_navigation_colors"
+        app:itemTextColor="@color/bottom_navigation_colors"
+        app:menu="@menu/bottom_navigation"
+
         >
 
-    </fragment>
-
-</LinearLayout>
+    </android.support.design.widget.BottomNavigationView>
+</RelativeLayout>
