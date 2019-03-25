@@ -1,11 +1,14 @@
 package com.example.musicforlife;
 
+import android.graphics.Bitmap;
+
 public class SongModel {
     private String path;
     private String title;
     private String album;
     private String artist;
-
+    private Bitmap bitmap;
+    private  String duration;
 
     public String getPath() {
         return path;
@@ -37,5 +40,21 @@ public class SongModel {
 
     public void setArtist(String artist) {
         this.artist = artist;
+    }
+
+    public Bitmap getBitmap() {
+        return bitmap;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
     }
 }

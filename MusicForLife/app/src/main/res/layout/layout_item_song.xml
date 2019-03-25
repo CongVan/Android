@@ -1,33 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingTop="5dp"
-    android:paddingBottom="5dp"
+
+
     >
 
-    <TextView
-        android:id="@+id/txtTitle"
+    <android.support.v7.widget.CardView
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:text="Tiêu đề bài hát"
-        android:textStyle="bold"
-        />
-    <TextView
-        android:id="@+id/txtArtist"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="14dp"
-        android:text="Ca sĩ"
-        />
-    <TextView
-        android:id="@+id/txtAlbum"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:text="Album"
-        />
+        android:layout_gravity="center"
+        android:layout_marginTop="1dp"
+        app:cardElevation="0dp"
+        card_view:cardBackgroundColor="#33FFFFFF"
+        card_view:cardCornerRadius="6dp"
+        card_view:cardPreventCornerOverlap="false"
+        card_view:contentPadding="1dp"
+
+        >
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:cacheColorHint="@null"
+            android:stretchColumns="1">
+
+            <TableRow>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="5dp"
+                    android:maxWidth="42dp"
+                    android:maxHeight="42dp"
+                    card_view:cardElevation="1dp"
+                    app:cardCornerRadius="8dp"
+                    card_view:cardPreventCornerOverlap="false"
+                    card_view:cardBackgroundColor="@android:color/transparent"
+                    card_view:contentPadding="0dp"
+                    >
+                    <ImageView
+                        android:id="@+id/imgSong"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:adjustViewBounds="true"
+                        android:maxWidth="42dp"
+                        android:maxHeight="42dp"
+                        android:scaleType="fitXY"
+                        tools:srcCompat="@mipmap/musical_note_light_32"
+                        android:background="@android:color/transparent"
+
+                        />
+                </android.support.v7.widget.CardView>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+
+                    >
+
+                    <TextView
+                        android:id="@+id/txtTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Tiêu đề bài hát"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+
+                        />
+
+                    <TextView
+                        android:id="@+id/txtArtist"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Ca sĩ"
+                        android:textSize="14dp"
+
+                        />
+
+                    <TextView
+                        android:id="@+id/txtDuration"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Thời gian"
+                        android:textSize="13dp"
+
+                        />
+                    <!--<TextView-->
+                    <!--android:id="@+id/txtAlbum"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="Album"-->
+                    <!--android:textSize="14sp"-->
+                    <!--android:textColor="@color/colorWhite"-->
+                    <!--/>-->
+                </LinearLayout>
+            </TableRow>
+
+        </TableLayout>
+
+    </android.support.v7.widget.CardView>
+
 
 </LinearLayout>

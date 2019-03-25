@@ -18,13 +18,35 @@
     <!--android:name="com.example.musicforlife.FragmentListSong"-->
     <!--&gt;-->
     <!--</fragment>-->
+    <android.support.design.widget.CollapsingToolbarLayout
+        android:id="@+id/tool_bar_main"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@drawable/background_gradient"
+        android:elevation="2dp"
+        app:contentScrim="@android:color/transparent"
+        app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+        <android.support.v7.widget.SearchView
+            android:id="@+id/search_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            style="@style/AppTheme.Toolbar"
+            >
+
+        </android.support.v7.widget.SearchView>
+
+    </android.support.design.widget.CollapsingToolbarLayout>
+
     <FrameLayout
         android:id="@+id/frame_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
+        android:layout_marginTop="?attr/actionBarSize"
         android:layout_marginBottom="?attr/actionBarSize"
-        android:background="@android:color/white"
+        android:background="@drawable/background_gradient"
         />
 
     <android.support.design.widget.BottomNavigationView
@@ -33,11 +55,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
-        app:itemBackground="@color/colorPrimary"
+        app:itemBackground="@android:color/transparent"
         app:itemIconTint="@color/bottom_navigation_colors"
         app:itemTextColor="@color/bottom_navigation_colors"
         app:menu="@menu/bottom_navigation"
-
+        android:background="@drawable/background_gradient"
         >
 
     </android.support.design.widget.BottomNavigationView>

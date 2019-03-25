@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -38,37 +39,62 @@ public class ListSongAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
         TextView titleSong;
-        TextView album;
+//        TextView album;
+        TextView duration;
         TextView artist;
+        ImageView imageView;
         LayoutInflater layout=(LayoutInflater)_context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
 
             convertView = layout.inflate(R.layout.layout_item_song, parent, false);
             titleSong = convertView.findViewById(R.id.txtTitle);
-            album=convertView.findViewById(R.id.txtAlbum);
+//            album=convertView.findViewById(R.id.txtAlbum);
+            duration=convertView.findViewById(R.id.txtDuration);
             artist=convertView.findViewById(R.id.txtArtist);
-            viewHolder = new ViewHolder(titleSong,album,artist);
+            imageView=convertView.findViewById(R.id.imgSong);
+            viewHolder = new ViewHolder(titleSong,artist,duration,imageView);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
             titleSong= viewHolder.titleSong;
-            album= viewHolder.album;
+//            album= viewHolder.album;
             artist=viewHolder.artist;
+            duration=viewHolder.duration;
+            imageView=viewHolder.imageView;
         }
-        SongModel SongModel=_listSong.get(position);
-        titleSong.setText(SongModel.getTitle());
-        album.setText(SongModel.getAlbum());
-        artist.setText(SongModel.getArtist());
+        SongModel songModel=_listSong.get(position);
+        titleSong.setText(songModel.getTitle());
+//        album.setText(songModel.getAlbum());
+        artist.setText(songModel.getArtist());
+        duration.setText(songModel.getDuration());
+        imageView.setImageBitmap(songModel.getBitmap());
+//        if(songModel.getBitmap() !=null){
+//
+//        }else{
+//            imageView.setImageResource(getResourceIdFromName("music_note"));
+//        }
+
         return convertView;
+    }
+    public int getResourceIdFromName(String resourceName) {
+
+        String pkgName = _context.getPackageName();
+        int resoureId = _context.getResources().getIdentifier(resourceName, "mipmap", pkgName);
+
+        return resoureId;
     }
     private class ViewHolder {
         TextView titleSong;
         TextView album;
         TextView artist;
-        public  ViewHolder(TextView titleSong,TextView album,TextView artist){
+        TextView duration;
+        ImageView imageView;
+        public  ViewHolder(TextView titleSong,TextView artist,TextView duration,ImageView imageView){
             this.titleSong=titleSong;
-            this.album=album;
+//            this.album=album;
             this.artist=artist;
+            this.imageView=imageView;
+            this.duration=duration;
         }
     }
 }
