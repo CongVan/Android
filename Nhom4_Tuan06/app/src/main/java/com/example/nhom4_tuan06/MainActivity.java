@@ -61,8 +61,10 @@ public class MainActivity extends AppCompatActivity {
         txtSize.setEnabled(false);
         btnSubmit.setEnabled(false);
         progressBarStatus.setProgress(0);
-        progressBarStatus.getProgressDrawable().setColorFilter(
-                Color.BLUE, android.graphics.PorterDuff.Mode.SRC_IN);
+        /*progressBarStatus.getProgressDrawable().setColorFilter(
+                Color.BLUE, android.graphics.PorterDuff.Mode.SRC_IN);*/
+
+        progressBarStatus.setProgressDrawable(getResources().getDrawable(R.drawable.progress_bar_drawable));
         currentPercent = Long.valueOf(0);
         piecePercent = Long.valueOf(0);
         txtPercent.setText("0%");

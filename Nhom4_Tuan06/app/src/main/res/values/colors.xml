@@ -3,4 +3,9 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
+    <!--  Customize color for ProgressBar  -->
+    <color name="progress_start">#689AD2</color>
+    <color name="progress_center">#2268B7</color>
+    <color name="progress_end">#2268B7</color>
 </resources>
