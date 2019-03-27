@@ -17,13 +17,14 @@
     <!--android:name="com.example.musicforlife.FragmentListSong"-->
     <!--&gt;-->
     <!--</fragment>-->
+
     <android.support.design.widget.CollapsingToolbarLayout
         android:id="@+id/tool_bar_main"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:layout_gravity="top"
         android:background="@drawable/background_gradient"
         android:elevation="2dp"
-        android:layout_gravity="top"
         app:contentScrim="@android:color/transparent"
         app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
@@ -37,6 +38,7 @@
         </android.support.v7.widget.SearchView>
 
     </android.support.design.widget.CollapsingToolbarLayout>
+
     <Button
         android:id="@+id/btn_bottom_sheet"
         android:layout_width="wrap_content"
@@ -45,24 +47,46 @@
         android:layout_gravity="center_horizontal"
         android:onClick="toggleBottomSheet"
         android:text="Show Bottom Sheet" />
-    <FrameLayout
-        android:id="@+id/frame_container"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
         android:layout_marginTop="?attr/actionBarSize"
         android:layout_marginBottom="?attr/actionBarSize"
-        android:background="@drawable/background_gradient" />
 
+        android:gravity="center"
+        android:orientation="vertical">
 
+        <FrameLayout
+            android:id="@+id/frame_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/background_gradient"
+            app:layout_anchor="@id/tool_bar_main" />
 
+        <LinearLayout
+            android:id="@+id/fragment_minimize_played"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_margin="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/background_gradient"
+            android:orientation="vertical"
+            app:layout_anchor="@id/navigation_main"
+            app:layout_anchorGravity="bottom">
 
+            <include layout="@layout/layout_minimize_played" />
+        </LinearLayout>
+
+    </LinearLayout>
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation_main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_height="?attr/actionBarSize"
+
         android:layout_gravity="bottom"
         android:background="@drawable/background_gradient"
         app:itemBackground="@android:color/transparent"
@@ -72,5 +96,5 @@
 
     </android.support.design.widget.BottomNavigationView>
     <!-- Adding bottom sheet after main content -->
-    <include layout="@layout/layout_bottom_sheet_played"/>
+    <include layout="@layout/layout_bottom_sheet_played" />
 </android.support.design.widget.CoordinatorLayout>

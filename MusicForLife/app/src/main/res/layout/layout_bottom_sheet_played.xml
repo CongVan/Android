@@ -4,88 +4,61 @@
     android:id="@+id/bottom_sheet"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff"
+    android:background="@drawable/background_gradient"
     android:clipToPadding="true"
     android:elevation="@dimen/design_appbar_elevation"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    android:padding="5dp"
-    app:behavior_hideable="false"
-    app:behavior_peekHeight="140dp"
+    android:padding="@dimen/margin_size_small"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="0dp"
     app:layout_anchor="@+id/bottom_sheet"
-    app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
-
-    >
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="@dimen/margin_size_small">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:orientation="horizontal"
-            android:weightSum="3"
+            android:orientation="horizontal">
 
-            >
-
-            <TextView
-                android:layout_width="0dp"
+            <ImageButton
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_weight="2"
-                android:text="Order Details"
-                android:textColor="#444"
-                android:textSize="18dp"
-                android:textStyle="bold" />
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="@dimen/margin_size_small"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_expand_more_black_36dp" />
 
-            <TextView
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="right"
-                android:text="₹435.00"
-                android:textSize="15dp"
-                android:textStyle="bold"></TextView>
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tên bài hát tại đây"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_size_normal" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tên ca sĩ tại đây"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_size_small" />
+
+            </LinearLayout>
         </LinearLayout>
 
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Chicken Fried Rice 1x1" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Paneer Tikka 1x2" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Delivery Address"
-            android:textColor="#444"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Flat No 404, Skyline Apartments, Vizag - 500576" />
-
-        <Button
-            android:id="@+id/btnCheckout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:background="#000"
-            android:foreground="?attr/selectableItemBackground"
-            android:onClick="TestEvent"
-            android:text="PROCEED PAYMENT"
-            android:textColor="#fff" />
     </LinearLayout>
 
 

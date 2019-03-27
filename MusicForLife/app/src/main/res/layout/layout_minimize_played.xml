@@ -5,23 +5,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingHorizontal="@dimen/margin_size_normal"
-
-    >
+    android:background="@drawable/background_gradient"
+    android:padding="@dimen/margin_size_small">
 
     <android.support.v7.widget.CardView
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="1dp"
         app:cardElevation="0dp"
-        card_view:cardBackgroundColor="#33FFFFFF"
-        card_view:cardCornerRadius="6dp"
+        card_view:cardBackgroundColor="@android:color/transparent"
+        card_view:cardCornerRadius="12dp"
         card_view:cardPreventCornerOverlap="false"
         card_view:contentPadding="1dp"
-
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
         >
 
         <TableLayout
@@ -42,63 +40,50 @@
                     android:layout_marginBottom="@dimen/margin_size_small"
                     android:maxWidth="42dp"
                     android:maxHeight="42dp"
-                    card_view:cardElevation="1dp"
                     app:cardCornerRadius="8dp"
-                    card_view:cardPreventCornerOverlap="false"
                     card_view:cardBackgroundColor="@android:color/transparent"
-                    card_view:contentPadding="0dp"
-                    >
+                    card_view:cardElevation="1dp"
+                    card_view:cardPreventCornerOverlap="false"
+                    card_view:contentPadding="0dp">
+
                     <ImageView
                         android:id="@+id/imgSong"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:adjustViewBounds="true"
+                        android:background="@android:color/transparent"
                         android:maxWidth="42dp"
                         android:maxHeight="42dp"
                         android:scaleType="fitXY"
-                        tools:srcCompat="@mipmap/musical_note_light_32"
-                        android:background="@android:color/transparent"
-
-                        />
+                        android:src="@mipmap/musical_note_light_32"
+                        tools:srcCompat="@mipmap/musical_note_light_32" />
                 </android.support.v7.widget.CardView>
-
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:orientation="vertical"
-
-                    >
+                    android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/txtTitle"
+                        android:id="@+id/txtTitlePlayed"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Tiêu đề bài hát"
+                        android:textColor="@android:color/white"
                         android:textSize="@dimen/text_size_normal"
-                        android:textStyle="bold"
-
-                        />
+                        android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/txtArtist"
+                        android:id="@+id/txtArtistPlayed"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Ca sĩ"
-                        android:textSize="@dimen/text_size_small"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/text_size_small" />
 
-                        />
 
-                    <TextView
-                        android:id="@+id/txtDuration"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Thời gian"
-                        android:textSize="@dimen/text_size_small"
-
-                        />
                     <!--<TextView-->
                     <!--android:id="@+id/txtAlbum"-->
                     <!--android:layout_width="match_parent"-->
@@ -108,11 +93,43 @@
                     <!--android:textColor="@color/colorWhite"-->
                     <!--/>-->
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginHorizontal="@dimen/margin_size_small"
+                        android:background="@android:color/transparent"
+                        android:drawableLeft="@drawable/ic_skip_previous_light_24dp"
+                        android:gravity="center"
+                        android:padding="@dimen/margin_size_small" />
+
+                    <Button
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginHorizontal="@dimen/margin_size_small"
+                        android:background="@android:color/transparent"
+                        android:drawableLeft="@drawable/ic_play_arrow_light_24dp"
+                        android:gravity="center"
+                        android:padding="@dimen/margin_size_small" />
+
+                    <Button
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginHorizontal="@dimen/margin_size_small"
+                        android:background="@android:color/transparent"
+                        android:drawableLeft="@drawable/ic_skip_next_light_24dp"
+                        android:gravity="center"
+                        android:padding="@dimen/margin_size_small" />
+                </LinearLayout>
             </TableRow>
 
         </TableLayout>
-
     </android.support.v7.widget.CardView>
-
 
 </LinearLayout>
