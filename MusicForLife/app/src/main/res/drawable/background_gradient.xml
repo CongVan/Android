@@ -4,15 +4,15 @@
     <!--<gradient-->
         <!--android:angle="0"-->
         <!--android:startColor="#43cea2"-->
-
+        <!---->
         <!--android:endColor="#185a9d"-->
 
         <!--android:type="linear"/>-->
     <gradient
         android:angle="0"
-        android:startColor="#085078"
+        android:startColor="#134E5E"
 
-        android:endColor="#85D8CE"
+        android:endColor="#71B280"
 
         android:type="linear"/>
 </shape>
