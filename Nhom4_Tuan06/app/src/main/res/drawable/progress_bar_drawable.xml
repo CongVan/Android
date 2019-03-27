@@ -2,10 +2,11 @@
     <item android:id="@android:id/progress">
         <clip>
             <shape>
+                <size android:height="5dip"/>
                 <gradient
                     android:startColor="@color/progress_start"
                     android:centerColor="@color/progress_center"
-                    android:endColor="@color/progress_end"/>
+                    android:endColor="@color/progress_end" />
             </shape>
         </clip>
     </item>
