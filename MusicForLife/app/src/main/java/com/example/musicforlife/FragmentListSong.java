@@ -14,6 +14,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +40,7 @@ public class FragmentListSong extends Fragment {
     ListSongAdapter _listSongAdapter;
     Button btnCheckout;
     Button btnBottomSheet;
-    LinearLayout layoutBottomSheet;
+    NestedScrollView layoutBottomSheet;
 
     BottomSheetBehavior sheetBehavior;
 
@@ -89,59 +90,59 @@ public class FragmentListSong extends Fragment {
             }
         });
 
-        btnCheckout = _layoutListSong.findViewById(R.id.btnCheckout);
-        btnCheckout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(_context, "OK", Toast.LENGTH_SHORT).show();
-            }
-        });
-        btnBottomSheet = _layoutListSong.findViewById(R.id.btn_bottom_sheet);
-        layoutBottomSheet = _layoutListSong.findViewById(R.id.bottom_sheet);
-        sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
-//        sheetBehavior.setPeekHeight(BottomSheetBehavior.PEEK_HEIGHT_AUTO);
-//        layoutBottomSheet.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
-        sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                switch (newState) {
-                    case BottomSheetBehavior.STATE_HIDDEN:
-                        break;
-                    case BottomSheetBehavior.STATE_EXPANDED: {
-                        btnBottomSheet.setText("Close Sheet");
-//                        bottomNavigationView.setSystemUiVisibility(View.INVISIBLE);
-                        layoutBottomSheet.bringToFront();
-                    }
-                    break;
-                    case BottomSheetBehavior.STATE_COLLAPSED: {
-                        btnBottomSheet.setText("Expand Sheet");
-//                        bottomNavigationView.setSystemUiVisibility(View.VISIBLE);
-                    }
-                    break;
-                    case BottomSheetBehavior.STATE_DRAGGING:
-                        break;
-                    case BottomSheetBehavior.STATE_SETTLING:
-                        break;
-                }
-            }
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-
-            }
-        });
+//        btnCheckout = _layoutListSong.findViewById(R.id.btnCheckout);
+//        btnCheckout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(_context, "OK", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//        btnBottomSheet = _layoutListSong.findViewById(R.id.btn_bottom_sheet);
+//        layoutBottomSheet = _layoutListSong.findViewById(R.id.bottom_sheet);
+//        sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
+////        sheetBehavior.setPeekHeight(BottomSheetBehavior.PEEK_HEIGHT_AUTO);
+////        layoutBottomSheet.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+//        sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+//            @Override
+//            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+//                switch (newState) {
+//                    case BottomSheetBehavior.STATE_HIDDEN:
+//                        break;
+//                    case BottomSheetBehavior.STATE_EXPANDED: {
+//                        btnBottomSheet.setText("Close Sheet");
+////                        bottomNavigationView.setSystemUiVisibility(View.INVISIBLE);
+//                        layoutBottomSheet.bringToFront();
+//                    }
+//                    break;
+//                    case BottomSheetBehavior.STATE_COLLAPSED: {
+//                        btnBottomSheet.setText("Expand Sheet");
+////                        bottomNavigationView.setSystemUiVisibility(View.VISIBLE);
+//                    }
+//                    break;
+//                    case BottomSheetBehavior.STATE_DRAGGING:
+//                        break;
+//                    case BottomSheetBehavior.STATE_SETTLING:
+//                        break;
+//                }
+//            }
+//
+//            @Override
+//            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+//
+//            }
+//        });
         return _layoutListSong;
     }
 
-    public void toggleBottomSheet(View view) {
-        if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
-            sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            btnBottomSheet.setText("Close sheet");
-        } else {
-            sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-            btnBottomSheet.setText("Expand sheet");
-        }
-    }
+//    public void toggleBottomSheet(View view) {
+//        if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+//            sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+//            btnBottomSheet.setText("Close sheet");
+//        } else {
+//            sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+//            btnBottomSheet.setText("Expand sheet");
+//        }
+//    }
 
     public ArrayList<SongModel> getAllAudioFromDevice(final Context context) {
         final ArrayList<SongModel> tempAudioList = new ArrayList<SongModel>();

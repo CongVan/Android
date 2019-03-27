@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     Button btnBottomSheet;
 
     //    @BindView(R.id.bottom_sheet)
-    LinearLayout layoutBottomSheet;
+    NestedScrollView layoutBottomSheet;
 
     BottomSheetBehavior sheetBehavior;
 
@@ -45,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 //        ButterKnife.bind(this);
         frameLayoutContainer = findViewById(R.id.frame_container);
-//        btnBottomSheet = findViewById(R.id.btn_bottom_sheet);
-//        layoutBottomSheet = findViewById(R.id.bottom_sheet);
+        btnBottomSheet = findViewById(R.id.btn_bottom_sheet);
+        layoutBottomSheet = findViewById(R.id.bottom_sheet);
 //        fragmentThread.run();
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar_main);
 //
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 //        setSupportActionBar(toolbar);
 //
 
-//        sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
+
         final BottomNavigationView bottomNavigationView = findViewById(R.id.navigation_main);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -85,36 +86,37 @@ public class MainActivity extends AppCompatActivity {
  * bottom sheet state change listener
  * we are changing button text when sheet changed state
  * */
-//        layoutBottomSheet.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
-//        sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-//            @Override
-//            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-//                switch (newState) {
-//                    case BottomSheetBehavior.STATE_HIDDEN:
-//                        break;
-//                    case BottomSheetBehavior.STATE_EXPANDED: {
-//                        btnBottomSheet.setText("Close Sheet");
-////                        bottomNavigationView.setSystemUiVisibility(View.INVISIBLE);
-//                        layoutBottomSheet.bringToFront();
-//                    }
-//                    break;
-//                    case BottomSheetBehavior.STATE_COLLAPSED: {
-//                        btnBottomSheet.setText("Expand Sheet");
-////                        bottomNavigationView.setSystemUiVisibility(View.VISIBLE);
-//                    }
-//                    break;
-//                    case BottomSheetBehavior.STATE_DRAGGING:
-//                        break;
-//                    case BottomSheetBehavior.STATE_SETTLING:
-//                        break;
-//                }
-//            }
-//
-//            @Override
-//            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-//
-//            }
-//        });
+        sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
+        layoutBottomSheet.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+        sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                switch (newState) {
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        break;
+                    case BottomSheetBehavior.STATE_EXPANDED: {
+                        btnBottomSheet.setText("Close Sheet");
+//                        bottomNavigationView.setSystemUiVisibility(View.INVISIBLE);
+                        layoutBottomSheet.bringToFront();
+                    }
+                    break;
+                    case BottomSheetBehavior.STATE_COLLAPSED: {
+                        btnBottomSheet.setText("Expand Sheet");
+//                        bottomNavigationView.setSystemUiVisibility(View.VISIBLE);
+                    }
+                    break;
+                    case BottomSheetBehavior.STATE_DRAGGING:
+                        break;
+                    case BottomSheetBehavior.STATE_SETTLING:
+                        break;
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
 
     }
 

@@ -37,7 +37,14 @@
         </android.support.v7.widget.SearchView>
 
     </android.support.design.widget.CollapsingToolbarLayout>
+    <Button
+        android:id="@+id/btn_bottom_sheet"
+        android:layout_width="wrap_content"
 
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:onClick="toggleBottomSheet"
+        android:text="Show Bottom Sheet" />
     <FrameLayout
         android:id="@+id/frame_container"
         android:layout_width="match_parent"
@@ -61,10 +68,9 @@
         app:itemBackground="@android:color/transparent"
         app:itemIconTint="@color/bottom_navigation_colors"
         app:itemTextColor="@color/bottom_navigation_colors"
-
         app:menu="@menu/bottom_navigation">
 
     </android.support.design.widget.BottomNavigationView>
     <!-- Adding bottom sheet after main content -->
-
+    <include layout="@layout/layout_bottom_sheet_played"/>
 </android.support.design.widget.CoordinatorLayout>

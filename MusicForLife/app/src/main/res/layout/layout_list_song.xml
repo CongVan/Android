@@ -7,14 +7,7 @@
     android:background="@android:color/transparent"
     android:cacheColorHint="@android:color/transparent"
     >
-    <Button
-        android:id="@+id/btn_bottom_sheet"
-        android:layout_width="wrap_content"
 
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:onClick="toggleBottomSheet"
-        android:text="Show Bottom Sheet" />
     <ListView
         android:id="@+id/lsvSongs"
         android:layout_width="match_parent"
@@ -27,5 +20,5 @@
         android:listSelector="@drawable/list_selector"
         >
     </ListView>
-    <include layout="@layout/layout_bottom_sheet_played" />
+
 </android.support.design.widget.CoordinatorLayout>
