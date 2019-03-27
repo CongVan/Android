@@ -1,11 +1,13 @@
 package com.example.nhom4_tuan06;
 
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -14,9 +16,10 @@ public class MainActivity extends AppCompatActivity {
     TextView txtSize;
     TextView txtPercent;
     ProgressBar progressBarStatus;
+    Button btnSubmit;
     Long maxSize;
     Long piecePercent;
-    Long currentPercent =Long.valueOf(0);
+    Long currentPercent = Long.valueOf(0);
     Handler mainHandle;
     private static final String TAG = "MainActivity";
 
@@ -27,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         txtSize = findViewById(R.id.txtSize);
         txtPercent = findViewById(R.id.txtPercent);
         progressBarStatus = findViewById(R.id.prgStatus);
+        btnSubmit = findViewById(R.id.btnSubmit);
         progressBarStatus.setMax(100);
         mainHandle = new Handler() {
             @Override
@@ -41,6 +45,12 @@ public class MainActivity extends AppCompatActivity {
 //                currentPercent=currentPercent+piece;
 //                txtPercent.setText(currentPercent.toString() + "%");
 //                progressBarStatus.setProgress(currentPercent);
+
+                if (progressBarStatus.getProgress() == progressBarStatus.getMax())
+                {
+                    txtSize.setEnabled(true);
+                    btnSubmit.setEnabled(true);
+                }
             }
         };
 
@@ -48,7 +58,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void submimtStatus(View view) {
+        txtSize.setEnabled(false);
+        btnSubmit.setEnabled(false);
         progressBarStatus.setProgress(0);
+        progressBarStatus.getProgressDrawable().setColorFilter(
+                Color.BLUE, android.graphics.PorterDuff.Mode.SRC_IN);
         currentPercent = Long.valueOf(0);
         piecePercent = Long.valueOf(0);
         txtPercent.setText("0%");
