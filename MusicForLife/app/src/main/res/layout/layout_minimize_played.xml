@@ -5,28 +5,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_gradient"
-    android:padding="@dimen/margin_size_small">
+    android:background="@drawable/backgroundPrimary"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:paddingHorizontal="@dimen/margin_size_small">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:layout_marginTop="1dp"
+
         app:cardElevation="0dp"
         card_view:cardBackgroundColor="@android:color/transparent"
-        card_view:cardCornerRadius="12dp"
-        card_view:cardPreventCornerOverlap="false"
-        card_view:contentPadding="1dp"
-        android:clickable="true"
-        android:foreground="?android:attr/selectableItemBackground"
-        >
+
+        card_view:cardPreventCornerOverlap="false">
 
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@null"
-            android:cacheColorHint="@null"
+
             android:stretchColumns="1">
 
             <TableRow>
@@ -105,7 +102,9 @@
                         android:layout_height="32dp"
                         android:layout_marginHorizontal="@dimen/margin_size_small"
                         android:background="@android:color/transparent"
+                        android:clickable="true"
                         android:drawableLeft="@drawable/ic_skip_previous_light_24dp"
+                        android:foreground="?android:attr/selectableItemBackground"
                         android:gravity="center"
                         android:padding="@dimen/margin_size_small" />
 
@@ -114,7 +113,9 @@
                         android:layout_height="32dp"
                         android:layout_marginHorizontal="@dimen/margin_size_small"
                         android:background="@android:color/transparent"
+                        android:clickable="true"
                         android:drawableLeft="@drawable/ic_play_arrow_light_24dp"
+                        android:foreground="?android:attr/selectableItemBackground"
                         android:gravity="center"
                         android:padding="@dimen/margin_size_small" />
 
@@ -123,7 +124,9 @@
                         android:layout_height="32dp"
                         android:layout_marginHorizontal="@dimen/margin_size_small"
                         android:background="@android:color/transparent"
+                        android:clickable="true"
                         android:drawableLeft="@drawable/ic_skip_next_light_24dp"
+                        android:foreground="?android:attr/selectableItemBackground"
                         android:gravity="center"
                         android:padding="@dimen/margin_size_small" />
                 </LinearLayout>

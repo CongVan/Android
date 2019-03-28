@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingVertical="@dimen/margin_size_small"
-
     android:background="@android:color/transparent"
     android:cacheColorHint="@android:color/transparent"
     >

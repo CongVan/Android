@@ -16,4 +16,6 @@
     <color name="colorPrimaryLight">#689AD2</color>
     <color name="colorAccent">#FFBF5D</color>
     <color name="colorWhite">#FFFFFF</color>
+
+    <drawable name="backgroundPrimary">@drawable/background_gradient</drawable>
 </resources>
