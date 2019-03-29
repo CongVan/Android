@@ -17,5 +17,10 @@
     <color name="colorAccent">#FFBF5D</color>
     <color name="colorWhite">#FFFFFF</color>
 
+
+    <color name="tabcolor">#a2a2ef</color>
+    <color name="tabselect">#f40404</color>
+
+
     <drawable name="backgroundPrimary">@drawable/background_gradient</drawable>
 </resources>

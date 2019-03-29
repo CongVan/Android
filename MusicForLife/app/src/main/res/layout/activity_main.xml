@@ -38,16 +38,12 @@
         </android.support.v7.widget.SearchView>
 
     </android.support.design.widget.CollapsingToolbarLayout>
-
-    <Button
-        android:id="@+id/btn_bottom_sheet"
-        android:layout_width="wrap_content"
-
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:onClick="toggleBottomSheet"
-        android:text="Show Bottom Sheet" />
-
+<Button
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Test Activity"
+    android:onClick="showPlayActivity"
+    />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -64,18 +60,6 @@
             android:layout_weight="1"
             android:background="@drawable/backgroundPrimary" />
 
-        <!--<LinearLayout-->
-        <!--android:id="@+id/fragment_minimize_played"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="100dp"-->
-        <!---->
-        <!--android:layout_weight="1"-->
-        <!--android:background="@drawable/background_gradient"-->
-        <!--android:orientation="vertical"-->
-        <!--android:visibility="gone"-->
-        <!--app:layout_anchorGravity="bottom">-->
-        <!--<include layout="@layout/layout_minimize_played" />-->
-        <!--</LinearLayout>-->
 
     </LinearLayout>
 
@@ -92,6 +76,5 @@
         app:menu="@menu/bottom_navigation">
 
     </android.support.design.widget.BottomNavigationView>
-    <!-- Adding bottom sheet after main content -->
-    <include layout="@layout/layout_bottom_sheet_played" />
+
 </android.support.design.widget.CoordinatorLayout>
