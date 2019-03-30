@@ -52,14 +52,19 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <FrameLayout
-            android:id="@+id/frame_container"
+        <!--<FrameLayout-->
+            <!--android:id="@+id/frame_container"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:layout_weight="1"-->
+            <!--android:background="@drawable/backgroundPrimary" />-->
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pagerMainContent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:background="@drawable/backgroundPrimary" />
-
+            android:background="@drawable/backgroundPrimary"
+            />
 
     </LinearLayout>
 

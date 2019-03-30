@@ -1,6 +1,6 @@
 package com.example.musicforlife;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -29,6 +29,7 @@ import android.widget.Toast;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class FragmentListSong extends Fragment  implements FragmentCallbacks {
@@ -73,6 +74,7 @@ public class FragmentListSong extends Fragment  implements FragmentCallbacks {
         super.onResume();
         Log.i(TAG, "onResume: STARTED");
         new loadImageFromStorage().execute();
+//        AlbumModel.getAllAlbumFromDevice(_context);
     }
 
     @Override
@@ -257,53 +259,55 @@ public class FragmentListSong extends Fragment  implements FragmentCallbacks {
 
         @Override
         public ArrayList<SongModel> doInBackground(Void... voids) {
-            final ArrayList<SongModel> tempAudioList = new ArrayList<SongModel>();
-            Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-//        String[] projection = {MediaStore.Audio.AudioColumns.DATA, MediaStore.Audio.AudioColumns.TITLE, MediaStore.Audio.AudioColumns.ALBUM, MediaStore.Audio.ArtistColumns.ARTIST,};
-            Cursor c = _context.getContentResolver().query(uri, null, null, null, null);
-            int debugLoop = 40;
-            if (c != null) {
-                int count = 0;
-                while (c.moveToNext() && count++ < debugLoop) {// && count++<debugLoop
-                    SongModel songModel = new SongModel();
-                    String path = c.getString(c.getColumnIndex(MediaStore.Audio.AudioColumns.DATA));
-                    String name = c.getString(c.getColumnIndex(MediaStore.Audio.AudioColumns.TITLE));
-                    String album = c.getString(c.getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM));
-                    String artist = c.getString(c.getColumnIndex(MediaStore.Audio.AudioColumns.ARTIST));
-                    String duration = c.getString(c.getColumnIndex(MediaStore.Audio.AudioColumns.DURATION));
-
-                    MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-                    mediaMetadataRetriever.setDataSource(path);
-                    InputStream inputStream = null;
-                    Bitmap bitmap = null;
-//                    try {
+//            final ArrayList<SongModel> tempAudioList = new ArrayList<SongModel>();
+//            Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+////        String[] projection = {MediaStore.Audio.AudioColumns.DATA, MediaStore.Audio.AudioColumns.TITLE, MediaStore.Audio.AudioColumns.ALBUM, MediaStore.Audio.ArtistColumns.ARTIST,};
+//            Cursor c = _context.getContentResolver().query(uri, null, null, null, null);
+//            int debugLoop = 40;
+//            if (c != null) {
+//                int count = 0;
+//                while (c.moveToNext() && count++ < debugLoop) {// && count++<debugLoop
+//                    SongModel songModel = new SongModel();
+//                    String path = c.getString(c.getColumnIndex(MediaStore.Audio.AudioColumns.DATA));
+//                    String name = c.getString(c.getColumnIndex(MediaStore.Audio.AudioColumns.TITLE));
+//                    String album = c.getString(c.getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM));
+//                    String artist = c.getString(c.getColumnIndex(MediaStore.Audio.AudioColumns.ARTIST));
+//                    String duration = c.getString(c.getColumnIndex(MediaStore.Audio.AudioColumns.DURATION));
 //
-//                    } catch (Exception ex) {
+//                    MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+//                    mediaMetadataRetriever.setDataSource(path);
+//                    InputStream inputStream = null;
+//                    Bitmap bitmap = null;
+////                    try {
+////
+////                    } catch (Exception ex) {
+////
+////                    }
 //
+//                    if (mediaMetadataRetriever.getEmbeddedPicture() != null) {
+//                        inputStream = new ByteArrayInputStream(mediaMetadataRetriever.getEmbeddedPicture());
+//                        mediaMetadataRetriever.release();
+//                        bitmap = BitmapFactory.decodeStream(inputStream);
+//                    } else {
+//                        bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.musical_note_light_64);
 //                    }
-
-                    if (mediaMetadataRetriever.getEmbeddedPicture() != null) {
-                        inputStream = new ByteArrayInputStream(mediaMetadataRetriever.getEmbeddedPicture());
-                        mediaMetadataRetriever.release();
-                        bitmap = BitmapFactory.decodeStream(inputStream);
-                    } else {
-                        bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.musical_note_light_64);
-                    }
-
-
-                    songModel.setTitle(name);
-                    songModel.setAlbum(album);
-                    songModel.setArtist(artist);
-                    songModel.setPath(path);
-                    songModel.setBitmap(bitmap);
-                    songModel.setDuration(formateMilliSeccond(Long.valueOf(duration)));
-//                Log.e("Name :" + name, " Album :" + album);
-//                Log.e("Path :" + path, " Artist :" + artist);
-
-                    tempAudioList.add(songModel);
-                }
-                c.close();
-            }
+//
+//
+//                    songModel.setTitle(name);
+//                    songModel.setAlbum(album);
+//                    songModel.setArtist(artist);
+//                    songModel.setPath(path);
+//                    songModel.setBitmap(bitmap);
+//                    songModel.setDuration(formateMilliSeccond(Long.valueOf(duration)));
+////                Log.e("Name :" + name, " Album :" + album);
+////                Log.e("Path :" + path, " Artist :" + artist);
+//
+//                    tempAudioList.add(songModel);
+//                }
+//                c.close();
+//            }
+            ArrayList<SongModel> tempAudioList=SongModel.getAllAudioFromDevice(_context);
+//            Log.i(TAG, "doInBackground: "+tempAudioList.size());
             return tempAudioList;
         }
 

@@ -19,7 +19,7 @@ public class SongModel {
     private String album;
     private String artist;
     private Bitmap bitmap;
-    private  String duration;
+    private String duration;
 
     public String getPath() {
         return path;
@@ -70,27 +70,35 @@ public class SongModel {
     }
 
     public static ArrayList<SongModel> getAllAudioFromDevice(final Context context) {
-        final ArrayList<SongModel> tempAudioList = new ArrayList<SongModel>();
+        final ArrayList<SongModel> tempAudioList = new ArrayList<>();
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-//        String[] projection = {MediaStore.Audio.AudioColumns.DATA, MediaStore.Audio.AudioColumns.TITLE, MediaStore.Audio.AudioColumns.ALBUM, MediaStore.Audio.ArtistColumns.ARTIST,};
-        Cursor c = context.getContentResolver().query(uri, null, null, null, null);
-        int debugLoop = 20;
+        String[] projection = {MediaStore.Audio.AudioColumns.DATA,
+                MediaStore.Audio.AudioColumns.TITLE,
+                MediaStore.Audio.AudioColumns.ALBUM,
+                MediaStore.Audio.ArtistColumns.ARTIST,
+                MediaStore.Audio.AudioColumns.DURATION
+        };
+        String sortOrder = MediaStore.Audio.Media.TITLE + " ASC";
+        String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0 ";
+        Cursor c = context.getContentResolver().query(uri, projection, selection, null, sortOrder);
+        int debugLoop = 40;
         if (c != null) {
             int count = 0;
-            while (c.moveToNext()) {// && count++<debugLoop
+
+            while (c.moveToNext() ) {// && count++<debugLoop
                 count++;
 //                Log.d(TAG, "getAllAudioFromDevice: " + count);
                 SongModel songModel = new SongModel();
-                String path = c.getString(c.getColumnIndex(MediaStore.Audio.AudioColumns.DATA));
-                String name = c.getString(c.getColumnIndex(MediaStore.Audio.AudioColumns.TITLE));
-                String album = c.getString(c.getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM));
-                String artist = c.getString(c.getColumnIndex(MediaStore.Audio.AudioColumns.ARTIST));
-                String duration = c.getString(c.getColumnIndex(MediaStore.Audio.AudioColumns.DURATION));
+                String path = c.getString(0);//c.getColumnIndex(MediaStore.Audio.AudioColumns.DATA)
+                String name = c.getString(1);//c.getColumnIndex(MediaStore.Audio.AudioColumns.TITLE)
+                String album = c.getString(2);//c.getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM)
+                String artist = c.getString(3);//c.getColumnIndex(MediaStore.Audio.AudioColumns.ARTIST)
+                String duration = c.getString(4);//c.getColumnIndex(MediaStore.Audio.AudioColumns.DURATION)
 
                 MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
                 mediaMetadataRetriever.setDataSource(path);
-                InputStream inputStream = null;
-                Bitmap bitmap = null;
+                InputStream inputStream;
+                Bitmap bitmap;
 
 
                 if (mediaMetadataRetriever.getEmbeddedPicture() != null) {
@@ -115,6 +123,7 @@ public class SongModel {
         }
         return tempAudioList;
     }
+
     private static String formateMilliSeccond(long milliseconds) {
         String finalTimerString = "";
         String secondsString = "";
@@ -146,4 +155,6 @@ public class SongModel {
         // return timer string
         return finalTimerString;
     }
+
+
 }
