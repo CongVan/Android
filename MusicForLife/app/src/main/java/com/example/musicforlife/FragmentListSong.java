@@ -5,13 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
+
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
+
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.NestedScrollView;
@@ -21,16 +21,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.LinearLayout;
+
 import android.widget.ListView;
 import android.widget.Toast;
+
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
 
-public class FragmentListSong extends Fragment {
+
+public class FragmentListSong extends Fragment  implements FragmentCallbacks {
     MainActivity _mainActivity;
     Context _context;
     LayoutInflater _inflater;
@@ -44,7 +45,8 @@ public class FragmentListSong extends Fragment {
 
     BottomSheetBehavior sheetBehavior;
 
-    private static final String TAG = "FragmentListSong";
+    private static final String TAG = "FRAGMENT_LIST_SONG";
+    public static final String SENDER="FRAGMENT_LIST_SONG";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,14 +81,16 @@ public class FragmentListSong extends Fragment {
 
         _listSong = new ArrayList<>();// getAllAudioFromDevice(_context);
         _inflater = inflater;
-        _layoutListSong = (CoordinatorLayout) _inflater.inflate(R.layout.layout_list_song, null);
+        _layoutListSong = (CoordinatorLayout) _inflater.inflate(R.layout.fragment_list_song, null);
         _listViewSong = _layoutListSong.findViewById(R.id.lsvSongs);
         _listSongAdapter = new ListSongAdapter(_context, _listSong);
         _listViewSong.setAdapter(_listSongAdapter);
         _listViewSong.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                Log.i(TAG, "onItemClick: OKOKOKO"+position);
+                _mainActivity.TestMessageFromFragmentToActivity(SENDER);
+                Toast.makeText(_context,"OKOKO__"+position,Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -223,6 +227,11 @@ public class FragmentListSong extends Fragment {
 
         // return timer string
         return finalTimerString;
+    }
+
+    @Override
+    public void TestMessageFromFragmentToActivity(String message) {
+
     }
 
     private class loadImageFromStorage extends AsyncTask<Void, Integer, ArrayList<SongModel>> {

@@ -45,6 +45,7 @@ public class FragmentPlayList extends Fragment {
     LinearLayout mLayoutListSong;
     ListView mListViewSong;
     ListSongAdapter mListSongAdapter;
+    LoadImageFromStorage loadImageFromStorage;
     private static final String TAG = "FragmentPlayList";
 
     @Override
@@ -53,6 +54,7 @@ public class FragmentPlayList extends Fragment {
         try {
             mContext = getActivity();
             mPlayActivity = (PlayActivity) getActivity();
+            loadImageFromStorage=new LoadImageFromStorage();
         } catch (IllegalStateException e) {
 
         }
@@ -91,9 +93,16 @@ public class FragmentPlayList extends Fragment {
 
             }
         });
-        new loadImageFromStorage().execute();
+        loadImageFromStorage.execute();
         return mLayoutListSong;
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        loadImageFromStorage.cancel(true);
+    }
+
     public ArrayList<SongModel> getAllAudioFromDevice(final Context context) {
         final ArrayList<SongModel> tempAudioList = new ArrayList<SongModel>();
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
@@ -142,7 +151,7 @@ public class FragmentPlayList extends Fragment {
         }
         return tempAudioList;
     }
-    private class loadImageFromStorage extends AsyncTask<Void, Integer, ArrayList<SongModel>> {
+    private class LoadImageFromStorage extends AsyncTask<Void, Integer, ArrayList<SongModel>> {
 
         @Override
         protected void onPostExecute(ArrayList<SongModel> songModels) {
