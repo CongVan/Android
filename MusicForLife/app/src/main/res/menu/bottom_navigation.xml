@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
+
      >
     <item
         android:id="@+id/navigation_recent"
         android:enabled="true"
         android:icon="@drawable/ic_av_timer_black_24dp"
+
         android:title="Gần đây">
     </item>
+
     <item
         android:id="@+id/navigation_song"
         android:enabled="true"

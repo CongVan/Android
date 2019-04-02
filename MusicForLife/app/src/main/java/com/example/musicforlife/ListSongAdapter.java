@@ -63,7 +63,7 @@ public class ListSongAdapter extends BaseAdapter {
             imageView=viewHolder.imageView;
         }
         SongModel songModel=_listSong.get(position);
-        titleSong.setText(songModel.getTitle() + "__" + songModel.getSongId()+"__"+songModel.getFolder());
+        titleSong.setText(songModel.getTitle() );//+ "__" + songModel.getSongId()+"__"+songModel.getFolder()
 //        album.setText(songModel.getAlbum());
         artist.setText(songModel.getArtist());
         duration.setText(songModel.getDuration());

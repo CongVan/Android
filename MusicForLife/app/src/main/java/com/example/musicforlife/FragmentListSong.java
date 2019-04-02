@@ -1,5 +1,7 @@
 package com.example.musicforlife;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.database.Cursor;
@@ -15,6 +17,8 @@ import android.provider.MediaStore;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -34,14 +39,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class FragmentListSong extends Fragment  implements FragmentCallbacks {
+public class FragmentListSong extends Fragment implements FragmentCallbacks {
     MainActivity _mainActivity;
     Context _context;
     LayoutInflater _inflater;
     ArrayList<SongModel> _listSong;
-    CoordinatorLayout _layoutListSong;
-    ListView _listViewSong;
-    ListSongAdapter _listSongAdapter;
+    //    CoordinatorLayout _layoutListSong;
+    NestedScrollView _layoutListSong;
+    //    ListView _listViewSong;
+//    ListSongAdapter _listSongAdapter;
+    RecyclerView _listViewSong;
+    ListSongRecyclerAdaper _listSongAdapter;
     Button btnCheckout;
     Button btnBottomSheet;
     NestedScrollView layoutBottomSheet;
@@ -49,7 +57,7 @@ public class FragmentListSong extends Fragment  implements FragmentCallbacks {
     BottomSheetBehavior sheetBehavior;
 
     private static final String TAG = "FRAGMENT_LIST_SONG";
-    public static final String SENDER="FRAGMENT_LIST_SONG";
+    public static final String SENDER = "FRAGMENT_LIST_SONG";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,23 +88,33 @@ public class FragmentListSong extends Fragment  implements FragmentCallbacks {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.i(TAG, "onCreateView: STARTED CREATE VIEW");
-
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         _listSong = new ArrayList<>();// getAllAudioFromDevice(_context);
-        _inflater = inflater;
-        _layoutListSong = (CoordinatorLayout) _inflater.inflate(R.layout.fragment_list_song, null);
-        _listViewSong = _layoutListSong.findViewById(R.id.lsvSongs);
-        _listSongAdapter = new ListSongAdapter(_context, _listSong);
+
+//        _layoutListSong = (NestedScrollView) _inflater.inflate(R.layout.fragment_list_song, null);
+        _listViewSong = (RecyclerView) view.findViewById(R.id.lsvSongs);
+        _listSongAdapter = new ListSongRecyclerAdaper(_context, _listSong);
+        _listViewSong.setLayoutManager(new LinearLayoutManager(_context));
         _listViewSong.setAdapter(_listSongAdapter);
-        _listViewSong.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i(TAG, "onItemClick: OKOKOKO"+position);
-                _mainActivity.TestMessageFromFragmentToActivity(SENDER);
-                Toast.makeText(_context,"OKOKO__"+position,Toast.LENGTH_SHORT).show();
-            }
-        });
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        Log.i(TAG, "onCreateView: STARTED CREATE VIEW");
+        return inflater.inflate(R.layout.fragment_list_song, container, false);
+
+
+//        _listViewSong.setNestedScrollingEnabled(true);
+//        _listViewSong.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Log.i(TAG, "onItemClick: OKOKOKO"+position);
+//                _mainActivity.TestMessageFromFragmentToActivity(SENDER);
+//                Toast.makeText(_context,"OKOKO__"+position,Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
 //        btnCheckout = _layoutListSong.findViewById(R.id.btnCheckout);
 //        btnCheckout.setOnClickListener(new View.OnClickListener() {
@@ -139,7 +157,7 @@ public class FragmentListSong extends Fragment  implements FragmentCallbacks {
 //
 //            }
 //        });
-        return _layoutListSong;
+//        return _layoutListSong;
     }
 
 //    public void toggleBottomSheet(View view) {
@@ -311,7 +329,7 @@ public class FragmentListSong extends Fragment  implements FragmentCallbacks {
 //                c.close();
 //            }
 //            ArrayList<SongModel> tempAudioList=SongModel.getAllAudioFromDevice(_context);
-            ArrayList<SongModel> tempAudioList=SongModel.getAllSongs(MainActivity.mDatabaseHelper);
+            ArrayList<SongModel> tempAudioList = SongModel.getAllSongs(MainActivity.mDatabaseHelper);
 //            Log.i(TAG, "doInBackground: "+tempAudioList.size());
             return tempAudioList;
         }
