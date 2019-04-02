@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@drawable/backgroundPrimary"
     android:gravity="center"
 
     android:orientation="vertical"
@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_gravity="top"
-        android:background="@drawable/backgroundPrimary"
+
 
         app:contentScrim="@android:color/transparent"
         app:layout_scrollFlags="scroll|exitUntilCollapsed">
@@ -49,6 +49,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize"
         android:layout_marginBottom="?attr/actionBarSize"
+        android:background="@android:color/white"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -63,7 +64,8 @@
             android:id="@+id/pagerMainContent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/backgroundPrimary"
+            android:background="@android:color/white"
+
             />
 
     </LinearLayout>
@@ -73,7 +75,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_gravity="bottom"
-        android:background="@drawable/backgroundPrimary"
+
         android:padding="0dp"
         app:itemBackground="@android:color/transparent"
         app:itemIconTint="@color/bottom_navigation_colors"

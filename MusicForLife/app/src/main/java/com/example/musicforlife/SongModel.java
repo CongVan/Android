@@ -1,25 +1,62 @@
 package com.example.musicforlife;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaDataSource;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import com.example.musicforlife.db.DatabaseHelper;
+
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SongModel {
+    public static final String TABLE_NAME = "songs";
+
+    public static final String COLUMN_ID = "id";
+    public static final String COLUMN_SONG_ID = "song_id";
+    public static final String COLUMN_TITLE = "title";
+    public static final String COLUMN_ALBUM = "album";
+    public static final String COLUMN_ARTIST = "artist";
+    public static final String COLUMN_DURATION = "duration";
+    public static final String COLUMN_FOLDER = "folder";
+    public  static  final  String COLUMN_PATH="path";
+
+
+    public static final String SCRIPT_CREATE_TABLE = new StringBuilder("CREATE TABLE ")
+            .append(TABLE_NAME).append("(")
+            .append(COLUMN_ID).append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
+            .append(COLUMN_SONG_ID).append(" INTEGER , ")
+            .append(COLUMN_TITLE).append(" TEXT,")
+            .append(COLUMN_ALBUM).append(" TEXT,")
+            .append(COLUMN_ARTIST).append(" TEXT,")
+            .append(COLUMN_DURATION).append(" TEXT,")
+            .append(COLUMN_FOLDER).append(" TEXT ,")
+            .append(COLUMN_PATH).append(" TEXT ")
+            .append(" )")
+            .toString();
+    private static final String TAG = "SONG_MODEL";
+
     private String path;
     private String title;
     private String album;
     private String artist;
     private Bitmap bitmap;
     private String duration;
+    private int id;
+    private int songId;
+    private String folder;
 
     public String getPath() {
         return path;
@@ -69,23 +106,53 @@ public class SongModel {
         this.duration = duration;
     }
 
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getFolder() {
+        return folder;
+    }
+
+    public void setFolder(String folder) {
+        this.folder = folder;
+    }
+
+    public int getSongId() {
+        return songId;
+    }
+
+    public void setSongId(int songId) {
+        this.songId = songId;
+    }
+
     public static ArrayList<SongModel> getAllAudioFromDevice(final Context context) {
         final ArrayList<SongModel> tempAudioList = new ArrayList<>();
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        String[] projection = {MediaStore.Audio.AudioColumns.DATA,
+        String[] projection = {
+
+                MediaStore.Audio.AudioColumns.DATA,//path
                 MediaStore.Audio.AudioColumns.TITLE,
                 MediaStore.Audio.AudioColumns.ALBUM,
                 MediaStore.Audio.ArtistColumns.ARTIST,
-                MediaStore.Audio.AudioColumns.DURATION
+                MediaStore.Audio.AudioColumns.DURATION,
+                MediaStore.Audio.AudioColumns._ID,
+
+
         };
         String sortOrder = MediaStore.Audio.Media.TITLE + " ASC";
         String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0 ";
-        Cursor c = context.getContentResolver().query(uri, projection, selection, null, sortOrder);
+        Cursor c = context.getContentResolver().query(uri, projection, selection, null, sortOrder);//select .. from audio
         int debugLoop = 40;
         if (c != null) {
             int count = 0;
 
-            while (c.moveToNext() ) {// && count++<debugLoop
+            while (c.moveToNext()) {// && count++<debugLoop
                 count++;
 //                Log.d(TAG, "getAllAudioFromDevice: " + count);
                 SongModel songModel = new SongModel();
@@ -94,26 +161,30 @@ public class SongModel {
                 String album = c.getString(2);//c.getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM)
                 String artist = c.getString(3);//c.getColumnIndex(MediaStore.Audio.AudioColumns.ARTIST)
                 String duration = c.getString(4);//c.getColumnIndex(MediaStore.Audio.AudioColumns.DURATION)
-
-                MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-                mediaMetadataRetriever.setDataSource(path);
-                InputStream inputStream;
-                Bitmap bitmap;
-
-
-                if (mediaMetadataRetriever.getEmbeddedPicture() != null) {
-                    inputStream = new ByteArrayInputStream(mediaMetadataRetriever.getEmbeddedPicture());
-                    mediaMetadataRetriever.release();
-                    bitmap = BitmapFactory.decodeStream(inputStream);
-                } else {
-                    bitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.musical_note_light_64);
-                }
+                int songId = c.getInt(5);
+                String parentPath = new File(path).getParent();
+                String folder = parentPath.substring(parentPath.lastIndexOf('/') + 1);
+//                MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+//                mediaMetadataRetriever.setDataSource(path);
+//                InputStream inputStream;
+//                Bitmap bitmap;
+//
+//
+//                if (mediaMetadataRetriever.getEmbeddedPicture() != null) {
+//                    inputStream = new ByteArrayInputStream(mediaMetadataRetriever.getEmbeddedPicture());
+//                    mediaMetadataRetriever.release();
+//                    bitmap = BitmapFactory.decodeStream(inputStream);
+//                } else {
+//                    bitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.musical_note_light_64);
+//                }
                 songModel.setTitle(name);
                 songModel.setAlbum(album);
                 songModel.setArtist(artist);
                 songModel.setPath(path);
-                songModel.setBitmap(bitmap);
+                songModel.setBitmap(null);
                 songModel.setDuration(formateMilliSeccond(Long.valueOf(duration)));
+                songModel.setSongId(songId);
+                songModel.setFolder(folder);
 //                Log.e("Name :" + name, " Album :" + album);
 //                Log.e("Path :" + path, " Artist :" + artist);
 
@@ -121,6 +192,8 @@ public class SongModel {
             }
             c.close();
         }
+
+
         return tempAudioList;
     }
 
@@ -154,6 +227,88 @@ public class SongModel {
 
         // return timer string
         return finalTimerString;
+    }
+
+    public static long insertSong(DatabaseHelper databaseHelper, SongModel songModel) {
+
+        SQLiteDatabase database = databaseHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SongModel.COLUMN_SONG_ID, songModel.getSongId());
+        contentValues.put(SongModel.COLUMN_TITLE,songModel.getTitle());
+        contentValues.put(SongModel.COLUMN_ARTIST, songModel.getArtist());
+        contentValues.put(SongModel.COLUMN_ALBUM, songModel.getAlbum());
+        contentValues.put(SongModel.COLUMN_DURATION, songModel.getDuration());
+        contentValues.put(SongModel.COLUMN_FOLDER, songModel.getFolder());
+        contentValues.put(SongModel.COLUMN_PATH, songModel.getPath());
+
+        long id = database.insert(SongModel.TABLE_NAME, null, contentValues);
+        database.close();
+        return id;
+    }
+
+    public static SongModel getSong(DatabaseHelper databaseHelper, long id) {
+        // get readable database as we are not inserting anything
+        SQLiteDatabase db = databaseHelper.getReadableDatabase();
+        String[] projection = {SongModel.COLUMN_SONG_ID, SongModel.COLUMN_TITLE, SongModel.COLUMN_ALBUM};
+        String sortOrder = SongModel.COLUMN_ID + " ASC";
+        String selection = "";// SongModel.COLUMN_SONG_ID + " =  " +id;
+
+
+        Cursor cursor = db.query(SongModel.TABLE_NAME,
+                projection,
+                selection, null, null, null, null
+        );
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+        } else {
+            return null;
+        }
+
+
+        SongModel songModel = new SongModel();
+        songModel.setSongId(cursor.getInt(cursor.getColumnIndex(SongModel.COLUMN_SONG_ID)));
+        songModel.setTitle(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_TITLE)));
+        songModel.setAlbum(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_ALBUM)));
+
+        Log.d(TAG, "getSong: " + songModel.getSongId() + " _ " + songModel.getTitle() + " _ " + songModel.getAlbum());
+        // close the db connection
+        cursor.close();
+
+        return songModel;
+    }
+
+    public static ArrayList<SongModel> getAllSongs(DatabaseHelper databaseHelper) {
+        ArrayList<SongModel> songModelList = new ArrayList<>();
+        SQLiteDatabase db = databaseHelper.getReadableDatabase();
+        String[] projection = {
+                SongModel.COLUMN_ID,
+                SongModel.COLUMN_SONG_ID,
+                SongModel.COLUMN_TITLE,
+                SongModel.COLUMN_ALBUM,
+                SongModel.COLUMN_DURATION,
+                SongModel.COLUMN_FOLDER,
+                SongModel.COLUMN_ARTIST,
+                SongModel.COLUMN_PATH
+        };
+        Cursor cursor = db.query(TABLE_NAME, projection, null, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                SongModel songModel = new SongModel();
+                songModel.setId(cursor.getInt(cursor.getColumnIndex(SongModel.COLUMN_ID)));
+                songModel.setSongId(cursor.getInt(cursor.getColumnIndex(SongModel.COLUMN_SONG_ID)));
+                songModel.setTitle(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_TITLE)));
+                songModel.setAlbum(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_ALBUM)));
+                songModel.setArtist(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_ARTIST)));
+                songModel.setFolder(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_FOLDER)));
+                songModel.setDuration(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_DURATION)));
+                songModel.setPath(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_PATH)));
+                songModelList.add(songModel);
+            } while (cursor.moveToNext());
+
+        }
+        cursor.close();
+        return songModelList;
     }
 
 

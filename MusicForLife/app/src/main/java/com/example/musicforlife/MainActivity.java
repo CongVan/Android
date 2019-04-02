@@ -1,7 +1,13 @@
 package com.example.musicforlife;
 
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.ActivityManager;
+import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.TaskStackBuilder;
@@ -30,8 +36,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
+import com.example.musicforlife.db.DatabaseHelper;
 import com.example.musicforlife.play.FragmentPlayAdapter;
 import com.example.musicforlife.play.ZoomOutPageTransformer;
+
+import java.util.ArrayList;
 
 import static android.content.Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY;
 
@@ -57,20 +66,28 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     private MenuItem mPrevMenuBottomNavigation;
     private ViewPager mPager;
     private PagerAdapter pagerAdapter;
+    public static  DatabaseHelper mDatabaseHelper;
+
 
     private static final String TAG = "MainActivity";
 
+    @TargetApi(Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+//            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},1);
+//        }
 
         setContentView(R.layout.activity_main);
 
-
+        mDatabaseHelper=DatabaseHelper.newInstance(this);
+//        SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
+//        mDatabaseHelper.onUpgrade(db,2,3);
+        new intitSongFromDevice().execute();
 //        frameLayoutContainer = findViewById(R.id.frame_container);
 
         mBottomNavigationView = findViewById(R.id.navigation_main);
-
         mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -238,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
             super.onBackPressed();
         } else {
 //            // Otherwise, select the previous step.
-            
+
             mPager.setCurrentItem(mPager.getCurrentItem() - 1);
         }
 
@@ -275,6 +292,8 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
 //        }
     }
 
+
+
     @Override
     public void TestMessageFromFragmentToActivity(String sender) {
 //        Toast.makeText(this,sender,Toast.LENGTH_SHORT).show();
@@ -282,7 +301,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     }
 
 
-//    private class FragmentThread extends Thread {
+    //    private class FragmentThread extends Thread {
 //        @Override
 //        public void run() {
 //
@@ -299,5 +318,28 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
 //            });
 //        }
 //    }
+    private class intitSongFromDevice extends AsyncTask<Void, Integer, ArrayList<SongModel>> {
 
+        @Override
+        protected void onPostExecute(ArrayList<SongModel> songModels) {
+            super.onPostExecute(songModels);
+            for (SongModel song : songModels) {
+                long id = SongModel.insertSong(mDatabaseHelper, song);
+                Log.d(TAG, "onPostExecute: INSERT SONG FROM MAIN : " + id);
+            }
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        public ArrayList<SongModel> doInBackground(Void... voids) {
+            ArrayList<SongModel> tempAudioList = SongModel.getAllAudioFromDevice(getApplicationContext());
+            return tempAudioList;
+        }
+
+    }
 }

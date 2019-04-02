@@ -56,23 +56,23 @@ public class ListSongAdapter extends BaseAdapter {
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
-            titleSong= viewHolder.titleSong;
+            titleSong= viewHolder.titleSong ;
 //            album= viewHolder.album;
             artist=viewHolder.artist;
             duration=viewHolder.duration;
             imageView=viewHolder.imageView;
         }
         SongModel songModel=_listSong.get(position);
-        titleSong.setText(songModel.getTitle());
+        titleSong.setText(songModel.getTitle() + "__" + songModel.getSongId()+"__"+songModel.getFolder());
 //        album.setText(songModel.getAlbum());
         artist.setText(songModel.getArtist());
         duration.setText(songModel.getDuration());
-        imageView.setImageBitmap(songModel.getBitmap());
-//        if(songModel.getBitmap() !=null){
-//
-//        }else{
-//            imageView.setImageResource(getResourceIdFromName("music_note"));
-//        }
+//        imageView.setImageBitmap(songModel.getBitmap());
+        if(songModel.getBitmap() !=null){
+            imageView.setImageBitmap(songModel.getBitmap());
+        }else{
+            imageView.setImageResource(getResourceIdFromName("musical_note_light_64"));
+        }
 
         return convertView;
     }
@@ -89,12 +89,14 @@ public class ListSongAdapter extends BaseAdapter {
         TextView artist;
         TextView duration;
         ImageView imageView;
+        TextView id;
         public  ViewHolder(TextView titleSong,TextView artist,TextView duration,ImageView imageView){
             this.titleSong=titleSong;
 //            this.album=album;
             this.artist=artist;
             this.imageView=imageView;
             this.duration=duration;
+
         }
     }
 }

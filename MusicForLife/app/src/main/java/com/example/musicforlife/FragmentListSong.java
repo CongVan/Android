@@ -26,6 +26,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 
+import com.example.musicforlife.db.DatabaseHelper;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -259,6 +261,8 @@ public class FragmentListSong extends Fragment  implements FragmentCallbacks {
 
         @Override
         public ArrayList<SongModel> doInBackground(Void... voids) {
+//            DatabaseHelper databaseHelper=DatabaseHelper.newInstance(_context);
+//            SongModel.getSong(databaseHelper,58267);
 //            final ArrayList<SongModel> tempAudioList = new ArrayList<SongModel>();
 //            Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
 ////        String[] projection = {MediaStore.Audio.AudioColumns.DATA, MediaStore.Audio.AudioColumns.TITLE, MediaStore.Audio.AudioColumns.ALBUM, MediaStore.Audio.ArtistColumns.ARTIST,};
@@ -306,7 +310,8 @@ public class FragmentListSong extends Fragment  implements FragmentCallbacks {
 //                }
 //                c.close();
 //            }
-            ArrayList<SongModel> tempAudioList=SongModel.getAllAudioFromDevice(_context);
+//            ArrayList<SongModel> tempAudioList=SongModel.getAllAudioFromDevice(_context);
+            ArrayList<SongModel> tempAudioList=SongModel.getAllSongs(MainActivity.mDatabaseHelper);
 //            Log.i(TAG, "doInBackground: "+tempAudioList.size());
             return tempAudioList;
         }
