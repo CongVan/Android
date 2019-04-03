@@ -1,42 +1,28 @@
 package com.example.musicforlife.play;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.MediaMetadataRetriever;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.NestedScrollView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.example.musicforlife.FragmentListSong;
 import com.example.musicforlife.ListSongAdapter;
-import com.example.musicforlife.MainActivity;
 import com.example.musicforlife.PlayActivity;
 import com.example.musicforlife.R;
 import com.example.musicforlife.SongModel;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 
-public class FragmentPlayList extends Fragment {
+public class FragmentListPlaying extends Fragment {
 
     PlayActivity mPlayActivity;
     Context mContext;
@@ -46,7 +32,7 @@ public class FragmentPlayList extends Fragment {
     ListView mListViewSong;
     ListSongAdapter mListSongAdapter;
     LoadImageFromStorage loadImageFromStorage;
-    private static final String TAG = "FragmentPlayList";
+    private static final String TAG = "FragmentListPlaying";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,12 +47,12 @@ public class FragmentPlayList extends Fragment {
 
     }
 
-    public static FragmentPlayList newInstance() {
-        FragmentPlayList fragmentPlayList = new FragmentPlayList();
+    public static FragmentListPlaying newInstance() {
+        FragmentListPlaying fragmentListPlaying = new FragmentListPlaying();
         Bundle args = new Bundle();
         args.putString("Key1", "OK");
-        fragmentPlayList.setArguments(args);
-        return fragmentPlayList;
+        fragmentListPlaying.setArguments(args);
+        return fragmentListPlaying;
     }
     @Override
     public void onResume() {
@@ -83,7 +69,7 @@ public class FragmentPlayList extends Fragment {
         Log.i(TAG, "onCreateView PLAYLIST: OKOKOKO");
         mListSong = new ArrayList<>();// getAllAudioFromDevice(_context);
         mInflater = inflater;
-        mLayoutListSong = (LinearLayout) mInflater.inflate(R.layout.fragment_playlist, container, false);
+        mLayoutListSong = (LinearLayout) mInflater.inflate(R.layout.fragment_list_playing, container, false);
         mListViewSong = mLayoutListSong.findViewById(R.id.lsvSongs);
         mListSongAdapter = new ListSongAdapter(mContext, mListSong);
         mListViewSong.setAdapter(mListSongAdapter);

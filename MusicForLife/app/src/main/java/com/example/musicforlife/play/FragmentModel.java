@@ -3,7 +3,7 @@ package com.example.musicforlife.play;
 import com.example.musicforlife.R;
 
 public enum FragmentModel {
-    PLAYLIST("Playlist", R.layout.fragment_playlist),
+    PLAYLIST("Playlist", R.layout.fragment_list_playing),
     PLAYING("Playing",R.layout.fragment_playing);
 
     private String titleName;

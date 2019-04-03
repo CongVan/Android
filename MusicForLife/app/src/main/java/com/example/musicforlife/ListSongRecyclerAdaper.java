@@ -1,14 +1,22 @@
 package com.example.musicforlife;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
+import android.media.MediaMetadataRetriever;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,6 +73,71 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<ListSongRecycle
             this.titleSong.setText(songModel.getTitle());
             this.artist.setText(songModel.getArtist());
             this.duration.setText(songModel.getDuration());
+
+            ParamImageThread paramImageThread =new ParamImageThread(this.imageView,songModel.getPath());
+            new loadImageFromStorage().execute(paramImageThread);
+
+        }
+    }
+
+    private class loadImageFromStorage extends AsyncTask<ParamImageThread, Integer, Bitmap> {
+        ParamImageThread paramImageThread;
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            super.onPostExecute(bitmap);
+            paramImageThread.imageView.setImageBitmap(bitmap);
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        public Bitmap doInBackground(ParamImageThread... paramImageThreads) {
+            MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+            this.paramImageThread=paramImageThreads[0];
+            mediaMetadataRetriever.setDataSource(paramImageThread.getPath());
+            InputStream inputStream;
+            Bitmap bitmap;
+
+
+            if (mediaMetadataRetriever.getEmbeddedPicture() != null) {
+                inputStream = new ByteArrayInputStream(mediaMetadataRetriever.getEmbeddedPicture());
+                mediaMetadataRetriever.release();
+                bitmap = BitmapFactory.decodeStream(inputStream);
+            } else {
+                bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.musical_note_light_64);
+            }
+            return bitmap;
+        }
+
+
+    }
+    private class ParamImageThread{
+        private  ImageView imageView;
+        private String path;
+
+        public  ParamImageThread(ImageView imageView, String path){
+            this.imageView=imageView;
+            this.path=path;
+        }
+        public ImageView getImageView() {
+            return imageView;
+        }
+
+        public void setImageView(ImageView imageView) {
+            this.imageView = imageView;
+        }
+
+        public String getPath() {
+            return path;
+        }
+
+        public void setPath(String path) {
+            this.path = path;
         }
     }
 }

@@ -1,12 +1,8 @@
 package com.example.musicforlife.play;
 
-import android.content.Context;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-
-import com.example.musicforlife.FragmentListSong;
 
 
 public class FragmentPlayAdapter extends FragmentStatePagerAdapter {
@@ -20,7 +16,7 @@ public class FragmentPlayAdapter extends FragmentStatePagerAdapter {
         Fragment fragment=null;
         switch (i){
             case 0:
-                fragment= FragmentPlayList.newInstance();
+                fragment= FragmentListPlaying.newInstance();
                 break;
             case 1:
                 fragment=new FragmentPlaying();

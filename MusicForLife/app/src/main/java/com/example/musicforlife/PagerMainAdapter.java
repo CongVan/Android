@@ -8,8 +8,8 @@ import android.support.v4.app.FragmentTransaction;
 
 
 public class PagerMainAdapter extends FragmentStatePagerAdapter {
-    private static final int NUM_PAGES = 5;
-    private Fragment mFragmentListSong, mFragmentRecent, mFramentArtist, mFragmentAlbum, mFragmentFolder;
+    private static final int NUM_PAGES = 6;
+    private Fragment mFragmentListSong, mFragmentRecent, mFramentArtist, mFragmentAlbum, mFragmentFolder,mFragmentPlaylist;
     FragmentManager mFragmentManager;
 
     public PagerMainAdapter(FragmentManager fm) {
@@ -39,6 +39,9 @@ public class PagerMainAdapter extends FragmentStatePagerAdapter {
                 break;
             case 4:
                 fragment = mFragmentFolder == null ? mFragmentFolder = new FragmentFolder() : mFragmentFolder;
+                break;
+            case 5:
+                fragment = mFragmentPlaylist == null ? mFragmentPlaylist = new FragmentPlaylist() : mFragmentPlaylist;
                 break;
             default:
                 break;
@@ -84,6 +87,10 @@ public class PagerMainAdapter extends FragmentStatePagerAdapter {
                 break;
             case 4:
                 title = "Thư mục";
+
+                break;
+            case 5:
+                title = "Playlist";
 
                 break;
             default:
