@@ -44,6 +44,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.support.v7.widget.Toolbar;
@@ -105,22 +106,31 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
 //
         setContentView(R.layout.activity_main);
 
-//        final Bitmap bitmapBackgroundMain=getBitmap(R.drawable.background_gradient);
-//                //BitmapFactory.decodeResource(MainActivity.this.getResources(), R.drawable.background);
-//                //getBitmap(R.drawable.background_gradient);
-//        final CoordinatorLayout mainLayout= findViewById(R.id.mainContent);
-//        mainLayout.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                Blurry.with(MainActivity.this)
-//                        .radius(80)
-//                        .sampling(80)
-//                        .from(bitmapBackgroundMain)
-////                        .color(Color.argb(66, 255, 255, 0))
-////                        .async()
-//                        .into((ImageView) findViewById(R.id.imageViewBackgroundMain));
-//            }
-//        });
+        final Bitmap bitmapBackgroundMain=BitmapFactory.decodeResource(MainActivity.this.getResources(), R.drawable.background_1);
+                //BitmapFactory.decodeResource(MainActivity.this.getResources(), R.drawable.background);
+                //getBitmap(R.drawable.background_gradient);
+        imageViewBackgroundMain=findViewById(R.id.imageViewBackgroundMain);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        getSupportActionBar().hide();
+
+        imageViewBackgroundMain.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+        imageViewBackgroundMain.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+        imageViewBackgroundMain.setAdjustViewBounds(false);
+        imageViewBackgroundMain.setScaleType(ImageView.ScaleType.FIT_XY);
+        final CoordinatorLayout mainLayout= findViewById(R.id.mainContent);
+        mainLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                Blurry.with(MainActivity.this)
+                        .radius(10)
+                        .sampling(10)
+                        .from(bitmapBackgroundMain)
+//                        .color(Color.argb(66, 255, 255, 0))
+//                        .async()
+                        .into(imageViewBackgroundMain );
+            }
+        });
 
 //        SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
 //        mDatabaseHelper.onUpgrade(db,2,3);

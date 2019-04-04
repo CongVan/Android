@@ -10,7 +10,6 @@
     android:foreground="?android:attr/selectableItemBackground"
     android:focusable="true"
     android:orientation="vertical"
-
     >
     <!--android:clickable="true"-->
     <!--android:foreground="?android:attr/selectableItemBackground"-->
@@ -43,7 +42,7 @@
                     android:layout_marginBottom="@dimen/margin_size_small"
                     android:maxWidth="48dp"
                     android:maxHeight="48dp"
-                    app:cardCornerRadius="24dp"
+                    app:cardCornerRadius="4dp"
                     card_view:cardBackgroundColor="@android:color/transparent"
                     card_view:cardElevation="0dp"
                     card_view:cardPreventCornerOverlap="false"
@@ -74,10 +73,10 @@
                     >
 
                     <TextView
-                        android:id="@+id/txtTitle"
+                        android:id="@+id/txtTitlePlaylist"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Tiêu đề bài hát"
+                        android:text="Tiêu đề playlist"
                         android:textSize="@dimen/text_size_small"
                         android:textStyle="bold"
                         android:textColor="@color/colorTitlePrimary"
@@ -85,32 +84,15 @@
                         />
 
                     <TextView
-                        android:id="@+id/txtArtist"
+                        android:id="@+id/txtAuthorPlaylist"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Ca sĩ"
+                        android:text="Tác giả"
                         android:textSize="@dimen/text_size_small"
                         android:textColor="@color/colorTitleSecondary"
 
                         />
 
-                    <TextView
-                        android:id="@+id/txtDuration"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Thời gian"
-                        android:textSize="@dimen/text_size_small"
-                        android:textColor="@color/colorTitleSecondary"
-                        android:layout_marginBottom="@dimen/margin_size_small"
-                        />
-                    <!--<TextView-->
-                    <!--android:id="@+id/txtAlbum"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:text="Album"-->
-                    <!--android:textSize="14sp"-->
-                    <!--android:textColor="@color/colorWhite"-->
-                    <!--/>-->
                 </LinearLayout>
             </TableRow>
 

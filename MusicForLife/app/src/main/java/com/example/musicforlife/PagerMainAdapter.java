@@ -9,7 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 
 public class PagerMainAdapter extends FragmentStatePagerAdapter {
     private static final int NUM_PAGES = 6;
-    private Fragment mFragmentListSong, mFragmentRecent, mFramentArtist, mFragmentAlbum, mFragmentFolder,mFragmentPlaylist;
+    private Fragment mFragmentListSong, mFragmentRecent, mFramentArtist, mFragmentAlbum, mFragmentFolder, mFragmentPlaylist;
     FragmentManager mFragmentManager;
 
     public PagerMainAdapter(FragmentManager fm) {
@@ -32,17 +32,17 @@ public class PagerMainAdapter extends FragmentStatePagerAdapter {
             case 2:
                 fragment = mFragmentPlaylist == null ? mFragmentPlaylist = new FragmentPlaylist() : mFragmentPlaylist;
                 break;
-
             case 3:
-                fragment = mFragmentAlbum == null ? mFragmentAlbum = new FragmentAlbum() : mFragmentAlbum;
 
+                fragment = mFramentArtist == null ? mFramentArtist = new FragmentArtist() : mFramentArtist;
                 break;
+
             case 4:
                 fragment = mFragmentFolder == null ? mFragmentFolder = new FragmentFolder() : mFragmentFolder;
                 break;
             case 5:
+                fragment = mFragmentAlbum == null ? mFragmentAlbum = new FragmentAlbum() : mFragmentAlbum;
 
-                fragment = mFramentArtist == null ? mFramentArtist = new FragmentArtist() : mFramentArtist;
                 break;
             default:
                 break;
@@ -81,18 +81,19 @@ public class PagerMainAdapter extends FragmentStatePagerAdapter {
                 title = "Playlist";
 
                 break;
-
             case 3:
-                title = "Album";
-
+                title = "Ca sĩ";
 
                 break;
+
+
             case 4:
                 title = "Thư mục";
 
                 break;
             case 5:
-                title = "Ca sĩ";
+                title = "Album";
+
 
                 break;
             default:

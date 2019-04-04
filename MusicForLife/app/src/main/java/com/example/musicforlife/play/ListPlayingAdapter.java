@@ -1,32 +1,33 @@
-package com.example.musicforlife;
+package com.example.musicforlife.play;
+
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.media.Image;
 import android.media.MediaMetadataRetriever;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.musicforlife.ListSongRecyclerAdaper;
+import com.example.musicforlife.R;
+import com.example.musicforlife.SongModel;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
 
-public class ListSongRecyclerAdaper extends RecyclerView.Adapter<ListSongRecyclerAdaper.ViewHolderRecycler> {
+public class ListPlayingAdapter extends RecyclerView.Adapter<ListPlayingAdapter.ViewHolderRecycler> {
 
     private static ArrayList<SongModel> mListSong;
     private static Context mContext;
 
-    public ListSongRecyclerAdaper(Context context, ArrayList<SongModel> listSong) {
+    public ListPlayingAdapter(Context context, ArrayList<SongModel> listSong) {
         this.mContext = context;
         this.mListSong = listSong;
     }
@@ -79,8 +80,8 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<ListSongRecycle
             this.duration.setText(songModel.getDuration());
 
 //            if (this.imageView.getDrawable() == null) {
-            ParamImageThread paramImageThread = new ParamImageThread(this.imageView, songModel.getPath());
-            new loadImageFromStorage().execute(paramImageThread);
+//        ListSongRecyclerAdaper.ParamImageThread paramImageThread = new ListSongRecyclerAdaper.ParamImageThread(this.imageView, songModel.getPath());
+//        new ListSongRecyclerAdaper.loadImageFromStorage().execute(paramImageThread);
 //            }
 
 
@@ -89,8 +90,8 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<ListSongRecycle
 
     }
 
-    private static class loadImageFromStorage extends AsyncTask<ParamImageThread, Integer, Bitmap> {
-        ParamImageThread paramImageThread;
+    private static class loadImageFromStorage extends AsyncTask<ListPlayingAdapter.ParamImageThread, Integer, Bitmap> {
+        ListPlayingAdapter.ParamImageThread paramImageThread;
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
@@ -106,7 +107,7 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<ListSongRecycle
         }
 
         @Override
-        public Bitmap doInBackground(ParamImageThread... paramImageThreads) {
+        public Bitmap doInBackground(ListPlayingAdapter.ParamImageThread... paramImageThreads) {
             MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
             this.paramImageThread = paramImageThreads[0];
             mediaMetadataRetriever.setDataSource(paramImageThread.getPath());

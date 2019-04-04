@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:tag="nested">
+    android:paddingHorizontal="@dimen/margin_size_normal"
+    android:paddingVertical="@dimen/margin_size_small"
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:focusable="true"
+    >
+    <android.support.v7.widget.RecyclerView
 
-<include layout="@layout/fragment_list_song" android:id="@+id/lsvPlaylist"/>
-
-    <TextView
+        android:id="@+id/lsvPlaying"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="LIST PLAYING"
-        android:textSize="@dimen/text_size_large" />
 
+
+
+
+        ></android.support.v7.widget.RecyclerView>
 </LinearLayout>

@@ -16,12 +16,14 @@
     <color name="colorPrimaryLight">#689AD2</color>
     <color name="colorAccent">#FFBF5D</color>
     <color name="colorWhite">#FFFFFF</color>
-    <color name="colorWhiteGlassWhite">#32FFFFFF</color>
-    <color name="colorWhiteGlassBlack">#08FFFFFF</color>
+    <color name="colorWhiteGlassLight">#32FFFFFF</color>
+    <color name="colorWhiteGlassDark">#08FFFFFF</color>
+    <color name="colorBlackGlassLight">#32000000</color>
+    <color name="colorBlackGlassDark">#02000000</color>
 
-    <color name="tabcolor">#a2a2ef</color>
-    <color name="tabselect">#f40404</color>
+    <color name="colorTitlePrimary">#F8FFFFFF</color>
+    <color name="colorTitleSecondary">#64FFFFFF</color>
 
-
+    <color name="colorCardBackgroundDark">#322F2F2F</color>
     <drawable name="backgroundPrimary">@drawable/background_gradient</drawable>
 </resources>

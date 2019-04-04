@@ -19,7 +19,7 @@
     </style>
 
     <style name="TabLayoutAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">
-        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:textSize">@dimen/tab_text_size</item>
 
     </style>
 

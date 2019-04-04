@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,24 +15,29 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.example.musicforlife.FragmentPlaylist;
 import com.example.musicforlife.ListSongAdapter;
+import com.example.musicforlife.ListSongRecyclerAdaper;
+import com.example.musicforlife.MainActivity;
 import com.example.musicforlife.PlayActivity;
 import com.example.musicforlife.R;
+import com.example.musicforlife.RecyclerItemClickListener;
 import com.example.musicforlife.SongModel;
 
 import java.util.ArrayList;
 
 
 public class FragmentListPlaying extends Fragment {
-
+    MainActivity mMainActivity;
     PlayActivity mPlayActivity;
     Context mContext;
     LayoutInflater mInflater;
     ArrayList<SongModel> mListSong;
     LinearLayout mLayoutListSong;
-    ListView mListViewSong;
-    ListSongAdapter mListSongAdapter;
+    RecyclerView mListViewSong;
+    ListPlayingAdapter mListSongAdapter;
     LoadImageFromStorage loadImageFromStorage;
     private static final String TAG = "FragmentListPlaying";
 
@@ -40,6 +47,7 @@ public class FragmentListPlaying extends Fragment {
         try {
             mContext = getActivity();
             mPlayActivity = (PlayActivity) getActivity();
+
             loadImageFromStorage=new LoadImageFromStorage();
         } catch (IllegalStateException e) {
 
@@ -58,7 +66,7 @@ public class FragmentListPlaying extends Fragment {
     public void onResume() {
         super.onResume();
         Log.i(TAG, "onResume: STARTED");
-
+        new LoadImageFromStorage().execute();
     }
     @Nullable
     @Override
@@ -66,23 +74,50 @@ public class FragmentListPlaying extends Fragment {
 
 //        ViewGroup viewGroup= (ViewGroup)inflater.inflate(R.layout.fragment_playlist, container, false);
 
-        Log.i(TAG, "onCreateView PLAYLIST: OKOKOKO");
-        mListSong = new ArrayList<>();// getAllAudioFromDevice(_context);
-        mInflater = inflater;
-        mLayoutListSong = (LinearLayout) mInflater.inflate(R.layout.fragment_list_playing, container, false);
-        mListViewSong = mLayoutListSong.findViewById(R.id.lsvSongs);
-        mListSongAdapter = new ListSongAdapter(mContext, mListSong);
-        mListViewSong.setAdapter(mListSongAdapter);
-        mListViewSong.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-        });
-        loadImageFromStorage.execute();
-        return mLayoutListSong;
+        return inflater.inflate(R.layout.fragment_list_playing, container, false);
+//        Log.i(TAG, "onCreateView PLAYLIST: OKOKOKO");
+//        mListSong = new ArrayList<>();// getAllAudioFromDevice(_context);
+//        mInflater = inflater;
+//        mLayoutListSong = (LinearLayout) mInflater.inflate(R.layout.fragment_list_playing, container, false);
+//        mListViewSong = mLayoutListSong.findViewById(R.id.lsvSongs);
+//        mListSongAdapter = new ListSongAdapter(mContext, mListSong);
+//        mListViewSong.setAdapter(mListSongAdapter);
+//        mListViewSong.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//            }
+//        });
+//        loadImageFromStorage.execute();
+//        return mLayoutListSong;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mListSong = new ArrayList<>();// getAllAudioFromDevice(_context);
+
+//        _layoutListSong = (NestedScrollView) _inflater.inflate(R.layout.fragment_list_song, null);
+        mListViewSong = (RecyclerView) view.findViewById(R.id.lsvPlaying);
+        mListSongAdapter = new ListPlayingAdapter(mContext, mListSong);
+        mListViewSong.setLayoutManager(new LinearLayoutManager(mContext));
+        mListViewSong.setAdapter(mListSongAdapter);
+        mListViewSong.addOnItemTouchListener(
+                new RecyclerItemClickListener(mContext, mListViewSong,new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+                        // do whatever
+                        Toast.makeText(mContext,"CLICK ITEM SONG"+position,Toast.LENGTH_SHORT).show();
+//                        mPlayActivity.playSongFromFragmentListToMain(FragmentPlaylist.SENDER,_listSong.get(position));
+                    }
+
+                    @Override public void onLongItemClick(View view, int position) {
+                        // do whatever
+                        Toast.makeText(mContext,"LONG CLICK ITEM SONG"+position,Toast.LENGTH_SHORT).show();
+                    }
+                })
+        );
+
+    }
     @Override
     public void onDestroy() {
         super.onDestroy();

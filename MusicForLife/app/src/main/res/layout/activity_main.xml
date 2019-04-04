@@ -2,9 +2,9 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainContent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/mainContent"
     android:fitsSystemWindows="true"
     android:gravity="center"
     android:orientation="vertical"
@@ -16,8 +16,10 @@
         android:id="@+id/imageViewBackgroundMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/backgroundPrimary"
+        android:scaleType="fitXY"
+        android:layout_gravity="center"
+        android:src="@drawable/background_1"
+
         />
     <!--<fragment-->
     <!--android:id="@+id/frgSongs"-->
@@ -32,9 +34,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        app:elevation="0dp"
+        app:contentScrim="@android:color/transparent"
 
-        app:contentScrim="@android:color/transparent">
+        app:elevation="0dp">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/tool_bar_main"
@@ -44,9 +46,8 @@
 
             <android.support.v7.widget.SearchView
                 android:id="@+id/search_main"
-                style="@style/AppTheme.Toolbar"
-                android:layout_width="match_parent"
 
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
             </android.support.v7.widget.SearchView>
@@ -57,11 +58,18 @@
             android:id="@+id/tablayout_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_size_large"
+            android:layout_marginRight="@dimen/margin_size_large"
             app:tabGravity="fill"
+            app:tabIndicatorColor="@android:color/white"
+            app:tabIndicatorHeight="0dp"
             app:tabMode="scrollable"
             app:tabSelectedTextColor="@android:color/white"
             app:tabTextAppearance="@style/TabLayoutAppearance"
-            app:tabTextColor="@android:color/darker_gray">
+            app:tabTextColor="@color/colorBlackGlassLight"
+            app:tabPaddingStart="@dimen/margin_size_normal"
+            >
+
             <!--app:tabSelectedTextColor="@android:color/white"-->
             <!--app:tabTextAppearance="@style/TabLayoutAppearance"-->
             <!--app:tabTextColor="@android:color/darker_gray"-->
