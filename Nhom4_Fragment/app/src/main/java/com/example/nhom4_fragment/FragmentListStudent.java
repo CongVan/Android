@@ -149,7 +149,10 @@ public class FragmentListStudent extends Fragment implements FragmentCallbacks {
 //                lsvStudent.requestFocusFromTouch();
                 lsvStudent.setItemChecked(currentPosition, true);
                 lsvStudent.setSelection(currentPosition);
-                lsvStudent.smoothScrollToPositionFromTop(currentPosition,0,0);
+//                int h1=lsvStudent.getHeight();
+
+                lsvStudent.smoothScrollToPositionFromTop(currentPosition,0,100);
+
                 listCustomerAdapter.notifyDataSetChanged();
 //
                 setDataOnChangeItem(currentPosition);

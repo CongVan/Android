@@ -21,6 +21,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -97,6 +98,21 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks {
         _listSongAdapter = new ListSongRecyclerAdaper(_context, _listSong);
         _listViewSong.setLayoutManager(new LinearLayoutManager(_context));
         _listViewSong.setAdapter(_listSongAdapter);
+        _listViewSong.addOnItemTouchListener(
+                new RecyclerItemClickListener(_context, _listViewSong ,new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+                        // do whatever
+                        Toast.makeText(_context,"CLICK ITEM SONG"+position,Toast.LENGTH_SHORT).show();
+                        _mainActivity.playSongFromFragmentListToMain(FragmentPlaylist.SENDER,_listSong.get(position));
+                    }
+
+                    @Override public void onLongItemClick(View view, int position) {
+                        // do whatever
+                        Toast.makeText(_context,"LONG CLICK ITEM SONG"+position,Toast.LENGTH_SHORT).show();
+                    }
+                })
+        );
+
     }
 
     @Override
@@ -253,6 +269,11 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks {
 
     @Override
     public void TestMessageFromFragmentToActivity(String message) {
+
+    }
+
+    @Override
+    public void playSongFromFragmentListToMain(SongModel songModel) {
 
     }
 

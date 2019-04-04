@@ -30,9 +30,9 @@ public class PagerMainAdapter extends FragmentStatePagerAdapter {
                 fragment = mFragmentListSong == null ? mFragmentListSong = FragmentListSong.newInstance() : mFragmentListSong;
                 break;
             case 2:
-
-                fragment = mFramentArtist == null ? mFramentArtist = new FragmentArtist() : mFramentArtist;
+                fragment = mFragmentPlaylist == null ? mFragmentPlaylist = new FragmentPlaylist() : mFragmentPlaylist;
                 break;
+
             case 3:
                 fragment = mFragmentAlbum == null ? mFragmentAlbum = new FragmentAlbum() : mFragmentAlbum;
 
@@ -41,7 +41,8 @@ public class PagerMainAdapter extends FragmentStatePagerAdapter {
                 fragment = mFragmentFolder == null ? mFragmentFolder = new FragmentFolder() : mFragmentFolder;
                 break;
             case 5:
-                fragment = mFragmentPlaylist == null ? mFragmentPlaylist = new FragmentPlaylist() : mFragmentPlaylist;
+
+                fragment = mFramentArtist == null ? mFramentArtist = new FragmentArtist() : mFramentArtist;
                 break;
             default:
                 break;
@@ -77,9 +78,10 @@ public class PagerMainAdapter extends FragmentStatePagerAdapter {
                 title = "Bài hát";
                 break;
             case 2:
-                title = "Ca sĩ";
+                title = "Playlist";
 
                 break;
+
             case 3:
                 title = "Album";
 
@@ -90,7 +92,7 @@ public class PagerMainAdapter extends FragmentStatePagerAdapter {
 
                 break;
             case 5:
-                title = "Playlist";
+                title = "Ca sĩ";
 
                 break;
             default:

@@ -16,7 +16,8 @@
     <color name="colorPrimaryLight">#689AD2</color>
     <color name="colorAccent">#FFBF5D</color>
     <color name="colorWhite">#FFFFFF</color>
-
+    <color name="colorWhiteGlassWhite">#32FFFFFF</color>
+    <color name="colorWhiteGlassBlack">#08FFFFFF</color>
 
     <color name="tabcolor">#a2a2ef</color>
     <color name="tabselect">#f40404</color>

@@ -4,12 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/backgroundPrimary"
+    android:id="@+id/mainContent"
     android:fitsSystemWindows="true"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
 
+    >
+
+    <ImageView
+        android:id="@+id/imageViewBackgroundMain"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/backgroundPrimary"
+        />
     <!--<fragment-->
     <!--android:id="@+id/frgSongs"-->
     <!--android:layout_width="match_parent"-->
@@ -22,8 +31,8 @@
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:background="@android:color/transparent"
+        app:elevation="0dp"
 
         app:contentScrim="@android:color/transparent">
 
@@ -52,9 +61,10 @@
             app:tabMode="scrollable"
             app:tabSelectedTextColor="@android:color/white"
             app:tabTextAppearance="@style/TabLayoutAppearance"
-            app:tabTextColor="@android:color/darker_gray"
-            >
-
+            app:tabTextColor="@android:color/darker_gray">
+            <!--app:tabSelectedTextColor="@android:color/white"-->
+            <!--app:tabTextAppearance="@style/TabLayoutAppearance"-->
+            <!--app:tabTextColor="@android:color/darker_gray"-->
         </android.support.design.widget.TabLayout>
 
     </android.support.design.widget.AppBarLayout>

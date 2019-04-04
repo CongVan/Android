@@ -39,22 +39,27 @@ public class ListStudentAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder=null;
-        LayoutInflater layoutInflater=(LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-
+        ViewHolder viewHolder;
+//         layoutInflater=(LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+        TextView fullName;
+        ImageView imgAvatar;
         if (convertView == null) {
-            convertView =layoutInflater.inflate(R.layout.layout_item_student,null);
+
+            convertView = LayoutInflater.from(context).inflate(R.layout.layout_item_student, parent, false);
 
             //LayoutInflater.from(context).inflate(R.layout.list_Student_layout, parent, false); //layoutInflater.inflate(R.layout.list_Student_layout,null);
 
-            viewHolder= new ViewHolder();
-            viewHolder.imgAvatar= (ImageView) convertView.findViewById(R.id.imgAvatar);
+            viewHolder = new ViewHolder();
+            imgAvatar = (ImageView) convertView.findViewById(R.id.imgAvatar);
 
-            viewHolder.fullNameView=(TextView) convertView.findViewById(R.id.txtFullName);
-
+            fullName = (TextView) convertView.findViewById(R.id.txtFullName);
+            viewHolder.imgAvatar = imgAvatar;
+            viewHolder.fullNameView = fullName;
             convertView.setTag(viewHolder);
-        }else{
-            viewHolder= (ViewHolder) convertView.getTag();
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
+            fullName = viewHolder.fullNameView;
+            imgAvatar = viewHolder.imgAvatar;
         }
 
 //        Student currentStudent = (Student) getItem(position);
@@ -63,18 +68,22 @@ public class ListStudentAdapter extends BaseAdapter {
 //        txtFullName.setText(currentStudent.getFullName());
 //        txtPhoneNumber.setText(currentStudent.getPhoneNumber());
 //        return convertView;
-        Student cus = this.lstStudent.get(position);
-        viewHolder.fullNameView.setText(cus.getCode());
-//        viewHolder.phoneNumberView.setText(cus.getPhoneNumber());
-        int imgAvatarId = this.getImageIdByName(1 );
+        Student cus = lstStudent.get(position);
 
-        viewHolder.imgAvatar.setImageResource(imgAvatarId);
+
+//        viewHolder.fullNameView.setText();
+//        viewHolder.phoneNumberView.setText(cus.getPhoneNumber());
+
+        int imgAvatarId = getImageIdByName(1);
+        imgAvatar.setImageResource(imgAvatarId);
+        fullName.setText(cus.getCode());
+//        viewHolder.imgAvatar.setImageResource(imgAvatarId);
 
         return convertView;
     }
 
     public int getImageIdByName(int type) {
-        String imgName="user";
+        String imgName = "user";
 
 //        imgName= type==1?"user";
 

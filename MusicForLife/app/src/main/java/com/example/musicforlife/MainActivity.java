@@ -6,8 +6,15 @@ import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -31,19 +38,24 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.support.v7.widget.Toolbar;
+import android.widget.ImageView;
 
 import com.example.musicforlife.db.DatabaseHelper;
 import com.example.musicforlife.play.FragmentPlayAdapter;
 import com.example.musicforlife.play.ZoomOutPageTransformer;
 
 import java.util.ArrayList;
+
+import jp.wasabeef.blurry.Blurry;
 
 import static android.content.Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY;
 
@@ -71,15 +83,17 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     private PagerAdapter pagerAdapter;
     private TabLayout mTabLayout;
     private Toolbar mToolBar;
-    private  int[] mTabIcons={
+    private int[] mTabIcons = {
             R.drawable.ic_av_timer_black_24dp,
             R.drawable.ic_library_music_black_24dp,
             R.drawable.ic_people_black_24dp,
             R.drawable.ic_album_black_24dp,
             R.drawable.ic_folder_black_24dp,
     };
+    private ImageView imageViewBackgroundMain;
 
-    public static  DatabaseHelper mDatabaseHelper;
+
+    public static DatabaseHelper mDatabaseHelper;
 
 
     private static final String TAG = "MainActivity";
@@ -91,6 +105,22 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
 //
         setContentView(R.layout.activity_main);
 
+//        final Bitmap bitmapBackgroundMain=getBitmap(R.drawable.background_gradient);
+//                //BitmapFactory.decodeResource(MainActivity.this.getResources(), R.drawable.background);
+//                //getBitmap(R.drawable.background_gradient);
+//        final CoordinatorLayout mainLayout= findViewById(R.id.mainContent);
+//        mainLayout.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                Blurry.with(MainActivity.this)
+//                        .radius(80)
+//                        .sampling(80)
+//                        .from(bitmapBackgroundMain)
+////                        .color(Color.argb(66, 255, 255, 0))
+////                        .async()
+//                        .into((ImageView) findViewById(R.id.imageViewBackgroundMain));
+//            }
+//        });
 
 //        SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
 //        mDatabaseHelper.onUpgrade(db,2,3);
@@ -241,11 +271,11 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
 
             }
         });
-        mDatabaseHelper=DatabaseHelper.newInstance(getApplicationContext());
+        mDatabaseHelper = DatabaseHelper.newInstance(getApplicationContext());
         new Thread(new Runnable() {
             @Override
             public void run() {
-                if (!getApplicationContext().getDatabasePath(DatabaseHelper.DATABASE_NAME).exists()){
+                if (!getApplicationContext().getDatabasePath(DatabaseHelper.DATABASE_NAME).exists()) {
                     Log.d(TAG, "run: NOT EXIST DATABASE: ");
 
                     new intitSongFromDevice().execute();
@@ -253,16 +283,26 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
 //                Log.d(TAG, "run:  EXIST DATABASE: ");
             }
         }).run();
-        mToolBar= findViewById(R.id.tool_bar_main);
+        mToolBar = findViewById(R.id.tool_bar_main);
         setSupportActionBar(mToolBar);
-        mTabLayout=findViewById(R.id.tablayout_main);
+        mTabLayout = findViewById(R.id.tablayout_main);
         mTabLayout.setupWithViewPager(mViewPager);
-//        for (int i=0;i<mTabIcons.length;i++){
+//        for (int i = 0; i < mTabIcons.length; i++) {
 //            mTabLayout.getTabAt(i).setIcon(mTabIcons[i]);
 //        }
 
     }
 
+    private Bitmap getBitmap(int drawableRes) {
+        Drawable drawable = getResources().getDrawable(drawableRes);
+        Canvas canvas = new Canvas();
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        canvas.setBitmap(bitmap);
+        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
+    }
 
     public static final String TEST_MESSAGE = "Play";
 
@@ -323,10 +363,14 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     }
 
 
-
     @Override
     public void TestMessageFromFragmentToActivity(String sender) {
 //        Toast.makeText(this,sender,Toast.LENGTH_SHORT).show();
+        handleShowPlayActivity();
+    }
+
+    @Override
+    public void playSongFromFragmentListToMain(String sender,SongModel songModel) {
         handleShowPlayActivity();
     }
 

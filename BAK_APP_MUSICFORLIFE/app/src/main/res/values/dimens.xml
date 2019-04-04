@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="text_size_small">12dp</dimen>
+    <dimen name="text_size_normal">16dp</dimen>
+    <dimen name="text_size_large">18dp</dimen>
+
+    <dimen name="margin_size_small">4dp</dimen>
+    <dimen name="margin_size_normal">12dp</dimen>
+    <dimen name="margin_size_large">18dp</dimen>
+
+    <dimen name="height_collapse_played">80dp</dimen>
+
+</resources>

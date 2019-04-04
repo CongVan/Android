@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--<color name="colorPrimary">#136B86</color>-->
+    <!--<color name="colorPrimaryDark">#062F38</color>-->
+    <!--<color name="colorPrimaryLight">#2294A8</color>-->
+    <!--<color name="colorAccent">#FE0968</color>-->
+    <!--<color name="colorWhite">#FFFFFF</color>-->
+    <!--GREEN TONE-->
+    <!--<color name="colorPrimary">#32C452</color>-->
+    <!--<color name="colorPrimaryDark">#048F23</color>-->
+    <!--<color name="colorPrimaryLight">#7FE395</color>-->
+    <!--<color name="colorAccent">#8EE63B</color>-->
+    <!--BLUE TONE-->
+    <color name="colorPrimary">#2268B7</color>
+    <color name="colorPrimaryDark">#083D79</color>
+    <color name="colorPrimaryLight">#689AD2</color>
+    <color name="colorAccent">#FFBF5D</color>
+    <color name="colorWhite">#FFFFFF</color>
+
+
+    <color name="tabcolor">#a2a2ef</color>
+    <color name="tabselect">#f40404</color>
+
+
+    <drawable name="backgroundPrimary">@drawable/background_gradient</drawable>
+</resources>
