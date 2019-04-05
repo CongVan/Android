@@ -17,6 +17,7 @@ import android.provider.MediaStore;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -95,6 +96,8 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks {
 
 //        _layoutListSong = (NestedScrollView) _inflater.inflate(R.layout.fragment_list_song, null);
         _listViewSong = (RecyclerView) view.findViewById(R.id.lsvSongs);
+//        _listViewSong.addItemDecoration(new DividerItemDecoration(_listViewSong.getContext(), DividerItemDecoration.VERTICAL));
+
         _listSongAdapter = new ListSongRecyclerAdaper(_context, _listSong);
         _listViewSong.setLayoutManager(new LinearLayoutManager(_context));
         _listViewSong.setAdapter(_listSongAdapter);

@@ -5,22 +5,21 @@
     android:id="@+id/mainContent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorWhite"
     android:fitsSystemWindows="true"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".MainActivity"
+    tools:context=".MainActivity">
 
-    >
+    <!--<ImageView-->
+    <!--android:id="@+id/imageViewBackgroundMain"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:scaleType="fitXY"-->
+    <!--android:layout_gravity="center"-->
+    <!--android:src="@drawable/background_1"-->
 
-    <ImageView
-        android:id="@+id/imageViewBackgroundMain"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:layout_gravity="center"
-        android:src="@drawable/background_1"
-
-        />
+    <!--/>-->
     <!--<fragment-->
     <!--android:id="@+id/frgSongs"-->
     <!--android:layout_width="match_parent"-->
@@ -33,16 +32,21 @@
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        app:contentScrim="@android:color/transparent"
 
-        app:elevation="0dp">
+        app:contentScrim="@android:color/transparent"
+        android:outlineProvider="paddedBounds"
+        app:elevation="20dp">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/tool_bar_main"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:layout_scrollFlags="scroll|enterAlways">
+            android:background="@color/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways"
+            android:elevation="20dp"
+            app:elevation="20dp"
+            android:outlineProvider="paddedBounds"
+            >
 
             <android.support.v7.widget.SearchView
                 android:id="@+id/search_main"
@@ -58,17 +62,18 @@
             android:id="@+id/tablayout_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_size_large"
-            android:layout_marginRight="@dimen/margin_size_large"
+            android:background="@android:color/white"
+            android:outlineProvider="paddedBounds"
+            app:elevation="20dp"
+            android:elevation="20dp"
             app:tabGravity="fill"
-            app:tabIndicatorColor="@android:color/white"
-            app:tabIndicatorHeight="0dp"
+            app:tabIndicatorColor="@color/colorPrimaryDark"
+
             app:tabMode="scrollable"
-            app:tabSelectedTextColor="@android:color/white"
-            app:tabTextAppearance="@style/TabLayoutAppearance"
-            app:tabTextColor="@color/colorBlackGlassLight"
             app:tabPaddingStart="@dimen/margin_size_normal"
-            >
+            app:tabSelectedTextColor="@color/colorPrimaryDark"
+            app:tabTextAppearance="@style/TabLayoutAppearance"
+            app:tabTextColor="@color/colorTitleSecondary">
 
             <!--app:tabSelectedTextColor="@android:color/white"-->
             <!--app:tabTextAppearance="@style/TabLayoutAppearance"-->

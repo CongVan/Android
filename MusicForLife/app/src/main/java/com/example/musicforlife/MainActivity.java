@@ -33,6 +33,7 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.BottomSheetBehavior;
 
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -44,6 +45,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -109,28 +111,35 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
         final Bitmap bitmapBackgroundMain=BitmapFactory.decodeResource(MainActivity.this.getResources(), R.drawable.background_1);
                 //BitmapFactory.decodeResource(MainActivity.this.getResources(), R.drawable.background);
                 //getBitmap(R.drawable.background_gradient);
-        imageViewBackgroundMain=findViewById(R.id.imageViewBackgroundMain);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//        getSupportActionBar().hide();
-
-        imageViewBackgroundMain.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
-        imageViewBackgroundMain.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
-        imageViewBackgroundMain.setAdjustViewBounds(false);
-        imageViewBackgroundMain.setScaleType(ImageView.ScaleType.FIT_XY);
-        final CoordinatorLayout mainLayout= findViewById(R.id.mainContent);
-        mainLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                Blurry.with(MainActivity.this)
-                        .radius(10)
-                        .sampling(10)
-                        .from(bitmapBackgroundMain)
-//                        .color(Color.argb(66, 255, 255, 0))
+//        imageViewBackgroundMain=findViewById(R.id.imageViewBackgroundMain);
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+////        getSupportActionBar().hide();
+//
+//        imageViewBackgroundMain.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+//        imageViewBackgroundMain.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+//        imageViewBackgroundMain.setAdjustViewBounds(false);
+//        imageViewBackgroundMain.setScaleType(ImageView.ScaleType.FIT_XY);
+//        final CoordinatorLayout mainLayout= findViewById(R.id.mainContent);
+//        mainLayout.post(new Runnable() {
+//            @Override
+//            public void run() {
+////                Blurry.with(MainActivity.this)
+////                        .radius(10)
+////                        .sampling(10)
+////                        .from(bitmapBackgroundMain)
+//////                        .color(Color.argb(66, 255, 255, 0))
+//////                        .async()
+////                        .into(imageViewBackgroundMain);
+//                Blurry.with(MainActivity.this)
+//                        .radius(10)
+//                        .sampling(8)
+//                        .color(Color.argb(1, 47, 47, 47))
 //                        .async()
-                        .into(imageViewBackgroundMain );
-            }
-        });
+//                        .animate(500)
+//                        .onto();
+//            }
+//        });
 
 //        SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
 //        mDatabaseHelper.onUpgrade(db,2,3);
@@ -300,7 +309,12 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
 //        for (int i = 0; i < mTabIcons.length; i++) {
 //            mTabLayout.getTabAt(i).setIcon(mTabIcons[i]);
 //        }
-
+        //Set status bar color
+        Window window=MainActivity.this.getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(ContextCompat.getColor(MainActivity.this,R.color.colorPrimary));
+//        window.setBackgroundDrawable(MainActivity.this.getDrawable(R.drawable));
     }
 
     private Bitmap getBitmap(int drawableRes) {

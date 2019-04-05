@@ -2,11 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutPlayActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@drawable/background_1"
     android:fitsSystemWindows="true"
+    android:orientation="vertical"
     tools:context=".PlayActivity">
 
     <LinearLayout
@@ -15,11 +16,10 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:foreground="?attr/selectableItemBackground"
+        android:gravity="top"
         android:onClick="hidePlayActivity"
         android:orientation="horizontal"
-        android:padding="@dimen/margin_size_normal"
-        android:gravity="top"
-        >
+        android:padding="@dimen/margin_size_normal">
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -60,8 +60,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
-        >
+        android:background="@color/colorCardBackgroundDark">
 
         <android.support.v4.view.ViewPager
 
@@ -73,6 +72,7 @@
             />
 
     </LinearLayout>
+
     <TextView
         android:id="@+id/txtTest"
         android:layout_width="match_parent"

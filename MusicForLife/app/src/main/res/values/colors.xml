@@ -21,8 +21,9 @@
     <color name="colorBlackGlassLight">#32000000</color>
     <color name="colorBlackGlassDark">#02000000</color>
 
-    <color name="colorTitlePrimary">#F8FFFFFF</color>
-    <color name="colorTitleSecondary">#64FFFFFF</color>
+    <color name="colorTranparent">@android:color/transparent</color>
+    <color name="colorTitlePrimary">#212121</color>
+    <color name="colorTitleSecondary">#616161</color>
 
     <color name="colorCardBackgroundDark">#322F2F2F</color>
     <drawable name="backgroundPrimary">@drawable/background_gradient</drawable>

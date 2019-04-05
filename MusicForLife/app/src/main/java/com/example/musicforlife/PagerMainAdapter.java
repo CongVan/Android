@@ -11,6 +11,7 @@ public class PagerMainAdapter extends FragmentStatePagerAdapter {
     private static final int NUM_PAGES = 6;
     private Fragment mFragmentListSong, mFragmentRecent, mFramentArtist, mFragmentAlbum, mFragmentFolder, mFragmentPlaylist;
     FragmentManager mFragmentManager;
+    private int[] iconsId = {R.id.navigation_recent, R.id.navigation_song, R.id.navigation_album, R.id.navigation_artist, R.id.navigation_album, R.id.navigation_folder};
 
     public PagerMainAdapter(FragmentManager fm) {
         super(fm);
@@ -22,7 +23,6 @@ public class PagerMainAdapter extends FragmentStatePagerAdapter {
         Fragment fragment = null;
         switch (i) {
             case 0:
-
                 fragment = mFragmentRecent == null ? mFragmentRecent = new FragmentRecent() : mFragmentRecent;
                 break;
             case 1:
@@ -36,14 +36,14 @@ public class PagerMainAdapter extends FragmentStatePagerAdapter {
 
                 fragment = mFramentArtist == null ? mFramentArtist = new FragmentArtist() : mFramentArtist;
                 break;
-
             case 4:
-                fragment = mFragmentFolder == null ? mFragmentFolder = new FragmentFolder() : mFragmentFolder;
-                break;
-            case 5:
                 fragment = mFragmentAlbum == null ? mFragmentAlbum = new FragmentAlbum() : mFragmentAlbum;
 
                 break;
+            case 5:
+                fragment = mFragmentFolder == null ? mFragmentFolder = new FragmentFolder() : mFragmentFolder;
+                break;
+
             default:
                 break;
         }
@@ -70,35 +70,33 @@ public class PagerMainAdapter extends FragmentStatePagerAdapter {
         String title = "";
         switch (position) {
             case 0:
-
                 title = "Gần đây";
                 break;
             case 1:
-
                 title = "Bài hát";
                 break;
             case 2:
                 title = "Playlist";
-
                 break;
             case 3:
                 title = "Ca sĩ";
-
                 break;
-
 
             case 4:
-                title = "Thư mục";
-
+                title = "Album";
                 break;
             case 5:
-                title = "Album";
-
-
+                title = "Thư mục";
                 break;
+
             default:
                 break;
         }
         return title;
     }
+
+    public  int getTabIconId(int position) {
+        return iconsId[position];
+    }
+
 }

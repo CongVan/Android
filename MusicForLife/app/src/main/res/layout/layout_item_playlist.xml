@@ -10,6 +10,7 @@
     android:foreground="?android:attr/selectableItemBackground"
     android:focusable="true"
     android:orientation="vertical"
+
     >
     <!--android:clickable="true"-->
     <!--android:foreground="?android:attr/selectableItemBackground"-->
@@ -24,7 +25,7 @@
 
         card_view:cardPreventCornerOverlap="false"
         card_view:contentPadding="@dimen/margin_size_small"
-        app:cardBackgroundColor="@color/colorCardBackgroundDark">
+     >
         <!--card_view:cardCornerRadius="@dimen/border_radius_large"-->
         <TableLayout
             android:layout_width="match_parent"
