@@ -1,6 +1,9 @@
 package com.example.musicforlife;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +15,8 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.List;
 
 public class ListArtistAdapter extends RecyclerView.Adapter<ListArtistAdapter.ArtistViewHolder> {
@@ -32,8 +37,7 @@ public class ListArtistAdapter extends RecyclerView.Adapter<ListArtistAdapter.Ar
 
     @Override
     public void onBindViewHolder(@NonNull ArtistViewHolder artistViewHolder, int i) {
-        ArtistModel _aArtistModel = artistList.get(i);
-        artistViewHolder.BindData(_aArtistModel);
+        artistViewHolder.BindData(artistList,i);
     }
     @Override
     public int getItemCount() {
@@ -43,14 +47,39 @@ public class ListArtistAdapter extends RecyclerView.Adapter<ListArtistAdapter.Ar
     public static class ArtistViewHolder extends RecyclerView.ViewHolder{
         TextView TVArtistName;
         TextView TVArtistCount;
+        ImageView IVArtist;
         public ArtistViewHolder(@NonNull View itemView) {
             super(itemView);
             TVArtistName = (TextView)itemView.findViewById(R.id.txtArtistName);
             TVArtistCount = (TextView)itemView.findViewById(R.id.txtArtistCount);
+            IVArtist = (ImageView)itemView.findViewById(R.id.imgartist);
         }
-        public void BindData(ArtistModel artistModel){
+        public void BindData(List<ArtistModel> artistList,int position){
+            ArtistModel artistModel = artistList.get(position);
+
             TVArtistName.setText(artistModel.getName());
             TVArtistCount.setText(artistModel.getSongCount() + " Bài hát");
+
+            //get Image from path if exists getBitmap()
+            if(artistModel.getBitmap() == null){
+                MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+                mediaMetadataRetriever.setDataSource(artistList.get(position).getPath());
+                if (mediaMetadataRetriever.getEmbeddedPicture() != null) {
+                    InputStream inputStream = new ByteArrayInputStream(mediaMetadataRetriever.getEmbeddedPicture());
+                    mediaMetadataRetriever.release();
+                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                    IVArtist.setImageBitmap(bitmap);
+                    //set bitmap for list
+                    artistList.get(position).setBitmap(bitmap);
+                } else {
+                    //set default if can't getEmbeddedPicture()
+                    IVArtist.setImageResource(R.mipmap.musical_note_light_64);
+                }
+            }
+            else{
+                //set Image from bitmap model
+                IVArtist.setImageBitmap(artistModel.getBitmap());
+            }
         }
     }
 }
