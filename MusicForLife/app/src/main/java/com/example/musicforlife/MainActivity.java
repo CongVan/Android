@@ -271,6 +271,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
             }
         });
         mDatabaseHelper = DatabaseHelper.newInstance(getApplicationContext());
+//        new intitSongFromDevice().execute();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -283,7 +284,9 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
             }
         }).run();
         mToolBar = findViewById(R.id.tool_bar_main);
+        mToolBar.setTitle("Music for life");
         setSupportActionBar(mToolBar);
+        getSupportActionBar().setTitle("Music for life");
         mTabLayout = findViewById(R.id.tablayout_main);
         mTabLayout.setupWithViewPager(mViewPager);
 //        for (int i = 0; i < mTabIcons.length; i++) {
@@ -308,7 +311,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
         return bitmap;
     }
 
-    public static final String TEST_MESSAGE = "Play";
+    public static final String TEST_MESSAGE = "PlayModel";
 
 //    private void loadFragment(Fragment fragment, String tag) {
 //        //load fragment
@@ -370,6 +373,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     @Override
     public void TestMessageFromFragmentToActivity(String sender) {
 //        Toast.makeText(this,sender,Toast.LENGTH_SHORT).show();
+
         handleShowPlayActivity();
     }
 

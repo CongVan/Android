@@ -68,7 +68,7 @@ public class ListSongAdapter extends BaseAdapter {
         titleSong.setText(songModel.getTitle() );//+ "__" + songModel.getSongId()+"__"+songModel.getFolder()
 //        album.setText(songModel.getAlbum());
         artist.setText(songModel.getArtist());
-        duration.setText(songModel.getDuration());
+        duration.setText(SongModel.formateMilliSeccond(songModel.getDuration()));
 //        imageView.setImageBitmap(songModel.getBitmap());
         if(songModel.getBitmap() !=null){
             imageView.setImageBitmap(songModel.getBitmap());

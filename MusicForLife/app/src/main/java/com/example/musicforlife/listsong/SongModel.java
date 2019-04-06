@@ -34,7 +34,7 @@ public class SongModel {
             .append(COLUMN_TITLE).append(" TEXT,")
             .append(COLUMN_ALBUM).append(" TEXT,")
             .append(COLUMN_ARTIST).append(" TEXT,")
-            .append(COLUMN_DURATION).append(" TEXT,")
+            .append(COLUMN_DURATION).append(" INTEGER,")
             .append(COLUMN_FOLDER).append(" TEXT ,")
             .append(COLUMN_PATH).append(" TEXT ")
             .append(" )")
@@ -46,7 +46,7 @@ public class SongModel {
     private String album;
     private String artist;
     private Bitmap bitmap;
-    private String duration;
+    private Long duration;
     private int id;
     private int songId;
     private String folder;
@@ -91,11 +91,11 @@ public class SongModel {
         this.bitmap = bitmap;
     }
 
-    public String getDuration() {
+    public Long getDuration() {
         return duration;
     }
 
-    public void setDuration(String duration) {
+    public void setDuration(Long duration) {
         this.duration = duration;
     }
 
@@ -153,7 +153,7 @@ public class SongModel {
                 String name = c.getString(1);//c.getColumnIndex(MediaStore.Audio.AudioColumns.TITLE)
                 String album = c.getString(2);//c.getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM)
                 String artist = c.getString(3);//c.getColumnIndex(MediaStore.Audio.AudioColumns.ARTIST)
-                String duration = c.getString(4);//c.getColumnIndex(MediaStore.Audio.AudioColumns.DURATION)
+                Long duration = c.getLong(4);//c.getColumnIndex(MediaStore.Audio.AudioColumns.DURATION)
                 int songId = c.getInt(5);
                 String parentPath = new File(path).getParent();
                 String folder = parentPath.substring(parentPath.lastIndexOf('/') + 1);
@@ -175,7 +175,7 @@ public class SongModel {
                 songModel.setArtist(artist);
                 songModel.setPath(path);
                 songModel.setBitmap(null);
-                songModel.setDuration(formateMilliSeccond(Long.valueOf(duration)));
+                songModel.setDuration(duration);
                 songModel.setSongId(songId);
                 songModel.setFolder(folder);
 //                Log.e("Name :" + name, " Album :" + album);
@@ -190,7 +190,7 @@ public class SongModel {
         return tempAudioList;
     }
 
-    private static String formateMilliSeccond(long milliseconds) {
+    public static String formateMilliSeccond(long milliseconds) {
         String finalTimerString = "";
         String secondsString = "";
 
@@ -294,7 +294,7 @@ public class SongModel {
                 songModel.setAlbum(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_ALBUM)));
                 songModel.setArtist(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_ARTIST)));
                 songModel.setFolder(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_FOLDER)));
-                songModel.setDuration(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_DURATION)));
+                songModel.setDuration(cursor.getLong(cursor.getColumnIndex(SongModel.COLUMN_DURATION)));
                 songModel.setPath(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_PATH)));
                 songModelList.add(songModel);
             } while (cursor.moveToNext());

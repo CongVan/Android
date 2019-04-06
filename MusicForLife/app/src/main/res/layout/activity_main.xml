@@ -41,6 +41,7 @@
             android:background="@color/colorPrimary"
             android:outlineProvider="bounds"
             app:layout_scrollFlags="scroll|enterAlways"
+            app:title="Music For Life"
             >
 
             <android.support.v7.widget.SearchView

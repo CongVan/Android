@@ -201,7 +201,7 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks {
                 String name = c.getString(c.getColumnIndex(MediaStore.Audio.AudioColumns.TITLE));
                 String album = c.getString(c.getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM));
                 String artist = c.getString(c.getColumnIndex(MediaStore.Audio.AudioColumns.ARTIST));
-                String duration = c.getString(c.getColumnIndex(MediaStore.Audio.AudioColumns.DURATION));
+                Long duration = c.getLong(c.getColumnIndex(MediaStore.Audio.AudioColumns.DURATION));
 
                 MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
                 mediaMetadataRetriever.setDataSource(path);
@@ -223,7 +223,7 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks {
                 songModel.setArtist(artist);
                 songModel.setPath(path);
                 songModel.setBitmap(bitmap);
-                songModel.setDuration(formateMilliSeccond(Long.valueOf(duration)));
+                songModel.setDuration(duration);
 //                Log.e("Name :" + name, " Album :" + album);
 //                Log.e("Path :" + path, " artist :" + artist);
 

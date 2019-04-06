@@ -11,8 +11,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static DatabaseHelper mDatabaseInstance = null;
     private Context mContext;
 
+    public static  DatabaseHelper getInstance(){
+        return  mDatabaseInstance;
+    }
+
     // Database Version
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     // Database Name
     public static final String DATABASE_NAME = "music_of_life_db.db";
