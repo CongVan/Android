@@ -29,10 +29,8 @@
     <!--</fragment>-->
 
     <android.support.design.widget.AppBarLayout
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:outlineProvider="bounds"
         app:elevation="4dp">
         <!--app:contentScrim="@android:color/transparent"-->
@@ -42,9 +40,7 @@
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
             android:outlineProvider="bounds"
-
             app:layout_scrollFlags="scroll|enterAlways"
-
             >
 
             <android.support.v7.widget.SearchView
@@ -86,6 +82,18 @@
         android:layout_height="wrap_content"
         android:background="@color/colorWhiteLight"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <include
+        layout="@layout/layout_minimize_played"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:visibility="gone"
+        >
+
+    </include>
+
+
     <!--<Button-->
     <!--android:layout_width="wrap_content"-->
     <!--android:layout_height="wrap_content"-->
@@ -128,5 +136,6 @@
     <!--app:menu="@menu/bottom_navigation">-->
     <!--//app:labelVisibilityMode="labeled"-->
     <!--</android.support.design.widget.BottomNavigationView>-->
+
 
 </android.support.design.widget.CoordinatorLayout>
