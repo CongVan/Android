@@ -33,19 +33,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        app:contentScrim="@android:color/transparent"
-        android:outlineProvider="paddedBounds"
-        app:elevation="20dp">
-
+        android:outlineProvider="bounds"
+        app:elevation="4dp">
+        <!--app:contentScrim="@android:color/transparent"-->
         <android.support.v7.widget.Toolbar
             android:id="@+id/tool_bar_main"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
+            android:outlineProvider="bounds"
+
             app:layout_scrollFlags="scroll|enterAlways"
-            android:elevation="20dp"
-            app:elevation="20dp"
-            android:outlineProvider="paddedBounds"
+
             >
 
             <android.support.v7.widget.SearchView
@@ -62,18 +61,17 @@
             android:id="@+id/tablayout_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:outlineProvider="paddedBounds"
-            app:elevation="20dp"
-            android:elevation="20dp"
+            android:background="@color/colorPrimary"
             app:tabGravity="fill"
-            app:tabIndicatorColor="@color/colorPrimaryDark"
+            app:tabIndicatorColor="@color/colorWhiteLight"
+            app:tabIndicatorFullWidth="false"
 
             app:tabMode="scrollable"
-            app:tabPaddingStart="@dimen/margin_size_normal"
-            app:tabSelectedTextColor="@color/colorPrimaryDark"
+            app:tabPaddingEnd="@dimen/margin_size_normal"
+            app:tabPaddingStart="@dimen/margin_size_large"
+            app:tabSelectedTextColor="@color/colorWhiteLight"
             app:tabTextAppearance="@style/TabLayoutAppearance"
-            app:tabTextColor="@color/colorTitleSecondary">
+            app:tabTextColor="@color/colorPrimaryLight">
 
             <!--app:tabSelectedTextColor="@android:color/white"-->
             <!--app:tabTextAppearance="@style/TabLayoutAppearance"-->
@@ -86,9 +84,8 @@
         android:id="@+id/pagerMainContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-
-        />
+        android:background="@color/colorWhiteLight"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
     <!--<Button-->
     <!--android:layout_width="wrap_content"-->
     <!--android:layout_height="wrap_content"-->

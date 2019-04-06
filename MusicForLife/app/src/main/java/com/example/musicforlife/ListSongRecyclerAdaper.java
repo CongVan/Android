@@ -118,7 +118,7 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<ListSongRecycle
                 mediaMetadataRetriever.release();
                 bitmap = BitmapFactory.decodeStream(inputStream);
             } else {
-                bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.music_circular_button);
+                bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.music_file_128);
             }
             return bitmap;
         }
