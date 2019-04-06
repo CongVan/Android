@@ -27,7 +27,7 @@ public class ShowHeadlines extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_show_headlines);
 
 //        myListView = (ListView) this.findViewById(R.id.myListView);
 
