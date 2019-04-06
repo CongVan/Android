@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.ListView;
 
 import java.text.SimpleDateFormat;
@@ -17,21 +18,29 @@ public class MainActivity extends AppCompatActivity {
 
     // Main GUI - A NEWS application based on National Public Radio RSS material
     ArrayAdapter<String> adapterMainSubjects;
-    ListView myMainListView;
+    GridView myMainListView;
     Context context;
     SingleItem selectedNewsItem;
 
     // hard-coding main NEWS categories (TODO: use a resource file)
     String[][] myUrlCaptionMenu = {
-            {"https://www.npr.org/rss/rss.php?id=1004", "Trang chủ"},
+            {"https://vnexpress.net/rss/tin-moi-nhat.rss", "Trang chủ"},
             {"https://vnexpress.net/rss/thoi-su.rss", "Thời sự"},
-            {"http://www.npr.org/rss/rss.php?id=1004", "World News"},
-            {"http://www.npr.org/rss/rss.php?id=1006", "Business"},
-            {"http://www.npr.org/rss/rss.php?id=1007", "Health & Science"},
-            {"http://www.npr.org/rss/rss.php?id=1008", "Arts & Entertainment"},
-            {"http://www.npr.org/rss/rss.php?id=1012", "Politics & Society"},
-            {"http://www.npr.org/rss/rss.php?id=1021", "People & Places"},
-            {"http://www.npr.org/rss/rss.php?id=1057", "Opinion"}
+            {"https://vnexpress.net/rss/the-gioi.rss", "Thế giới"},
+            {"https://vnexpress.net/rss/kinh-doanh.rss", "Knih doanh"},
+            {"https://vnexpress.net/rss/startup.rss", "StartUp"},
+            {"https://vnexpress.net/rss/giai-tri.rss", "Giải trí"},
+            {"https://vnexpress.net/rss/the-thao.rss", "Thể thao"},
+            {"https://vnexpress.net/rss/phap-luat.rss", "Pháp luật"},
+            {"https://vnexpress.net/rss/giao-duc.rss", "Giáo dục"},
+            {"https://vnexpress.net/rss/suc-khoe.rss", "Sức khỏe"},
+            {"https://vnexpress.net/rss/gia-dinh.rss", "Gia đình"},
+            {"https://vnexpress.net/rss/khoa-hoc.rss", "Khoa học"},
+            {"https://vnexpress.net/rss/so-hoa.rss", "Số hóa"},
+            {"https://vnexpress.net/rss/oto-xe-may.rss", "Oto xe máy"},
+            {"https://vnexpress.net/rss/y-kien.rss", "Ý kiến"},
+            {"https://vnexpress.net/rss/tam-su.rss", "Tâm sự"},
+            {"https://vnexpress.net/rss/cuoi.rss", "Cười"}
     };
     //define convenient URL and CAPTIONs arrays
     String[] myUrlCaption = new String[myUrlCaptionMenu.length];
@@ -43,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         for (int i = 0; i < myUrlCaptionMenu.length; i++) {
             myUrlAddress[i] = myUrlCaptionMenu[i][0];
             myUrlCaption[i] = myUrlCaptionMenu[i][1];
@@ -52,12 +60,12 @@ public class MainActivity extends AppCompatActivity {
         this.setTitle("NPR Headline News\n" + niceDate());
 
         // user will tap on a ListView’s row to request category’s headlines
-        myMainListView = (ListView) this.findViewById(R.id.myListView);
+        myMainListView = (GridView) this.findViewById(R.id.myListView);
         myMainListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> _av, View _v,
-                                    int _index, long _id) {
-                String urlAddress = myUrlAddress[_index];
-                String urlCaption = myUrlCaption[_index];
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String urlAddress = myUrlAddress[position];
+                String urlCaption = myUrlCaption[position];
 //create an Intent to talk to activity: ShowHeadlines
                 Intent callShowHeadlines = new Intent(MainActivity.this, ShowHeadlines.class);
                 //prepare a Bundle and add the input arguments: url & caption
@@ -68,6 +76,12 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(callShowHeadlines);
             }
         });
+//        myMainListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            public void onItemClick(AdapterView<?> _av, View _v,
+//                                    int _index, long _id) {
+//
+//            }
+//        });
 
 // fill up the Main-GUI’s ListView with main news categories
         adapterMainSubjects = new ArrayAdapter<String>(this,
