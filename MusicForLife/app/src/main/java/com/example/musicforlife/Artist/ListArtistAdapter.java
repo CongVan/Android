@@ -1,4 +1,4 @@
-package com.example.musicforlife;
+package com.example.musicforlife.Artist;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -9,11 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
+import com.example.musicforlife.R;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

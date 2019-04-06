@@ -1,10 +1,11 @@
-package com.example.musicforlife;
+package com.example.musicforlife.Artist;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 
+import com.example.musicforlife.SongModel;
 import com.example.musicforlife.db.DatabaseHelper;
 
 import java.text.MessageFormat;

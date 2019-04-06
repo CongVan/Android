@@ -4,7 +4,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.app.FragmentTransaction;
+
+import com.example.musicforlife.Artist.FragmentArtist;
 
 
 public class PagerMainAdapter extends FragmentStatePagerAdapter {
