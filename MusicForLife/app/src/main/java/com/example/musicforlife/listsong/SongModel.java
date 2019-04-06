@@ -1,25 +1,18 @@
-package com.example.musicforlife;
+package com.example.musicforlife.listsong;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.MediaDataSource;
-import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 
 import com.example.musicforlife.db.DatabaseHelper;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.InputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 public class SongModel {
     public static final String TABLE_NAME = "songs";
@@ -186,7 +179,7 @@ public class SongModel {
                 songModel.setSongId(songId);
                 songModel.setFolder(folder);
 //                Log.e("Name :" + name, " Album :" + album);
-//                Log.e("Path :" + path, " Artist :" + artist);
+//                Log.e("Path :" + path, " artist :" + artist);
 
                 tempAudioList.add(songModel);
             }

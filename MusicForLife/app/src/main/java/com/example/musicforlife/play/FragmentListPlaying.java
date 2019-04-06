@@ -12,19 +12,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.musicforlife.FragmentPlaylist;
-import com.example.musicforlife.ListSongAdapter;
-import com.example.musicforlife.ListSongRecyclerAdaper;
 import com.example.musicforlife.MainActivity;
 import com.example.musicforlife.PlayActivity;
 import com.example.musicforlife.R;
-import com.example.musicforlife.RecyclerItemClickListener;
-import com.example.musicforlife.SongModel;
+import com.example.musicforlife.listsong.RecyclerItemClickListener;
+import com.example.musicforlife.listsong.SongModel;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package com.example.musicforlife;
+package com.example.musicforlife.listsong;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.musicforlife.R;
 
 import java.util.ArrayList;
 

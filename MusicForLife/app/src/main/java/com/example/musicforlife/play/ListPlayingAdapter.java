@@ -14,9 +14,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.musicforlife.ListSongRecyclerAdaper;
 import com.example.musicforlife.R;
-import com.example.musicforlife.SongModel;
+import com.example.musicforlife.listsong.SongModel;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
