@@ -21,26 +21,13 @@
 
             <TableRow>
 
-                <android.support.v7.widget.CardView
+                <TextView
+                    android:id="@+id/artistSongNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_size_small"
-                    android:layout_marginTop="@dimen/margin_size_small"
-                    android:layout_marginRight="@dimen/margin_size_normal"
-                    android:layout_marginBottom="@dimen/margin_size_small"
-                    app:cardCornerRadius="@dimen/border_radius_small"
-                    app:cardUseCompatPadding="true"
-                    card_view:cardBackgroundColor="@color/colorWhiteLight"
-                    card_view:cardElevation="@dimen/elevation_xsmall"
-                    card_view:contentPadding="0dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1"
-                        android:textSize="12dp" />
-
-                </android.support.v7.widget.CardView>
+                    android:padding="10dp"
+                    android:text="1"
+                    android:textSize="13dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -49,20 +36,21 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/artistSongNameSong"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
                         android:text="Tiêu đề bài hát"
                         android:textColor="@color/colorTitlePrimary"
-                        android:textSize="@dimen/text_size_small"
+                        android:textSize="13dp"
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/artistSongNameArtist"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Ca sĩ"
                         android:textColor="@color/colorTitleSecondary"
-                        android:textSize="@dimen/text_size_small"
+                        android:textSize="13dp"
 
                         />
                 </LinearLayout>
@@ -73,13 +61,13 @@
                     android:paddingHorizontal="@dimen/margin_size_small">
 
                     <TextView
+                        android:id="@+id/artistSongDuration"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
                         android:gravity="center_vertical"
                         android:text="Thời gian"
                         android:textColor="@color/colorTitleSecondary"
-                        android:textSize="@dimen/text_size_small" />
+                        android:textSize="13dp" />
                 </LinearLayout>
 
             </TableRow>
