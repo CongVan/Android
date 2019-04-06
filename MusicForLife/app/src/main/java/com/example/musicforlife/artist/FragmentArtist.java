@@ -16,6 +16,7 @@ import com.example.musicforlife.MainActivity;
 import com.example.musicforlife.R;
 import com.example.musicforlife.listsong.RecyclerItemClickListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class FragmentArtist extends Fragment {
@@ -39,7 +40,7 @@ public class FragmentArtist extends Fragment {
         LVArtist = (RecyclerView) view.findViewById(R.id.lvArtistList);
 
         //get list artist from db
-        arrArtist = ArtistModel.getArtistModel(context);
+        arrArtist = ArtistProvider.getArtistModel(context);
 
         //map layout with adapter
         ListArtistAdapter listArtistAdapter = new ListArtistAdapter(context,arrArtist);
@@ -55,6 +56,9 @@ public class FragmentArtist extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(context,ArtistSongsActivity.class);
+                ArtistModel artistModel = arrArtist.get(position);
+                ArtistViewModel artistViewModel = new ArtistViewModel(artistModel.getName(),artistModel.getPath(),artistModel.getSongCount());
+                intent.putExtra("infoArtist", artistViewModel);
                 startActivity(intent);
             }
 

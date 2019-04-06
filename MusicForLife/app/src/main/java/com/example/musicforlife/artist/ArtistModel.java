@@ -1,23 +1,12 @@
 package com.example.musicforlife.artist;
 
-import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 
-import com.example.musicforlife.listsong.SongModel;
-import com.example.musicforlife.db.DatabaseHelper;
-
-import java.text.MessageFormat;
-import java.util.ArrayList;
-
-public class ArtistModel {
+public class ArtistModel extends ArtistViewModel {
 
     public ArtistModel(String name,String path,int count)
     {
-        Name = name;
-        Path = path;
-        SongCount = count;
+        super(name,path,count);
     }
     private Bitmap bitmap = null;
 
@@ -29,49 +18,4 @@ public class ArtistModel {
         return bitmap;
     }
 
-    private String Path;
-
-    public void setPath(String path) {
-        Path = path;
-    }
-
-    public String getPath() {
-        return Path;
-    }
-
-    private String Name;
-
-    public void setName(String name) {
-        Name = name;
-    }
-
-    public String getName() {
-        return Name;
-    }
-
-    private int SongCount;
-
-    public void setSongCount(int songCount) {
-        SongCount = songCount;
-    }
-
-    public int getSongCount() {
-        return SongCount;
-    }
-
-    public static ArrayList<ArtistModel> getArtistModel(Context context){
-        ArrayList<ArtistModel> result = new ArrayList<ArtistModel>();
-        DatabaseHelper databaseHelper = DatabaseHelper.newInstance(context);
-        SQLiteDatabase db = databaseHelper.getReadableDatabase();
-        String query = MessageFormat.format("select {0},{1},COUNT({2}) from {3} group by {0}"
-                ,new String[] {SongModel.COLUMN_ARTIST,SongModel.COLUMN_PATH,SongModel.COLUMN_ID,SongModel.TABLE_NAME});
-        Cursor cursor = db.rawQuery(query,null);
-        if (cursor.moveToFirst()) {
-            do {
-                result.add(new ArtistModel(cursor.getString(0),cursor.getString(1),cursor.getInt(2)));
-            } while (cursor.moveToNext());
-        }
-        db.close();
-        return result;
-    }
 }
