@@ -78,7 +78,8 @@ public class PlayActivity extends AppCompatActivity {
         mPager = (ViewPager) findViewById(R.id.pager);
         pagerAdapter = new FragmentPlayAdapter(getSupportFragmentManager());
         mPager.setAdapter(pagerAdapter);
-        mPager.setPageTransformer(true, new ZoomOutPageTransformer());
+        //set animation for slide page
+//        mPager.setPageTransformer(true, new ZoomOutPageTransformer());
     }
     @Override
     public void onBackPressed() {

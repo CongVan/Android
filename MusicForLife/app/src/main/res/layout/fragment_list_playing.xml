@@ -55,21 +55,27 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:orientation="vertical">
-
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/margin_size_small"
-                    android:text="Tên bài hát tại đây"
+                    android:text="Danh sách phát"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/text_size_large" />
+                <!--<TextView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginBottom="@dimen/margin_size_small"-->
+                    <!--android:text="Tên bài hát tại đây"-->
+                    <!--android:textColor="@color/colorWhite"-->
+                    <!--android:textSize="@dimen/text_size_large" />-->
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Tên ca sĩ tại đây"
-                    android:textColor="@color/colorWhiteLight"
-                    android:textSize="@dimen/text_size_normal" />
+                <!--<TextView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="Tên ca sĩ tại đây"-->
+                    <!--android:textColor="@color/colorWhiteLight"-->
+                    <!--android:textSize="@dimen/text_size_normal" />-->
 
             </LinearLayout>
 
