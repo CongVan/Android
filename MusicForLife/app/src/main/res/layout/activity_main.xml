@@ -24,7 +24,7 @@
     <!--android:id="@+id/frgSongs"-->
     <!--android:layout_width="match_parent"-->
     <!--android:layout_height="wrap_content"-->
-    <!--android:name="com.example.musicforlife.FragmentListSong"-->
+    <!--android:name="com.example.musicforlife.listsong.FragmentListSong"-->
     <!--&gt;-->
     <!--</fragment>-->
 
@@ -41,6 +41,7 @@
             android:background="@color/colorPrimary"
             android:outlineProvider="bounds"
             app:layout_scrollFlags="scroll|enterAlways"
+            app:title="Music For Life"
             >
 
             <android.support.v7.widget.SearchView

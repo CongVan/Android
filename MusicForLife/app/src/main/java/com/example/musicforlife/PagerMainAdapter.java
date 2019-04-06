@@ -5,7 +5,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.example.musicforlife.Artist.FragmentArtist;
+import com.example.musicforlife.artist.FragmentArtist;
+import com.example.musicforlife.album.FragmentAlbum;
+import com.example.musicforlife.folder.FragmentFolder;
+import com.example.musicforlife.listsong.FragmentListSong;
+import com.example.musicforlife.playlist.FragmentPlaylist;
+import com.example.musicforlife.recent.FragmentRecent;
 
 
 public class PagerMainAdapter extends FragmentStatePagerAdapter {

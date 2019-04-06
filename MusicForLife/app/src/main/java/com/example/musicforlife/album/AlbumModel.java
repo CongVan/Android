@@ -1,16 +1,10 @@
-package com.example.musicforlife;
+package com.example.musicforlife.album;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.provider.MediaStore;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 public class AlbumModel {
@@ -92,7 +86,7 @@ public class AlbumModel {
 //                songModel.setBitmap(bitmap);
 //                songModel.setDuration(formateMilliSeccond(Long.valueOf(duration)));
 ////                Log.e("Name :" + name, " Album :" + album);
-////                Log.e("Path :" + path, " Artist :" + artist);
+////                Log.e("Path :" + path, " artist :" + artist);
 //
 //                tempAudioList.add(songModel);
             }

@@ -1,4 +1,4 @@
-package com.example.musicforlife;
+package com.example.musicforlife.listsong;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.musicforlife.R;
 
 import java.util.ArrayList;
 
@@ -66,7 +68,7 @@ public class ListSongAdapter extends BaseAdapter {
         titleSong.setText(songModel.getTitle() );//+ "__" + songModel.getSongId()+"__"+songModel.getFolder()
 //        album.setText(songModel.getAlbum());
         artist.setText(songModel.getArtist());
-        duration.setText(songModel.getDuration());
+        duration.setText(SongModel.formateMilliSeccond(songModel.getDuration()));
 //        imageView.setImageBitmap(songModel.getBitmap());
         if(songModel.getBitmap() !=null){
             imageView.setImageBitmap(songModel.getBitmap());

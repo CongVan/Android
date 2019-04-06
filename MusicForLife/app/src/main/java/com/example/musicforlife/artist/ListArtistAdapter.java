@@ -1,4 +1,4 @@
-package com.example.musicforlife.Artist;
+package com.example.musicforlife.artist;
 
 import android.content.Context;
 import android.graphics.Bitmap;

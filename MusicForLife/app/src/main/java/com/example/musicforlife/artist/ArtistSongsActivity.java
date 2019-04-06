@@ -1,4 +1,4 @@
-package com.example.musicforlife.Artist;
+package com.example.musicforlife.artist;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,8 +9,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.musicforlife.R;
-
-import org.w3c.dom.Text;
 
 public class ArtistSongsActivity extends AppCompatActivity {
 
