@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
             {"https://vnexpress.net/rss/tin-moi-nhat.rss", "Trang chủ"},
             {"https://vnexpress.net/rss/thoi-su.rss", "Thời sự"},
             {"https://vnexpress.net/rss/the-gioi.rss", "Thế giới"},
-            {"https://vnexpress.net/rss/kinh-doanh.rss", "Knih doanh"},
+            {"https://vnexpress.net/rss/kinh-doanh.rss", "Kinh doanh"},
             {"https://vnexpress.net/rss/startup.rss", "StartUp"},
             {"https://vnexpress.net/rss/giai-tri.rss", "Giải trí"},
             {"https://vnexpress.net/rss/the-thao.rss", "Thể thao"},
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
             myUrlCaption[i] = myUrlCaptionMenu[i][1];
         }
         context = getApplicationContext();
-        this.setTitle("NPR Headline News\n" + niceDate());
+        this.setTitle("Vn Express News\n" + niceDate());
 
         // user will tap on a ListView’s row to request category’s headlines
         myMainListView = (GridView) this.findViewById(R.id.myListView);
