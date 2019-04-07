@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -39,7 +40,7 @@ public class ShowHeadlines extends AppCompatActivity {
         urlAddress = myBundle.getString("urlAddress");
         urlCaption = myBundle.getString("urlCaption");
 
-        this.setTitle("NPR - " + urlCaption + " \t" + MainActivity.niceDate());
+        this.setTitle("NPR - " + urlCaption + " \t" + MenuRss.niceDate());
 
         // clicking on a row shows dialogBox with more info about selected item
         myListView = (ListView) this.findViewById(R.id.myListView);
