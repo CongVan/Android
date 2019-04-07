@@ -23,6 +23,8 @@ public class MenuRss extends AppCompatActivity {
     //define convenient URL and CAPTIONs arrays
     String[] myUrlCaption;
     String[] myUrlAddress;
+    String urlcap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +36,7 @@ public class MenuRss extends AppCompatActivity {
         // grab data bundle holding selected url & caption sent to us
         Bundle myBundle = callingIntent.getExtras();
         String positioncap = myBundle.getString("positionCaption");
+        urlcap = myBundle.getString("urlCaption");
 
         myUrlCaptionMenu = getUrlRss(positioncap);
         myUrlCaption = new String[myUrlCaptionMenu.length];
@@ -43,7 +46,8 @@ public class MenuRss extends AppCompatActivity {
             myUrlCaption[i] = myUrlCaptionMenu[i][1];
         }
         context = getApplicationContext();
-        this.setTitle("Menu News\n" + niceDate());
+        // this.setTitle("Menu News\n" + niceDate());
+        this.setTitle(urlcap + " - " + niceDate());
 
         // user will tap on a ListView’s row to request category’s headlines
         myMainListView = (ListView) this.findViewById(R.id.myListViewMenu);
@@ -52,12 +56,14 @@ public class MenuRss extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String urlAddress = myUrlAddress[position];
                 String urlCaption = myUrlCaption[position];
+
                 //create an Intent to talk to activity: ShowHeadlines
                 Intent callShowHeadlines = new Intent(MenuRss.this, ShowHeadlines.class);
                 //prepare a Bundle and add the input arguments: url & caption
                 Bundle myData = new Bundle();
                 myData.putString("urlAddress", urlAddress);
                 myData.putString("urlCaption", urlCaption);
+                myData.putString("newsArticle", urlcap); // tên báo (THANH NIÊN, VTC,...)
                 callShowHeadlines.putExtras(myData);
                 startActivity(callShowHeadlines);
             }
@@ -90,13 +96,13 @@ public class MenuRss extends AppCompatActivity {
                         {"https://thanhnien.vn/rss/doi-song/dan-sinh.rss", "Dân sinh"},
                         {"https://thanhnien.vn/rss/thoi-su/viec-lam.rss", "Việc làm"},
                         {"https://thanhnien.vn/rss/viec-lam/can-biet.rss", "Cần biết"},
-                        {"https://thanhnien.vn/rss/viec-lam/nghe-hot.rss", "nghề hot"},
+                        {"https://thanhnien.vn/rss/viec-lam/nghe-hot.rss", "Nghề hot"},
                         {"https://thanhnien.vn/rss/viec-lam/ky-nang-tim-viec.rss", "Kỹ năng tìm việc"},
                         {"https://thanhnien.vn/rss/viec-lam/tuyen-dung.rss", "Tuyển dụng"},
                         {"https://thanhnien.vn/rss/viec-lam/san-viec.rss", "Săn việc"},
                         {"https://thanhnien.vn/rss/chinh-tri.rss", "Chính trị"},
                         {"https://thanhnien.vn/rss/the-gioi/quan-su.rss", "Quân sự"},
-                        {"https://thanhnien.vn/rss/the-gioi/kinh-te-the-gioi.rss", "Kinh tế thới giới"}
+                        {"https://thanhnien.vn/rss/the-gioi/kinh-te-the-gioi.rss", "Kinh tế thế giới"}
                 };
                 break;
             case "1":
@@ -112,7 +118,7 @@ public class MenuRss extends AppCompatActivity {
                         {"https://vtc.vn/phong-su-kham-pha.rss", "Phóng sự"},
                         {"https://vtc.vn/giao-duc.rss", "Giáo dục"},
                         {"https://vtc.vn/cong-nghe.rss", "Công nghệ"},
-                        {"https://vtc.vn/oto-xe-may.rss", "Oto xe máy"},
+                        {"https://vtc.vn/oto-xe-may.rss", "Ôtô xe máy"},
                         {"https://vtc.vn/suc-khoe-doi-song.rss", "Sức khỏe"}
                 };
                 break;
@@ -126,14 +132,14 @@ public class MenuRss extends AppCompatActivity {
                         {"https://vov.vn/rss/kinh-te-212.rss", "Kinh tế"},
                         {"https://vov.vn/rss/the-gioi-213.rss", "Thế giới"},
                         {"https://vov.vn/rss/phap-luat-237.rss", "Pháp luật"},
-                        {"https://vov.vn/rss/quan-su-quoc-phong-445.rss", "quân sự"},
+                        {"https://vov.vn/rss/quan-su-quoc-phong-445.rss", "Quân sự"},
                         {"https://vov.vn/rss/cong-nghe-449.rss", "Công nghệ"},
                         {"https://vov.vn/rss/the-thao-214.rss", "Thể thao"},
                         {"https://vov.vn/rss/van-hoa-giai-tri-215.rss", "Văn hóa"},
                         {"https://vov.vn/rss/nguoi-viet-287.rss", "Người Việt"},
                         {"https://vov.vn/rss/suc-khoe-311.rss", "Sức khỏe"},
-                        {"https://vov.vn/rss/oto-xe-may-423.rss", "oto xe máy"},
-                        {"https://vov.vn/rss/e-magazine-470.rss", "E magazine"}
+                        {"https://vov.vn/rss/oto-xe-may-423.rss", "Ôtô xe máy"},
+                        {"https://vov.vn/rss/e-magazine-470.rss", "E-Magazine"}
                 };
                 break;
             case "3":
@@ -153,6 +159,28 @@ public class MenuRss extends AppCompatActivity {
                         {"https://vietnamnet.vn/rss/tin-moi-nong.rss", "Tin mới nóng"},
                         {"https://vietnamnet.vn/rss/tuanvietnam.rss", "Tuần Việt Nam"},
                         {"https://vietnamnet.vn/rss/goc-nhin-thang.rss", "Góc nhìn tháng"}
+                };
+                break;
+            case "4":
+                result = new String[][]{
+                        {"https://vnexpress.net/rss/tin-moi-nhat.rss", "Trang chủ"},
+                        {"https://vnexpress.net/rss/thoi-su.rss", "Thời sự"},
+                        {"https://vnexpress.net/rss/the-gioi.rss", "Thế giới"},
+                        {"https://vnexpress.net/rss/kinh-doanh.rss", "Kinh doanh"},
+                        {"https://vnexpress.net/rss/startup.rss", "Startup"},
+                        {"https://vnexpress.net/rss/giai-tri.rss", "Giải trí"},
+                        {"https://vnexpress.net/rss/the-thao.rss", "Thể thao"},
+                        {"https://vnexpress.net/rss/phap-luat.rss", "Pháp luật"},
+                        {"https://vnexpress.net/rss/giao-duc.rss", "Giáo dục"},
+                        {"https://vnexpress.net/rss/suc-khoe.rss", "Sức khỏe"},
+                        {"https://vnexpress.net/rss/gia-dinh.rss", "Đời sống"},
+                        {"https://vnexpress.net/rss/du-lich.rss", "Du lịch"},
+                        {"https://vnexpress.net/rss/khoa-hoc.rss", "Khoa học"},
+                        {"https://vnexpress.net/rss/so-hoa.rss", "Số hóa"},
+                        {"https://vnexpress.net/rss/oto-xe-may.rss", "Xe"},
+                        {"https://vnexpress.net/rss/y-kien.rss", "Ý kiến"},
+                        {"https://vnexpress.net/rss/tam-su.rss", "Tâm sự"},
+                        {"https://vnexpress.net/rss/cuoi.rss", "Cười"}
                 };
                 break;
         }

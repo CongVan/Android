@@ -28,7 +28,8 @@ public class MainActivity extends AppCompatActivity {
             "THANH NIÊN",
             "VTC",
             "VOV",
-            "VIETNAMNET"
+            "VIETNAMNET",
+            "VnExpress"
     };
 
 
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         context = getApplicationContext();
-        this.setTitle("RSS App\n");
+        this.setTitle("News App\n");
 
         // user will tap on a ListView’s row to request category’s headlines
         myMainListView = (GridView) this.findViewById(R.id.myListView);
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
                 //prepare a Bundle and add the input arguments: url & caption
                 Bundle myData = new Bundle();
                 myData.putString("positionCaption", position + "");
+                myData.putString("urlCaption", urlCaption + "");
                 callSMenuRss.putExtras(myData);
                 startActivity(callSMenuRss);
             }

@@ -22,15 +22,15 @@ public class ShowHeadlines extends AppCompatActivity {
     ListView myListView;
     String urlAddress = "";
     String urlCaption = "";
+    String newsArticle = "";
     SingleItem selectedNewsItem;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_headlines);
 
-//        myListView = (ListView) this.findViewById(R.id.myListView);
+        // myListView = (ListView) this.findViewById(R.id.myListView);
 
         // find out which intent is calling us
         Intent callingIntent = getIntent();
@@ -39,8 +39,10 @@ public class ShowHeadlines extends AppCompatActivity {
         Bundle myBundle = callingIntent.getExtras();
         urlAddress = myBundle.getString("urlAddress");
         urlCaption = myBundle.getString("urlCaption");
+        newsArticle = myBundle.getString("newsArticle");
 
-        this.setTitle("NPR - " + urlCaption + " \t" + MenuRss.niceDate());
+        // this.setTitle("NPR - " + urlCaption + " - " + MenuRss.niceDate());
+        this.setTitle(newsArticle + " - " + urlCaption);
 
         // clicking on a row shows dialogBox with more info about selected item
         myListView = (ListView) this.findViewById(R.id.myListView);
@@ -74,7 +76,7 @@ public class ShowHeadlines extends AppCompatActivity {
             AlertDialog.Builder myBuilder = new AlertDialog.Builder(this);
             myBuilder
 //                    .setIcon(R.drawable.logo_npr)
-                    .setTitle(Html.fromHtml(urlCaption))
+                    .setTitle(Html.fromHtml(newsArticle + " - " + urlCaption))
                     .setMessage(title + "\n\n" + Html.fromHtml(description) + "\n")
                     .setPositiveButton("Close", null)
                     .setNegativeButton("More", new DialogInterface.OnClickListener() {
