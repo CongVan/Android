@@ -41,14 +41,14 @@
             android:background="@color/colorPrimary"
             android:outlineProvider="bounds"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:title="Music For Life"
-            >
+            app:title="Music For Life">
 
             <android.support.v7.widget.SearchView
                 android:id="@+id/search_main"
-
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+
+                >
 
             </android.support.v7.widget.SearchView>
         </android.support.v7.widget.Toolbar>
@@ -59,10 +59,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
+            android:paddingBottom="@dimen/margin_size_xlarge"
             app:tabGravity="fill"
             app:tabIndicatorColor="@color/colorWhiteLight"
             app:tabIndicatorFullWidth="false"
-
             app:tabMode="scrollable"
             app:tabPaddingEnd="@dimen/margin_size_normal"
             app:tabPaddingStart="@dimen/margin_size_large"
@@ -81,6 +81,7 @@
         android:id="@+id/pagerMainContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
         android:background="@color/colorWhiteLight"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
@@ -89,8 +90,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
 
     </include>
 

@@ -8,9 +8,10 @@ import android.database.sqlite.SQLiteDatabase;
 import com.example.musicforlife.db.DatabaseHelper;
 import com.example.musicforlife.listsong.SongModel;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 
-public class PlayModel {
+public  class PlayModel {
     public static final String TABLE_NAME = "plays";
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_SONG_ID = "song_id";
@@ -102,19 +103,59 @@ public class PlayModel {
         cursor.close();
         return playingList;
     }
-    public  static long addSongToPlayingList(SongModel song){
-        SQLiteDatabase database = mDatabaseHelper.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(PlayModel.COLUMN_SONG_ID, song.getSongId());
-        contentValues.put(PlayModel.COLUMN_SONG_ID,song.getSongId());
-        contentValues.put(PlayModel.COLUMN_IS_PLAYING, 1);
-        contentValues.put(PlayModel.COLUMN_CURRENT_DURATION, 0);
-
-        long id = database.insert(PlayModel.TABLE_NAME, null, contentValues);
-        database.close();
-        return id;
+    public static ArrayList<SongModel> getSongPlayingList() {
+        ArrayList<SongModel> songModelList = new ArrayList<>();
+        SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
+        String query="SELECT s.* FROM "+PlayModel.TABLE_NAME +" pm INNER JOIN "+SongModel.TABLE_NAME+" s ON pm."+PlayModel.COLUMN_SONG_ID
+                +"= s."+SongModel.COLUMN_SONG_ID;
+        Cursor cursor = db.rawQuery(query,null);
+        if (cursor.moveToFirst()) {
+            do {
+                SongModel songModel = new SongModel();
+                songModel.setId(cursor.getInt(cursor.getColumnIndex(SongModel.COLUMN_ID)));
+                songModel.setSongId(cursor.getInt(cursor.getColumnIndex(SongModel.COLUMN_SONG_ID)));
+                songModel.setTitle(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_TITLE)));
+                songModel.setAlbum(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_ALBUM)));
+                songModel.setArtist(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_ARTIST)));
+                songModel.setFolder(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_FOLDER)));
+                songModel.setDuration(cursor.getLong(cursor.getColumnIndex(SongModel.COLUMN_DURATION)));
+                songModel.setPath(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_PATH)));
+                songModelList.add(songModel);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return songModelList;
     }
-    public  static long isSongExsist(SongModel song){
-        return 0;
+    public  static long addSongToPlayingList(SongModel song){
+        if (!isSongExsist(song)){
+            SQLiteDatabase database = mDatabaseHelper.getWritableDatabase();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(PlayModel.COLUMN_ID, song.getId());
+            contentValues.put(PlayModel.COLUMN_SONG_ID,song.getSongId());
+            contentValues.put(PlayModel.COLUMN_IS_PLAYING, 1);
+            contentValues.put(PlayModel.COLUMN_CURRENT_DURATION, 0);
+
+            long id = database.insert(PlayModel.TABLE_NAME, null, contentValues);
+            database.close();
+            return id;
+        }
+        return -1;
+    }
+
+    public  static boolean isSongExsist(SongModel song){
+        SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
+        boolean result=false;
+        String query= MessageFormat.format("SELECT {0} FROM {1} WHERE {2}={3}",new String[] {PlayModel.COLUMN_ID,PlayModel.TABLE_NAME,PlayModel.COLUMN_SONG_ID,String.valueOf(song.getSongId())});
+        Cursor cursor = db.rawQuery(query,null);
+        if (cursor.moveToFirst()) {
+            result=true;
+        }
+        cursor.close();
+        return result;
+    }
+    public  static  boolean clearPlayingList(){
+        SQLiteDatabase db=mDatabaseHelper.getWritableDatabase();
+        return db.delete(PlayModel.TABLE_NAME,null,null)>0;
+
     }
 }

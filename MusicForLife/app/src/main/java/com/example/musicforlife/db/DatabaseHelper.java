@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.musicforlife.listsong.SongModel;
+import com.example.musicforlife.play.PlayModel;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -16,7 +17,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // Database Version
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     // Database Name
     public static final String DATABASE_NAME = "music_of_life_db.db";
@@ -37,12 +38,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SongModel.SCRIPT_CREATE_TABLE);
-
+        db.execSQL(PlayModel.SCRIPT_CREATE_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + SongModel.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + PlayModel.TABLE_NAME);
         onCreate(db);
     }
 }

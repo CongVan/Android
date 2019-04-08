@@ -338,15 +338,15 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
 
     }
 
-    public void showPlayActivity(View view) {
-        handleShowPlayActivity();
-    }
+//    public void showPlayActivity(View view) {
+//        handleShowPlayActivity();
+//    }
 
-    private void handleShowPlayActivity() {
+    private void handleShowPlayActivity(ArrayList<SongModel> songs) {
         if (mIntentPlayActivity == null) {
             mIntentPlayActivity = new Intent(MainActivity.this, PlayActivity.class);
             mIntentPlayActivity.setFlags(FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
-            mIntentPlayActivity.putExtra(TEST_MESSAGE, "OKOKOK");
+            mIntentPlayActivity.putExtra(PlayActivity.EXTRA_PLAYING_LIST,songs);
         }
 //        Intent intent=new Intent(MainActivity.this,PlayActivity.class);
 
@@ -372,14 +372,14 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
 
     @Override
     public void TestMessageFromFragmentToActivity(String sender) {
-//        Toast.makeText(this,sender,Toast.LENGTH_SHORT).show();
 
-        handleShowPlayActivity();
     }
 
     @Override
     public void playSongFromFragmentListToMain(String sender, SongModel songModel) {
-        handleShowPlayActivity();
+        ArrayList<SongModel> songModelArrayList=new ArrayList<SongModel>();
+        songModelArrayList.add(songModel);
+        handleShowPlayActivity(songModelArrayList);
     }
 
 

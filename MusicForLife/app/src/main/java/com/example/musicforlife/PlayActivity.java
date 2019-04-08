@@ -9,15 +9,21 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.musicforlife.listsong.SongModel;
 import com.example.musicforlife.play.FragmentPlayAdapter;
+import com.example.musicforlife.play.PlayCenter;
 import com.example.musicforlife.play.ZoomOutPageTransformer;
+
+import java.util.ArrayList;
 
 import jp.wasabeef.blurry.Blurry;
 
@@ -29,17 +35,19 @@ public class PlayActivity extends AppCompatActivity {
      * The pager adapter, which provides the pages to the view pager widget.
      */
     private PagerAdapter pagerAdapter;
-
+    private PlayCenter mPlayCenter;
     private ImageView imageViewBackgroundMain;
+    private static final String TAG = "PlayActivity";
+    public static String EXTRA_PLAYING_LIST = "EXTRA_PLAYING_LIST";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
-        Window window=PlayActivity.this.getWindow();
+        Window window = PlayActivity.this.getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(ContextCompat.getColor(PlayActivity.this,R.color.colorPrimary));
+        window.setStatusBarColor(ContextCompat.getColor(PlayActivity.this, R.color.colorPrimary));
 //        final Bitmap bitmapBackgroundMain= BitmapFactory.decodeResource(PlayActivity.this.getResources(), R.drawable.background_1);
 //        //BitmapFactory.decodeResource(MainActivity.this.getResources(), R.drawable.background);
 //        //getBitmap(R.drawable.background_gradient);
@@ -67,20 +75,24 @@ public class PlayActivity extends AppCompatActivity {
 //        });
 
 
-
-
-        Intent intent=getIntent();
-        String message=intent.getStringExtra(MainActivity.TEST_MESSAGE);
-        TextView textView=findViewById(R.id.txtTest);
-        textView.setText(message);
+        Intent intent = getIntent();
+        ArrayList<SongModel> songs = (ArrayList<SongModel>) intent.getSerializableExtra(PlayActivity.EXTRA_PLAYING_LIST);
+//        TextView textView=findViewById(R.id.txtTest);
+        Log.d(TAG, "onCreate: " + songs.size());
+//        Toast.makeText(PlayActivity.this, songs.size()+"", Toast.LENGTH_SHORT).show();
+        mPlayCenter=PlayCenter.newInstance(PlayActivity.this.getApplicationContext());
+        PlayCenter.addSongsToPlayingList(songs);
 
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) findViewById(R.id.pager);
         pagerAdapter = new FragmentPlayAdapter(getSupportFragmentManager());
         mPager.setAdapter(pagerAdapter);
+
+        mPlayCenter = PlayCenter.newInstance(PlayActivity.this.getApplicationContext());
         //set animation for slide page
 //        mPager.setPageTransformer(true, new ZoomOutPageTransformer());
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();

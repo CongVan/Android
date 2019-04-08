@@ -12,9 +12,10 @@ import android.util.Log;
 import com.example.musicforlife.db.DatabaseHelper;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class SongModel {
+public class SongModel implements Serializable {
     public static final String TABLE_NAME = "songs";
 
     public static final String COLUMN_ID = "id";

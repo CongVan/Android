@@ -143,7 +143,7 @@ public class FragmentListPlaying extends Fragment {
         @Override
         public ArrayList<SongModel> doInBackground(Void... voids) {
 
-            return SongModel.getAllAudioFromDevice(mContext);
+            return PlayModel.getSongPlayingList();
         }
 
 

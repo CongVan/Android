@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <size
-        android:width="980dp"
 
-        android:height="1280dp"
-        >
 
-    </size>
     <!--<gradient-->
     <!--android:angle="135"-->
     <!--android:startColor="#43cea2"-->
@@ -16,10 +11,13 @@
 
     <!--android:type="linear"/>-->
     <gradient
-        android:angle="90"
-        android:startColor="#6200EA"
-        android:centerColor="#651FFF"
-        android:endColor="#7E57C2"
+        android:angle="45"
+        android:startColor="#0f7222"
+
+
+
+
+        android:endColor="#52b35d"
 
         android:type="linear" />
     <!--<gradient-->
