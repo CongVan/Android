@@ -1,20 +1,21 @@
 package com.example.nhom4_tuan07_xml;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ListView;
+import android.widget.Toolbar;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class MenuRss extends AppCompatActivity {
+public class MenuRss extends Activity {
     ArrayAdapter<String> adapterMainSubjects;
     ListView myMainListView;
     Context context;
@@ -24,6 +25,7 @@ public class MenuRss extends AppCompatActivity {
     String[] myUrlCaption;
     String[] myUrlAddress;
     String urlcap;
+    Toolbar toolbarRSS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +49,9 @@ public class MenuRss extends AppCompatActivity {
         }
         context = getApplicationContext();
         // this.setTitle("Menu News\n" + niceDate());
-        this.setTitle(urlcap + " - " + niceDate());
-
+//        this.setTitle(urlcap + " - " + niceDate());
+        toolbarRSS=findViewById(R.id.toolbarRSS);
+        toolbarRSS.setTitle(urlcap + " - " + niceDate());
         // user will tap on a ListView’s row to request category’s headlines
         myMainListView = (ListView) this.findViewById(R.id.myListViewMenu);
         myMainListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

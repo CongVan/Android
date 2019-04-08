@@ -1,8 +1,8 @@
 package com.example.nhom4_tuan07_xml;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -10,17 +10,18 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ListView;
-
+import android.widget.Toolbar;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     // Main GUI - A NEWS application based on National Public Radio RSS material
     ArrayAdapter<String> adapterMainSubjects;
     GridView myMainListView;
     Context context;
+    Toolbar toolbarMain;
     SingleItem selectedNewsItem;
 
     // hard-coding main NEWS categories (TODO: use a resource file)
@@ -40,8 +41,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         context = getApplicationContext();
-        this.setTitle("News App\n");
-
+        toolbarMain=findViewById(R.id.toolbarMain);
+//        this.setTitle("News App\n");
+        toolbarMain.setTitle("News App");
         // user will tap on a ListView’s row to request category’s headlines
         myMainListView = (GridView) this.findViewById(R.id.myListView);
         myMainListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

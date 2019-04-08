@@ -1,11 +1,11 @@
 package com.example.nhom4_tuan07_xml;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -13,10 +13,10 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-
+import android.widget.Toolbar;
 import java.util.ArrayList;
 
-public class ShowHeadlines extends AppCompatActivity {
+public class ShowHeadlines extends Activity {
 
     ArrayList<SingleItem> newsList = new ArrayList<SingleItem>();
     ListView myListView;
@@ -24,12 +24,12 @@ public class ShowHeadlines extends AppCompatActivity {
     String urlCaption = "";
     String newsArticle = "";
     SingleItem selectedNewsItem;
-
+    Toolbar toolbarHeadlines;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_headlines);
-
+        toolbarHeadlines=findViewById(R.id.toolbarHeadlines);
         // myListView = (ListView) this.findViewById(R.id.myListView);
 
         // find out which intent is calling us
@@ -42,8 +42,8 @@ public class ShowHeadlines extends AppCompatActivity {
         newsArticle = myBundle.getString("newsArticle");
 
         // this.setTitle("NPR - " + urlCaption + " - " + MenuRss.niceDate());
-        this.setTitle(newsArticle + " - " + urlCaption);
-
+//        this.setTitle(newsArticle + " - " + urlCaption);
+        toolbarHeadlines.setTitle(newsArticle + " - " + urlCaption);
         // clicking on a row shows dialogBox with more info about selected item
         myListView = (ListView) this.findViewById(R.id.myListView);
         myListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -7,7 +7,14 @@
     tools:context=".MainActivity"
     android:orientation="vertical"
     >
+<Toolbar
+    android:id="@+id/toolbarMain"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:titleTextColor="@color/colorPrimaryDark"
+    >
 
+</Toolbar>
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
