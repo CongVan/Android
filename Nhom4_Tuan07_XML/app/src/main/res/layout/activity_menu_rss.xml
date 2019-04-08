@@ -1,28 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".MenuRss"
     android:orientation="vertical"
     >
-<Toolbar
-    android:id="@+id/toolbarMain"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:titleTextColor="@color/colorPrimaryDark"
-    >
-
-</Toolbar>
-    <ImageView
-        android:layout_width="wrap_content"
+    <Toolbar
+        android:id="@+id/toolbarRSS"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp">
-    </ImageView>
+        android:titleTextColor="@color/colorPrimaryDark"
+        >
 
-    <GridView
-        android:id="@+id/myListView"
+    </Toolbar>
+
+    <ListView
+        android:id="@+id/myListViewMenu"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_margin="10dp"
@@ -32,5 +28,6 @@
         android:horizontalSpacing="50dp"
         android:numColumns="2"
         android:verticalSpacing="50dp"
-        ></GridView>
+        ></ListView>
+
 </LinearLayout>
