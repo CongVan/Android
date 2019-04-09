@@ -2,24 +2,25 @@ package com.example.musicforlife.play;
 
 import android.content.Context;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.CountDownTimer;
-import android.os.Environment;
 import android.util.Log;
 
+import com.example.musicforlife.PlayActivity;
 import com.example.musicforlife.listsong.SongModel;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class PlayCenter {
+public class PlayCenter implements PlayInterface {
     private static ArrayList<PlayModel> mPlayingList;
     private SongModel mCurrentSongPlaying;
+    private int mCurrentIndexSong;
     private static Context mContext;
+    private static PlayActivity mPlayActivity;
     private static MediaPlayer mMediaPlayer = null;
     private static PlayCenter mPlayCenter = null;
+    private static boolean mIsPlaying = false;
 
     public static final int ACTION_PLAY = 1;
     public static final int ACTION_PAUSE = 2;
@@ -27,18 +28,19 @@ public class PlayCenter {
     public static final int ACTION_NEXT = 4;
     public static final int ACTION_PREV = 5;
 
-    private static boolean isPlaying = false;
-
 
     public static boolean Shuffle;
     private static final String TAG = "PlayCenter";
+    public static final String SENDER = "PLAY_CENTER";
 
-    public static PlayCenter newInstance(Context context) {
+    public static PlayCenter newInstance(Context context, PlayActivity playActivity) {
         if (mContext == null || mPlayCenter == null || mMediaPlayer == null) {
             mPlayCenter = new PlayCenter();
             mContext = context;
+            mPlayActivity = playActivity;
             mMediaPlayer = new MediaPlayer();
         }
+
         return mPlayCenter;
     }
 
@@ -57,9 +59,21 @@ public class PlayCenter {
                     new MediaPlayer.OnPreparedListener() {
                         @Override
                         public void onPrepared(MediaPlayer mp) {
-                            mp.start();
+
                             mCurrentSongPlaying = songModel;
-                            isPlaying = true;
+                            mIsPlaying = true;
+                            new CountDownTimer(songModel.getDuration(), 1000) {
+
+                                public void onTick(long millisUntilFinished) {
+                                    updateSeekbar(SENDER, mMediaPlayer.getCurrentPosition());
+                                }
+
+                                public void onFinish() {
+                                    mMediaPlayer.stop();
+                                    mIsPlaying = false;
+                                }
+                            }.start();
+                            mp.start();
                         }
                     }
             );
@@ -68,29 +82,22 @@ public class PlayCenter {
             e.printStackTrace();
         }
 
-        new CountDownTimer(30000, 1000) {
 
-            public void onTick(long millisUntilFinished) {
-            }
-
-            public void onFinish() {
-                mMediaPlayer.stop();
-                isPlaying = false;
-            }
-        }.start();
     }
 
     public void pause() {
         mMediaPlayer.pause();
-        isPlaying = false;
+        mIsPlaying = false;
     }
-    public  void resurme(){
-        if (mCurrentSongPlaying!=null && mMediaPlayer != null) {
+
+    public void resurme() {
+        if (mCurrentSongPlaying != null && mMediaPlayer != null) {
             mMediaPlayer.seekTo(mMediaPlayer.getCurrentPosition());
             mMediaPlayer.start();
         }
-        isPlaying = true;
+        mIsPlaying = true;
     }
+
     public void next() {
 
     }
@@ -122,13 +129,36 @@ public class PlayCenter {
         return mPlayingList.size();
     }
 
+
     public ArrayList<PlayModel> getPlayModelsList() {
         return mPlayingList;
     }
 
     public static boolean isPlaying() {
-        return isPlaying;
+        return mIsPlaying;
     }
 
+    public void updateDuration(int progress) {
+        mMediaPlayer.seekTo(progress * 1000);
+    }
 
+    @Override
+    public void controlSong(String sender, SongModel songModel, int action) {
+
+    }
+
+    @Override
+    public void updateControlPlaying(String sender, SongModel songModel) {
+
+    }
+
+    @Override
+    public void updateDuration(String sender, int progress) {
+
+    }
+
+    @Override
+    public void updateSeekbar(String sender, int duration) {
+        mPlayActivity.updateSeekbar(sender, duration);
+    }
 }

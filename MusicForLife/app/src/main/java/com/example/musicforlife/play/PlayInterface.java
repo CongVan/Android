@@ -4,5 +4,7 @@ import com.example.musicforlife.listsong.SongModel;
 
 public interface PlayInterface {
     void controlSong(String sender, SongModel songModel, int action);
-    void updateControlPlaying(String sender);
+    void updateControlPlaying(String sender,SongModel songModel);
+    void updateDuration(String sender, int progress);
+    void updateSeekbar(String sender, int duration);
 }

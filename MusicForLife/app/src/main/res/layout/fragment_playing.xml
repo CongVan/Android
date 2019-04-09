@@ -54,6 +54,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/txtTitleSongPlaying"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/margin_size_small"
@@ -62,15 +63,14 @@
                     android:textSize="@dimen/text_size_large" />
 
                 <TextView
+                    android:id="@+id/txtArtistSongPlaying"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Tên ca sĩ tại đây"
                     android:textColor="@color/colorWhiteLight"
-                    android:textSize="@dimen/text_size_normal" />
+                    android:textSize="@dimen/text_size_small" />
 
             </LinearLayout>
-
-
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
@@ -137,6 +137,7 @@
             android:weightSum="4">
 
             <TextView
+                android:id="@+id/txtCurrentDuration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
@@ -146,13 +147,15 @@
                 android:textColor="@color/colorTitlePrimaryLight" />
 
             <SeekBar
-                android:layout_width="match_parent"
 
+                android:id="@+id/sebDurationSongPlaying"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:theme="@style/seekBarControlPlay" />
 
             <TextView
+                android:id="@+id/txtDurationSongPlaying"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
@@ -217,9 +220,9 @@
                         android:clickable="true"
                         android:foreground="?android:attr/selectableItemBackground"
                         android:maxHeight="70dp"
-                        android:alpha="0.5"
+                        android:alpha="0.8"
                         android:scaleType="fitCenter"
-                        android:src="@drawable/ic_play_arrow_black_70dp"
+                        android:src="@drawable/ic_pause_black_70dp"
 
                         />
                 </android.support.v7.widget.CardView>
