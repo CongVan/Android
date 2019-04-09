@@ -24,10 +24,10 @@
                 <TextView
                     android:id="@+id/artistSongNumber"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:padding="10dp"
                     android:text="1"
-                    android:textSize="13dp" />
+                    android:textSize="14dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -37,20 +37,22 @@
 
                     <TextView
                         android:id="@+id/artistSongNameSong"
+                        android:layout_marginTop="5dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Tiêu đề bài hát"
                         android:textColor="@color/colorTitlePrimary"
-                        android:textSize="13dp"
+                        android:textSize="14dp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/artistSongNameArtist"
+                        android:layout_marginTop="5dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Ca sĩ"
                         android:textColor="@color/colorTitleSecondary"
-                        android:textSize="13dp"
+                        android:textSize="14dp"
 
                         />
                 </LinearLayout>

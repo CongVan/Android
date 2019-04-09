@@ -26,4 +26,25 @@ public class ArtistProvider {
         db.close();
         return result;
     }
+
+    public static ArrayList<ArtistSongsModel> getArtistSongs(Context context,String artist){
+        ArrayList<ArtistSongsModel> arr =  new ArrayList<ArtistSongsModel>();
+        DatabaseHelper databaseHelper = DatabaseHelper.newInstance(context);
+        SQLiteDatabase db = databaseHelper.getReadableDatabase();
+        String query = MessageFormat.format("select {0},{1},{2} from {3} where {4} = ?"
+                ,new String[] {SongModel.COLUMN_ARTIST,SongModel.COLUMN_TITLE,SongModel.COLUMN_DURATION,SongModel.TABLE_NAME,SongModel.COLUMN_ARTIST});
+        String[] whereArgs = new String[] {
+                artist,
+        };
+        Cursor cursor = db.rawQuery(query,whereArgs);
+        if (cursor.moveToFirst()) {
+            do {
+                long duration = cursor.getLong(2);
+                arr.add(new ArtistSongsModel(cursor.getString(0),cursor.getString(1),SongModel.formateMilliSeccond(duration)));
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        return arr;
+    }
+
 }

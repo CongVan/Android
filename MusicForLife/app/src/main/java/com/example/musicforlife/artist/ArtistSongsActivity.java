@@ -1,11 +1,11 @@
 package com.example.musicforlife.artist;
-
+import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaMetadataRetriever;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -18,7 +18,7 @@ import com.example.musicforlife.R;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-public class ArtistSongsActivity extends AppCompatActivity {
+public class ArtistSongsActivity extends Activity {
 
     ImageButton ImgBtnBack;
     RelativeLayout RLHeroImage;
@@ -35,6 +35,16 @@ public class ArtistSongsActivity extends AppCompatActivity {
         artistViewModel = (ArtistViewModel)intent.getSerializableExtra("infoArtist");
         InitControl();
         BindData();
+
+        //Init Fragment
+        final FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        FragmentArtistSong fragmentArtistSong = new FragmentArtistSong();
+        Bundle bundle = new Bundle();
+        bundle.putString("artistQuery",artistViewModel.getName());
+        fragmentArtistSong.setArguments(bundle);
+        fragmentTransaction.add(R.id.artistSongFragmentLayout,fragmentArtistSong);
+        fragmentTransaction.commit();
+        //Init Fragment
 
         //set button Back
         ImgBtnBack.setOnClickListener(new View.OnClickListener() {
