@@ -75,7 +75,7 @@ public class ListPlayingAdapter extends RecyclerView.Adapter<ListPlayingAdapter.
 
         public void bindContent(SongModel songModel) {
             this.titleSong.setText(songModel.getTitle());
-            this.artist.setText(songModel.getArtist());
+            this.artist.setText(songModel.getArtist() +" - "+ songModel.getPath());
             this.duration.setText(SongModel.formateMilliSeccond(songModel.getDuration()));
 
 //            if (this.imageView.getDrawable() == null) {

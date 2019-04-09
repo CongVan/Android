@@ -17,7 +17,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // Database Version
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     // Database Name
     public static final String DATABASE_NAME = "music_of_life_db.db";
@@ -39,6 +39,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SongModel.SCRIPT_CREATE_TABLE);
         db.execSQL(PlayModel.SCRIPT_CREATE_TABLE);
+
     }
 
     @Override

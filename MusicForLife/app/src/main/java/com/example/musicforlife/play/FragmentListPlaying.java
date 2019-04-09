@@ -25,7 +25,7 @@ import com.example.musicforlife.listsong.SongModel;
 import java.util.ArrayList;
 
 
-public class FragmentListPlaying extends Fragment {
+public class FragmentListPlaying extends Fragment implements FragmentPlayInterface {
     MainActivity mMainActivity;
     PlayActivity mPlayActivity;
     Context mContext;
@@ -36,7 +36,7 @@ public class FragmentListPlaying extends Fragment {
     ListPlayingAdapter mListSongAdapter;
     LoadImageFromStorage loadImageFromStorage;
     TextView txtSizePlayingList;
-
+    public  static  final  String SENDER="FRAGMENT_PLAYING_LIST";
     private static final String TAG = "FragmentListPlaying";
 
     @Override
@@ -47,7 +47,7 @@ public class FragmentListPlaying extends Fragment {
             mContext = getActivity();
             mPlayActivity = (PlayActivity) getActivity();
 
-            loadImageFromStorage=new LoadImageFromStorage();
+
 
         } catch (IllegalStateException e) {
 
@@ -109,7 +109,8 @@ public class FragmentListPlaying extends Fragment {
                     @Override public void onItemClick(View view, int position) {
                         // do whatever
                         Toast.makeText(mContext,"CLICK ITEM SONG"+position,Toast.LENGTH_SHORT).show();
-//                        mPlayActivity.playSongFromFragmentListToMain(FragmentPlaylist.SENDER,_listSong.get(position));
+                        mPlayActivity.controlSong(FragmentListPlaying.SENDER,mListSong.get(position),PlayCenter.ACTION_PLAY);
+                        mPlayActivity.updateControlPlaying(SENDER);
                     }
 
                     @Override public void onLongItemClick(View view, int position) {
@@ -118,7 +119,6 @@ public class FragmentListPlaying extends Fragment {
                     }
                 })
         );
-
     }
     @Override
     public void onDestroy() {
@@ -126,6 +126,13 @@ public class FragmentListPlaying extends Fragment {
         loadImageFromStorage.cancel(true);
     }
 
+
+
+
+    @Override
+    public void updateControlPlaying() {
+
+    }
 
 
     private class LoadImageFromStorage extends AsyncTask<Void, Integer, ArrayList<SongModel>> {

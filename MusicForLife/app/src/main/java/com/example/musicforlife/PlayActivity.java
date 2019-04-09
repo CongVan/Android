@@ -1,9 +1,6 @@
 package com.example.musicforlife;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -11,23 +8,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.musicforlife.listsong.SongModel;
 import com.example.musicforlife.play.FragmentPlayAdapter;
 import com.example.musicforlife.play.PlayCenter;
-import com.example.musicforlife.play.ZoomOutPageTransformer;
+import com.example.musicforlife.play.FragmentPlayInterface;
+import com.example.musicforlife.play.PlayInterface;
 
 import java.util.ArrayList;
 
-import jp.wasabeef.blurry.Blurry;
-
-public class PlayActivity extends AppCompatActivity {
+public class PlayActivity extends AppCompatActivity implements PlayInterface {
 
     private ViewPager mPager;
 
@@ -37,6 +31,8 @@ public class PlayActivity extends AppCompatActivity {
     private PagerAdapter pagerAdapter;
     private PlayCenter mPlayCenter;
     private ImageView imageViewBackgroundMain;
+
+
     private static final String TAG = "PlayActivity";
     public static String EXTRA_PLAYING_LIST = "EXTRA_PLAYING_LIST";
 
@@ -90,6 +86,7 @@ public class PlayActivity extends AppCompatActivity {
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) findViewById(R.id.pager);
         pagerAdapter = new FragmentPlayAdapter(getSupportFragmentManager());
+
         mPager.setAdapter(pagerAdapter);
 
         mPlayCenter = PlayCenter.newInstance(PlayActivity.this.getApplicationContext());
@@ -117,5 +114,34 @@ public class PlayActivity extends AppCompatActivity {
 //        startActivity(i);
         onBackPressed();
 //        finish();
+    }
+
+    public void playSong(View view) {
+        Toast.makeText(this, "PLAY CLICK", Toast.LENGTH_SHORT).show();
+    }
+
+
+
+    @Override
+    public void controlSong(String sender, SongModel songModel, int action) {
+        switch (action) {
+            case PlayCenter.ACTION_PLAY:
+                mPlayCenter.play(songModel);
+                break;
+            case PlayCenter.ACTION_PAUSE:
+                mPlayCenter.pause();
+                break;
+            case PlayCenter.ACTION_RESUME:
+                mPlayCenter.resurme();
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    @Override
+    public void updateControlPlaying(String sender) {
+        ((FragmentPlayAdapter) pagerAdapter).getFragmentPlaying().updateControlPlaying();
     }
 }

@@ -1,13 +1,17 @@
 package com.example.musicforlife;
 
 
+import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Build;
@@ -79,6 +83,13 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
 
     public static DatabaseHelper mDatabaseHelper;
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+
+    }
 
     private static final String TAG = "MainActivity";
 
@@ -272,7 +283,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
             }
         });
         mDatabaseHelper = DatabaseHelper.newInstance(getApplicationContext());
-//        new intitSongFromDevice().execute();
+        //new intitSongFromDevice().execute();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -300,6 +311,35 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
         window.setStatusBarColor(ContextCompat.getColor(MainActivity.this,R.color.colorPrimary));
 //        window.setBackgroundDrawable(MainActivity.this.getDrawable(R.drawable));
     }
+
+//    private boolean requestPermission(){
+//        // Here, thisActivity is the current activity
+//        if (ContextCompat.checkSelfPermission(MainActivity.this,
+//                Manifest.permission.READ_EXTERNAL_STORAGE)
+//                != PackageManager.PERMISSION_GRANTED) {
+//
+//            // Permission is not granted
+//            // Should we show an explanation?
+//            if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,
+//                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+//                // Show an explanation to the user *asynchronously* -- don't block
+//                // this thread waiting for the user's response! After the user
+//                // sees the explanation, try again to request the permission.
+//            } else {
+//                // No explanation needed; request the permission
+//                ActivityCompat.requestPermissions(MainActivity.this,
+//                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+//                        MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+//
+//                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+//                // app-defined int constant. The callback method gets the
+//                // result of the request.
+//            }
+//        } else {
+//            // Permission has already been granted
+//            return true;
+//        }
+//    }
 
     private Bitmap getBitmap(int drawableRes) {
         Drawable drawable = getResources().getDrawable(drawableRes);
