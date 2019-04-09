@@ -46,7 +46,7 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
         try {
             mContext = getActivity();
             mPlayActivity = (PlayActivity) getActivity();
-
+            loadImageFromStorage=new LoadImageFromStorage();
 
 
         } catch (IllegalStateException e) {
