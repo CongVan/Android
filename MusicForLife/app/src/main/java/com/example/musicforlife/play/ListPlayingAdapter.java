@@ -76,7 +76,7 @@ public class ListPlayingAdapter extends RecyclerView.Adapter<ListPlayingAdapter.
         public void bindContent(SongModel songModel) {
             this.titleSong.setText(songModel.getTitle());
             this.artist.setText(songModel.getArtist());
-            this.duration.setText(songModel.getDuration().toString());
+            this.duration.setText(SongModel.formateMilliSeccond(songModel.getDuration()));
 
 //            if (this.imageView.getDrawable() == null) {
 //        ListSongRecyclerAdaper.ParamImageThread paramImageThread = new ListSongRecyclerAdaper.ParamImageThread(this.imageView, songModel.getPath());

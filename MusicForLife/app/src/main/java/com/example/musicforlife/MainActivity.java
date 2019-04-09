@@ -32,6 +32,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.musicforlife.callbacks.MainCallbacks;
 import com.example.musicforlife.db.DatabaseHelper;
@@ -346,10 +347,10 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
         if (mIntentPlayActivity == null) {
             mIntentPlayActivity = new Intent(MainActivity.this, PlayActivity.class);
             mIntentPlayActivity.setFlags(FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
-            mIntentPlayActivity.putExtra(PlayActivity.EXTRA_PLAYING_LIST,songs);
+
         }
 //        Intent intent=new Intent(MainActivity.this,PlayActivity.class);
-
+        mIntentPlayActivity.putExtra(PlayActivity.EXTRA_PLAYING_LIST,songs);
         startActivity(mIntentPlayActivity);
 
 //        TaskStackBuilder.create(this)
@@ -377,6 +378,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
 
     @Override
     public void playSongFromFragmentListToMain(String sender, SongModel songModel) {
+        Toast.makeText(MainActivity.this,"Playsong form Main SONG ID: "+songModel.getSongId(),Toast.LENGTH_SHORT).show();
         ArrayList<SongModel> songModelArrayList=new ArrayList<SongModel>();
         songModelArrayList.add(songModel);
         handleShowPlayActivity(songModelArrayList);

@@ -79,8 +79,12 @@ public class PlayActivity extends AppCompatActivity {
         ArrayList<SongModel> songs = (ArrayList<SongModel>) intent.getSerializableExtra(PlayActivity.EXTRA_PLAYING_LIST);
 //        TextView textView=findViewById(R.id.txtTest);
         Log.d(TAG, "onCreate: " + songs.size());
+        for (SongModel song : songs
+        ) {
+            Log.d(TAG, "onCreate: " + song.getSongId());
+        }
 //        Toast.makeText(PlayActivity.this, songs.size()+"", Toast.LENGTH_SHORT).show();
-        mPlayCenter=PlayCenter.newInstance(PlayActivity.this.getApplicationContext());
+        mPlayCenter = PlayCenter.newInstance(PlayActivity.this.getApplicationContext());
         PlayCenter.addSongsToPlayingList(songs);
 
         // Instantiate a ViewPager and a PagerAdapter.

@@ -1,6 +1,7 @@
 package com.example.musicforlife.play;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.musicforlife.listsong.SongModel;
 
@@ -8,14 +9,14 @@ import java.util.ArrayList;
 
 
 public class PlayCenter {
-    private static  ArrayList<PlayModel> playModelsList;
+    private static  ArrayList<PlayModel> mPlayModelsList;
     private SongModel currentSong;
     private static Context mContext;
     private static PlayCenter mPlayCenter = null;
 
     public static TypeLoop LOOP_TYPE;
     public static boolean Shuffle;
-
+    private static final String TAG = "PlayCenter";
 
     public static PlayCenter newInstance(Context context) {
         if (mContext == null || mPlayCenter == null) {
@@ -59,12 +60,13 @@ public class PlayCenter {
     }
 
     private static int updatePlayingList() {
-        playModelsList = PlayModel.getListPlaying();
-        return playModelsList.size();
+        mPlayModelsList = PlayModel.getListPlaying();
+        Log.d(TAG, "updatePlayingList: SIZE PLAYING LIST"+mPlayModelsList.size());
+        return mPlayModelsList.size();
     }
 
     public ArrayList<PlayModel> getPlayModelsList() {
-        return playModelsList;
+        return mPlayModelsList;
     }
 
 }

@@ -101,7 +101,7 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks {
                 new RecyclerItemClickListener(_context, _listViewSong ,new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
                         // do whatever
-                        Toast.makeText(_context,"CLICK ITEM SONG"+position,Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(_context,"CLICK ITEM SONG SONG ID: "+_listSong.get(position).getSongId(),Toast.LENGTH_SHORT).show();
                         _mainActivity.playSongFromFragmentListToMain(FragmentPlaylist.SENDER,_listSong.get(position));
                     }
 

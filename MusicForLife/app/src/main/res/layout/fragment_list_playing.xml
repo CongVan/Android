@@ -65,15 +65,24 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:orientation="vertical">
+                        android:layout_gravity="center"
+                        android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/margin_size_small"
                             android:text="Danh sách phát"
                             android:textColor="@color/colorWhite"
+
+                            android:textSize="@dimen/text_size_large" />
+                        <TextView
+                            android:id="@+id/txtSizePlayingList"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="size"
+                            android:textColor="@color/colorWhiteLight"
+                            android:layout_marginLeft="@dimen/margin_size_small"
                             android:textSize="@dimen/text_size_large" />
                         <!--<TextView-->
                         <!--android:layout_width="match_parent"-->

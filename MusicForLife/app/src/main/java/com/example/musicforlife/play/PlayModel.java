@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.example.musicforlife.db.DatabaseHelper;
 import com.example.musicforlife.listsong.SongModel;
@@ -36,7 +37,7 @@ public  class PlayModel {
     private int song_id;
     private int is_playing;
     private int current_duration;
-
+    private static final String TAG = "PlayModel";
 //    public PlayModel newInstance(Context context){
 //        if (mContext==null ){
 //            mContext=context;
@@ -127,14 +128,16 @@ public  class PlayModel {
         return songModelList;
     }
     public  static long addSongToPlayingList(SongModel song){
-        if (!isSongExsist(song)){
+        Log.d(TAG, "addSongToPlayingList: SONG_ID"+ song.getSongId());
+        boolean existSong=isSongExsist(song);
+        Log.d(TAG, "addSongToPlayingList: EXIST"+existSong);
+        if (!existSong){
             SQLiteDatabase database = mDatabaseHelper.getWritableDatabase();
             ContentValues contentValues = new ContentValues();
             contentValues.put(PlayModel.COLUMN_ID, song.getId());
             contentValues.put(PlayModel.COLUMN_SONG_ID,song.getSongId());
             contentValues.put(PlayModel.COLUMN_IS_PLAYING, 1);
             contentValues.put(PlayModel.COLUMN_CURRENT_DURATION, 0);
-
             long id = database.insert(PlayModel.TABLE_NAME, null, contentValues);
             database.close();
             return id;

@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.musicforlife.MainActivity;
@@ -34,16 +35,20 @@ public class FragmentListPlaying extends Fragment {
     RecyclerView mListViewSong;
     ListPlayingAdapter mListSongAdapter;
     LoadImageFromStorage loadImageFromStorage;
+    TextView txtSizePlayingList;
+
     private static final String TAG = "FragmentListPlaying";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         try {
             mContext = getActivity();
             mPlayActivity = (PlayActivity) getActivity();
 
             loadImageFromStorage=new LoadImageFromStorage();
+
         } catch (IllegalStateException e) {
 
         }
@@ -68,8 +73,9 @@ public class FragmentListPlaying extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
 //        ViewGroup viewGroup= (ViewGroup)inflater.inflate(R.layout.fragment_playlist, container, false);
+        View view=inflater.inflate(R.layout.fragment_list_playing, container, false);
 
-        return inflater.inflate(R.layout.fragment_list_playing, container, false);
+        return view;
 //        Log.i(TAG, "onCreateView PLAYLIST: OKOKOKO");
 //        mListSong = new ArrayList<>();// getAllAudioFromDevice(_context);
 //        mInflater = inflater;
@@ -90,6 +96,7 @@ public class FragmentListPlaying extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        txtSizePlayingList=mPlayActivity.findViewById(R.id.txtSizePlayingList);
         mListSong = new ArrayList<>();// getAllAudioFromDevice(_context);
 
 //        _layoutListSong = (NestedScrollView) _inflater.inflate(R.layout.fragment_list_song, null);
@@ -119,12 +126,17 @@ public class FragmentListPlaying extends Fragment {
         loadImageFromStorage.cancel(true);
     }
 
+
+
     private class LoadImageFromStorage extends AsyncTask<Void, Integer, ArrayList<SongModel>> {
 
         @Override
         protected void onPostExecute(ArrayList<SongModel> songModels) {
             super.onPostExecute(songModels);
+
             mListSong.addAll(songModels);
+
+            txtSizePlayingList.setText(" ("+mListSong.size()+") ");
             Log.i(TAG, "onPostExecute: SONGS--> " + mListSong.size());
             mListViewSong.post(new Runnable() {
                 @Override
