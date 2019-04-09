@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.musicforlife.PlayActivity;
@@ -18,11 +20,18 @@ import com.example.musicforlife.listsong.SongModel;
 
 public class FragmentPlaying extends Fragment implements FragmentPlayInterface {
 
-    LinearLayout mLayoutFragmentPlaying;
-    ViewGroup mViewGroupMain;
-    ImageButton mImageButtonPlaySong;
-    Context mContext;
-    PlayActivity mPlayActivity;
+    private LinearLayout mLayoutFragmentPlaying;
+    private ViewGroup mViewGroupMain;
+    private ImageButton mImageButtonPlaySong;
+    private Context mContext;
+    private PlayActivity mPlayActivity;
+    private TextView mTxtTitleSongPlaying;
+    private TextView mTxtArtistSongPlaying;
+    private TextView mTxtDurationSongPlaying;
+    private SeekBar mSebDurationSongPlaying;
+    private TextView mTxtCurrentDuration;
+
+    private SongModel mSongPlaying;
 
     public static final String SENDER = "FRAGMENT_PLAYING";
 
@@ -51,6 +60,12 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mImageButtonPlaySong = mViewGroupMain.findViewById(R.id.btnPlaySong);
+        mTxtTitleSongPlaying = mViewGroupMain.findViewById(R.id.txtTitleSongPlaying);
+        mTxtArtistSongPlaying = mViewGroupMain.findViewById(R.id.txtArtistSongPlaying);
+        mTxtDurationSongPlaying = mViewGroupMain.findViewById(R.id.txtDurationSongPlaying);
+        mSebDurationSongPlaying = mViewGroupMain.findViewById(R.id.sebDurationSongPlaying);
+        mTxtCurrentDuration=mViewGroupMain.findViewById(R.id.txtCurrentDuration);
+
         mImageButtonPlaySong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,12 +73,34 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface {
 
                 if (PlayCenter.isPlaying()) {// song is playing then stop
                     mPlayActivity.controlSong(SENDER, null, PlayCenter.ACTION_PAUSE);
+
+                    mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_play_arrow_black_70dp));
+                } else { //resume
+                    mPlayActivity.controlSong(SENDER, null, PlayCenter.ACTION_RESUME);
                     mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_pause_black_70dp));
 
-                } else { //resume
-                    mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_play_arrow_black_70dp));
-                    mPlayActivity.controlSong(SENDER, null, PlayCenter.ACTION_RESUME);
+
                 }
+
+            }
+        });
+        mSebDurationSongPlaying.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser){
+                    mPlayActivity.updateDuration(SENDER, progress);
+                }
+
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
 
             }
         });
@@ -71,7 +108,21 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface {
 
 
     @Override
-    public void updateControlPlaying() {
-        mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_play_arrow_black_70dp));
+    public void updateControlPlaying(SongModel songModel) {
+        mSongPlaying = songModel;
+        mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_pause_black_70dp));
+        mTxtTitleSongPlaying.setText(mSongPlaying.getTitle());
+        mTxtArtistSongPlaying.setText(mSongPlaying.getArtist());
+        mTxtDurationSongPlaying.setText(mSongPlaying.formateMilliSeccond(songModel.getDuration()));
+        mSebDurationSongPlaying.setMax(mSongPlaying.getDuration().intValue() / 1000);
+
+        //
+
+    }
+
+    @Override
+    public void updateSeekbar(int currentDuration) {
+        mSebDurationSongPlaying.setProgress(currentDuration / 1000);
+        mTxtCurrentDuration.setText(SongModel.formateMilliSeccond(currentDuration));
     }
 }

@@ -110,7 +110,7 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
                         // do whatever
                         Toast.makeText(mContext,"CLICK ITEM SONG"+position,Toast.LENGTH_SHORT).show();
                         mPlayActivity.controlSong(FragmentListPlaying.SENDER,mListSong.get(position),PlayCenter.ACTION_PLAY);
-                        mPlayActivity.updateControlPlaying(SENDER);
+                        mPlayActivity.updateControlPlaying(SENDER,mListSong.get(position));
                     }
 
                     @Override public void onLongItemClick(View view, int position) {
@@ -130,10 +130,15 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
 
 
     @Override
-    public void updateControlPlaying() {
+    public void updateControlPlaying(SongModel songModel
+    ) {
 
     }
 
+    @Override
+    public void updateSeekbar(int currentDuration) {
+
+    }
 
     private class LoadImageFromStorage extends AsyncTask<Void, Integer, ArrayList<SongModel>> {
 

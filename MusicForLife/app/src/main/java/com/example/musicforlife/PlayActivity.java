@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.musicforlife.listsong.SongModel;
+import com.example.musicforlife.play.FragmentListPlaying;
 import com.example.musicforlife.play.FragmentPlayAdapter;
 import com.example.musicforlife.play.PlayCenter;
 import com.example.musicforlife.play.FragmentPlayInterface;
@@ -80,7 +81,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
             Log.d(TAG, "onCreate: " + song.getSongId());
         }
 //        Toast.makeText(PlayActivity.this, songs.size()+"", Toast.LENGTH_SHORT).show();
-        mPlayCenter = PlayCenter.newInstance(PlayActivity.this.getApplicationContext());
+        mPlayCenter = PlayCenter.newInstance(PlayActivity.this.getApplicationContext(), this);
         PlayCenter.addSongsToPlayingList(songs);
 
         // Instantiate a ViewPager and a PagerAdapter.
@@ -89,7 +90,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
 
         mPager.setAdapter(pagerAdapter);
 
-        mPlayCenter = PlayCenter.newInstance(PlayActivity.this.getApplicationContext());
+        mPlayCenter = PlayCenter.newInstance(PlayActivity.this.getApplicationContext(), this);
         //set animation for slide page
 //        mPager.setPageTransformer(true, new ZoomOutPageTransformer());
     }
@@ -121,11 +122,13 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
     }
 
 
-
     @Override
     public void controlSong(String sender, SongModel songModel, int action) {
         switch (action) {
             case PlayCenter.ACTION_PLAY:
+                if (sender.equals(FragmentListPlaying.SENDER)) {
+                    mPager.setCurrentItem(1);
+                }
                 mPlayCenter.play(songModel);
                 break;
             case PlayCenter.ACTION_PAUSE:
@@ -141,7 +144,17 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
     }
 
     @Override
-    public void updateControlPlaying(String sender) {
-        ((FragmentPlayAdapter) pagerAdapter).getFragmentPlaying().updateControlPlaying();
+    public void updateControlPlaying(String sender, SongModel songModel) {
+        ((FragmentPlayAdapter) pagerAdapter).getFragmentPlaying().updateControlPlaying(songModel);
+    }
+
+    @Override
+    public void updateDuration(String sender, int progress) {
+        mPlayCenter.updateDuration(progress);
+    }
+
+    @Override
+    public void updateSeekbar(String sender, int duration) {
+        ((FragmentPlayAdapter) pagerAdapter).getFragmentPlaying().updateSeekbar(duration);
     }
 }
