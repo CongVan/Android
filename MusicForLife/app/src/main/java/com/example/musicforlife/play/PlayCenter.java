@@ -6,6 +6,7 @@ import android.os.CountDownTimer;
 import android.util.Log;
 
 import com.example.musicforlife.PlayActivity;
+import com.example.musicforlife.db.DatabaseHelper;
 import com.example.musicforlife.listsong.SongModel;
 
 import java.io.IOException;
@@ -15,12 +16,14 @@ import java.util.ArrayList;
 public class PlayCenter implements PlayInterface {
     private static ArrayList<PlayModel> mPlayingList;
     private SongModel mCurrentSongPlaying;
-    private int mCurrentIndexSong;
+    private static int mCurrentIndexSong;
     private static Context mContext;
     private static PlayActivity mPlayActivity;
     private static MediaPlayer mMediaPlayer = null;
     private static PlayCenter mPlayCenter = null;
+    private static DatabaseHelper mDatabaseHelper = null;
     private static boolean mIsPlaying = false;
+
 
     public static final int ACTION_PLAY = 1;
     public static final int ACTION_PAUSE = 2;
@@ -33,25 +36,27 @@ public class PlayCenter implements PlayInterface {
     private static final String TAG = "PlayCenter";
     public static final String SENDER = "PLAY_CENTER";
 
-    public static PlayCenter newInstance(Context context, PlayActivity playActivity) {
-        if (mContext == null || mPlayCenter == null || mMediaPlayer == null) {
+    public static PlayCenter newInstance(Context context, PlayActivity playActivity, DatabaseHelper databaseHelper) {
+        if (mContext == null || mPlayCenter == null || mMediaPlayer == null || mDatabaseHelper == null) {
             mPlayCenter = new PlayCenter();
             mContext = context;
             mPlayActivity = playActivity;
             mMediaPlayer = new MediaPlayer();
+            mDatabaseHelper = databaseHelper;
         }
 
         return mPlayCenter;
     }
 
     public void play(final SongModel songModel) {
-
-
 //        Log.d(TAG, "play: "+songModel.getPath());
 //        Log.d(TAG, "play: "+ Uri.parse(songModel.getPath()));
 //        File path = Environment.getExternalStorageDirectory();
 //        Log.d(TAG, "play: "+ path+songModel.getPath());
         try {
+            mCurrentSongPlaying = songModel;
+            mIsPlaying = true;
+            setIndexSongInPlayingList();
             mMediaPlayer.reset();
             mMediaPlayer.setDataSource(songModel.getPath());
             mMediaPlayer.prepareAsync();
@@ -59,9 +64,6 @@ public class PlayCenter implements PlayInterface {
                     new MediaPlayer.OnPreparedListener() {
                         @Override
                         public void onPrepared(MediaPlayer mp) {
-
-                            mCurrentSongPlaying = songModel;
-                            mIsPlaying = true;
                             new CountDownTimer(songModel.getDuration(), 1000) {
 
                                 public void onTick(long millisUntilFinished) {
@@ -99,11 +101,33 @@ public class PlayCenter implements PlayInterface {
     }
 
     public void next() {
-
+        if (mIsPlaying) {
+            mMediaPlayer.reset();
+            mMediaPlayer.stop();
+        }
+        if (mCurrentIndexSong == mPlayingList.size()-1) {
+            mCurrentIndexSong = 0;
+        } else {
+            mCurrentIndexSong++;
+        }
+        mCurrentSongPlaying = SongModel.getSongFromSongId(mDatabaseHelper, mPlayingList.get(mCurrentIndexSong).getSongId());
+        play(mCurrentSongPlaying);
+        mPlayActivity.updateControlPlaying(SENDER, mCurrentSongPlaying);
     }
 
     public void prev() {
-
+        if (mIsPlaying) {
+            mMediaPlayer.reset();
+            mMediaPlayer.stop();
+        }
+        if (mCurrentIndexSong == 0) {
+            mCurrentIndexSong = mPlayingList.size() - 1;
+        } else {
+            mCurrentIndexSong--;
+        }
+        mCurrentSongPlaying = SongModel.getSongFromSongId(mDatabaseHelper, mPlayingList.get(mCurrentIndexSong).getSongId());
+        play(mCurrentSongPlaying);
+        mPlayActivity.updateControlPlaying(SENDER, mCurrentSongPlaying);
     }
 
     public static int addSongsToPlayingList(ArrayList<SongModel> songs) {
@@ -160,5 +184,14 @@ public class PlayCenter implements PlayInterface {
     @Override
     public void updateSeekbar(String sender, int duration) {
         mPlayActivity.updateSeekbar(sender, duration);
+    }
+
+    private void setIndexSongInPlayingList() {
+
+        for (int i = 0; i < mPlayingList.size(); i++) {
+            if (mPlayingList.get(i).getSongId() == mCurrentSongPlaying.getSongId()) {
+                mCurrentIndexSong = i;
+            }
+        }
     }
 }

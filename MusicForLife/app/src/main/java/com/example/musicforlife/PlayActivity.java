@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.musicforlife.db.DatabaseHelper;
 import com.example.musicforlife.listsong.SongModel;
 import com.example.musicforlife.play.FragmentListPlaying;
 import com.example.musicforlife.play.FragmentPlayAdapter;
@@ -29,13 +30,17 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
     /**
      * The pager adapter, which provides the pages to the view pager widget.
      */
+    private DatabaseHelper mDatabaseHelper;
     private PagerAdapter pagerAdapter;
     private PlayCenter mPlayCenter;
     private ImageView imageViewBackgroundMain;
 
 
     private static final String TAG = "PlayActivity";
-    public static String EXTRA_PLAYING_LIST = "EXTRA_PLAYING_LIST";
+    public static final String EXTRA_PLAYING_LIST = "EXTRA_PLAYING_LIST";
+    public static final String SENDER = "PLAY_ACTIVITY";
+
+    private SongModel mSongPlaying = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,26 +79,29 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
 
         Intent intent = getIntent();
         ArrayList<SongModel> songs = (ArrayList<SongModel>) intent.getSerializableExtra(PlayActivity.EXTRA_PLAYING_LIST);
-//        TextView textView=findViewById(R.id.txtTest);
-        Log.d(TAG, "onCreate: " + songs.size());
-        for (SongModel song : songs
-        ) {
-            Log.d(TAG, "onCreate: " + song.getSongId());
+        if (songs.size() > 0) {
+            mSongPlaying = songs.get(0);
+            PlayCenter.addSongsToPlayingList(songs);
         }
+//        TextView textView=findViewById(R.id.txtTest);
+//        Log.d(TAG, "onCreate: " + songs.size());
+//        for (SongModel song : songs
+//        ) {
+//            Log.d(TAG, "onCreate: " + song.getSongId());
+//        }
 //        Toast.makeText(PlayActivity.this, songs.size()+"", Toast.LENGTH_SHORT).show();
-        mPlayCenter = PlayCenter.newInstance(PlayActivity.this.getApplicationContext(), this);
-        PlayCenter.addSongsToPlayingList(songs);
-
+//        mPlayCenter = PlayCenter.newInstance(PlayActivity.this.getApplicationContext(), this);
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) findViewById(R.id.pager);
-        pagerAdapter = new FragmentPlayAdapter(getSupportFragmentManager());
-
+        pagerAdapter = new FragmentPlayAdapter(getSupportFragmentManager(), mSongPlaying);
         mPager.setAdapter(pagerAdapter);
+        mDatabaseHelper = DatabaseHelper.newInstance(getApplicationContext());
+        mPlayCenter = PlayCenter.newInstance(PlayActivity.this.getApplicationContext(), this, mDatabaseHelper);
 
-        mPlayCenter = PlayCenter.newInstance(PlayActivity.this.getApplicationContext(), this);
         //set animation for slide page
 //        mPager.setPageTransformer(true, new ZoomOutPageTransformer());
     }
+
 
     @Override
     public void onBackPressed() {
@@ -136,6 +144,12 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
                 break;
             case PlayCenter.ACTION_RESUME:
                 mPlayCenter.resurme();
+                break;
+            case PlayCenter.ACTION_PREV:
+                mPlayCenter.prev();
+                break;
+            case PlayCenter.ACTION_NEXT:
+                mPlayCenter.next();
                 break;
             default:
                 break;

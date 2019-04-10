@@ -39,8 +39,8 @@ public class PlayModel {
     private static DatabaseHelper mDatabaseHelper = DatabaseHelper.getInstance();
 
     private int id;
-    private int song_id;
-    private int is_playing;
+    private int songId;
+    private int isPlaying;
     private int current_duration;
     private static final String TAG = "PlayModel";
 //    public PlayModel newInstance(Context context){
@@ -59,20 +59,20 @@ public class PlayModel {
         this.id = id;
     }
 
-    public int getSong_id() {
-        return song_id;
+    public int getSongId() {
+        return songId;
     }
 
-    public void setSong_id(int song_id) {
-        this.song_id = song_id;
+    public void setSongId(int songId) {
+        this.songId = songId;
     }
 
-    public int getIs_playing() {
-        return is_playing;
+    public int getIsPlaying() {
+        return isPlaying;
     }
 
-    public void setIs_playing(int is_playing) {
-        this.is_playing = is_playing;
+    public void setIsPlaying(int isPlaying) {
+        this.isPlaying = isPlaying;
     }
 
     public int getCurrent_duration() {
@@ -91,15 +91,16 @@ public class PlayModel {
                 PlayModel.COLUMN_SONG_ID,
                 PlayModel.COLUMN_IS_PLAYING,
                 PlayModel.COLUMN_CURRENT_DURATION,
-
+                PlayModel.COLUMN_CREATE_DATE
         };
-        Cursor cursor = db.query(PlayModel.TABLE_NAME, projection, null, null, null, null, null);
+        String orderBy=PlayModel.COLUMN_CREATE_DATE +" DESC ";
+        Cursor cursor = db.query(PlayModel.TABLE_NAME, projection, null, null, null, null, orderBy);
         if (cursor.moveToFirst()) {
             do {
                 PlayModel play = new PlayModel();
                 play.setId(cursor.getInt(cursor.getColumnIndex(PlayModel.COLUMN_ID)));
-                play.setSong_id(cursor.getInt(cursor.getColumnIndex(PlayModel.COLUMN_SONG_ID)));
-                play.setIs_playing(cursor.getInt(cursor.getColumnIndex(PlayModel.COLUMN_IS_PLAYING)));
+                play.setSongId(cursor.getInt(cursor.getColumnIndex(PlayModel.COLUMN_SONG_ID)));
+                play.setIsPlaying(cursor.getInt(cursor.getColumnIndex(PlayModel.COLUMN_IS_PLAYING)));
                 play.setCurrent_duration(cursor.getInt(cursor.getColumnIndex(PlayModel.COLUMN_CURRENT_DURATION)));
 
                 playingList.add(play);

@@ -26,16 +26,18 @@ import java.util.ArrayList;
 
 
 public class FragmentListPlaying extends Fragment implements FragmentPlayInterface {
-    MainActivity mMainActivity;
-    PlayActivity mPlayActivity;
-    Context mContext;
-    LayoutInflater mInflater;
-    ArrayList<SongModel> mListSong;
-    LinearLayout mLayoutListSong;
-    RecyclerView mListViewSong;
-    ListPlayingAdapter mListSongAdapter;
-    LoadImageFromStorage loadImageFromStorage;
-    TextView txtSizePlayingList;
+    private MainActivity mMainActivity;
+    private PlayActivity mPlayActivity;
+    private Context mContext;
+    private LayoutInflater mInflater;
+    private ArrayList<SongModel> mListSong;
+    private LinearLayout mLayoutListSong;
+    private RecyclerView mListViewSong;
+    private ListPlayingAdapter mListSongAdapter;
+    private LoadImageFromStorage loadImageFromStorage;
+    private TextView txtSizePlayingList;
+    private static SongModel mSongPlaying=null;
+
     public  static  final  String SENDER="FRAGMENT_PLAYING_LIST";
     private static final String TAG = "FragmentListPlaying";
 
@@ -55,11 +57,12 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
 
     }
 
-    public static FragmentListPlaying newInstance() {
+    public static FragmentListPlaying newInstance(SongModel songPlaying) {
         FragmentListPlaying fragmentListPlaying = new FragmentListPlaying();
-        Bundle args = new Bundle();
-        args.putString("Key1", "OK");
-        fragmentListPlaying.setArguments(args);
+//        Bundle args = new Bundle();
+//        args.putString("Key1", "OK");
+//        fragmentListPlaying.setArguments(args);
+        mSongPlaying=songPlaying;
         return fragmentListPlaying;
     }
     @Override
@@ -145,9 +148,7 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
         @Override
         protected void onPostExecute(ArrayList<SongModel> songModels) {
             super.onPostExecute(songModels);
-
             mListSong.addAll(songModels);
-
             txtSizePlayingList.setText(" ("+mListSong.size()+") ");
             Log.i(TAG, "onPostExecute: SONGS--> " + mListSong.size());
             mListViewSong.post(new Runnable() {
@@ -157,6 +158,11 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
                 }
             });
             Log.i(TAG, "onPostExecute: FINISHED");
+            //play song if songPlaying !=null
+            if (mSongPlaying!=null){
+                mPlayActivity.controlSong(FragmentListPlaying.SENDER,mSongPlaying,PlayCenter.ACTION_PLAY);
+                mPlayActivity.updateControlPlaying(SENDER,mSongPlaying);
+            }
         }
 
         @Override

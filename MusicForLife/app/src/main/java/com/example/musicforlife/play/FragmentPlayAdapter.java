@@ -4,12 +4,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.example.musicforlife.listsong.SongModel;
+
 
 public class FragmentPlayAdapter extends FragmentStatePagerAdapter {
     private static final int NUM_PAGES = 2;
+    private SongModel mSongPlaying;
 
-    public FragmentPlayAdapter(FragmentManager fm) {
+    public FragmentPlayAdapter(FragmentManager fm, SongModel songPlaying) {
         super(fm);
+        mSongPlaying = songPlaying;
     }
 
     private static Fragment mFragmentListPlaying, mFragmentPlaying;
@@ -17,10 +21,9 @@ public class FragmentPlayAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int i) {
         Fragment fragment = null;
-
         switch (i) {
             case 0:
-                mFragmentListPlaying = FragmentListPlaying.newInstance();
+                mFragmentListPlaying = FragmentListPlaying.newInstance(mSongPlaying);
                 fragment = mFragmentListPlaying;
                 break;
             case 1:
@@ -38,7 +41,7 @@ public class FragmentPlayAdapter extends FragmentStatePagerAdapter {
         return NUM_PAGES;
     }
 
-    public FragmentPlaying getFragmentPlaying(){
-        return (FragmentPlaying)mFragmentPlaying;
+    public FragmentPlaying getFragmentPlaying() {
+        return (FragmentPlaying) mFragmentPlaying;
     }
 }

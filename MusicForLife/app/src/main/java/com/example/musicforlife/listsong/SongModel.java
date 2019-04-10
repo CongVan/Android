@@ -259,36 +259,47 @@ public class SongModel implements Serializable {
         return result;
     }
 
-    public static SongModel getSong(DatabaseHelper databaseHelper, long id) {
+    public static SongModel getSongFromSongId(DatabaseHelper databaseHelper, int id) {
         // get readable database as we are not inserting anything
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
-        String[] projection = {SongModel.COLUMN_SONG_ID, SongModel.COLUMN_TITLE, SongModel.COLUMN_ALBUM};
+        String[] projection = {
+                SongModel.COLUMN_ID,
+                SongModel.COLUMN_SONG_ID,
+                SongModel.COLUMN_TITLE,
+                SongModel.COLUMN_ALBUM,
+                SongModel.COLUMN_DURATION,
+                SongModel.COLUMN_FOLDER,
+                SongModel.COLUMN_ARTIST,
+                SongModel.COLUMN_PATH
+        };
         String sortOrder = SongModel.COLUMN_ID + " ASC";
-        String selection = "";// SongModel.COLUMN_SONG_ID + " =  " +id;
+        String selection = SongModel.COLUMN_SONG_ID + " =  " +id;// ;
 
 
         Cursor cursor = db.query(SongModel.TABLE_NAME,
                 projection,
                 selection, null, null, null, null
         );
-
+        SongModel songModel = new SongModel();
         if (cursor != null) {
             cursor.moveToFirst();
+            songModel.setId(cursor.getInt(cursor.getColumnIndex(SongModel.COLUMN_ID)));
+            songModel.setSongId(cursor.getInt(cursor.getColumnIndex(SongModel.COLUMN_SONG_ID)));
+            songModel.setTitle(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_TITLE)));
+            songModel.setAlbum(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_ALBUM)));
+            songModel.setArtist(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_ARTIST)));
+            songModel.setFolder(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_FOLDER)));
+            songModel.setDuration(cursor.getLong(cursor.getColumnIndex(SongModel.COLUMN_DURATION)));
+            songModel.setPath(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_PATH)));
+            cursor.close();
+
+            return songModel;
         } else {
             return null;
         }
-
-
-        SongModel songModel = new SongModel();
-        songModel.setSongId(cursor.getInt(cursor.getColumnIndex(SongModel.COLUMN_SONG_ID)));
-        songModel.setTitle(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_TITLE)));
-        songModel.setAlbum(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_ALBUM)));
-
-        Log.d(TAG, "getSong: " + songModel.getSongId() + " _ " + songModel.getTitle() + " _ " + songModel.getAlbum());
+        //Log.d(TAG, "getSong: " + songModel.getSongId() + " _ " + songModel.getTitle() + " _ " + songModel.getAlbum());
         // close the db connection
-        cursor.close();
 
-        return songModel;
     }
 
 

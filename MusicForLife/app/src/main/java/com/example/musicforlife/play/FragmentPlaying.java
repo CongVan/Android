@@ -30,6 +30,8 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface {
     private TextView mTxtDurationSongPlaying;
     private SeekBar mSebDurationSongPlaying;
     private TextView mTxtCurrentDuration;
+    private ImageButton mImageButtonPrevSong;
+    private ImageButton mImageButtonNextSong;
 
     private SongModel mSongPlaying;
 
@@ -60,11 +62,14 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mImageButtonPlaySong = mViewGroupMain.findViewById(R.id.btnPlaySong);
+        mImageButtonPrevSong=mViewGroupMain.findViewById(R.id.btnPrevSong);
+        mImageButtonNextSong=mViewGroupMain.findViewById(R.id.btnNextSong);
         mTxtTitleSongPlaying = mViewGroupMain.findViewById(R.id.txtTitleSongPlaying);
         mTxtArtistSongPlaying = mViewGroupMain.findViewById(R.id.txtArtistSongPlaying);
         mTxtDurationSongPlaying = mViewGroupMain.findViewById(R.id.txtDurationSongPlaying);
         mSebDurationSongPlaying = mViewGroupMain.findViewById(R.id.sebDurationSongPlaying);
-        mTxtCurrentDuration=mViewGroupMain.findViewById(R.id.txtCurrentDuration);
+        mTxtCurrentDuration = mViewGroupMain.findViewById(R.id.txtCurrentDuration);
+
 
         mImageButtonPlaySong.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,14 +89,27 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface {
 
             }
         });
+
+        mImageButtonPrevSong.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPlayActivity.controlSong(SENDER,null,PlayCenter.ACTION_PREV);
+            }
+        });
+
+        mImageButtonNextSong.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPlayActivity.controlSong(SENDER,null,PlayCenter.ACTION_NEXT);
+            }
+        });
+
         mSebDurationSongPlaying.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser){
+                if (fromUser) {
                     mPlayActivity.updateDuration(SENDER, progress);
                 }
-
-
             }
 
             @Override
