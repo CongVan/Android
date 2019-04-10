@@ -46,7 +46,7 @@ public class ArtistSongsAdapter extends BaseAdapter {
 
         ArtistSongsModel artistSongsModel = mylist.get(position);
 
-        TVNumber.setText(position + "");
+        TVNumber.setText(position + 1 + "");
         TVNameSong.setText(artistSongsModel.getNameSong());
         TVNameArtist.setText(artistSongsModel.getNameSongArtist());
         TVDuration.setText(artistSongsModel.getDuration());
