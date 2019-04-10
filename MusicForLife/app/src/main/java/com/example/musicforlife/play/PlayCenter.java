@@ -15,14 +15,13 @@ import java.util.ArrayList;
 
 public class PlayCenter implements PlayInterface {
     private static ArrayList<PlayModel> mPlayingList;
-    private SongModel mCurrentSongPlaying;
+    private static SongModel mCurrentSongPlaying;
     private static int mCurrentIndexSong;
     private static Context mContext;
     private static PlayActivity mPlayActivity;
     private static MediaPlayer mMediaPlayer = null;
     private static PlayCenter mPlayCenter = null;
     private static DatabaseHelper mDatabaseHelper = null;
-    private static boolean mIsPlaying = false;
 
 
     public static final int ACTION_PLAY = 1;
@@ -55,30 +54,36 @@ public class PlayCenter implements PlayInterface {
 //        Log.d(TAG, "play: "+ path+songModel.getPath());
         try {
             mCurrentSongPlaying = songModel;
-            mIsPlaying = true;
+
             setIndexSongInPlayingList();
             mMediaPlayer.reset();
             mMediaPlayer.setDataSource(songModel.getPath());
-            mMediaPlayer.prepareAsync();
+
             mMediaPlayer.setOnPreparedListener(
                     new MediaPlayer.OnPreparedListener() {
                         @Override
                         public void onPrepared(MediaPlayer mp) {
-                            new CountDownTimer(songModel.getDuration(), 1000) {
 
-                                public void onTick(long millisUntilFinished) {
-                                    updateSeekbar(SENDER, mMediaPlayer.getCurrentPosition());
-                                }
+                            if (!mMediaPlayer.isPlaying()) {
+                                new CountDownTimer(songModel.getDuration(), 1000) {
+                                    public void onTick(long millisUntilFinished) {
 
-                                public void onFinish() {
-                                    mMediaPlayer.stop();
-                                    mIsPlaying = false;
-                                }
-                            }.start();
+                                        updateSeekbar(SENDER, mMediaPlayer.getCurrentPosition());
+                                    }
+
+                                    public void onFinish() {
+                                        mMediaPlayer.stop();
+
+                                    }
+                                }.start();
+
+                            }
                             mp.start();
+
                         }
                     }
             );
+            mMediaPlayer.prepareAsync();
 //            mMediaPlayer.start();
         } catch (IOException e) {
             e.printStackTrace();
@@ -89,23 +94,27 @@ public class PlayCenter implements PlayInterface {
 
     public void pause() {
         mMediaPlayer.pause();
-        mIsPlaying = false;
+
     }
 
     public void resurme() {
+
         if (mCurrentSongPlaying != null && mMediaPlayer != null) {
             mMediaPlayer.seekTo(mMediaPlayer.getCurrentPosition());
             mMediaPlayer.start();
+            Log.d(TAG, "resurme: RESUME SONG " + mMediaPlayer.getCurrentPosition());
+        } else {
+            Log.d(TAG, "resurme: NOT RESUME SONG ");
         }
-        mIsPlaying = true;
+
     }
 
     public void next() {
-        if (mIsPlaying) {
+        if (mMediaPlayer.isPlaying()) {
             mMediaPlayer.reset();
             mMediaPlayer.stop();
         }
-        if (mCurrentIndexSong == mPlayingList.size()-1) {
+        if (mCurrentIndexSong == mPlayingList.size() - 1) {
             mCurrentIndexSong = 0;
         } else {
             mCurrentIndexSong++;
@@ -116,7 +125,7 @@ public class PlayCenter implements PlayInterface {
     }
 
     public void prev() {
-        if (mIsPlaying) {
+        if (mMediaPlayer.isPlaying()) {
             mMediaPlayer.reset();
             mMediaPlayer.stop();
         }
@@ -159,11 +168,23 @@ public class PlayCenter implements PlayInterface {
     }
 
     public static boolean isPlaying() {
-        return mIsPlaying;
+        return mMediaPlayer.isPlaying();
+    }
+
+    public static int getCurrentDuration() {
+        return mMediaPlayer.getCurrentPosition();
+    }
+    public  static SongModel getCurrentSongPlaying(){
+        return mCurrentSongPlaying;
     }
 
     public void updateDuration(int progress) {
+
         mMediaPlayer.seekTo(progress * 1000);
+//        if (!mMediaPlayer.isPlaying()) {
+//            mMediaPlayer.start();
+//            mPlayActivity.updateControlPlaying(SENDER, mCurrentSongPlaying);
+//        }
     }
 
     @Override

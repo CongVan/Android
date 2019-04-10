@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +37,7 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface {
     private SongModel mSongPlaying;
 
     public static final String SENDER = "FRAGMENT_PLAYING";
-
+    private static final String TAG = "FragmentPlaying";
     public FragmentPlaying() {
 
     }
@@ -109,6 +110,12 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
                     mPlayActivity.updateDuration(SENDER, progress);
+                    if(!PlayCenter.isPlaying()){
+                        mPlayActivity.controlSong(SENDER, null, PlayCenter.ACTION_RESUME);
+                        mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_pause_black_70dp));
+
+                    }
+
                 }
             }
 
@@ -124,6 +131,14 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateSeekbar(PlayCenter.getCurrentDuration());
+        Log.d(TAG, "onResume: "+PlayCenter.getCurrentDuration());
+//        mPlayActivity.controlSong(SENDER, null, PlayCenter.ACTION_RESUME);
+
+    }
 
     @Override
     public void updateControlPlaying(SongModel songModel) {
@@ -133,7 +148,6 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface {
         mTxtArtistSongPlaying.setText(mSongPlaying.getArtist());
         mTxtDurationSongPlaying.setText(mSongPlaying.formateMilliSeccond(songModel.getDuration()));
         mSebDurationSongPlaying.setMax(mSongPlaying.getDuration().intValue() / 1000);
-
         //
 
     }

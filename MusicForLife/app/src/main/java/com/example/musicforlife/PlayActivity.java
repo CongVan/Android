@@ -125,10 +125,6 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
 //        finish();
     }
 
-    public void playSong(View view) {
-        Toast.makeText(this, "PLAY CLICK", Toast.LENGTH_SHORT).show();
-    }
-
 
     @Override
     public void controlSong(String sender, SongModel songModel, int action) {
@@ -154,7 +150,6 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
             default:
                 break;
         }
-
     }
 
     @Override
