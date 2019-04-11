@@ -115,7 +115,7 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
                     public void onItemClick(View view, int position) {
                         // do whatever
                         Toast.makeText(mContext, "CLICK ITEM SONG" + position, Toast.LENGTH_SHORT).show();
-                        mPlayActivity.controlSong(FragmentListPlaying.SENDER, mListSong.get(position), PlayCenter.ACTION_PLAY);
+                        mPlayActivity.controlSong(FragmentListPlaying.SENDER, mListSong.get(position), PlayService.ACTION_PLAY);
                         mPlayActivity.updateControlPlaying(SENDER, mListSong.get(position));
                     }
 
@@ -162,11 +162,11 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
             });
             Log.i(TAG, "onPostExecute: FINISHED");
             //play song if songPlaying !=null
-            if ((mSongPlaying != null && PlayCenter.isPlaying() == false) ||
-                    mSongPlaying.getSongId() != PlayCenter.getCurrentSongPlaying().getSongId()
+            if ((mSongPlaying != null && PlayService.isPlaying() == false) ||
+                    mSongPlaying.getSongId() != PlayService.getCurrentSongPlaying().getSongId()
             ) {
 
-                mPlayActivity.controlSong(FragmentListPlaying.SENDER, mSongPlaying, PlayCenter.ACTION_PLAY);
+                mPlayActivity.controlSong(FragmentListPlaying.SENDER, mSongPlaying, PlayService.ACTION_PLAY);
                 mPlayActivity.updateControlPlaying(SENDER, mSongPlaying);
             }
         }

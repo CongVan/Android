@@ -6,19 +6,16 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.example.musicforlife.db.DatabaseHelper;
 import com.example.musicforlife.listsong.SongModel;
 import com.example.musicforlife.play.FragmentListPlaying;
 import com.example.musicforlife.play.FragmentPlayAdapter;
-import com.example.musicforlife.play.PlayCenter;
-import com.example.musicforlife.play.FragmentPlayInterface;
+import com.example.musicforlife.play.PlayService;
 import com.example.musicforlife.play.PlayInterface;
 
 import java.util.ArrayList;
@@ -32,7 +29,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
      */
     private DatabaseHelper mDatabaseHelper;
     private PagerAdapter pagerAdapter;
-    private PlayCenter mPlayCenter;
+    private PlayService mPlayService;
     private ImageView imageViewBackgroundMain;
 
 
@@ -81,7 +78,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
         ArrayList<SongModel> songs = (ArrayList<SongModel>) intent.getSerializableExtra(PlayActivity.EXTRA_PLAYING_LIST);
         if (songs.size() > 0) {
             mSongPlaying = songs.get(0);
-            PlayCenter.addSongsToPlayingList(songs);
+            PlayService.addSongsToPlayingList(songs);
         }
 //        TextView textView=findViewById(R.id.txtTest);
 //        Log.d(TAG, "onCreate: " + songs.size());
@@ -90,13 +87,13 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
 //            Log.d(TAG, "onCreate: " + song.getSongId());
 //        }
 //        Toast.makeText(PlayActivity.this, songs.size()+"", Toast.LENGTH_SHORT).show();
-//        mPlayCenter = PlayCenter.newInstance(PlayActivity.this.getApplicationContext(), this);
+//        mPlayService = PlayService.newInstance(PlayActivity.this.getApplicationContext(), this);
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) findViewById(R.id.pager);
         pagerAdapter = new FragmentPlayAdapter(getSupportFragmentManager(), mSongPlaying);
         mPager.setAdapter(pagerAdapter);
         mDatabaseHelper = DatabaseHelper.newInstance(getApplicationContext());
-        mPlayCenter = PlayCenter.newInstance(PlayActivity.this.getApplicationContext(), this, mDatabaseHelper);
+        mPlayService = PlayService.newInstance(PlayActivity.this.getApplicationContext(), this, mDatabaseHelper);
 
         //set animation for slide page
 //        mPager.setPageTransformer(true, new ZoomOutPageTransformer());
@@ -129,23 +126,23 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
     @Override
     public void controlSong(String sender, SongModel songModel, int action) {
         switch (action) {
-            case PlayCenter.ACTION_PLAY:
+            case PlayService.ACTION_PLAY:
                 if (sender.equals(FragmentListPlaying.SENDER)) {
                     mPager.setCurrentItem(1);
                 }
-                mPlayCenter.play(songModel);
+                mPlayService.play(songModel);
                 break;
-            case PlayCenter.ACTION_PAUSE:
-                mPlayCenter.pause();
+            case PlayService.ACTION_PAUSE:
+                mPlayService.pause();
                 break;
-            case PlayCenter.ACTION_RESUME:
-                mPlayCenter.resurme();
+            case PlayService.ACTION_RESUME:
+                mPlayService.resurme();
                 break;
-            case PlayCenter.ACTION_PREV:
-                mPlayCenter.prev();
+            case PlayService.ACTION_PREV:
+                mPlayService.prev();
                 break;
-            case PlayCenter.ACTION_NEXT:
-                mPlayCenter.next();
+            case PlayService.ACTION_NEXT:
+                mPlayService.next();
                 break;
             default:
                 break;
@@ -159,7 +156,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
 
     @Override
     public void updateDuration(String sender, int progress) {
-        mPlayCenter.updateDuration(progress);
+        mPlayService.updateDuration(progress);
     }
 
     @Override

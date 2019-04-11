@@ -13,14 +13,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class PlayCenter implements PlayInterface {
+public class PlayService implements PlayInterface {
     private static ArrayList<PlayModel> mPlayingList;
     private static SongModel mCurrentSongPlaying;
     private static int mCurrentIndexSong;
     private static Context mContext;
     private static PlayActivity mPlayActivity;
     private static MediaPlayer mMediaPlayer = null;
-    private static PlayCenter mPlayCenter = null;
+    private static PlayService mPlayService = null;
     private static DatabaseHelper mDatabaseHelper = null;
 
 
@@ -32,19 +32,19 @@ public class PlayCenter implements PlayInterface {
 
 
     public static boolean Shuffle;
-    private static final String TAG = "PlayCenter";
+    private static final String TAG = "PlayService";
     public static final String SENDER = "PLAY_CENTER";
 
-    public static PlayCenter newInstance(Context context, PlayActivity playActivity, DatabaseHelper databaseHelper) {
-        if (mContext == null || mPlayCenter == null || mMediaPlayer == null || mDatabaseHelper == null) {
-            mPlayCenter = new PlayCenter();
+    public static PlayService newInstance(Context context, PlayActivity playActivity, DatabaseHelper databaseHelper) {
+        if (mContext == null || mPlayService == null || mMediaPlayer == null || mDatabaseHelper == null) {
+            mPlayService = new PlayService();
             mContext = context;
             mPlayActivity = playActivity;
             mMediaPlayer = new MediaPlayer();
             mDatabaseHelper = databaseHelper;
         }
 
-        return mPlayCenter;
+        return mPlayService;
     }
 
     public void play(final SongModel songModel) {

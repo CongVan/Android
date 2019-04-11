@@ -77,12 +77,12 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface {
             public void onClick(View v) {
                 Toast.makeText(mContext, "PLAY CLICK", Toast.LENGTH_SHORT).show();
 
-                if (PlayCenter.isPlaying()) {// song is playing then stop
-                    mPlayActivity.controlSong(SENDER, null, PlayCenter.ACTION_PAUSE);
+                if (PlayService.isPlaying()) {// song is playing then stop
+                    mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_PAUSE);
 
                     mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_play_arrow_black_70dp));
                 } else { //resume
-                    mPlayActivity.controlSong(SENDER, null, PlayCenter.ACTION_RESUME);
+                    mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_RESUME);
                     mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_pause_black_70dp));
 
 
@@ -94,14 +94,14 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface {
         mImageButtonPrevSong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPlayActivity.controlSong(SENDER,null,PlayCenter.ACTION_PREV);
+                mPlayActivity.controlSong(SENDER,null, PlayService.ACTION_PREV);
             }
         });
 
         mImageButtonNextSong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPlayActivity.controlSong(SENDER,null,PlayCenter.ACTION_NEXT);
+                mPlayActivity.controlSong(SENDER,null, PlayService.ACTION_NEXT);
             }
         });
 
@@ -110,8 +110,8 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
                     mPlayActivity.updateDuration(SENDER, progress);
-                    if(!PlayCenter.isPlaying()){
-                        mPlayActivity.controlSong(SENDER, null, PlayCenter.ACTION_RESUME);
+                    if(!PlayService.isPlaying()){
+                        mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_RESUME);
                         mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_pause_black_70dp));
 
                     }
@@ -134,9 +134,9 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface {
     @Override
     public void onResume() {
         super.onResume();
-        updateSeekbar(PlayCenter.getCurrentDuration());
-        Log.d(TAG, "onResume: "+PlayCenter.getCurrentDuration());
-//        mPlayActivity.controlSong(SENDER, null, PlayCenter.ACTION_RESUME);
+        updateSeekbar(PlayService.getCurrentDuration());
+        Log.d(TAG, "onResume: "+ PlayService.getCurrentDuration());
+//        mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_RESUME);
 
     }
 
