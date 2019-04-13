@@ -10,6 +10,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -38,10 +39,12 @@ import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.musicforlife.artist.ArtistModel;
 import com.example.musicforlife.callbacks.MainCallbacks;
 import com.example.musicforlife.db.DatabaseHelper;
 import com.example.musicforlife.listsong.FragmentListSong;
 import com.example.musicforlife.listsong.SongModel;
+import com.example.musicforlife.playlist.FragmentPlaylist;
 
 import java.util.ArrayList;
 
@@ -312,7 +315,16 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
 //        window.setBackgroundDrawable(MainActivity.this.getDrawable(R.drawable));
     }
 
-//    private boolean requestPermission(){
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == ArtistModel.RequestCode){ // == 2
+            SongModel songModelFromArtist = (SongModel)data.getSerializableExtra(ArtistModel.RequestCodeString);
+            playSongFromFragmentListToMain(FragmentPlaylist.SENDER,songModelFromArtist);
+        }
+    }
+
+    //    private boolean requestPermission(){
 //        // Here, thisActivity is the current activity
 //        if (ContextCompat.checkSelfPermission(MainActivity.this,
 //                Manifest.permission.READ_EXTERNAL_STORAGE)

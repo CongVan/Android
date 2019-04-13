@@ -4,12 +4,23 @@ import java.util.ArrayList;
 
 public class ArtistSongsModel {
 
-    public ArtistSongsModel(String song,String artist,String duration)
+    public ArtistSongsModel(String songId,String song,String artist,String duration)
     {
+        SongId = songId;
         NameSong = song;
         NameSongArtist = artist;
         Duration = duration;
     }
+    private String SongId;
+
+    public void setSongId(String songId) {
+        SongId = songId;
+    }
+
+    public String getSongId() {
+        return SongId;
+    }
+
     private String NameSong;
 
     public void setNameSong(String nameSong) {
@@ -40,12 +51,4 @@ public class ArtistSongsModel {
         return Duration;
     }
 
-    public static ArrayList<ArtistSongsModel> getArtistSongs(String artist){
-        ArrayList<ArtistSongsModel> arr =  new ArrayList<ArtistSongsModel>();
-        arr.add(new ArtistSongsModel("1","1" , "1"));
-        arr.add(new ArtistSongsModel("2","2" , "2"));
-        arr.add(new ArtistSongsModel("3","3" , "3"));
-        arr.add(new ArtistSongsModel("4","4" , "4"));
-        return arr;
-    }
 }

@@ -59,7 +59,7 @@ public class FragmentArtist extends Fragment {
                 ArtistModel artistModel = arrArtist.get(position);
                 ArtistViewModel artistViewModel = new ArtistViewModel(artistModel.getName(),artistModel.getPath(),artistModel.getSongCount());
                 intent.putExtra("infoArtist", artistViewModel);
-                startActivity(intent);
+                startActivityForResult(intent,ArtistModel.RequestCode);
             }
 
             @Override
