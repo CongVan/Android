@@ -52,7 +52,7 @@ public class FragmentArtistSong extends Fragment {
         LVArtistSongList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int songId = Integer.parseInt(artistSongsList.get(position).getSongId());
+                int songId = artistSongsList.get(position).getSongId();
                 SongModel songModel = ArtistProvider.GetSongFromSongModel(context,songId);
                 Intent intent=new Intent();
                 intent.putExtra(ArtistModel.RequestCodeString,songModel);

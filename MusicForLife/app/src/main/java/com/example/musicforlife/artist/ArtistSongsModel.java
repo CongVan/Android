@@ -4,20 +4,20 @@ import java.util.ArrayList;
 
 public class ArtistSongsModel {
 
-    public ArtistSongsModel(String songId,String song,String artist,String duration)
+    public ArtistSongsModel(int songId,String song,String artist,String duration)
     {
         SongId = songId;
         NameSong = song;
         NameSongArtist = artist;
         Duration = duration;
     }
-    private String SongId;
+    private int SongId;
 
-    public void setSongId(String songId) {
+    public void setSongId(int songId) {
         SongId = songId;
     }
 
-    public String getSongId() {
+    public int getSongId() {
         return SongId;
     }
 

@@ -40,7 +40,7 @@ public class ArtistProvider {
         if (cursor.moveToFirst()) {
             do {
                 long duration = cursor.getLong(3);
-                arr.add(new ArtistSongsModel(cursor.getString(0),cursor.getString(1), cursor.getString(2), SongModel.formateMilliSeccond(duration)));
+                arr.add(new ArtistSongsModel(cursor.getInt(0),cursor.getString(1), cursor.getString(2), SongModel.formateMilliSeccond(duration)));
             } while (cursor.moveToNext());
         }
         db.close();
