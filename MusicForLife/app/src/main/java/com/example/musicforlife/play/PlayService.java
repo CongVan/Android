@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class PlayService implements PlayInterface {
+public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
     private static ArrayList<PlayModel> mPlayingList;
     private static SongModel mCurrentSongPlaying;
     private static int mCurrentIndexSong;
@@ -22,6 +22,7 @@ public class PlayService implements PlayInterface {
     private static MediaPlayer mMediaPlayer = null;
     private static PlayService mPlayService = null;
     private static DatabaseHelper mDatabaseHelper = null;
+    private CountDownTimer mCountDownTimerUpdateSeekBar = null;
 
 
     public static final int ACTION_PLAY = 1;
@@ -42,6 +43,7 @@ public class PlayService implements PlayInterface {
             mPlayActivity = playActivity;
             mMediaPlayer = new MediaPlayer();
             mDatabaseHelper = databaseHelper;
+
         }
 
         return mPlayService;
@@ -58,31 +60,9 @@ public class PlayService implements PlayInterface {
             setIndexSongInPlayingList();
             mMediaPlayer.reset();
             mMediaPlayer.setDataSource(songModel.getPath());
+            mMediaPlayer.setOnPreparedListener(this);
+            mMediaPlayer.setOnCompletionListener(this);
 
-            mMediaPlayer.setOnPreparedListener(
-                    new MediaPlayer.OnPreparedListener() {
-                        @Override
-                        public void onPrepared(MediaPlayer mp) {
-
-                            if (!mMediaPlayer.isPlaying()) {
-                                new CountDownTimer(songModel.getDuration(), 1000) {
-                                    public void onTick(long millisUntilFinished) {
-
-                                        updateSeekbar(SENDER, mMediaPlayer.getCurrentPosition());
-                                    }
-
-                                    public void onFinish() {
-                                        mMediaPlayer.stop();
-
-                                    }
-                                }.start();
-
-                            }
-                            mp.start();
-
-                        }
-                    }
-            );
             mMediaPlayer.prepareAsync();
 //            mMediaPlayer.start();
         } catch (IOException e) {
@@ -174,7 +154,8 @@ public class PlayService implements PlayInterface {
     public static int getCurrentDuration() {
         return mMediaPlayer.getCurrentPosition();
     }
-    public  static SongModel getCurrentSongPlaying(){
+
+    public static SongModel getCurrentSongPlaying() {
         return mCurrentSongPlaying;
     }
 
@@ -215,4 +196,35 @@ public class PlayService implements PlayInterface {
             }
         }
     }
+
+    @Override
+    public void onPrepared(MediaPlayer mp) {
+        if (!mMediaPlayer.isPlaying()) {
+            mCountDownTimerUpdateSeekBar = new CountDownTimer(mCurrentSongPlaying.getDuration(), 1000) {
+                public void onTick(long millisUntilFinished) {
+                    if (mMediaPlayer.isPlaying()){
+                        Log.d(TAG, "onTick: "+millisUntilFinished +" "+ mCurrentSongPlaying.getTitle());
+                        updateSeekbar(SENDER, mMediaPlayer.getCurrentPosition());
+                    }
+
+                }
+
+                public void onFinish() {
+                    Log.d(TAG, "onFinish: "+mMediaPlayer.getCurrentPosition());
+//                                        mMediaPlayer.stop();
+
+                }
+            }.start();
+
+        }
+        mp.start();
+    }
+
+
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        Log.d(TAG, "onCompletion: NEXT -> ");
+        next();
+    }
+
 }

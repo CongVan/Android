@@ -70,6 +70,13 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
     public void onResume() {
         super.onResume();
         Log.i(TAG, "onResume: STARTED");
+        if (PlayService.getCurrentSongPlaying() != null) {
+            if (mSongPlaying.getSongId() != PlayService.getCurrentSongPlaying().getSongId()) {
+                mSongPlaying = PlayService.getCurrentSongPlaying();
+            }
+
+        }
+
         new LoadImageFromStorage().execute();
     }
 
@@ -162,12 +169,21 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
             });
             Log.i(TAG, "onPostExecute: FINISHED");
             //play song if songPlaying !=null
-            if ((mSongPlaying != null && PlayService.isPlaying() == false) ||
-                    mSongPlaying.getSongId() != PlayService.getCurrentSongPlaying().getSongId()
-            ) {
-
-                mPlayActivity.controlSong(FragmentListPlaying.SENDER, mSongPlaying, PlayService.ACTION_PLAY);
-                mPlayActivity.updateControlPlaying(SENDER, mSongPlaying);
+            if (mSongPlaying != null && PlayService.isPlaying() == false) {
+                Log.d(TAG, "onPostExecute: DURATION " + PlayService.getCurrentDuration());
+                if (PlayService.getCurrentSongPlaying() != null && PlayService.getCurrentDuration() > 0) {
+                    Log.d(TAG, "onPostExecute: DURATION " + PlayService.getCurrentDuration());
+                    Log.i(TAG, "onPostExecute: RESUME PLAY IN LIST "
+                            + mSongPlaying.getSongId() + "__"
+                            + PlayService.getCurrentSongPlaying().getSongId()
+                            + mSongPlaying + "__"
+                            + PlayService.isPlaying()
+                    );
+                } else {
+                    mPlayActivity.controlSong(FragmentListPlaying.SENDER, mSongPlaying, PlayService.ACTION_PLAY);
+                    mPlayActivity.updateControlPlaying(SENDER, mSongPlaying);
+                }
+//                Log.i(TAG, "onPostExecute: RESUME PLAY IN LIST " + mSongPlaying.getSongId() + "__" + PlayService.getCurrentSongPlaying().getSongId());
             }
         }
 
