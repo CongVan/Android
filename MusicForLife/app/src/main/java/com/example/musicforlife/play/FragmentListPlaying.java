@@ -70,17 +70,9 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
     public void onResume() {
         super.onResume();
         Log.i(TAG, "onResume: STARTED");
-        if (PlayService.getCurrentSongPlaying() != null) {
-            if (mSongPlaying.getSongId() != PlayService.getCurrentSongPlaying().getSongId()) {
 
-//                mSongPlaying = PlayService.getCurrentSongPlaying();
-//                mPlayActivity.controlSong(FragmentListPlaying.SENDER, mSongPlaying, PlayService.ACTION_PLAY);
-//                mPlayActivity.updateControlPlaying(SENDER, mSongPlaying);
-            }
 
-        }
 
-        new LoadImageFromStorage().execute();
     }
 
     @Nullable
@@ -89,7 +81,6 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
 
 //        ViewGroup viewGroup= (ViewGroup)inflater.inflate(R.layout.fragment_playlist, container, false);
         View view = inflater.inflate(R.layout.fragment_list_playing, container, false);
-
         return view;
 //        Log.i(TAG, "onCreateView PLAYLIST: OKOKOKO");
 //        mListSong = new ArrayList<>();// getAllAudioFromDevice(_context);
@@ -136,8 +127,22 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
                     }
                 })
         );
+        if (mSongPlaying!=null && PlayService.getCurrentSongPlaying()!=null){
+            if (mSongPlaying.getSongId()==PlayService.getCurrentSongPlaying().getSongId()){
+                playFirst=false;
 
+            }
+        }
 
+        new LoadImageFromStorage().execute();
+
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d(TAG, "onSaveInstanceState: LIST PLAYING "+mListSong.size());
+        outState.putSerializable("playList",mListSong);
     }
 
     @Override

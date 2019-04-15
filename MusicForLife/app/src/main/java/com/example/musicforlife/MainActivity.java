@@ -37,6 +37,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.musicforlife.artist.ArtistModel;
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     Handler _mainHandle = new Handler();
     //    FragmentThread fragmentThread = new FragmentThread();
     //    @BindView(R.id.btn_bottom_sheet)
-    Button btnBottomSheet;
+    LinearLayout layoutBottomSheetPlay;
 
     //    @BindView(R.id.bottom_sheet)
     BottomSheetBehavior sheetBehavior;
@@ -102,8 +103,16 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
         super.onCreate(savedInstanceState);
 //
         setContentView(R.layout.activity_main);
-
-        final Bitmap bitmapBackgroundMain=BitmapFactory.decodeResource(MainActivity.this.getResources(), R.drawable.background_1);
+        mToolBar = findViewById(R.id.tool_bar_main);
+        mViewPager =  findViewById(R.id.pagerMainContent);
+        layoutBottomSheetPlay=findViewById(R.id.bottomSheetPlay);
+        layoutBottomSheetPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handleShowPlayActivityWithSongList(null,null,PlayActivity.TYPE_SHOW_RESUME);
+            }
+        });
+//        final Bitmap bitmapBackgroundMain=BitmapFactory.decodeResource(MainActivity.this.getResources(), R.drawable.background_1);
                 //BitmapFactory.decodeResource(MainActivity.this.getResources(), R.drawable.background);
                 //getBitmap(R.drawable.background_gradient);
 //        imageViewBackgroundMain=findViewById(R.id.imageViewBackgroundMain);
@@ -258,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
 //        view.performClick();
 //        loadFragment(mFragmentRecent,FragmentRecent.SENDER);
 
-        mViewPager = (ViewPager) findViewById(R.id.pagerMainContent);
+
         pagerAdapter = new PagerMainAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(pagerAdapter);
         mViewPager.setPageTransformer(true, null);
@@ -298,7 +307,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
 //                Log.d(TAG, "run:  EXIST DATABASE: ");
             }
         }).run();
-        mToolBar = findViewById(R.id.tool_bar_main);
+
         mToolBar.setTitle("Music for life");
         setSupportActionBar(mToolBar);
         getSupportActionBar().setTitle("Music for life");
@@ -439,7 +448,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     @Override
     public void playSongsFromFragmentListToMain(String Sender, SongModel songPlay, ArrayList<SongModel> songList) {
         Log.d(TAG, "playSongsFromFragmentListToMain: "+"SONG "+ songPlay.getTitle()+" LIST "+songList.size());
-        handleShowPlayActivityWithSongList(songPlay,songList);
+        handleShowPlayActivityWithSongList(songPlay,songList,PlayActivity.TYPE_SHOW_NEW);
     }
 
     @Override
@@ -447,15 +456,16 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
         handleShowPlayActivityWithSongIdList(songPlay,songsId);
     }
 
-    private void handleShowPlayActivityWithSongList(SongModel songPlay, ArrayList<SongModel> songList){
+    private void handleShowPlayActivityWithSongList(SongModel songPlay, ArrayList<SongModel> songList,int typeShow){
         if (mIntentPlayActivity == null) {
             mIntentPlayActivity = new Intent(MainActivity.this, PlayActivity.class);
-            mIntentPlayActivity.setFlags(FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
+            mIntentPlayActivity.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         }
 //        Intent intent=new Intent(MainActivity.this,PlayActivity.class);
         Bundle bundle =new Bundle();
         bundle.putSerializable("PLAY_LIST",songList);
         bundle.putSerializable("PLAY_SONG",songPlay);
+        bundle.putInt("TYPE_SHOW",typeShow);
         mIntentPlayActivity.putExtras(bundle);
         startActivity(mIntentPlayActivity);
     }
@@ -471,6 +481,8 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
         mIntentPlayActivity.putExtras(bundle);
         startActivity(mIntentPlayActivity);
     }
+
+
     //    private class FragmentThread extends Thread {
 //        @Override
 //        public void run() {

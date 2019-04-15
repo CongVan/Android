@@ -86,6 +86,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <include
+
         layout="@layout/layout_minimize_played"
 
        >

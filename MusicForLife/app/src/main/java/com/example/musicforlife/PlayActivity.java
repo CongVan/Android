@@ -1,6 +1,8 @@
 package com.example.musicforlife;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -38,6 +40,9 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
     public static final String EXTRA_PLAYING_LIST = "EXTRA_PLAYING_LIST";
     public static final String SENDER = "PLAY_ACTIVITY";
 
+    public static final int TYPE_SHOW_NEW = 1;
+    public static final int TYPE_SHOW_RESUME = 2;
+
     private SongModel mSongPlaying = null;
 
     @Override
@@ -73,29 +78,36 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
 //                        .into(imageViewBackgroundMain );
 //            }
 //        });
-
+        mPager = (ViewPager) findViewById(R.id.pager);
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         ArrayList<SongModel> playList = null;
-
-        if (bundle.getSerializable("PLAY_LIST") != null) {
-            playList = (ArrayList<SongModel>) bundle.getSerializable("PLAY_LIST");
-        } else {
-            playList = (ArrayList<SongModel>) intent.getSerializableExtra(PlayActivity.EXTRA_PLAYING_LIST);
-        }
-        Log.d(TAG, "onCreate: "+"PLAY LIST "+playList.size());
-        if (bundle.getSerializable("PLAY_SONG") != null) {
-            mSongPlaying = (SongModel) bundle.getSerializable("PLAY_SONG");
-        } else {
-            if (playList.size() > 0) {
-                mSongPlaying = playList.get(0);
-
+        int typeShow = -1;
+        typeShow = bundle.getInt("TYPE_SHOW");
+        Log.d(TAG, "onCreate: TYPE SHOW"+ typeShow);
+        if (typeShow == TYPE_SHOW_NEW) {
+            if (bundle.getSerializable("PLAY_LIST") != null) {
+                playList = (ArrayList<SongModel>) bundle.getSerializable("PLAY_LIST");
+            } else {
+                playList = (ArrayList<SongModel>) intent.getSerializableExtra(PlayActivity.EXTRA_PLAYING_LIST);
             }
+            Log.d(TAG, "onCreate: " + "PLAY LIST " + playList.size());
+            if (bundle.getSerializable("PLAY_SONG") != null) {
+                mSongPlaying = (SongModel) bundle.getSerializable("PLAY_SONG");
+            } else {
+                if (playList.size() > 0) {
+                    mSongPlaying = playList.get(0);
+                }
+            }
+            PlayService.addSongsToPlayingList(playList);
+        } else if (typeShow == TYPE_SHOW_RESUME) {
+            Log.d(TAG, "onCreate: RESUME " + PlayService.getCurrentSongPlaying());
+            mSongPlaying = PlayService.getCurrentSongPlaying();
         }
 
-        PlayService.addSongsToPlayingList(playList);
-        Log.d(TAG, "onCreate: "+"PLAY SONG "+mSongPlaying.getTitle());
+
+//        Log.d(TAG, "onCreate: " + "PLAY SONG " + mSongPlaying.getTitle());
 
 //        TextView textView=findViewById(R.id.txtTest);
 //        Log.d(TAG, "onCreate: " + songs.size());
@@ -106,20 +118,49 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
 //        Toast.makeText(PlayActivity.this, songs.size()+"", Toast.LENGTH_SHORT).show();
 //        mPlayService = PlayService.newInstance(PlayActivity.this.getApplicationContext(), this);
         // Instantiate a ViewPager and a PagerAdapter.
-        mPager = (ViewPager) findViewById(R.id.pager);
+
         pagerAdapter = new FragmentPlayAdapter(getSupportFragmentManager(), mSongPlaying);
         mPager.setAdapter(pagerAdapter);
         mDatabaseHelper = DatabaseHelper.newInstance(getApplicationContext());
+
         mPlayService = PlayService.newInstance(PlayActivity.this.getApplicationContext(), this, mDatabaseHelper);
+
+        if (PlayService.getCurrentSongPlaying() != null) {
+            Log.d(TAG, "onCreate: SONG PLAYING " + PlayService.getCurrentSongPlaying().getTitle()
+                    + " mSONGPLAYING " + mSongPlaying.getTitle());
+        }
 
         //set animation for slide page
 //        mPager.setPageTransformer(true, new ZoomOutPageTransformer());
+//        Log.d(TAG, "onCreate: SAVE INSTANCE STATE" + savedInstanceState);
+//        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+////        int defaultValue = getResources().getInteger("TEST");
+//        int highScore = sharedPref.getInt("TEST", 0);
+//        Log.d(TAG, "onCreate: TEST SHARE "+ highScore);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Log.d(TAG, "onRestoreInstanceState: RESTORE " + savedInstanceState);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("tabIndex", 1);
     }
 
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        SharedPreferences sharedPref = PlayActivity.this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt("TEST", 1);
+        editor.commit();
+
+
 //        super.onPause();
 //        if (mPager.getCurrentItem() == 0) {
 //            // If the user is currently looking at the first step, allow the system to handle the
@@ -147,7 +188,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
 //                if (sender.equals(FragmentListPlaying.SENDER)) {
 //
 //                }
-                Log.d(TAG, "controlSong: PLAY " +sender +" "+songModel.getTitle());
+                Log.d(TAG, "controlSong: PLAY " + sender + " " + songModel.getTitle());
                 mPager.setCurrentItem(1);
                 mPlayService.play(songModel);
                 break;

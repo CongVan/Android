@@ -134,6 +134,8 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
 
     public static int addSongsToPlayingList(ArrayList<SongModel> songs) {
 //        PlayModel.clearPlayingList();
+        if (songs==null)
+            return -1;
         for (SongModel song : songs) {
             long result = PlayModel.addSongToPlayingList(song);
         }

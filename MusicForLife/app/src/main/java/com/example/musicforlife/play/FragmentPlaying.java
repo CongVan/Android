@@ -134,13 +134,18 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
 
         if (PlayService.isPlaying() && mSongPlaying.getSongId() != PlayService.getCurrentSongPlaying().getSongId()) {
             Log.d(TAG, "onResume: SERVICE "+PlayService.getCurrentSongPlaying().getTitle() +" PLAY "+ mSongPlaying.getTitle());
 //            mSongPlaying=PlayService.getCurrentSongPlaying();
-
             mPlayActivity.controlSong(SENDER, mSongPlaying, PlayService.ACTION_PLAY);
             updateControlPlaying(mSongPlaying);
 //            mPlayActivity.updateControlPlaying(SENDER, mSongPlaying);
@@ -149,7 +154,12 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
         updateSeekbar(PlayService.getCurrentDuration());
         Log.d(TAG, "onResume: " + PlayService.getCurrentDuration());
 //        mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_RESUME);
+        if (mSongPlaying!=null && PlayService.getCurrentSongPlaying()!=null){
+            if (mSongPlaying.getSongId()==PlayService.getCurrentSongPlaying().getSongId()){
+                updateControlPlaying(mSongPlaying);
 
+            }
+        }
     }
 
     @Override
