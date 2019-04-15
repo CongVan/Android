@@ -46,14 +46,13 @@ public class FragmentArtistSong extends Fragment {
         }
 
         LVArtistSongList = (ListView)view.findViewById(R.id.lvArtistSongList);
-        final ArrayList<ArtistSongsModel> artistSongsList = ArtistProvider.getArtistSongs(context,artistQuery);
+        final ArrayList<SongModel> artistSongsList = ArtistProvider.getArtistSongs(context,artistQuery);
         ArtistSongsAdapter artistSongsAdapter = new ArtistSongsAdapter(context,artistSongsList);
         LVArtistSongList.setAdapter(artistSongsAdapter);
         LVArtistSongList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int songId = artistSongsList.get(position).getSongId();
-                SongModel songModel = ArtistProvider.GetSongFromSongModel(context,songId);
+                SongModel songModel = artistSongsList.get(position);
                 Intent intent=new Intent();
                 intent.putExtra(ArtistModel.RequestCodeString,songModel);
                 _artistSongsActivity.setResult(ArtistModel.RequestCode,intent);

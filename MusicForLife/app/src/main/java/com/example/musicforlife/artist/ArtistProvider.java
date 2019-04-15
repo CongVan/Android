@@ -27,20 +27,38 @@ public class ArtistProvider {
         return result;
     }
 
-    public static ArrayList<ArtistSongsModel> getArtistSongs(Context context, String artist) {
-        ArrayList<ArtistSongsModel> arr = new ArrayList<ArtistSongsModel>();
+    public static ArrayList<SongModel> getArtistSongs(Context context, String artist) {
+        ArrayList<SongModel> arr = new ArrayList<SongModel>();
         DatabaseHelper databaseHelper = DatabaseHelper.newInstance(context);
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
-        String query = MessageFormat.format("select {0},{1},{2},{3} from {4} where {5} = ?"
-                , new String[]{SongModel.COLUMN_SONG_ID,SongModel.COLUMN_ARTIST, SongModel.COLUMN_TITLE, SongModel.COLUMN_DURATION, SongModel.TABLE_NAME, SongModel.COLUMN_ARTIST});
+        String query = MessageFormat.format("select {0},{1},{2},{3},{4},{5},{6},{7} from {8} where {9} = ?"
+                , new String[]{
+                        SongModel.COLUMN_ID,
+                        SongModel.COLUMN_SONG_ID,
+                        SongModel.COLUMN_TITLE,
+                        SongModel.COLUMN_ALBUM,
+                        SongModel.COLUMN_DURATION,
+                        SongModel.COLUMN_FOLDER,
+                        SongModel.COLUMN_ARTIST,
+                        SongModel.COLUMN_PATH,
+                        SongModel.TABLE_NAME,
+                        SongModel.COLUMN_ARTIST});
         String[] whereArgs = new String[]{
                 artist,
         };
         Cursor cursor = db.rawQuery(query, whereArgs);
         if (cursor.moveToFirst()) {
             do {
-                long duration = cursor.getLong(3);
-                arr.add(new ArtistSongsModel(cursor.getInt(0),cursor.getString(1), cursor.getString(2), SongModel.formateMilliSeccond(duration)));
+                SongModel songModel = new SongModel();
+                songModel.setId(cursor.getInt(cursor.getColumnIndex(SongModel.COLUMN_ID)));
+                songModel.setSongId(cursor.getInt(cursor.getColumnIndex(SongModel.COLUMN_SONG_ID)));
+                songModel.setTitle(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_TITLE)));
+                songModel.setAlbum(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_ALBUM)));
+                songModel.setArtist(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_ARTIST)));
+                songModel.setFolder(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_FOLDER)));
+                songModel.setDuration(cursor.getLong(cursor.getColumnIndex(SongModel.COLUMN_DURATION)));
+                songModel.setPath(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_PATH)));
+                arr.add(songModel);
             } while (cursor.moveToNext());
         }
         db.close();
@@ -51,4 +69,5 @@ public class ArtistProvider {
         DatabaseHelper databaseHelper = DatabaseHelper.newInstance(context);
         return SongModel.getSongFromSongId(databaseHelper,id);
     }
+
 }

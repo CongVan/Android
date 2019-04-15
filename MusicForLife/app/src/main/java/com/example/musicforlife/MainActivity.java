@@ -39,6 +39,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.musicforlife.artist.ArtistModel;
+import com.example.musicforlife.artist.ArtistProvider;
 import com.example.musicforlife.callbacks.MainCallbacks;
 import com.example.musicforlife.db.DatabaseHelper;
 import com.example.musicforlife.listsong.FragmentListSong;
@@ -342,7 +343,8 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks,Vie
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == ArtistModel.RequestCode){ // == 2
             SongModel songModelFromArtist = (SongModel)data.getSerializableExtra(ArtistModel.RequestCodeString);
-            playSongFromFragmentListToMain(FragmentPlaylist.SENDER,songModelFromArtist);
+            ArrayList<SongModel> listSongFromArtist = ArtistProvider.getArtistSongs(MainActivity.this,songModelFromArtist.getArtist());
+            playSongsFromFragmentListToMain(FragmentPlaylist.SENDER,songModelFromArtist,listSongFromArtist);
         }
     }
 

@@ -8,14 +8,15 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.musicforlife.R;
+import com.example.musicforlife.listsong.SongModel;
 
 import java.util.List;
 
 public class ArtistSongsAdapter extends BaseAdapter {
-    private List<ArtistSongsModel> mylist;
+    private List<SongModel> mylist;
     private Context myContext;
 
-    public ArtistSongsAdapter(Context context,List<ArtistSongsModel> list){
+    public ArtistSongsAdapter(Context context,List<SongModel> list){
         myContext = context;
         mylist = list;
     }
@@ -44,12 +45,12 @@ public class ArtistSongsAdapter extends BaseAdapter {
         TextView TVNameArtist = (TextView) convertView.findViewById(R.id.artistSongNameArtist);
         TextView TVDuration = (TextView) convertView.findViewById(R.id.artistSongDuration);
 
-        ArtistSongsModel artistSongsModel = mylist.get(position);
+        SongModel artistSongsModel = mylist.get(position);
 
         TVNumber.setText(position + 1 + "");
-        TVNameSong.setText(artistSongsModel.getNameSong());
-        TVNameArtist.setText(artistSongsModel.getNameSongArtist());
-        TVDuration.setText(artistSongsModel.getDuration());
+        TVNameSong.setText(artistSongsModel.getTitle());
+        TVNameArtist.setText(artistSongsModel.getArtist());
+        TVDuration.setText(SongModel.formateMilliSeccond(artistSongsModel.getDuration()));
 
         return convertView;
     }
