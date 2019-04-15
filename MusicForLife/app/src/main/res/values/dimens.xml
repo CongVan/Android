@@ -24,4 +24,5 @@
     <dimen name="elevation_large">12dp</dimen>
 
     <dimen name="image_icon_item">52dp</dimen>
+    <dimen name="image_card_item">52dp</dimen>
 </resources>

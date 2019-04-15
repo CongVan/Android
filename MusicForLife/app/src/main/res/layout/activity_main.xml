@@ -81,14 +81,15 @@
         android:id="@+id/pagerMainContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:background="@color/colorWhiteLight"
+
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <include
-
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         layout="@layout/layout_minimize_played"
-
        >
 
     </include>

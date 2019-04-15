@@ -28,6 +28,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -45,6 +46,7 @@ import com.example.musicforlife.callbacks.MainCallbacks;
 import com.example.musicforlife.db.DatabaseHelper;
 import com.example.musicforlife.listsong.FragmentListSong;
 import com.example.musicforlife.listsong.SongModel;
+import com.example.musicforlife.play.PlayService;
 import com.example.musicforlife.playlist.FragmentPlaylist;
 
 import java.util.ArrayList;
@@ -52,7 +54,7 @@ import java.util.ArrayList;
 import static android.content.Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY;
 
 
-public class MainActivity extends AppCompatActivity implements MainCallbacks {
+public class MainActivity extends AppCompatActivity implements MainCallbacks,View.OnClickListener {
 
     FragmentListSong fragmentListSong;
     FrameLayout frameLayoutContainer = null;
@@ -62,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     LinearLayout layoutBottomSheetPlay;
 
     //    @BindView(R.id.bottom_sheet)
-    BottomSheetBehavior sheetBehavior;
+    BottomSheetBehavior bottomSheetBehaviorPlay;
 
 
     //    private FragmentTransaction mFragmentTransaction;
@@ -106,12 +108,12 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
         mToolBar = findViewById(R.id.tool_bar_main);
         mViewPager =  findViewById(R.id.pagerMainContent);
         layoutBottomSheetPlay=findViewById(R.id.bottomSheetPlay);
-        layoutBottomSheetPlay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                handleShowPlayActivityWithSongList(null,null,PlayActivity.TYPE_SHOW_RESUME);
-            }
-        });
+        layoutBottomSheetPlay.setOnClickListener(this);
+
+        mViewPager.setPadding(0,0,0,layoutBottomSheetPlay.getHeight());
+//        bottomSheetBehaviorPlay=BottomSheetBehavior.from(layoutBottomSheetPlay);
+
+
 //        final Bitmap bitmapBackgroundMain=BitmapFactory.decodeResource(MainActivity.this.getResources(), R.drawable.background_1);
                 //BitmapFactory.decodeResource(MainActivity.this.getResources(), R.drawable.background);
                 //getBitmap(R.drawable.background_gradient);
@@ -480,6 +482,20 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
         bundle.putSerializable("PLAY_SONG",songPlay);
         mIntentPlayActivity.putExtras(bundle);
         startActivity(mIntentPlayActivity);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.bottomSheetPlay:
+                if (PlayService.getCurrentSongPlaying()==null){
+                    break;
+                }
+                handleShowPlayActivityWithSongList(null,null,PlayActivity.TYPE_SHOW_RESUME);
+                break;
+                default:
+                    break;
+        }
     }
 
 

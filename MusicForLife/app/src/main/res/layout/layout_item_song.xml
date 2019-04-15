@@ -49,11 +49,11 @@
 
                     <ImageView
                         android:id="@+id/imgSong"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
+                        android:layout_width="@dimen/image_card_item"
+                        android:layout_height="@dimen/image_card_item"
                         android:adjustViewBounds="true"
                         android:background="@drawable/shape_circle"
-                        android:scaleType="fitXY"
+                        android:scaleType="fitCenter"
                         tools:srcCompat="@mipmap/music_file_128" />
 
                 </android.support.v7.widget.CardView>
