@@ -37,7 +37,7 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
     private LoadImageFromStorage loadImageFromStorage;
     private TextView txtSizePlayingList;
     private static SongModel mSongPlaying = null;
-
+    private boolean playFirst=true;
     public static final String SENDER = "FRAGMENT_PLAYING_LIST";
     private static final String TAG = "FragmentListPlaying";
 
@@ -173,22 +173,28 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
             });
             Log.i(TAG, "onPostExecute: FINISHED");
             //play song if songPlaying !=null
-            if (mSongPlaying != null && !PlayService.isPlaying()) {
-                Log.d(TAG, "onPostExecute: DURATION " + PlayService.getCurrentDuration());
-                if (PlayService.getCurrentSongPlaying() != null && PlayService.getCurrentDuration() > 0) {
-                    Log.d(TAG, "onPostExecute: DURATION " + PlayService.getCurrentDuration());
-                    Log.i(TAG, "onPostExecute: RESUME PLAY IN LIST "
-                            + mSongPlaying.getSongId() + "__"
-                            + PlayService.getCurrentSongPlaying().getSongId()
-                            + mSongPlaying + "__"
-                            + PlayService.isPlaying()
-                    );
-                } else {
-                    mPlayActivity.controlSong(FragmentListPlaying.SENDER, mSongPlaying, PlayService.ACTION_PLAY);
-                    mPlayActivity.updateControlPlaying(SENDER, mSongPlaying);
-                }
-//                Log.i(TAG, "onPostExecute: RESUME PLAY IN LIST " + mSongPlaying.getSongId() + "__" + PlayService.getCurrentSongPlaying().getSongId());
+            if (playFirst){
+                mPlayActivity.controlSong(FragmentListPlaying.SENDER, mSongPlaying, PlayService.ACTION_PLAY);
+                mPlayActivity.updateControlPlaying(SENDER, mSongPlaying);
             }
+
+            playFirst=false;
+//            if (mSongPlaying != null && !PlayService.isPlaying()) {
+//                Log.d(TAG, "onPostExecute: DURATION " + PlayService.getCurrentDuration());
+//                if (PlayService.getCurrentSongPlaying() != null && PlayService.getCurrentDuration() > 0) {
+//                    Log.d(TAG, "onPostExecute: DURATION " + PlayService.getCurrentDuration());
+//                    Log.i(TAG, "onPostExecute: RESUME PLAY IN LIST "
+//                            + mSongPlaying.getSongId() + "__"
+//                            + PlayService.getCurrentSongPlaying().getSongId()
+//                            + mSongPlaying + "__"
+//                            + PlayService.isPlaying()
+//                    );
+//                } else {
+//                    mPlayActivity.controlSong(FragmentListPlaying.SENDER, mSongPlaying, PlayService.ACTION_PLAY);
+//                    mPlayActivity.updateControlPlaying(SENDER, mSongPlaying);
+//                }
+////                Log.i(TAG, "onPostExecute: RESUME PLAY IN LIST " + mSongPlaying.getSongId() + "__" + PlayService.getCurrentSongPlaying().getSongId());
+//            }
         }
 
         @Override

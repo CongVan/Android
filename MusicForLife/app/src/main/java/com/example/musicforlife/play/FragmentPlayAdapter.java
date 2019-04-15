@@ -26,6 +26,9 @@ public class FragmentPlayAdapter extends FragmentStatePagerAdapter {
             case 0:
                 mFragmentListPlaying = FragmentListPlaying.newInstance(mSongPlaying);
                 fragment = mFragmentListPlaying;
+//                Bundle bundle=new Bundle();
+//                bundle.putBoolean("PLAY_FISR",);
+//                fragment.setArguments(bundle);
                 break;
             case 1:
                 mFragmentPlaying = new FragmentPlaying();

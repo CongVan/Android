@@ -142,9 +142,10 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
 //            mSongPlaying=PlayService.getCurrentSongPlaying();
 
             mPlayActivity.controlSong(SENDER, mSongPlaying, PlayService.ACTION_PLAY);
+            updateControlPlaying(mSongPlaying);
 //            mPlayActivity.updateControlPlaying(SENDER, mSongPlaying);
         }
-        updateControlPlaying(mSongPlaying);
+
         updateSeekbar(PlayService.getCurrentDuration());
         Log.d(TAG, "onResume: " + PlayService.getCurrentDuration());
 //        mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_RESUME);
