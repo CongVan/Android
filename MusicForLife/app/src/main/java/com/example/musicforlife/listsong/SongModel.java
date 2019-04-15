@@ -227,8 +227,6 @@ public class SongModel implements Serializable {
 
     public static long insertSong(DatabaseHelper databaseHelper, SongModel songModel) {
         if (!isSongExsist(databaseHelper, songModel)) {
-
-
             SQLiteDatabase database = databaseHelper.getWritableDatabase();
             ContentValues contentValues = new ContentValues();
             contentValues.put(SongModel.COLUMN_SONG_ID, songModel.getSongId());
@@ -238,7 +236,6 @@ public class SongModel implements Serializable {
             contentValues.put(SongModel.COLUMN_DURATION, songModel.getDuration());
             contentValues.put(SongModel.COLUMN_FOLDER, songModel.getFolder());
             contentValues.put(SongModel.COLUMN_PATH, songModel.getPath());
-
             long id = database.insert(SongModel.TABLE_NAME, null, contentValues);
             database.close();
             return id;
@@ -299,7 +296,6 @@ public class SongModel implements Serializable {
         }
         //Log.d(TAG, "getSong: " + songModel.getSongId() + " _ " + songModel.getTitle() + " _ " + songModel.getAlbum());
         // close the db connection
-
     }
 
 

@@ -102,7 +102,16 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks {
                     @Override public void onItemClick(View view, int position) {
                         // do whatever
 //                        Toast.makeText(_context,"CLICK ITEM SONG SONG ID: "+_listSong.get(position).getSongId(),Toast.LENGTH_SHORT).show();
-                        _mainActivity.playSongFromFragmentListToMain(FragmentPlaylist.SENDER,_listSong.get(position));
+//call one song
+//                        _mainActivity.playSongFromFragmentListToMain(FragmentPlaylist.SENDER,_listSong.get(position));
+                        //call play list song
+                        _mainActivity.playSongsFromFragmentListToMain(FragmentPlaylist.SENDER,_listSong.get(position),_listSong);
+                        //call play list id
+//                        ArrayList<Integer> arrSongsId=new ArrayList<>();
+//                        for (SongModel song:_listSong){
+//                            arrSongsId.add(song.getId());
+//                        }
+//                        _mainActivity.playSongsIdFromFragmentListToMain(FragmentPlaylist.SENDER,_listSong.get(position),arrSongsId);
                     }
 
                     @Override public void onLongItemClick(View view, int position) {

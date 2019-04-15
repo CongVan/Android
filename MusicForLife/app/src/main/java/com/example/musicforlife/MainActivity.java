@@ -436,7 +436,41 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
         handleShowPlayActivity(songModelArrayList);
     }
 
+    @Override
+    public void playSongsFromFragmentListToMain(String Sender, SongModel songPlay, ArrayList<SongModel> songList) {
+        Log.d(TAG, "playSongsFromFragmentListToMain: "+"SONG "+ songPlay.getTitle()+" LIST "+songList.size());
+        handleShowPlayActivityWithSongList(songPlay,songList);
+    }
 
+    @Override
+    public void playSongsIdFromFragmentListToMain(String Sender, SongModel songPlay, ArrayList<Integer> songsId) {
+        handleShowPlayActivityWithSongIdList(songPlay,songsId);
+    }
+
+    private void handleShowPlayActivityWithSongList(SongModel songPlay, ArrayList<SongModel> songList){
+        if (mIntentPlayActivity == null) {
+            mIntentPlayActivity = new Intent(MainActivity.this, PlayActivity.class);
+            mIntentPlayActivity.setFlags(FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
+        }
+//        Intent intent=new Intent(MainActivity.this,PlayActivity.class);
+        Bundle bundle =new Bundle();
+        bundle.putSerializable("PLAY_LIST",songList);
+        bundle.putSerializable("PLAY_SONG",songPlay);
+        mIntentPlayActivity.putExtras(bundle);
+        startActivity(mIntentPlayActivity);
+    }
+    private void handleShowPlayActivityWithSongIdList(SongModel songPlay, ArrayList<Integer> songIdList){
+        if (mIntentPlayActivity == null) {
+            mIntentPlayActivity = new Intent(MainActivity.this, PlayActivity.class);
+            mIntentPlayActivity.setFlags(FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
+        }
+//        Intent intent=new Intent(MainActivity.this,PlayActivity.class);
+        Bundle bundle =new Bundle();
+        bundle.putSerializable("PLAY_LIST",songIdList);
+        bundle.putSerializable("PLAY_SONG",songPlay);
+        mIntentPlayActivity.putExtras(bundle);
+        startActivity(mIntentPlayActivity);
+    }
     //    private class FragmentThread extends Thread {
 //        @Override
 //        public void run() {

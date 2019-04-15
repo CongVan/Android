@@ -197,8 +197,6 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
 
             return PlayModel.getSongPlayingList();
         }
-
-
     }
 
     public static ArrayList<SongModel> getPlayingList() {

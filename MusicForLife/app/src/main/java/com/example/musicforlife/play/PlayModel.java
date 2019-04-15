@@ -93,7 +93,7 @@ public class PlayModel {
                 PlayModel.COLUMN_CURRENT_DURATION,
                 PlayModel.COLUMN_CREATE_DATE
         };
-        String orderBy=PlayModel.COLUMN_CREATE_DATE +" DESC ";
+        String orderBy = PlayModel.COLUMN_CREATE_DATE + " DESC ";
         Cursor cursor = db.query(PlayModel.TABLE_NAME, projection, null, null, null, null, orderBy);
         if (cursor.moveToFirst()) {
             do {
@@ -115,7 +115,7 @@ public class PlayModel {
         ArrayList<SongModel> songModelList = new ArrayList<>();
         SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
         String query = "SELECT s.* FROM " + PlayModel.TABLE_NAME + " pm INNER JOIN " + SongModel.TABLE_NAME + " s ON pm." + PlayModel.COLUMN_SONG_ID
-                + "= s." + SongModel.COLUMN_SONG_ID + " ORDER BY pm." + PlayModel.COLUMN_CREATE_DATE + " DESC";
+                + "= s." + SongModel.COLUMN_SONG_ID + " ORDER BY s." + SongModel.COLUMN_TITLE + " ";
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
             do {
@@ -142,7 +142,7 @@ public class PlayModel {
         if (!existSong) {
             SQLiteDatabase database = mDatabaseHelper.getWritableDatabase();
             ContentValues contentValues = new ContentValues();
-            contentValues.put(PlayModel.COLUMN_ID, song.getId());
+//            contentValues.put(PlayModel.COLUMN_ID, song.getId());
             contentValues.put(PlayModel.COLUMN_SONG_ID, song.getSongId());
             contentValues.put(PlayModel.COLUMN_IS_PLAYING, 1);
             contentValues.put(PlayModel.COLUMN_CURRENT_DURATION, 0);
@@ -152,6 +152,21 @@ public class PlayModel {
             return id;
         }
         return -1;
+    }
+
+    public static long createPlaylistFromSongs(ArrayList<SongModel> songs) {
+        SQLiteDatabase database = mDatabaseHelper.getWritableDatabase();
+        for (SongModel song : songs) {
+            ContentValues contentValues = new ContentValues();
+//            contentValues.put(PlayModel.COLUMN_ID, song.getId());
+            contentValues.put(PlayModel.COLUMN_SONG_ID, song.getSongId());
+            contentValues.put(PlayModel.COLUMN_IS_PLAYING, 1);
+            contentValues.put(PlayModel.COLUMN_CURRENT_DURATION, 0);
+            contentValues.put(PlayModel.COLUMN_CREATE_DATE, getDateTimeNow());
+            database.insert(PlayModel.TABLE_NAME, null, contentValues);
+        }
+        database.close();
+        return 0;
     }
 
     private static String getDateTimeNow() {

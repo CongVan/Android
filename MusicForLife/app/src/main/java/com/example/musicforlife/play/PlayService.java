@@ -31,7 +31,12 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
     public static final int ACTION_NEXT = 4;
     public static final int ACTION_PREV = 5;
 
+    public static final int NONE_LOOP = 1;
+    public static final int ALL_LOOP = 2;
+    public static final int ONE_LOOP = 3;
 
+
+    private static int loopType = ALL_LOOP;
     public static boolean Shuffle;
     private static final String TAG = "PlayService";
     public static final String SENDER = "PLAY_CENTER";
@@ -47,6 +52,14 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
         }
 
         return mPlayService;
+    }
+
+    public static int getLoopType() {
+        return loopType;
+    }
+
+    public static void setLoopType(int loopType) {
+        PlayService.loopType = loopType;
     }
 
     public void play(final SongModel songModel) {
@@ -120,6 +133,7 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
     }
 
     public static int addSongsToPlayingList(ArrayList<SongModel> songs) {
+//        PlayModel.clearPlayingList();
         for (SongModel song : songs) {
             long result = PlayModel.addSongToPlayingList(song);
         }
@@ -128,10 +142,9 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
     }
 
     public static int createPlayingList(ArrayList<SongModel> songs) {
+        Log.d(TAG, "createPlayingList: "+songs.size());
         PlayModel.clearPlayingList();
-        for (SongModel song : songs) {
-            long result = PlayModel.addSongToPlayingList(song);
-        }
+        PlayModel.createPlaylistFromSongs(songs);
         updatePlayingList();
         return 1;
     }
@@ -202,15 +215,15 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
         if (!mMediaPlayer.isPlaying()) {
             mCountDownTimerUpdateSeekBar = new CountDownTimer(mCurrentSongPlaying.getDuration(), 1000) {
                 public void onTick(long millisUntilFinished) {
-                    if (mMediaPlayer.isPlaying()){
-                        Log.d(TAG, "onTick: "+millisUntilFinished +" "+ mCurrentSongPlaying.getTitle());
+                    if (mMediaPlayer.isPlaying()) {
+                        Log.d(TAG, "onTick: " + millisUntilFinished + " " + mCurrentSongPlaying.getTitle());
                         updateSeekbar(SENDER, mMediaPlayer.getCurrentPosition());
                     }
 
                 }
 
                 public void onFinish() {
-                    Log.d(TAG, "onFinish: "+mMediaPlayer.getCurrentPosition());
+                    Log.d(TAG, "onFinish: " + mMediaPlayer.getCurrentPosition());
 //                                        mMediaPlayer.stop();
 
                 }

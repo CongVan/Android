@@ -6,6 +6,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -75,11 +76,27 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
 
 
         Intent intent = getIntent();
-        ArrayList<SongModel> songs = (ArrayList<SongModel>) intent.getSerializableExtra(PlayActivity.EXTRA_PLAYING_LIST);
-        if (songs.size() > 0) {
-            mSongPlaying = songs.get(0);
-            PlayService.addSongsToPlayingList(songs);
+        Bundle bundle = intent.getExtras();
+        ArrayList<SongModel> playList = null;
+
+        if (bundle.getSerializable("PLAY_LIST") != null) {
+            playList = (ArrayList<SongModel>) bundle.getSerializable("PLAY_LIST");
+        } else {
+            playList = (ArrayList<SongModel>) intent.getSerializableExtra(PlayActivity.EXTRA_PLAYING_LIST);
         }
+        Log.d(TAG, "onCreate: "+"PLAY LIST "+playList.size());
+        if (bundle.getSerializable("PLAY_SONG") != null) {
+            mSongPlaying = (SongModel) bundle.getSerializable("PLAY_SONG");
+        } else {
+            if (playList.size() > 0) {
+                mSongPlaying = playList.get(0);
+
+            }
+        }
+
+        PlayService.createPlayingList(playList);
+        Log.d(TAG, "onCreate: "+"PLAY SONG "+mSongPlaying.getTitle());
+
 //        TextView textView=findViewById(R.id.txtTest);
 //        Log.d(TAG, "onCreate: " + songs.size());
 //        for (SongModel song : songs
