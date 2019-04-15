@@ -1,5 +1,6 @@
 package com.example.musicforlife.play;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -29,6 +30,9 @@ public class FragmentPlayAdapter extends FragmentStatePagerAdapter {
             case 1:
                 mFragmentPlaying = new FragmentPlaying();
                 fragment = mFragmentPlaying;
+                Bundle bundle=new Bundle();
+                bundle.putSerializable("PLAY_SONG",mSongPlaying);
+                fragment.setArguments(bundle);
                 break;
             default:
                 break;

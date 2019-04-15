@@ -94,7 +94,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
             }
         }
 
-        PlayService.createPlayingList(playList);
+        PlayService.addSongsToPlayingList(playList);
         Log.d(TAG, "onCreate: "+"PLAY SONG "+mSongPlaying.getTitle());
 
 //        TextView textView=findViewById(R.id.txtTest);
@@ -144,9 +144,11 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
     public void controlSong(String sender, SongModel songModel, int action) {
         switch (action) {
             case PlayService.ACTION_PLAY:
-                if (sender.equals(FragmentListPlaying.SENDER)) {
-                    mPager.setCurrentItem(1);
-                }
+//                if (sender.equals(FragmentListPlaying.SENDER)) {
+//
+//                }
+                Log.d(TAG, "controlSong: PLAY " +sender +" "+songModel.getTitle());
+                mPager.setCurrentItem(1);
                 mPlayService.play(songModel);
                 break;
             case PlayService.ACTION_PAUSE:

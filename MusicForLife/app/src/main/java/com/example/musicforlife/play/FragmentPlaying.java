@@ -64,7 +64,10 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
         if (mContext == null) {
             mContext = getActivity();
             mPlayActivity = (PlayActivity) getActivity();
+
         }
+        Bundle bundle = getArguments();
+        mSongPlaying = (SongModel) bundle.getSerializable("PLAY_SONG");
     }
 
     @Nullable
@@ -127,11 +130,21 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
 
             }
         });
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
+        if (PlayService.isPlaying() && mSongPlaying.getSongId() != PlayService.getCurrentSongPlaying().getSongId()) {
+            Log.d(TAG, "onResume: SERVICE "+PlayService.getCurrentSongPlaying().getTitle() +" PLAY "+ mSongPlaying.getTitle());
+//            mSongPlaying=PlayService.getCurrentSongPlaying();
+
+            mPlayActivity.controlSong(SENDER, mSongPlaying, PlayService.ACTION_PLAY);
+//            mPlayActivity.updateControlPlaying(SENDER, mSongPlaying);
+        }
+        updateControlPlaying(mSongPlaying);
         updateSeekbar(PlayService.getCurrentDuration());
         Log.d(TAG, "onResume: " + PlayService.getCurrentDuration());
 //        mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_RESUME);

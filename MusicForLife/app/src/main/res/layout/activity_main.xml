@@ -87,10 +87,8 @@
 
     <include
         layout="@layout/layout_minimize_played"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:visibility="gone">
+
+       >
 
     </include>
 
