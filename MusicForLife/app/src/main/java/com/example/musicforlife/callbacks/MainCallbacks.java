@@ -9,4 +9,5 @@ public interface MainCallbacks {
     void playSongFromFragmentListToMain (String Sender, SongModel songModel);
     void playSongsFromFragmentListToMain (String Sender, SongModel songPlay, ArrayList<SongModel> songList);
     void playSongsIdFromFragmentListToMain (String Sender, SongModel songPlay, ArrayList<Integer> songsId);
+    void togglePlayingMinimize();
 }

@@ -34,7 +34,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
     private PagerAdapter pagerAdapter;
     private PlayService mPlayService;
     private ImageView imageViewBackgroundMain;
-
+    private MainActivity mMainActivity;
 
     private static final String TAG = "PlayActivity";
     public static final String EXTRA_PLAYING_LIST = "EXTRA_PLAYING_LIST";
@@ -49,6 +49,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
+
         Window window = PlayActivity.this.getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -191,6 +192,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
                 Log.d(TAG, "controlSong: PLAY " + sender + " " + songModel.getTitle());
                 mPager.setCurrentItem(1);
                 mPlayService.play(songModel);
+                MainActivity.getInstance().togglePlayingMinimize();
                 break;
             case PlayService.ACTION_PAUSE:
                 mPlayService.pause();

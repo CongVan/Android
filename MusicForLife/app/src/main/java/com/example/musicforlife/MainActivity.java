@@ -1,18 +1,16 @@
 package com.example.musicforlife;
 
 
-import android.Manifest;
 import android.annotation.TargetApi;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.media.MediaMetadataRetriever;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Build;
@@ -28,17 +26,16 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.musicforlife.artist.ArtistModel;
@@ -49,6 +46,8 @@ import com.example.musicforlife.listsong.SongModel;
 import com.example.musicforlife.play.PlayService;
 import com.example.musicforlife.playlist.FragmentPlaylist;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import static android.content.Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY;
@@ -61,8 +60,11 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks,Vie
     Handler _mainHandle = new Handler();
     //    FragmentThread fragmentThread = new FragmentThread();
     //    @BindView(R.id.btn_bottom_sheet)
-    LinearLayout layoutBottomSheetPlay;
-
+    private LinearLayout mLayoutPlayingMinimizie;
+    private TextView mTextViewTitleSongMinimize ;
+    private TextView mTextViewArtistMinimize;
+    private ImageView mImageViewSongMinimize;
+    private static MainActivity instance;
     //    @BindView(R.id.bottom_sheet)
     BottomSheetBehavior bottomSheetBehaviorPlay;
 
@@ -89,6 +91,10 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks,Vie
 
     public static DatabaseHelper mDatabaseHelper;
 
+    public static MainActivity getInstance() {
+        return instance;
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
@@ -107,11 +113,16 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks,Vie
         setContentView(R.layout.activity_main);
         mToolBar = findViewById(R.id.tool_bar_main);
         mViewPager =  findViewById(R.id.pagerMainContent);
-        layoutBottomSheetPlay=findViewById(R.id.bottomSheetPlay);
-        layoutBottomSheetPlay.setOnClickListener(this);
+        mLayoutPlayingMinimizie =findViewById(R.id.bottomSheetPlay);
+        mTextViewTitleSongMinimize=findViewById(R.id.txtTitleMinimize);
+        mTextViewArtistMinimize=findViewById(R.id.txtArtistMinimize);
+        mImageViewSongMinimize=findViewById(R.id.imgSongMinimize);
 
-        mViewPager.setPadding(0,0,0,layoutBottomSheetPlay.getHeight());
-//        bottomSheetBehaviorPlay=BottomSheetBehavior.from(layoutBottomSheetPlay);
+        mLayoutPlayingMinimizie.setOnClickListener(this);
+        instance=this;
+        togglePlayingMinimize();
+
+//        bottomSheetBehaviorPlay=BottomSheetBehavior.from(mLayoutPlayingMinimizie);
 
 
 //        final Bitmap bitmapBackgroundMain=BitmapFactory.decodeResource(MainActivity.this.getResources(), R.drawable.background_1);
@@ -388,6 +399,14 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks,Vie
 //    }
 
     //    @RequiresApi(api = Build.VERSION_CODES.O)
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        togglePlayingMinimize();
+    }
+
     @Override
     public void onBackPressed() {
         if (mViewPager.getCurrentItem() == 0) {
@@ -458,6 +477,39 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks,Vie
         handleShowPlayActivityWithSongIdList(songPlay,songsId);
     }
 
+    @Override
+    public void togglePlayingMinimize() {
+
+        if (PlayService.getCurrentSongPlaying()!=null && PlayService.isPlaying()){
+            SongModel songPlaying=PlayService.getCurrentSongPlaying();
+            mTextViewTitleSongMinimize.setText(songPlaying.getTitle());
+            mTextViewArtistMinimize.setText(songPlaying.getArtist());
+
+            MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+
+            mediaMetadataRetriever.setDataSource(songPlaying.getPath());
+            InputStream inputStream;
+            Bitmap bitmap;
+
+            if (mediaMetadataRetriever.getEmbeddedPicture() != null) {
+                inputStream = new ByteArrayInputStream(mediaMetadataRetriever.getEmbeddedPicture());
+                mediaMetadataRetriever.release();
+                bitmap = BitmapFactory.decodeStream(inputStream);
+            } else {
+                bitmap = BitmapFactory.decodeResource(this.getResources(), R.mipmap.music_file_128);
+            }
+
+
+            mImageViewSongMinimize.setImageBitmap(bitmap);
+
+            mLayoutPlayingMinimizie.setVisibility(View.VISIBLE);
+            mViewPager.setPadding(0,0,0, mLayoutPlayingMinimizie.getHeight());
+        }else{
+            mLayoutPlayingMinimizie.setVisibility(View.GONE);
+            mViewPager.setPadding(0,0,0,0);
+        }
+    }
+
     private void handleShowPlayActivityWithSongList(SongModel songPlay, ArrayList<SongModel> songList,int typeShow){
         if (mIntentPlayActivity == null) {
             mIntentPlayActivity = new Intent(MainActivity.this, PlayActivity.class);
@@ -468,6 +520,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks,Vie
         bundle.putSerializable("PLAY_LIST",songList);
         bundle.putSerializable("PLAY_SONG",songPlay);
         bundle.putInt("TYPE_SHOW",typeShow);
+
         mIntentPlayActivity.putExtras(bundle);
         startActivity(mIntentPlayActivity);
     }

@@ -63,7 +63,7 @@
         </LinearLayout>
         <include
             android:id="@+id/top_content_played_collapsed"
-            layout="@layout/layout_minimize_played"/>
+            layout="@layout/layout_playing_minimize"/>
 
         <LinearLayout
             android:layout_width="match_parent"

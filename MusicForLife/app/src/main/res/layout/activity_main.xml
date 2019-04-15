@@ -89,7 +89,7 @@
         android:layout_gravity="bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        layout="@layout/layout_minimize_played"
+        layout="@layout/layout_playing_minimize"
        >
 
     </include>
