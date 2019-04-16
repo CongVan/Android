@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.musicforlife.MainActivity;
+import com.example.musicforlife.PlayActivity;
 import com.example.musicforlife.R;
 import com.example.musicforlife.listsong.SongModel;
 import com.example.musicforlife.playlist.FragmentPlaylist;
@@ -28,6 +29,7 @@ public class FragmentArtistSong extends Fragment {
     ListView LVArtistSongList;
     String artistQuery = "";
     ArtistSongsActivity _artistSongsActivity;
+    private Intent mIntentPlayActivity;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -53,10 +55,9 @@ public class FragmentArtistSong extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 SongModel songModel = artistSongsList.get(position);
-                Intent intent=new Intent();
-                intent.putExtra(ArtistModel.RequestCodeString,songModel);
-                _artistSongsActivity.setResult(ArtistModel.RequestCode,intent);
-                _artistSongsActivity.finish();
+                ArrayList<SongModel> listSongFromArtist = ArtistProvider.getArtistSongs(_artistSongsActivity, songModel.getArtist());
+                MainActivity _mainActivity =  MainActivity.getMainActivity();
+                _mainActivity.playSongsFromFragmentListToMain(FragmentPlaylist.SENDER,songModel,artistSongsList);
             }
         });
 
