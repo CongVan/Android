@@ -84,9 +84,12 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         ArrayList<SongModel> playList = null;
+
+
+
         int typeShow = -1;
         typeShow = bundle.getInt("TYPE_SHOW");
-        Log.d(TAG, "onCreate: TYPE SHOW"+ typeShow);
+        Log.d(TAG, "onCreate: TYPE SHOW" + typeShow);
         if (typeShow == TYPE_SHOW_NEW) {
             if (bundle.getSerializable("PLAY_LIST") != null) {
                 playList = (ArrayList<SongModel>) bundle.getSerializable("PLAY_LIST");
@@ -184,6 +187,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
 
     @Override
     public void controlSong(String sender, SongModel songModel, int action) {
+
         switch (action) {
             case PlayService.ACTION_PLAY:
 //                if (sender.equals(FragmentListPlaying.SENDER)) {
@@ -192,7 +196,8 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
                 Log.d(TAG, "controlSong: PLAY " + sender + " " + songModel.getTitle());
                 mPager.setCurrentItem(1);
                 mPlayService.play(songModel);
-                MainActivity.getInstance().togglePlayingMinimize();
+                Log.d(TAG, "controlSong: ");
+
                 break;
             case PlayService.ACTION_PAUSE:
                 mPlayService.pause();
@@ -202,9 +207,11 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
                 break;
             case PlayService.ACTION_PREV:
                 mPlayService.prev();
+
                 break;
             case PlayService.ACTION_NEXT:
                 mPlayService.next();
+
                 break;
             default:
                 break;
@@ -214,6 +221,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
     @Override
     public void updateControlPlaying(String sender, SongModel songModel) {
         ((FragmentPlayAdapter) pagerAdapter).getFragmentPlaying().updateControlPlaying(songModel);
+        MainActivity.getMainActivity().togglePlayingMinimize(sender);
     }
 
     @Override

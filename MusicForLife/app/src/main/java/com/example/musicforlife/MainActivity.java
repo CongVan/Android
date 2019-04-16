@@ -2,6 +2,7 @@ package com.example.musicforlife;
 
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -25,6 +26,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,12 +50,13 @@ import com.example.musicforlife.playlist.FragmentPlaylist;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import static android.content.Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY;
 
 
-public class MainActivity extends AppCompatActivity implements MainCallbacks,View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements MainCallbacks, View.OnClickListener {
 
     FragmentListSong fragmentListSong;
     FrameLayout frameLayoutContainer = null;
@@ -61,10 +64,11 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks,Vie
     //    FragmentThread fragmentThread = new FragmentThread();
     //    @BindView(R.id.btn_bottom_sheet)
     private LinearLayout mLayoutPlayingMinimizie;
-    private TextView mTextViewTitleSongMinimize ;
+    private TextView mTextViewTitleSongMinimize;
     private TextView mTextViewArtistMinimize;
     private ImageView mImageViewSongMinimize;
-    private static MainActivity instance;
+    private CardView mCardViewPlayingMinimize;
+    private static MainActivity mMainActivity;
     //    @BindView(R.id.bottom_sheet)
     BottomSheetBehavior bottomSheetBehaviorPlay;
 
@@ -91,8 +95,8 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks,Vie
 
     public static DatabaseHelper mDatabaseHelper;
 
-    public static MainActivity getInstance() {
-        return instance;
+    public static MainActivity getMainActivity() {
+        return mMainActivity;
     }
 
     @Override
@@ -112,22 +116,23 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks,Vie
 //
         setContentView(R.layout.activity_main);
         mToolBar = findViewById(R.id.tool_bar_main);
-        mViewPager =  findViewById(R.id.pagerMainContent);
-        mLayoutPlayingMinimizie =findViewById(R.id.bottomSheetPlay);
-        mTextViewTitleSongMinimize=findViewById(R.id.txtTitleMinimize);
-        mTextViewArtistMinimize=findViewById(R.id.txtArtistMinimize);
-        mImageViewSongMinimize=findViewById(R.id.imgSongMinimize);
-
+        mViewPager = findViewById(R.id.pagerMainContent);
+        mLayoutPlayingMinimizie = findViewById(R.id.bottomSheetPlay);
+        mTextViewTitleSongMinimize = findViewById(R.id.txtTitleMinimize);
+        mTextViewArtistMinimize = findViewById(R.id.txtArtistMinimize);
+        mImageViewSongMinimize = findViewById(R.id.imgSongMinimize);
+        mCardViewPlayingMinimize = findViewById(R.id.cardViewPlayingMinimize);
         mLayoutPlayingMinimizie.setOnClickListener(this);
-        instance=this;
-        togglePlayingMinimize();
+        mCardViewPlayingMinimize.setOnClickListener(this);
+        mMainActivity = MainActivity.this;
+        togglePlayingMinimize("MAIN");
 
 //        bottomSheetBehaviorPlay=BottomSheetBehavior.from(mLayoutPlayingMinimizie);
 
 
 //        final Bitmap bitmapBackgroundMain=BitmapFactory.decodeResource(MainActivity.this.getResources(), R.drawable.background_1);
-                //BitmapFactory.decodeResource(MainActivity.this.getResources(), R.drawable.background);
-                //getBitmap(R.drawable.background_gradient);
+        //BitmapFactory.decodeResource(MainActivity.this.getResources(), R.drawable.background);
+        //getBitmap(R.drawable.background_gradient);
 //        imageViewBackgroundMain=findViewById(R.id.imageViewBackgroundMain);
 //        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 //                WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -330,19 +335,19 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks,Vie
 //            mTabLayout.getTabAt(i).setIcon(mTabIcons[i]);
 //        }
         //Set status bar color
-        Window window=MainActivity.this.getWindow();
+        Window window = MainActivity.this.getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(ContextCompat.getColor(MainActivity.this,R.color.colorPrimary));
+        window.setStatusBarColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
 //        window.setBackgroundDrawable(MainActivity.this.getDrawable(R.drawable));
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == ArtistModel.RequestCode){ // == 2
-            SongModel songModelFromArtist = (SongModel)data.getSerializableExtra(ArtistModel.RequestCodeString);
-            playSongFromFragmentListToMain(FragmentPlaylist.SENDER,songModelFromArtist);
+        if (resultCode == ArtistModel.RequestCode) { // == 2
+            SongModel songModelFromArtist = (SongModel) data.getSerializableExtra(ArtistModel.RequestCodeString);
+            playSongFromFragmentListToMain(FragmentPlaylist.SENDER, songModelFromArtist);
         }
     }
 
@@ -404,7 +409,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks,Vie
     @Override
     protected void onResume() {
         super.onResume();
-        togglePlayingMinimize();
+        togglePlayingMinimize("MAIN");
     }
 
     @Override
@@ -432,7 +437,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks,Vie
 
         }
 //        Intent intent=new Intent(MainActivity.this,PlayActivity.class);
-        mIntentPlayActivity.putExtra(PlayActivity.EXTRA_PLAYING_LIST,songs);
+        mIntentPlayActivity.putExtra(PlayActivity.EXTRA_PLAYING_LIST, songs);
         startActivity(mIntentPlayActivity);
 
 //        TaskStackBuilder.create(this)
@@ -460,28 +465,29 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks,Vie
 
     @Override
     public void playSongFromFragmentListToMain(String sender, SongModel songModel) {
-        Toast.makeText(MainActivity.this,"Playsong form Main SONG ID: "+songModel.getSongId(),Toast.LENGTH_SHORT).show();
-        ArrayList<SongModel> songModelArrayList=new ArrayList<SongModel>();
+        Toast.makeText(MainActivity.this, "Playsong form Main SONG ID: " + songModel.getSongId(), Toast.LENGTH_SHORT).show();
+        ArrayList<SongModel> songModelArrayList = new ArrayList<SongModel>();
         songModelArrayList.add(songModel);
         handleShowPlayActivity(songModelArrayList);
     }
 
     @Override
     public void playSongsFromFragmentListToMain(String Sender, SongModel songPlay, ArrayList<SongModel> songList) {
-        Log.d(TAG, "playSongsFromFragmentListToMain: "+"SONG "+ songPlay.getTitle()+" LIST "+songList.size());
-        handleShowPlayActivityWithSongList(songPlay,songList,PlayActivity.TYPE_SHOW_NEW);
+        Log.d(TAG, "playSongsFromFragmentListToMain: " + "SONG " + songPlay.getTitle() + " LIST " + songList.size());
+        handleShowPlayActivityWithSongList(songPlay, songList, PlayActivity.TYPE_SHOW_NEW);
     }
 
     @Override
     public void playSongsIdFromFragmentListToMain(String Sender, SongModel songPlay, ArrayList<Integer> songsId) {
-        handleShowPlayActivityWithSongIdList(songPlay,songsId);
+        handleShowPlayActivityWithSongIdList(songPlay, songsId);
     }
 
     @Override
-    public void togglePlayingMinimize() {
+    public void togglePlayingMinimize(String sender) {
 
-        if (PlayService.getCurrentSongPlaying()!=null && PlayService.isPlaying()){
-            SongModel songPlaying=PlayService.getCurrentSongPlaying();
+        if (PlayService.getCurrentSongPlaying() != null) {
+            Log.d(TAG, "togglePlayingMinimize: " + sender + " SONG PLAYING " + PlayService.getCurrentSongPlaying().getTitle());
+            SongModel songPlaying = PlayService.getCurrentSongPlaying();
             mTextViewTitleSongMinimize.setText(songPlaying.getTitle());
             mTextViewArtistMinimize.setText(songPlaying.getArtist());
 
@@ -503,51 +509,55 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks,Vie
             mImageViewSongMinimize.setImageBitmap(bitmap);
 
             mLayoutPlayingMinimizie.setVisibility(View.VISIBLE);
-            mViewPager.setPadding(0,0,0, mLayoutPlayingMinimizie.getHeight());
-        }else{
+            mViewPager.setPadding(0, 0, 0, mLayoutPlayingMinimizie.getHeight());
+        } else {
             mLayoutPlayingMinimizie.setVisibility(View.GONE);
-            mViewPager.setPadding(0,0,0,0);
+            mViewPager.setPadding(0, 0, 0, 0);
         }
     }
 
-    private void handleShowPlayActivityWithSongList(SongModel songPlay, ArrayList<SongModel> songList,int typeShow){
+    private void handleShowPlayActivityWithSongList(SongModel songPlay, ArrayList<SongModel> songList, int typeShow) {
         if (mIntentPlayActivity == null) {
             mIntentPlayActivity = new Intent(MainActivity.this, PlayActivity.class);
             mIntentPlayActivity.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         }
 //        Intent intent=new Intent(MainActivity.this,PlayActivity.class);
-        Bundle bundle =new Bundle();
-        bundle.putSerializable("PLAY_LIST",songList);
-        bundle.putSerializable("PLAY_SONG",songPlay);
-        bundle.putInt("TYPE_SHOW",typeShow);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("PLAY_LIST", songList);
+        bundle.putSerializable("PLAY_SONG", songPlay);
+
+        bundle.putInt("TYPE_SHOW", typeShow);
 
         mIntentPlayActivity.putExtras(bundle);
         startActivity(mIntentPlayActivity);
     }
-    private void handleShowPlayActivityWithSongIdList(SongModel songPlay, ArrayList<Integer> songIdList){
+
+    private void handleShowPlayActivityWithSongIdList(SongModel songPlay, ArrayList<Integer> songIdList) {
         if (mIntentPlayActivity == null) {
             mIntentPlayActivity = new Intent(MainActivity.this, PlayActivity.class);
             mIntentPlayActivity.setFlags(FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
         }
 //        Intent intent=new Intent(MainActivity.this,PlayActivity.class);
-        Bundle bundle =new Bundle();
-        bundle.putSerializable("PLAY_LIST",songIdList);
-        bundle.putSerializable("PLAY_SONG",songPlay);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("PLAY_LIST", songIdList);
+        bundle.putSerializable("PLAY_SONG", songPlay);
         mIntentPlayActivity.putExtras(bundle);
         startActivity(mIntentPlayActivity);
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.bottomSheetPlay:
-                if (PlayService.getCurrentSongPlaying()==null){
+            case R.id.cardViewPlayingMinimize:
+                if (PlayService.getCurrentSongPlaying() == null) {
                     break;
                 }
-                handleShowPlayActivityWithSongList(null,null,PlayActivity.TYPE_SHOW_RESUME);
+                handleShowPlayActivityWithSongList(null, null, PlayActivity.TYPE_SHOW_RESUME);
                 break;
-                default:
-                    break;
+
+            default:
+                break;
         }
     }
 

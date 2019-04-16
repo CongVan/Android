@@ -106,6 +106,7 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
         if (mMediaPlayer.isPlaying()) {
             mMediaPlayer.reset();
             mMediaPlayer.stop();
+            mCountDownTimerUpdateSeekBar.cancel();
         }
         if (mCurrentIndexSong == mPlayingList.size() - 1) {
             mCurrentIndexSong = 0;
@@ -121,6 +122,7 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
         if (mMediaPlayer.isPlaying()) {
             mMediaPlayer.reset();
             mMediaPlayer.stop();
+            mCountDownTimerUpdateSeekBar.cancel();
         }
         if (mCurrentIndexSong == 0) {
             mCurrentIndexSong = mPlayingList.size() - 1;
