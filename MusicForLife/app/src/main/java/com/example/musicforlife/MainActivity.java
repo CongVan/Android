@@ -41,6 +41,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.musicforlife.artist.ArtistModel;
+import com.example.musicforlife.artist.ArtistProvider;
 import com.example.musicforlife.callbacks.MainCallbacks;
 import com.example.musicforlife.db.DatabaseHelper;
 import com.example.musicforlife.listsong.FragmentListSong;
@@ -345,9 +346,16 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+<<<<<<< HEAD
         if (resultCode == ArtistModel.RequestCode) { // == 2
             SongModel songModelFromArtist = (SongModel) data.getSerializableExtra(ArtistModel.RequestCodeString);
             playSongFromFragmentListToMain(FragmentPlaylist.SENDER, songModelFromArtist);
+=======
+        if(resultCode == ArtistModel.RequestCode){ // == 2
+            SongModel songModelFromArtist = (SongModel)data.getSerializableExtra(ArtistModel.RequestCodeString);
+            ArrayList<SongModel> listSongFromArtist = ArtistProvider.getArtistSongs(MainActivity.this,songModelFromArtist.getArtist());
+            playSongsFromFragmentListToMain(FragmentPlaylist.SENDER,songModelFromArtist,listSongFromArtist);
+>>>>>>> d48a7f0546e4d09848ae49a21e8e5317c96968d2
         }
     }
 
