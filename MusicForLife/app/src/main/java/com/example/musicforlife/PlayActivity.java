@@ -104,7 +104,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
                     mSongPlaying = playList.get(0);
                 }
             }
-            PlayService.addSongsToPlayingList(playList);
+            PlayService.createPlayingList(playList);
         } else if (typeShow == TYPE_SHOW_RESUME) {
             Log.d(TAG, "onCreate: RESUME " + PlayService.getCurrentSongPlaying());
             mSongPlaying = PlayService.getCurrentSongPlaying();

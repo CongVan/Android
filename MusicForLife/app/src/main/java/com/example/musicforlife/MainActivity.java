@@ -346,16 +346,16 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-<<<<<<< HEAD
+        SongModel songModelFromArtist = null;
+//        if (resultCode == ArtistModel.RequestCode) { // == 2
+//            songModelFromArtist = (SongModel) data.getSerializableExtra(ArtistModel.RequestCodeString);
+//            playSongFromFragmentListToMain(FragmentPlaylist.SENDER, songModelFromArtist);
+//        }
         if (resultCode == ArtistModel.RequestCode) { // == 2
-            SongModel songModelFromArtist = (SongModel) data.getSerializableExtra(ArtistModel.RequestCodeString);
-            playSongFromFragmentListToMain(FragmentPlaylist.SENDER, songModelFromArtist);
-=======
-        if(resultCode == ArtistModel.RequestCode){ // == 2
-            SongModel songModelFromArtist = (SongModel)data.getSerializableExtra(ArtistModel.RequestCodeString);
-            ArrayList<SongModel> listSongFromArtist = ArtistProvider.getArtistSongs(MainActivity.this,songModelFromArtist.getArtist());
-            playSongsFromFragmentListToMain(FragmentPlaylist.SENDER,songModelFromArtist,listSongFromArtist);
->>>>>>> d48a7f0546e4d09848ae49a21e8e5317c96968d2
+            songModelFromArtist = (SongModel) data.getSerializableExtra(ArtistModel.RequestCodeString);
+            ArrayList<SongModel> listSongFromArtist = ArtistProvider.getArtistSongs(MainActivity.this, songModelFromArtist.getArtist());
+            playSongsFromFragmentListToMain(FragmentPlaylist.SENDER, songModelFromArtist, listSongFromArtist);
+            Log.d(TAG, "onActivityResult: PLAY FROM ARTIST: " + songModelFromArtist.getTitle() + "_" + listSongFromArtist.size());
         }
     }
 
@@ -533,7 +533,6 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         Bundle bundle = new Bundle();
         bundle.putSerializable("PLAY_LIST", songList);
         bundle.putSerializable("PLAY_SONG", songPlay);
-
         bundle.putInt("TYPE_SHOW", typeShow);
 
         mIntentPlayActivity.putExtras(bundle);
@@ -543,7 +542,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     private void handleShowPlayActivityWithSongIdList(SongModel songPlay, ArrayList<Integer> songIdList) {
         if (mIntentPlayActivity == null) {
             mIntentPlayActivity = new Intent(MainActivity.this, PlayActivity.class);
-            mIntentPlayActivity.setFlags(FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
+            mIntentPlayActivity.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         }
 //        Intent intent=new Intent(MainActivity.this,PlayActivity.class);
         Bundle bundle = new Bundle();
