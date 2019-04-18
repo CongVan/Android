@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/btnStartMusic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="START SERVICE - MUSIC PLAYER" />
+
+    <Button
+        android:id="@+id/btnStopMusic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="STOP SERVICE - MUSIC PLAYER" />
+
+    <Button
+        android:id="@+id/btnStartFib"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="START SERVICE - FIBONACCY" />
+
+    <Button
+        android:id="@+id/btnStopFib"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="STOP SERVICE - FIBONACCY" />
+
+    <Button
+        android:id="@+id/btnStartGPS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="START SERVICE - GPS" />
+
+    <Button
+        android:id="@+id/btnStopGPS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="STOP SERVICE - GPS" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/txtContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical"
+            />
+
+    </ScrollView>
+
+</LinearLayout>
