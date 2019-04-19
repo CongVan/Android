@@ -7,4 +7,5 @@ public interface FragmentPlayInterface {
 
     void updateControlPlaying(SongModel songModel);
     void updateSeekbar(int currentDuration);
+    void updateButtonPlay();
 }

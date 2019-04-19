@@ -3,6 +3,7 @@ package com.example.musicforlife;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -35,6 +36,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
     private PlayService mPlayService;
     private ImageView imageViewBackgroundMain;
     private MainActivity mMainActivity;
+    private ArrayList<SongModel> mPlayList;
 
     private static final String TAG = "PlayActivity";
     public static final String EXTRA_PLAYING_LIST = "EXTRA_PLAYING_LIST";
@@ -80,11 +82,12 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
 //            }
 //        });
         mPager = (ViewPager) findViewById(R.id.pager);
+        mDatabaseHelper = DatabaseHelper.newInstance(getApplicationContext());
+        mPlayService = PlayService.newInstance(PlayActivity.this.getApplicationContext(), PlayActivity.this, mDatabaseHelper);
+
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        ArrayList<SongModel> playList = null;
-
 
 
         int typeShow = -1;
@@ -92,23 +95,27 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
         Log.d(TAG, "onCreate: TYPE SHOW" + typeShow);
         if (typeShow == TYPE_SHOW_NEW) {
             if (bundle.getSerializable("PLAY_LIST") != null) {
-                playList = (ArrayList<SongModel>) bundle.getSerializable("PLAY_LIST");
+                mPlayList = (ArrayList<SongModel>) bundle.getSerializable("PLAY_LIST");
             } else {
-                playList = (ArrayList<SongModel>) intent.getSerializableExtra(PlayActivity.EXTRA_PLAYING_LIST);
+                mPlayList = (ArrayList<SongModel>) intent.getSerializableExtra(PlayActivity.EXTRA_PLAYING_LIST);
             }
-            Log.d(TAG, "onCreate: " + "PLAY LIST " + playList.size());
+            Log.d(TAG, "onCreate: " + "PLAY LIST " + mPlayList.size());
             if (bundle.getSerializable("PLAY_SONG") != null) {
                 mSongPlaying = (SongModel) bundle.getSerializable("PLAY_SONG");
             } else {
-                if (playList.size() > 0) {
-                    mSongPlaying = playList.get(0);
+                if (mPlayList.size() > 0) {
+                    mSongPlaying = mPlayList.get(0);
                 }
             }
-            PlayService.createPlayingList(playList);
+            new InitPlaylist().execute(mPlayList);
         } else if (typeShow == TYPE_SHOW_RESUME) {
             Log.d(TAG, "onCreate: RESUME " + PlayService.getCurrentSongPlaying());
             mSongPlaying = PlayService.getCurrentSongPlaying();
+            pagerAdapter = new FragmentPlayAdapter(getSupportFragmentManager(), mSongPlaying);
+            mPager.setAdapter(pagerAdapter);
+            ((FragmentPlayAdapter) pagerAdapter).getFragmentPlaying().updateButtonPlay();
         }
+
 
 
 //        Log.d(TAG, "onCreate: " + "PLAY SONG " + mSongPlaying.getTitle());
@@ -123,16 +130,11 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
 //        mPlayService = PlayService.newInstance(PlayActivity.this.getApplicationContext(), this);
         // Instantiate a ViewPager and a PagerAdapter.
 
-        pagerAdapter = new FragmentPlayAdapter(getSupportFragmentManager(), mSongPlaying);
-        mPager.setAdapter(pagerAdapter);
-        mDatabaseHelper = DatabaseHelper.newInstance(getApplicationContext());
 
-        mPlayService = PlayService.newInstance(PlayActivity.this.getApplicationContext(), this, mDatabaseHelper);
-
-        if (PlayService.getCurrentSongPlaying() != null) {
-            Log.d(TAG, "onCreate: SONG PLAYING " + PlayService.getCurrentSongPlaying().getTitle()
-                    + " mSONGPLAYING " + mSongPlaying.getTitle());
-        }
+//        if (PlayService.getCurrentSongPlaying() != null) {
+//            Log.d(TAG, "onCreate: SONG PLAYING " + PlayService.getCurrentSongPlaying().getTitle()
+//                    + " mSONGPLAYING " + mSongPlaying.getTitle());
+//        }
 
         //set animation for slide page
 //        mPager.setPageTransformer(true, new ZoomOutPageTransformer());
@@ -232,5 +234,27 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
     @Override
     public void updateSeekbar(String sender, int duration) {
         ((FragmentPlayAdapter) pagerAdapter).getFragmentPlaying().updateSeekbar(duration);
+    }
+
+    private class InitPlaylist extends AsyncTask<ArrayList<SongModel>, Integer, Void> {
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            pagerAdapter = new FragmentPlayAdapter(getSupportFragmentManager(), mSongPlaying);
+            mPager.setAdapter(pagerAdapter);
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected Void doInBackground(ArrayList<SongModel>... arrayLists) {
+            PlayService.createPlayingList(arrayLists[0]);
+
+            return null;
+        }
     }
 }

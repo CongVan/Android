@@ -332,6 +332,39 @@ public class SongModel implements Serializable {
         return songModelList;
     }
 
+    public static ArrayList<SongModel> getSongsWithThreshold(DatabaseHelper databaseHelper,int skip,int count) {
+        ArrayList<SongModel> songModelList = new ArrayList<>();
+        SQLiteDatabase db = databaseHelper.getReadableDatabase();
+//        String[] projection = {
+//                SongModel.COLUMN_ID,
+//                SongModel.COLUMN_SONG_ID,
+//                SongModel.COLUMN_TITLE,
+//                SongModel.COLUMN_ALBUM,
+//                SongModel.COLUMN_DURATION,
+//                SongModel.COLUMN_FOLDER,
+//                SongModel.COLUMN_ARTIST,
+//                SongModel.COLUMN_PATH
+//        };
+//        Cursor cursor = db.query(TABLE_NAME, projection, null, null, null, null, null);
+        String query="SELECT * FROM "+SongModel.TABLE_NAME+" LIMIT "+skip+","+count;
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+                SongModel songModel = new SongModel();
+                songModel.setId(cursor.getInt(cursor.getColumnIndex(SongModel.COLUMN_ID)));
+                songModel.setSongId(cursor.getInt(cursor.getColumnIndex(SongModel.COLUMN_SONG_ID)));
+                songModel.setTitle(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_TITLE)));
+                songModel.setAlbum(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_ALBUM)));
+                songModel.setArtist(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_ARTIST)));
+                songModel.setFolder(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_FOLDER)));
+                songModel.setDuration(cursor.getLong(cursor.getColumnIndex(SongModel.COLUMN_DURATION)));
+                songModel.setPath(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_PATH)));
+                songModelList.add(songModel);
+            } while (cursor.moveToNext());
 
+        }
+        cursor.close();
+        return songModelList;
+    }
 
 }

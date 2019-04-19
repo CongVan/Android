@@ -92,14 +92,10 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
         mSebDurationSongPlaying = mViewGroupMain.findViewById(R.id.sebDurationSongPlaying);
         mTxtCurrentDuration = mViewGroupMain.findViewById(R.id.txtCurrentDuration);
 
-
         mImageButtonPlaySong.setOnClickListener(this);
-
         mImageButtonPrevSong.setOnClickListener(this);
-
         mImageButtonNextSong.setOnClickListener(this);
         mImageButtonLoopType.setOnClickListener(this);
-
         mImageButtonLoopType.setImageDrawable(
                 mPlayActivity.getDrawable(
                         arrLoopTypeImage.get(
@@ -144,7 +140,7 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
         super.onResume();
 
         if (PlayService.isPlaying() && mSongPlaying.getSongId() != PlayService.getCurrentSongPlaying().getSongId()) {
-            Log.d(TAG, "onResume: SERVICE "+PlayService.getCurrentSongPlaying().getTitle() +" PLAY "+ mSongPlaying.getTitle());
+            Log.d(TAG, "onResume: SERVICE " + PlayService.getCurrentSongPlaying().getTitle() + " PLAY " + mSongPlaying.getTitle());
 //            mSongPlaying=PlayService.getCurrentSongPlaying();
             mPlayActivity.controlSong(SENDER, mSongPlaying, PlayService.ACTION_PLAY);
             updateControlPlaying(mSongPlaying);
@@ -154,18 +150,18 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
         updateSeekbar(PlayService.getCurrentDuration());
         Log.d(TAG, "onResume: " + PlayService.getCurrentDuration());
 //        mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_RESUME);
-        if (mSongPlaying!=null && PlayService.getCurrentSongPlaying()!=null){
-            if (mSongPlaying.getSongId()==PlayService.getCurrentSongPlaying().getSongId()){
+        if (mSongPlaying != null && PlayService.getCurrentSongPlaying() != null) {
+            if (mSongPlaying.getSongId() == PlayService.getCurrentSongPlaying().getSongId()) {
                 updateControlPlaying(mSongPlaying);
 
             }
         }
+
     }
 
     @Override
     public void updateControlPlaying(SongModel songModel) {
         mSongPlaying = songModel;
-        mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_pause_black_70dp));
         mTxtTitleSongPlaying.setText(mSongPlaying.getTitle());
         mTxtArtistSongPlaying.setText(mSongPlaying.getArtist());
         mTxtDurationSongPlaying.setText(mSongPlaying.formateMilliSeccond(songModel.getDuration()));
@@ -178,6 +174,16 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
     public void updateSeekbar(int currentDuration) {
         mSebDurationSongPlaying.setProgress(currentDuration / 1000);
         mTxtCurrentDuration.setText(SongModel.formateMilliSeccond(currentDuration));
+    }
+
+    @Override
+    public void updateButtonPlay() {
+        Log.d(TAG, "updateButtonPlay: " + PlayService.isPlaying());
+        if (PlayService.isPlaying()) {
+            mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_pause_black_70dp));
+        } else {
+            mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_play_arrow_black_70dp));
+        }
     }
 
     @Override

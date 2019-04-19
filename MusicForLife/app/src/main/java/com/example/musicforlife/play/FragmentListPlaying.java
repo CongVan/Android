@@ -162,6 +162,11 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
 
     }
 
+    @Override
+    public void updateButtonPlay() {
+
+    }
+
     private class LoadImageFromStorage extends AsyncTask<Void, Integer, ArrayList<SongModel>> {
 
         @Override
