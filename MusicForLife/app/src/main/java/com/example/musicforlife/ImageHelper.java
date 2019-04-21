@@ -3,6 +3,7 @@ package com.example.musicforlife;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
 import android.util.Log;
 
@@ -13,7 +14,7 @@ import java.net.ContentHandler;
 public class ImageHelper {
     private static Context mContext = MainActivity.getMainActivity().getApplicationContext();
 
-    public static Bitmap getBitmapFromPath(String pathImage,int resourceDefaultId) {
+    public static Bitmap getBitmapFromPath(String pathImage, int resourceDefaultId) {
         MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
         mediaMetadataRetriever.setDataSource(pathImage);
         InputStream inputStream;
@@ -29,21 +30,22 @@ public class ImageHelper {
 
         return bitmap;
     }
+
     /**
      * Stack Blur v1.0 from
      * http://www.quasimondo.com/StackBlurForCanvas/StackBlurDemo.html
      * Java Author: Mario Klingemann <mario at quasimondo.com>
      * http://incubator.quasimondo.com
-     *
+     * <p>
      * created Feburary 29, 2004
      * Android port : Yahel Bouaziz <yahel at kayenko.com>
      * http://www.kayenko.com
      * ported april 5th, 2012
-     *
+     * <p>
      * This is a compromise between Gaussian Blur and Box blur
      * It creates much better looking blurs than Box Blur, but is
      * 7x faster than my Gaussian Blur implementation.
-     *
+     * <p>
      * I called it Stack Blur because this describes best how this
      * filter works internally: it creates a kind of moving stack
      * of colors whilst scanning through the image. Thereby it
@@ -52,7 +54,7 @@ public class ImageHelper {
      * colors on the topmost layer of the stack are either added on
      * or reduced by one, depending on if they are on the right or
      * on the left side of the stack.
-     *
+     * <p>
      * If you are using this algorithm in your code please add
      * the following line:
      * Stack Blur Algorithm by Mario Klingemann <mario@quasimondo.com>
@@ -215,7 +217,7 @@ public class ImageHelper {
             stackpointer = radius;
             for (y = 0; y < h; y++) {
                 // Preserve alpha channel: ( 0xff000000 & pix[yi] )
-                pix[yi] = ( 0xff000000 & pix[yi] ) | ( dv[rsum] << 16 ) | ( dv[gsum] << 8 ) | dv[bsum];
+                pix[yi] = (0xff000000 & pix[yi]) | (dv[rsum] << 16) | (dv[gsum] << 8) | dv[bsum];
 
                 rsum -= routsum;
                 gsum -= goutsum;
@@ -265,4 +267,32 @@ public class ImageHelper {
 
         return (bitmap);
     }
+
+    public static boolean isDarkBitmap(Bitmap bitmap) {
+        boolean dark = false;
+
+        float darkThreshold = bitmap.getWidth() * bitmap.getHeight() * 0.45f;
+        int darkPixels = 0;
+
+        int[] pixels = new int[bitmap.getWidth() * bitmap.getHeight()];
+        bitmap.getPixels(pixels, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
+
+        for (int pixel : pixels) {
+            int color = pixel;
+            int r = Color.red(color);
+            int g = Color.green(color);
+            int b = Color.blue(color);
+            double luminance = (0.299 * r + 0.0f + 0.587 * g + 0.0f + 0.114 * b + 0.0f);
+            if (luminance < 150) {
+                darkPixels++;
+            }
+        }
+
+        if (darkPixels >= darkThreshold) {
+            dark = true;
+        }
+//        long duration = System.currentTimeMillis() - s;
+        return dark;
+    }
+
 }

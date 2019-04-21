@@ -2,6 +2,7 @@ package com.example.musicforlife.play;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,6 +15,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +32,7 @@ import java.util.Arrays;
 
 public class FragmentPlaying extends Fragment implements FragmentPlayInterface, View.OnClickListener {
 
-    private LinearLayout mLayoutFragmentPlaying;
+    private TableRow mTableLayoutControlPlaying;
     private ViewGroup mViewGroupMain;
     private ImageButton mImageButtonPlaySong;
     private Context mContext;
@@ -86,12 +89,13 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mTableLayoutControlPlaying=mViewGroupMain.findViewById(R.id.layoutControlPlaying);
         mImageButtonPlaySong = mViewGroupMain.findViewById(R.id.btnPlaySong);
         mImageButtonPrevSong = mViewGroupMain.findViewById(R.id.btnPrevSong);
         mImageButtonNextSong = mViewGroupMain.findViewById(R.id.btnNextSong);
         mImageButtonLoopType = mViewGroupMain.findViewById(R.id.btnLoopType);
         mImagePlaying = mViewGroupMain.findViewById(R.id.imgPlaying);
-        mImageBgPlaying=mViewGroupMain.findViewById(R.id.imgBgPlaying);
+        mImageBgPlaying = mViewGroupMain.findViewById(R.id.imgBgPlaying);
 
         mTxtTitleSongPlaying = mViewGroupMain.findViewById(R.id.txtTitleSongPlaying);
         mTxtArtistSongPlaying = mViewGroupMain.findViewById(R.id.txtArtistSongPlaying);
@@ -137,10 +141,17 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
     }
 
     private void setResourceImagePlaying() {
-        Bitmap bitmapPlaying=ImageHelper.getBitmapFromPath(mSongPlaying.getPath(), R.mipmap.music_circular_button_128);
-//        Bitmap bitmapBgPlaying=ImageHelper.getBitmapFromPath(mSongPlaying.getPath(), R.drawable.b2773);
+        Bitmap bitmapPlaying = ImageHelper.getBitmapFromPath(mSongPlaying.getPath(), R.mipmap.music_circular_button_128);
+
+        Bitmap bitmapBgPlaying = ImageHelper.getBitmapFromPath(mSongPlaying.getPath(), R.drawable.b2773);
         mImagePlaying.setImageBitmap(bitmapPlaying);
-//        mImageBgPlaying.setImageBitmap(ImageHelper.blurBitmap(bitmapBgPlaying,1.0f,60));
+//        mImageBgPlaying.setImageBitmap(ImageHelper.blurBitmap(bitmapBgPlaying, 1.0f, 60));
+        if (ImageHelper.isDarkBitmap(bitmapBgPlaying)) {
+            mTableLayoutControlPlaying.setBackgroundColor(Color.argb(40, 255, 255, 255));
+        } else {
+            mTableLayoutControlPlaying.setBackgroundColor(Color.TRANSPARENT);
+        }
+        Log.d(TAG, "setResourceImagePlaying: ISDARK" + ImageHelper.isDarkBitmap(bitmapPlaying));
     }
 
     @Override
@@ -164,12 +175,12 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
         updateSeekbar(PlayService.getCurrentDuration());
         Log.d(TAG, "onResume: " + PlayService.getCurrentDuration());
 //        mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_RESUME);
-        if (mSongPlaying != null && PlayService.getCurrentSongPlaying() != null) {
-            if (mSongPlaying.getSongId() == PlayService.getCurrentSongPlaying().getSongId()) {
-                updateControlPlaying(mSongPlaying);
-
-            }
-        }
+//        if (mSongPlaying != null && PlayService.getCurrentSongPlaying() != null) {
+//            if (mSongPlaying.getSongId() == PlayService.getCurrentSongPlaying().getSongId()) {
+//                updateControlPlaying(mSongPlaying);
+//
+//            }
+//        }
 
     }
 
