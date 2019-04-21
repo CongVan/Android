@@ -208,11 +208,11 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
                 mPlayService.resurme();
                 break;
             case PlayService.ACTION_PREV:
-                mPlayService.prev();
+                mPlayService.prev(PlayService.ACTION_FROM_USER);
 
                 break;
             case PlayService.ACTION_NEXT:
-                mPlayService.next();
+                mPlayService.next(PlayService.ACTION_FROM_USER);
 
                 break;
             default:
@@ -234,6 +234,11 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
     @Override
     public void updateSeekbar(String sender, int duration) {
         ((FragmentPlayAdapter) pagerAdapter).getFragmentPlaying().updateSeekbar(duration);
+    }
+
+    @Override
+    public void updateButtonPlay(String sender) {
+        ((FragmentPlayAdapter) pagerAdapter).getFragmentPlaying().updateButtonPlay();
     }
 
     private class InitPlaylist extends AsyncTask<ArrayList<SongModel>, Integer, Void> {

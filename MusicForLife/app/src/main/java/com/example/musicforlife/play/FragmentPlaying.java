@@ -167,7 +167,6 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
         mTxtDurationSongPlaying.setText(mSongPlaying.formateMilliSeccond(songModel.getDuration()));
         mSebDurationSongPlaying.setMax(mSongPlaying.getDuration().intValue() / 1000);
         //
-
     }
 
     @Override

@@ -35,6 +35,9 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
     public static final int ALL_LOOP = 2;
     public static final int ONE_LOOP = 3;
 
+    public static final int ACTION_FROM_USER = 1;
+    public static final int ACTION_FROM_SYSTEM = 2;
+
 
     private static int loopType = ALL_LOOP;
     public static boolean Shuffle;
@@ -102,23 +105,48 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
 
     }
 
-    public void next() {
-        if (mMediaPlayer.isPlaying()) {
-            mMediaPlayer.reset();
-            mMediaPlayer.stop();
-            mCountDownTimerUpdateSeekBar.cancel();
-        }
-        if (mCurrentIndexSong == mPlayingList.size() - 1) {
-            mCurrentIndexSong = 0;
+    public void next(int actionFrom) {
+        resetMediaPlayer();
+
+        if (actionFrom == ACTION_FROM_USER) {
+            setNextIndexSong();
         } else {
-            mCurrentIndexSong++;
+            if (loopType == ALL_LOOP) {
+                setNextIndexSong();
+            } else if (loopType == ONE_LOOP) {
+                mCurrentIndexSong = mCurrentIndexSong;
+            } else {
+                mMediaPlayer.seekTo(0);
+                mPlayActivity.updateControlPlaying(SENDER, mCurrentSongPlaying);
+                mPlayActivity.updateButtonPlay(SENDER);
+                mPlayActivity.updateSeekbar(SENDER,mMediaPlayer.getCurrentPosition());
+                pause();
+                return;
+            }
         }
+
         mCurrentSongPlaying = SongModel.getSongFromSongId(mDatabaseHelper, mPlayingList.get(mCurrentIndexSong).getSongId());
         play(mCurrentSongPlaying);
         mPlayActivity.updateControlPlaying(SENDER, mCurrentSongPlaying);
     }
 
-    public void prev() {
+    private void resetMediaPlayer() {
+        if (mMediaPlayer.isPlaying()) {
+            mMediaPlayer.reset();
+            mMediaPlayer.stop();
+            mCountDownTimerUpdateSeekBar.cancel();
+        }
+    }
+
+    private void setNextIndexSong() {
+        if (mCurrentIndexSong == mPlayingList.size() - 1) {
+            mCurrentIndexSong = 0;
+        } else {
+            mCurrentIndexSong++;
+        }
+    }
+
+    public void prev(int actionFrom) {
         if (mMediaPlayer.isPlaying()) {
             mMediaPlayer.reset();
             mMediaPlayer.stop();
@@ -136,7 +164,7 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
 
     public static int addSongsToPlayingList(ArrayList<SongModel> songs) {
 //        PlayModel.clearPlayingList();
-        if (songs==null)
+        if (songs == null)
             return -1;
         for (SongModel song : songs) {
             long result = PlayModel.addSongToPlayingList(song);
@@ -146,7 +174,7 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
     }
 
     public static int createPlayingList(ArrayList<SongModel> songs) {
-        Log.d(TAG, "createPlayingList: "+songs.size());
+        Log.d(TAG, "createPlayingList: " + songs.size());
         PlayModel.clearPlayingList();
         PlayModel.createPlaylistFromSongs(songs);
         updatePlayingList();
@@ -205,6 +233,11 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
         mPlayActivity.updateSeekbar(sender, duration);
     }
 
+    @Override
+    public void updateButtonPlay(String sender) {
+
+    }
+
     private void setIndexSongInPlayingList() {
 
         for (int i = 0; i < mPlayingList.size(); i++) {
@@ -241,7 +274,7 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
     @Override
     public void onCompletion(MediaPlayer mp) {
         Log.d(TAG, "onCompletion: NEXT -> ");
-        next();
+        next(ACTION_FROM_SYSTEM);
     }
 
 }
