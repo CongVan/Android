@@ -268,6 +268,7 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
 
         }
         mp.start();
+        mPlayActivity.updateButtonPlay(SENDER);
     }
 
 

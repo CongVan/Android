@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.musicforlife.ImageHelper;
 import com.example.musicforlife.R;
 
 import java.io.ByteArrayInputStream;
@@ -91,7 +92,7 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
         return position;
     }
 
-    public static class ViewHolderRecycler extends RecyclerView.ViewHolder {
+    private static class ViewHolderRecycler extends RecyclerView.ViewHolder {
         TextView titleSong;
         TextView album;
         TextView artist;
@@ -144,68 +145,6 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
         }
     }
 
-    private static class loadImageFromStorage extends AsyncTask<ParamImageThread, Integer, Bitmap> {
-        ParamImageThread paramImageThread;
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            super.onPostExecute(bitmap);
-
-            paramImageThread.imageView.setImageBitmap(bitmap);
-
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
-        }
-
-        @Override
-        public Bitmap doInBackground(ParamImageThread... paramImageThreads) {
-            MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-            this.paramImageThread = paramImageThreads[0];
-            mediaMetadataRetriever.setDataSource(paramImageThread.getPath());
-            InputStream inputStream;
-            Bitmap bitmap;
-
-            if (mediaMetadataRetriever.getEmbeddedPicture() != null) {
-                inputStream = new ByteArrayInputStream(mediaMetadataRetriever.getEmbeddedPicture());
-                mediaMetadataRetriever.release();
-                bitmap = BitmapFactory.decodeStream(inputStream);
-            } else {
-                bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.music_file_128);
-            }
-            return bitmap;
-        }
-
-
-    }
-
-    private static class ParamImageThread {
-        private ImageView imageView;
-        private String path;
-
-        public ParamImageThread(ImageView imageView, String path) {
-            this.imageView = imageView;
-            this.path = path;
-        }
-
-        public ImageView getImageView() {
-            return imageView;
-        }
-
-        public void setImageView(ImageView imageView) {
-            this.imageView = imageView;
-        }
-
-        public String getPath() {
-            return path;
-        }
-
-        public void setPath(String path) {
-            this.path = path;
-        }
-    }
 
     private static class AsyncDrawable extends BitmapDrawable {
         private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskWeakReference;
@@ -263,20 +202,21 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
         @Override
         protected Bitmap doInBackground(String... strings) {
             pathImage = strings[0];
-            MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+//            MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+//            mediaMetadataRetriever.setDataSource(pathImage);
+//            InputStream inputStream;
+//            Bitmap bitmap;
+//
+//            if (mediaMetadataRetriever.getEmbeddedPicture() != null) {
+//                inputStream = new ByteArrayInputStream(mediaMetadataRetriever.getEmbeddedPicture());
+//                mediaMetadataRetriever.release();
+//                bitmap = BitmapFactory.decodeStream(inputStream);
+//            } else {
+//
+//                bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.music_file_128);
+//            }
 
-            mediaMetadataRetriever.setDataSource(pathImage);
-            InputStream inputStream;
-            Bitmap bitmap;
-
-            if (mediaMetadataRetriever.getEmbeddedPicture() != null) {
-                inputStream = new ByteArrayInputStream(mediaMetadataRetriever.getEmbeddedPicture());
-                mediaMetadataRetriever.release();
-                bitmap = BitmapFactory.decodeStream(inputStream);
-            } else {
-
-                bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.music_file_128);
-            }
+            Bitmap bitmap = ImageHelper.getBitmapFromPath(pathImage, R.mipmap.music_file_128);
             mBitmap = bitmap;
             return bitmap;
 

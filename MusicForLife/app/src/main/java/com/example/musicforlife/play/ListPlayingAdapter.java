@@ -1,9 +1,11 @@
 package com.example.musicforlife.play;
 
-
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -12,19 +14,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.musicforlife.ImageHelper;
 import com.example.musicforlife.R;
 import com.example.musicforlife.listsong.SongModel;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-public class ListPlayingAdapter extends RecyclerView.Adapter<ListPlayingAdapter.ViewHolderRecycler> {
+public class ListPlayingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static ArrayList<SongModel> mListSong;
     private static Context mContext;
+
+    private static final int VIEW_TYPE_ITEM = 0;
+    private static final int VIEW_TYPE_LOADING = 1;
 
     public ListPlayingAdapter(Context context, ArrayList<SongModel> listSong) {
         this.mContext = context;
@@ -33,22 +41,51 @@ public class ListPlayingAdapter extends RecyclerView.Adapter<ListPlayingAdapter.
 
     @NonNull
     @Override
-    public ViewHolderRecycler onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_item_song, viewGroup, false);
-        ViewHolderRecycler viewHolder = new ViewHolderRecycler(view);
-        return viewHolder;
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        if (i == VIEW_TYPE_ITEM) {
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_item_song, viewGroup, false);
+//            ViewHolderRecycler viewHolder = new ViewHolderRecycler(view);
+            return new ViewHolderRecycler(view);
+        } else {
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.progressbar_circle, viewGroup, false);
+            return new LoadingViewHolder(view);
+        }
+
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolderRecycler viewHolderRecycler, int i) {
-        SongModel songModel = mListSong.get(i);
-        viewHolderRecycler.bindContent(songModel);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+        if (viewHolder instanceof ViewHolderRecycler) {
+            showSongItem((ViewHolderRecycler) viewHolder, i);
+        } else if (viewHolder instanceof LoadingViewHolder) {
+            showLoading((LoadingViewHolder) viewHolder, i);
+        }
+
     }
 
+    private void showSongItem(ViewHolderRecycler viewHolder, int position) {
+        SongModel songModel = mListSong.get(position);
+        viewHolder.bindContent(songModel);
+    }
+
+    private void showLoading(LoadingViewHolder viewHolder, int position) {
+
+    }
+//    @Override
+//    public void onBindViewHolder(@NonNull ViewHolderRecycler viewHolderRecycler, int i) {
+//        SongModel songModel = mListSong.get(i);
+//        viewHolderRecycler.bindContent(songModel);
+//    }
+
+
+    @Override
+    public int getItemViewType(int position) {
+        return mListSong.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+    }
 
     @Override
     public int getItemCount() {
-        return mListSong.size();
+        return mListSong == null ? 0 : mListSong.size();
     }
 
     @Override
@@ -56,7 +93,7 @@ public class ListPlayingAdapter extends RecyclerView.Adapter<ListPlayingAdapter.
         return position;
     }
 
-    public static class ViewHolderRecycler extends RecyclerView.ViewHolder {
+    private static class ViewHolderRecycler extends RecyclerView.ViewHolder {
         TextView titleSong;
         TextView album;
         TextView artist;
@@ -78,9 +115,20 @@ public class ListPlayingAdapter extends RecyclerView.Adapter<ListPlayingAdapter.
             this.artist.setText(songModel.getArtist());
             this.duration.setText(SongModel.formateMilliSeccond(songModel.getDuration()));
 
+//            if (imageView.getResources()==null){
+            if (cancelPotentialWork(songModel.getPath(), imageView)) {
+                final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
+                final AsyncDrawable asyncDrawable = new AsyncDrawable(null, task);
+                imageView.setImageDrawable(asyncDrawable);
+                task.execute(songModel.getPath());
+            }
+//            }
+
+//            new BitmapWorkerTask(imageView).execute(songModel.getPath());
+
 //            if (this.imageView.getDrawable() == null) {
-//        ListSongRecyclerAdaper.ParamImageThread paramImageThread = new ListSongRecyclerAdaper.ParamImageThread(this.imageView, songModel.getPath());
-//        new ListSongRecyclerAdaper.loadImageFromStorage().execute(paramImageThread);
+//            ParamImageThread paramImageThread = new ParamImageThread(this.imageView, songModel.getPath());
+//            new loadImageFromStorage().execute(paramImageThread);
 //            }
 
 
@@ -89,66 +137,91 @@ public class ListPlayingAdapter extends RecyclerView.Adapter<ListPlayingAdapter.
 
     }
 
-    private static class loadImageFromStorage extends AsyncTask<ListPlayingAdapter.ParamImageThread, Integer, Bitmap> {
-        ListPlayingAdapter.ParamImageThread paramImageThread;
+    private class LoadingViewHolder extends RecyclerView.ViewHolder {
+        ProgressBar progressBar;
+        public LoadingViewHolder(@NonNull View itemView) {
+            super(itemView);
+            progressBar = itemView.findViewById(R.id.progressBarCircle);
+        }
+    }
 
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            super.onPostExecute(bitmap);
 
-            paramImageThread.imageView.setImageBitmap(bitmap);
+
+    private static class AsyncDrawable extends BitmapDrawable {
+        private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskWeakReference;
+
+        public AsyncDrawable(Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
+//            super(resources, bitmap);
+            bitmapWorkerTaskWeakReference = new WeakReference<BitmapWorkerTask>(bitmapWorkerTask);
 
         }
 
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
+        public BitmapWorkerTask getBitmapWorkerTask() {
+            return bitmapWorkerTaskWeakReference.get();
         }
-
-        @Override
-        public Bitmap doInBackground(ListPlayingAdapter.ParamImageThread... paramImageThreads) {
-            MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-            this.paramImageThread = paramImageThreads[0];
-            mediaMetadataRetriever.setDataSource(paramImageThread.getPath());
-            InputStream inputStream;
-            Bitmap bitmap;
-
-            if (mediaMetadataRetriever.getEmbeddedPicture() != null) {
-                inputStream = new ByteArrayInputStream(mediaMetadataRetriever.getEmbeddedPicture());
-                mediaMetadataRetriever.release();
-                bitmap = BitmapFactory.decodeStream(inputStream);
-            } else {
-                bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.music_circular_button);
-            }
-            return bitmap;
-        }
-
 
     }
 
-    private static class ParamImageThread {
-        private ImageView imageView;
-        private String path;
+    private static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
+        if (imageView != null) {
+            final Drawable drawable = imageView.getDrawable();
+            if (drawable instanceof AsyncDrawable) {
+                final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
+                return asyncDrawable.getBitmapWorkerTask();
+            }
+        }
+        return null;
+    }
 
-        public ParamImageThread(ImageView imageView, String path) {
-            this.imageView = imageView;
-            this.path = path;
+    private static boolean cancelPotentialWork(String pathImage, ImageView imageView) {
+        final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
+        if (bitmapWorkerTask != null) {
+            final String path = bitmapWorkerTask.pathImage;
+            if (path == null || pathImage == null) {
+                return false;
+            }
+            if (!path.equals(pathImage)) {
+                bitmapWorkerTask.cancel(true);
+            } else {
+                return false;
+            }
+        }
+        return true;
+
+    }
+
+    private static class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
+        private final WeakReference<ImageView> imageViewWeakReference;
+        String pathImage;
+        Bitmap mBitmap;
+
+        private BitmapWorkerTask(ImageView imageView) {
+            this.imageViewWeakReference = new WeakReference<ImageView>(imageView);
         }
 
-        public ImageView getImageView() {
-            return imageView;
+
+        @Override
+        protected Bitmap doInBackground(String... strings) {
+            pathImage = strings[0];
+            Bitmap bitmap = ImageHelper.getBitmapFromPath(pathImage, R.mipmap.music_file_128);
+            mBitmap = bitmap;
+            return bitmap;
+
         }
 
-        public void setImageView(ImageView imageView) {
-            this.imageView = imageView;
-        }
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            if (isCancelled()) {
+                bitmap = null;
+            }
 
-        public String getPath() {
-            return path;
-        }
-
-        public void setPath(String path) {
-            this.path = path;
+            if (imageViewWeakReference != null && bitmap != null) {
+                final ImageView imageView = imageViewWeakReference.get();
+                final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
+                if (this == bitmapWorkerTask && imageView != null) {
+                    imageView.setImageBitmap(bitmap);
+                }
+            }
         }
     }
 }

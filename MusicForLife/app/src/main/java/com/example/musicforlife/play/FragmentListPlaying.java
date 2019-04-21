@@ -37,7 +37,7 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
     private LoadImageFromStorage loadImageFromStorage;
     private TextView txtSizePlayingList;
     private static SongModel mSongPlaying = null;
-    private boolean playFirst=true;
+    private boolean playFirst = true;
     public static final String SENDER = "FRAGMENT_PLAYING_LIST";
     private static final String TAG = "FragmentListPlaying";
 
@@ -70,7 +70,6 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
     public void onResume() {
         super.onResume();
         Log.i(TAG, "onResume: STARTED");
-
 
 
     }
@@ -116,8 +115,9 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
                     public void onItemClick(View view, int position) {
                         // do whatever
                         Toast.makeText(mContext, "CLICK ITEM SONG" + position, Toast.LENGTH_SHORT).show();
-                        mPlayActivity.controlSong(FragmentListPlaying.SENDER, mListSong.get(position), PlayService.ACTION_PLAY);
-                        mPlayActivity.updateControlPlaying(SENDER, mListSong.get(position));
+                        mSongPlaying = mListSong.get(position);
+                        mPlayActivity.controlSong(FragmentListPlaying.SENDER, mSongPlaying, PlayService.ACTION_PLAY);
+                        mPlayActivity.updateControlPlaying(SENDER, mSongPlaying);
                     }
 
                     @Override
@@ -127,9 +127,9 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
                     }
                 })
         );
-        if (mSongPlaying!=null && PlayService.getCurrentSongPlaying()!=null){
-            if (mSongPlaying.getSongId()==PlayService.getCurrentSongPlaying().getSongId()){
-                playFirst=false;
+        if (mSongPlaying != null && PlayService.getCurrentSongPlaying() != null) {
+            if (mSongPlaying.getSongId() == PlayService.getCurrentSongPlaying().getSongId()) {
+                playFirst = false;
 
             }
         }
@@ -141,8 +141,8 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.d(TAG, "onSaveInstanceState: LIST PLAYING "+mListSong.size());
-        outState.putSerializable("playList",mListSong);
+        Log.d(TAG, "onSaveInstanceState: LIST PLAYING " + mListSong.size());
+        outState.putSerializable("playList", mListSong);
     }
 
     @Override
@@ -183,12 +183,12 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
             });
             Log.i(TAG, "onPostExecute: FINISHED");
             //play song if songPlaying !=null
-            if (playFirst){
+            if (playFirst) {
                 mPlayActivity.controlSong(FragmentListPlaying.SENDER, mSongPlaying, PlayService.ACTION_PLAY);
                 mPlayActivity.updateControlPlaying(SENDER, mSongPlaying);
             }
 
-            playFirst=false;
+            playFirst = false;
 //            if (mSongPlaying != null && !PlayService.isPlaying()) {
 //                Log.d(TAG, "onPostExecute: DURATION " + PlayService.getCurrentDuration());
 //                if (PlayService.getCurrentSongPlaying() != null && PlayService.getCurrentDuration() > 0) {

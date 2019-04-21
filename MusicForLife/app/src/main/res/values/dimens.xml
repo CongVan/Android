@@ -4,6 +4,7 @@
     <dimen name="text_size_small">12dp</dimen>
     <dimen name="text_size_normal">16dp</dimen>
     <dimen name="text_size_large">18dp</dimen>
+    <dimen name="text_size_xlarge">24dp</dimen>
 
     <dimen name="margin_size_small">4dp</dimen>
     <dimen name="margin_size_normal">12dp</dimen>
@@ -25,4 +26,5 @@
 
     <dimen name="image_icon_item">52dp</dimen>
     <dimen name="image_card_item">52dp</dimen>
+    <dimen name="image_card_item_playlist">62dp</dimen>
 </resources>

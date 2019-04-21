@@ -1,6 +1,7 @@
 package com.example.musicforlife.play;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,11 +11,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.musicforlife.ImageHelper;
 import com.example.musicforlife.PlayActivity;
 import com.example.musicforlife.R;
 import com.example.musicforlife.listsong.SongModel;
@@ -39,6 +42,8 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
     private ImageButton mImageButtonPrevSong;
     private ImageButton mImageButtonNextSong;
     private ImageButton mImageButtonLoopType;
+    private ImageView mImagePlaying;
+    private ImageView mImageBgPlaying;
 
     private SongModel mSongPlaying;
 
@@ -85,6 +90,8 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
         mImageButtonPrevSong = mViewGroupMain.findViewById(R.id.btnPrevSong);
         mImageButtonNextSong = mViewGroupMain.findViewById(R.id.btnNextSong);
         mImageButtonLoopType = mViewGroupMain.findViewById(R.id.btnLoopType);
+        mImagePlaying = mViewGroupMain.findViewById(R.id.imgPlaying);
+        mImageBgPlaying=mViewGroupMain.findViewById(R.id.imgBgPlaying);
 
         mTxtTitleSongPlaying = mViewGroupMain.findViewById(R.id.txtTitleSongPlaying);
         mTxtArtistSongPlaying = mViewGroupMain.findViewById(R.id.txtArtistSongPlaying);
@@ -126,7 +133,14 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
 
             }
         });
+        setResourceImagePlaying();
+    }
 
+    private void setResourceImagePlaying() {
+        Bitmap bitmapPlaying=ImageHelper.getBitmapFromPath(mSongPlaying.getPath(), R.mipmap.music_circular_button_128);
+//        Bitmap bitmapBgPlaying=ImageHelper.getBitmapFromPath(mSongPlaying.getPath(), R.drawable.b2773);
+        mImagePlaying.setImageBitmap(bitmapPlaying);
+//        mImageBgPlaying.setImageBitmap(ImageHelper.blurBitmap(bitmapBgPlaying,1.0f,60));
     }
 
     @Override
@@ -166,6 +180,7 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
         mTxtArtistSongPlaying.setText(mSongPlaying.getArtist());
         mTxtDurationSongPlaying.setText(mSongPlaying.formateMilliSeccond(songModel.getDuration()));
         mSebDurationSongPlaying.setMax(mSongPlaying.getDuration().intValue() / 1000);
+        setResourceImagePlaying();
         //
     }
 
