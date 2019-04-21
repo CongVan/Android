@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/margin_size_normal">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tạo mới Playlist"
+        android:textColor="@color/colorTitlePrimary"
+        android:textSize="@dimen/text_size_normal" />
+
+    <EditText
+        android:id="@+id/txtTilePlaylistCreate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableTint="@color/colorPrimary"
+        android:foregroundTint="@color/colorPrimary"
+        style="@style/EditText.Primary"
+        android:theme="@style/EditText.Primary"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnCancelCreatePlaylist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_size_small"
+            android:background="@android:color/transparent"
+            android:text="Hủy"
+            android:textColor="@color/colorTitlePrimary" />
+
+        <Button
+            android:id="@+id/btnSubmitCreatePlaylist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_size_small"
+            android:background="@color/colorPrimary"
+            android:text="Hoàn tất"
+            android:textColor="@color/colorWhiteLight" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

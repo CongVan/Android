@@ -36,7 +36,7 @@ public class PagerMainAdapter extends FragmentStatePagerAdapter {
                 fragment = mFragmentListSong == null ? mFragmentListSong = FragmentListSong.newInstance() : mFragmentListSong;
                 break;
             case 2:
-                fragment = mFragmentPlaylist == null ? mFragmentPlaylist = new FragmentPlaylist() : mFragmentPlaylist;
+                fragment = mFragmentPlaylist == null ? mFragmentPlaylist = FragmentPlaylist.newInstance() : mFragmentPlaylist;
                 break;
             case 3:
 

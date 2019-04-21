@@ -31,4 +31,13 @@
         <item name="android:progressTint">@color/colorPrimary</item>
         <item name="android:colorControlActivated">@color/colorPrimary</item>
     </style>
+
+    <style name="EditText.Primary" parent="Widget.AppCompat.EditText">
+        <item name="android:textColor">@color/colorTitlePrimary</item>
+        <item name="android:textColorHint">@color/colorTitlePrimary</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="colorControlNormal">@color/colorPrimary</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
+    </style>
+
 </resources>
