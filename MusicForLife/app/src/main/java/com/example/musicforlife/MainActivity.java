@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.os.AsyncTask;
@@ -315,17 +316,17 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         });
         mDatabaseHelper = DatabaseHelper.newInstance(getApplicationContext());
         //new intitSongFromDevice().execute();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (!getApplicationContext().getDatabasePath(DatabaseHelper.DATABASE_NAME).exists()) {
-                    Log.d(TAG, "run: NOT EXIST DATABASE: ");
-
-                    new intitSongFromDevice().execute();
-                }
-//                Log.d(TAG, "run:  EXIST DATABASE: ");
-            }
-        }).run();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (!getApplicationContext().getDatabasePath(DatabaseHelper.DATABASE_NAME).exists()) {
+//                    Log.d(TAG, "run: NOT EXIST DATABASE: ");
+//
+//                    new intitSongFromDevice().execute();
+//                }
+////                Log.d(TAG, "run:  EXIST DATABASE: ");
+//            }
+//        }).run();
 
         mToolBar.setTitle("Music for life");
         setSupportActionBar(mToolBar);
@@ -499,23 +500,11 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
             mTextViewTitleSongMinimize.setText(songPlaying.getTitle());
             mTextViewArtistMinimize.setText(songPlaying.getArtist());
 
-            MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-
-            mediaMetadataRetriever.setDataSource(songPlaying.getPath());
-            InputStream inputStream;
-            Bitmap bitmap;
-
-            if (mediaMetadataRetriever.getEmbeddedPicture() != null) {
-                inputStream = new ByteArrayInputStream(mediaMetadataRetriever.getEmbeddedPicture());
-                mediaMetadataRetriever.release();
-                bitmap = BitmapFactory.decodeStream(inputStream);
-            } else {
-                bitmap = BitmapFactory.decodeResource(this.getResources(), R.mipmap.music_file_128);
-            }
-
-
+            Bitmap bitmap = ImageHelper.getBitmapFromPath(songPlaying.getPath(), R.mipmap.music_file_128);
+//            Bitmap blurBitmap = ImageHelper.blurBitmap(bitmap, 2.0f, 80);
+//            BitmapDrawable background = new BitmapDrawable(blurBitmap);
             mImageViewSongMinimize.setImageBitmap(bitmap);
-
+//            mLayoutPlayingMinimizie.setBackground(background);
             mLayoutPlayingMinimizie.setVisibility(View.VISIBLE);
             mViewPager.setPadding(0, 0, 0, mLayoutPlayingMinimizie.getHeight());
         } else {

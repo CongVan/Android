@@ -16,6 +16,7 @@ import java.util.ArrayList;
 public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
     private static ArrayList<PlayModel> mPlayingList;
     private static SongModel mCurrentSongPlaying;
+    private static SongModel mOldSongPlaying;
     private static int mCurrentIndexSong;
     private static Context mContext;
     private static PlayActivity mPlayActivity;
@@ -71,6 +72,9 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
 //        File path = Environment.getExternalStorageDirectory();
 //        Log.d(TAG, "play: "+ path+songModel.getPath());
         try {
+            if (mOldSongPlaying==null){
+                mOldSongPlaying=songModel;
+            }
             mCurrentSongPlaying = songModel;
 
             setIndexSongInPlayingList();
@@ -85,7 +89,10 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
             e.printStackTrace();
         }
 
-
+        if (mOldSongPlaying.getSongId() != mCurrentSongPlaying.getSongId()) {
+            boolean resultUpdateStatus = PlayModel.updateStatusPlaying(mOldSongPlaying.getSongId(), mCurrentSongPlaying.getSongId());
+            Log.d(TAG, "play: UPDATE STATUS" + resultUpdateStatus);
+        }
     }
 
     public void pause() {
@@ -107,7 +114,7 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
 
     public void next(int actionFrom) {
         resetMediaPlayer();
-
+        mOldSongPlaying = mCurrentSongPlaying;
         if (actionFrom == ACTION_FROM_USER) {
             setNextIndexSong();
         } else {
@@ -119,7 +126,7 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
                 mMediaPlayer.seekTo(0);
                 mPlayActivity.updateControlPlaying(SENDER, mCurrentSongPlaying);
                 mPlayActivity.updateButtonPlay(SENDER);
-                mPlayActivity.updateSeekbar(SENDER,mMediaPlayer.getCurrentPosition());
+                mPlayActivity.updateSeekbar(SENDER, mMediaPlayer.getCurrentPosition());
                 pause();
                 return;
             }
@@ -147,11 +154,8 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
     }
 
     public void prev(int actionFrom) {
-        if (mMediaPlayer.isPlaying()) {
-            mMediaPlayer.reset();
-            mMediaPlayer.stop();
-            mCountDownTimerUpdateSeekBar.cancel();
-        }
+        resetMediaPlayer();
+        mOldSongPlaying = mCurrentSongPlaying;
         if (mCurrentIndexSong == 0) {
             mCurrentIndexSong = mPlayingList.size() - 1;
         } else {

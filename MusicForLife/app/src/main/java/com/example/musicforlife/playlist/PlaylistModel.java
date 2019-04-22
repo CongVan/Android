@@ -69,7 +69,7 @@ public class PlaylistModel {
         ArrayList<PlaylistModel> playlistModels = new ArrayList<PlaylistModel>();
         SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
         String query = "SELECT P." + COLUMN_ID + ",P." + COLUMN_PLAYLIST_TITLE + ",P." + COLUMN_PATH_IMAGE + ",COUNT(PS." + PlaylistSongModel.COLUMN_ID + ") " + COLUMN_NUMBER_OF_SONG + " from " + TABLE_NAME + " P" +
-                " INNER JOIN " + PlaylistSongModel.TABLE_NAME + " PS ON P." + COLUMN_ID + "=PS." + PlaylistSongModel.COLUMN_PLAYLIST_ID + "" +
+                " LEFT JOIN " + PlaylistSongModel.TABLE_NAME + " PS ON P." + COLUMN_ID + "=PS." + PlaylistSongModel.COLUMN_PLAYLIST_ID + "" +
                 " group by P." + COLUMN_ID + ",P." + COLUMN_PLAYLIST_TITLE + ",P." + COLUMN_PATH_IMAGE;
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {

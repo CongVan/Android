@@ -3,7 +3,10 @@ package com.example.musicforlife;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.media.MediaMetadataRetriever;
 import android.util.Log;
 
@@ -15,6 +18,9 @@ public class ImageHelper {
     private static Context mContext = MainActivity.getMainActivity().getApplicationContext();
 
     public static Bitmap getBitmapFromPath(String pathImage, int resourceDefaultId) {
+        if (pathImage == null || pathImage.isEmpty()) {
+            return null;
+        }
         MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
         mediaMetadataRetriever.setDataSource(pathImage);
         InputStream inputStream;
@@ -295,4 +301,27 @@ public class ImageHelper {
         return dark;
     }
 
+    public static Bitmap overlayBitmapToCenter(Bitmap bitmap1, Bitmap bitmap2) {
+        int bitmap1Width = bitmap1.getWidth();
+        int bitmap1Height = bitmap1.getHeight();
+        int bitmap2Width = bitmap2.getWidth();
+        int bitmap2Height = bitmap2.getHeight();
+
+        float marginLeft = (float) (bitmap1Width * 0.5 - bitmap2Width * 0.5);
+        float marginTop = (float) (bitmap1Height * 0.5 - bitmap2Height * 0.5);
+
+        Bitmap overlayBitmap = Bitmap.createBitmap(bitmap1Width, bitmap1Height, bitmap1.getConfig());
+        Canvas canvas = new Canvas(overlayBitmap);
+        canvas.drawBitmap(bitmap1, new Matrix(), null);
+        canvas.drawBitmap(bitmap2, marginLeft, marginTop, null);
+        return overlayBitmap;
+    }
+    public static Bitmap createImage(int width, int height, int color) {
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Paint paint = new Paint();
+        paint.setColor(color);
+        canvas.drawRect(0F, 0F, (float) width, (float) height, paint);
+        return bitmap;
+    }
 }

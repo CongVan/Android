@@ -28,11 +28,11 @@ public class FragmentPlaylist extends Fragment {
     public static final String SENDER = "FRAGMENT_PLAY_LIST";
     private Context mContext;
     private MainActivity mMainActivity;
-    private RecyclerView mRecyclerViewPlaylist;
-    private PlaylistAdapter mPlaylistAdapter;
+    private static RecyclerView mRecyclerViewPlaylist;
+    private static PlaylistAdapter mPlaylistAdapter;
     private FloatingActionButton mButtonCreatePlaylist;
 
-    private ArrayList<PlaylistModel> mPlaylist;
+    private static ArrayList<PlaylistModel> mPlaylist;
 
     public FragmentPlaylist() {
 
@@ -72,7 +72,6 @@ public class FragmentPlaylist extends Fragment {
         mRecyclerViewPlaylist = view.findViewById(R.id.rcvPlaylist);
         mButtonCreatePlaylist = view.findViewById(R.id.btnCreatePlaylist);
 
-
         mPlaylistAdapter = new PlaylistAdapter(mContext, mPlaylist);
         mRecyclerViewPlaylist.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerViewPlaylist.setAdapter(mPlaylistAdapter);
@@ -97,4 +96,16 @@ public class FragmentPlaylist extends Fragment {
             }
         });
     }
+
+    public static void refreshPlaylist() {
+        mPlaylist = PlaylistModel.getAllPlaylist();
+        mRecyclerViewPlaylist.post(new Runnable() {
+            @Override
+            public void run() {
+                mPlaylistAdapter.notifyDataSetChanged();
+            }
+        });
+
+    }
+
 }

@@ -10,6 +10,7 @@ import android.media.MediaMetadataRetriever;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ public class ListPlayingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private static final int VIEW_TYPE_ITEM = 0;
     private static final int VIEW_TYPE_LOADING = 1;
+    private static final String TAG = "ListPlayingAdapter";
 
     public ListPlayingAdapter(Context context, ArrayList<SongModel> listSong) {
         this.mContext = context;
@@ -99,6 +101,7 @@ public class ListPlayingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         TextView artist;
         TextView duration;
         ImageView imageView;
+        ImageView imgStatusPlaying;
 
         public ViewHolderRecycler(@NonNull View itemView) {
             super(itemView);
@@ -107,13 +110,23 @@ public class ListPlayingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             this.artist = (TextView) itemView.findViewById(R.id.txtArtist);
             this.imageView = (ImageView) itemView.findViewById(R.id.imgSong);
             this.duration = (TextView) itemView.findViewById(R.id.txtDuration);
-
+            this.imgStatusPlaying = (ImageView) itemView.findViewById(R.id.imgStatusPlaying);
         }
 
         public void bindContent(SongModel songModel) {
             this.titleSong.setText(songModel.getTitle());
             this.artist.setText(songModel.getArtist());
             this.duration.setText(SongModel.formateMilliSeccond(songModel.getDuration()));
+            Log.d(TAG, "bindContent: " + imgStatusPlaying);
+            if (songModel != null && PlayService.getCurrentSongPlaying() != null) {
+                if (songModel.getSongId() == PlayService.getCurrentSongPlaying().getSongId()) {
+                    this.imgStatusPlaying.setVisibility(View.VISIBLE);
+                    this.titleSong.setTextColor(mContext.getResources().getColor(R.color.colorPrimaryDark));
+                } else {
+                    this.titleSong.setTextColor(mContext.getResources().getColor(R.color.colorTitlePrimary));
+                    this.imgStatusPlaying.setVisibility(View.GONE);
+                }
+            }
 
 //            if (imageView.getResources()==null){
             if (cancelPotentialWork(songModel.getPath(), imageView)) {
@@ -139,12 +152,12 @@ public class ListPlayingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private class LoadingViewHolder extends RecyclerView.ViewHolder {
         ProgressBar progressBar;
+
         public LoadingViewHolder(@NonNull View itemView) {
             super(itemView);
             progressBar = itemView.findViewById(R.id.progressBarCircle);
         }
     }
-
 
 
     private static class AsyncDrawable extends BitmapDrawable {

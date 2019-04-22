@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,21 +27,24 @@ public class PlaylistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private static ArrayList<PlaylistModel> mPlaylist;
     private static Context mContext;
-
+    private static final String TAG = "PlaylistAdapter";
 
     public PlaylistAdapter(Context context, ArrayList<PlaylistModel> playlist) {
         this.mContext = context;
         this.mPlaylist = playlist;
+        Log.d(TAG, "PlaylistAdapter: Context "+ mContext + "LIST "+ mPlaylist.size());
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_item_playlist, viewGroup, false);
-//            ViewHolderRecycler viewHolder = new ViewHolderRecycler(view);
+//        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_item_playlist, viewGroup, false);
+//        ViewHolderRecycler viewHolder = new ViewHolderRecycler(view);
+//        Log.d(TAG, "onCreateViewHolder: PLAYLIST ADAPTER " + viewGroup.getId());
+//        return viewHolder;
+        final View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_item_playlist,viewGroup, false);
         return new ViewHolderRecycler(view);
-
 
     }
 
@@ -52,6 +56,8 @@ public class PlaylistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private void showSongItem(ViewHolderRecycler viewHolder, int position) {
         PlaylistModel playlistModel = mPlaylist.get(position);
+        Log.d(TAG, "showSongItem: "+ playlistModel +" View "+viewHolder);
+
         viewHolder.bindContent(playlistModel);
     }
 
@@ -75,13 +81,14 @@ public class PlaylistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return position;
     }
 
-    private static class ViewHolderRecycler extends RecyclerView.ViewHolder {
+    private  class ViewHolderRecycler extends RecyclerView.ViewHolder {
         TextView titlePlaylist;
         TextView numberOfSong;
         ImageView imagePlaylist;
 
         public ViewHolderRecycler(@NonNull View itemView) {
             super(itemView);
+            Log.d(TAG, "ViewHolderRecycler: " + itemView.getId());
             this.titlePlaylist = (TextView) itemView.findViewById(R.id.txtPlaylistTitle);
 //            this.album=album;
             this.numberOfSong = (TextView) itemView.findViewById(R.id.txtNumberSongPlaylist);
@@ -90,8 +97,8 @@ public class PlaylistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         public void bindContent(PlaylistModel playlistModel) {
             this.titlePlaylist.setText(playlistModel.getTitle());
-            this.numberOfSong.setText(playlistModel.getNumberOfSongs());
-            this.imagePlaylist.setImageBitmap(ImageHelper.getBitmapFromPath(playlistModel.getPathImage(), R.mipmap.album_128));
+            this.numberOfSong.setText(String.valueOf(playlistModel.getNumberOfSongs()));
+            this.imagePlaylist.setImageBitmap(ImageHelper.getBitmapFromPath(playlistModel.getPathImage(), -1));
         }
 
 

@@ -118,6 +118,7 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
                         mSongPlaying = mListSong.get(position);
                         mPlayActivity.controlSong(FragmentListPlaying.SENDER, mSongPlaying, PlayService.ACTION_PLAY);
                         mPlayActivity.updateControlPlaying(SENDER, mSongPlaying);
+                        mListSongAdapter.notifyDataSetChanged();
                     }
 
                     @Override

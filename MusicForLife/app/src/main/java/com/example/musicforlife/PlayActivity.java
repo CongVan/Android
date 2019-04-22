@@ -114,6 +114,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
             pagerAdapter = new FragmentPlayAdapter(getSupportFragmentManager(), mSongPlaying);
             mPager.setAdapter(pagerAdapter);
             ((FragmentPlayAdapter) pagerAdapter).getFragmentPlaying().updateButtonPlay();
+            mPager.setCurrentItem(1);
         }
 
 

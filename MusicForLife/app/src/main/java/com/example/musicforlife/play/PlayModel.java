@@ -144,7 +144,7 @@ public class PlayModel {
             ContentValues contentValues = new ContentValues();
 //            contentValues.put(PlayModel.COLUMN_ID, song.getId());
             contentValues.put(PlayModel.COLUMN_SONG_ID, song.getSongId());
-            contentValues.put(PlayModel.COLUMN_IS_PLAYING, 1);
+            contentValues.put(PlayModel.COLUMN_IS_PLAYING, 0);
             contentValues.put(PlayModel.COLUMN_CURRENT_DURATION, 0);
             contentValues.put(PlayModel.COLUMN_CREATE_DATE, getDateTimeNow());
             long id = database.insert(PlayModel.TABLE_NAME, null, contentValues);
@@ -160,7 +160,7 @@ public class PlayModel {
             ContentValues contentValues = new ContentValues();
 //            contentValues.put(PlayModel.COLUMN_ID, song.getId());
             contentValues.put(PlayModel.COLUMN_SONG_ID, song.getSongId());
-            contentValues.put(PlayModel.COLUMN_IS_PLAYING, 1);
+            contentValues.put(PlayModel.COLUMN_IS_PLAYING, 0);
             contentValues.put(PlayModel.COLUMN_CURRENT_DURATION, 0);
             contentValues.put(PlayModel.COLUMN_CREATE_DATE, getDateTimeNow());
             database.insert(PlayModel.TABLE_NAME, null, contentValues);
@@ -193,5 +193,17 @@ public class PlayModel {
         SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
         return db.delete(PlayModel.TABLE_NAME, null, null) > 0;
 
+    }
+
+    public static boolean updateStatusPlaying(int oldSongId, int newSongId) {
+        SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
+//        boolean result = false;
+        ContentValues oldValue = new ContentValues();
+        oldValue.put(COLUMN_IS_PLAYING, 0);
+        ContentValues newValue = new ContentValues();
+        newValue.put(COLUMN_IS_PLAYING, 1);
+        int oldResult = db.update(TABLE_NAME, oldValue, COLUMN_SONG_ID + "=" + oldSongId, null);
+        int newResult = db.update(TABLE_NAME, newValue, COLUMN_SONG_ID + "=" + newSongId, null);
+        return oldResult > 0 && newResult > 0;
     }
 }

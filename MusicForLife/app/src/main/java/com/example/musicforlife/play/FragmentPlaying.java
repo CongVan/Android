@@ -89,7 +89,7 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mTableLayoutControlPlaying=mViewGroupMain.findViewById(R.id.layoutControlPlaying);
+        mTableLayoutControlPlaying = mViewGroupMain.findViewById(R.id.layoutControlPlaying);
         mImageButtonPlaySong = mViewGroupMain.findViewById(R.id.btnPlaySong);
         mImageButtonPrevSong = mViewGroupMain.findViewById(R.id.btnPrevSong);
         mImageButtonNextSong = mViewGroupMain.findViewById(R.id.btnNextSong);
@@ -143,9 +143,11 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
     private void setResourceImagePlaying() {
         Bitmap bitmapPlaying = ImageHelper.getBitmapFromPath(mSongPlaying.getPath(), R.mipmap.music_circular_button_128);
 
-        Bitmap bitmapBgPlaying = ImageHelper.getBitmapFromPath(mSongPlaying.getPath(), R.drawable.b2773);
+        Bitmap bitmapBgPlaying = ImageHelper.getBitmapFromPath(mSongPlaying.getPath(), R.drawable.background_1);
         mImagePlaying.setImageBitmap(bitmapPlaying);
-//        mImageBgPlaying.setImageBitmap(ImageHelper.blurBitmap(bitmapBgPlaying, 1.0f, 60));
+        Bitmap bitmapBlurBgPlaying = ImageHelper.blurBitmap(bitmapBgPlaying, 1.0f, 100);
+//        Bitmap bitmapOverlay = ImageHelper.createImage(bitmapBgPlaying.getWidth(), bitmapBgPlaying.getHeight(), Color.argb(100, 0, 0, 0));
+//        mImageBgPlaying.setImageBitmap(bitmapBlurBgPlaying);
         if (ImageHelper.isDarkBitmap(bitmapBgPlaying)) {
             mTableLayoutControlPlaying.setBackgroundColor(Color.argb(40, 255, 255, 255));
         } else {
@@ -178,10 +180,10 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
 //        if (mSongPlaying != null && PlayService.getCurrentSongPlaying() != null) {
 //            if (mSongPlaying.getSongId() == PlayService.getCurrentSongPlaying().getSongId()) {
 //                updateControlPlaying(mSongPlaying);
-//
 //            }
 //        }
-
+        updateControlPlaying(mSongPlaying);
+        updateButtonPlay();
     }
 
     @Override
