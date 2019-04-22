@@ -1,6 +1,6 @@
-package com.example.musicforlife.artist;
+package com.example.musicforlife.album;
+
 import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,58 +18,45 @@ import com.example.musicforlife.R;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-public class ArtistSongsActivity extends Activity {
-
+public class AlbumSongsActivity extends Activity {
     ImageButton ImgBtnBack;
     RelativeLayout RLHeroImage;
     ImageView ImgProfile;
     TextView TVNameArtist;
     TextView TVSongcount;
-    ArtistModel artistModel;
+    AlbumModel albumModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_artist_songs);
-
+        setContentView(R.layout.activity_album_songs);
         Intent intent = getIntent();
-        artistModel = (ArtistModel)intent.getSerializableExtra("infoArtist");
+        albumModel = (AlbumModel)intent.getSerializableExtra("infoAlbum");
         InitControl();
         BindData();
 
-        //Init Fragment
-        final FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        FragmentArtistSong fragmentArtistSong = new FragmentArtistSong();
-        Bundle bundle = new Bundle();
-        bundle.putString("artistQuery",artistModel.getName());
-        fragmentArtistSong.setArguments(bundle);
-        fragmentTransaction.add(R.id.artistSongFragmentLayout,fragmentArtistSong);
-        fragmentTransaction.commit();
-        //Init Fragment
-
-        //set button Back
         ImgBtnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-
     }
 
     private void InitControl(){
-        ImgBtnBack = (ImageButton)findViewById(R.id.artistSongBtnBack);
-        RLHeroImage = (RelativeLayout)findViewById(R.id.artistSongHeroImage);
-        ImgProfile = (ImageView)findViewById(R.id.artistSongImgProfile);
-        TVNameArtist = (TextView)findViewById(R.id.artistSongNameArtist);
-        TVSongcount = (TextView)findViewById(R.id.artistSongcount);
+        ImgBtnBack = (ImageButton)findViewById(R.id.albumSongBtnBack);
+        RLHeroImage = (RelativeLayout)findViewById(R.id.albumSongHeroImage);
+        ImgProfile = (ImageView)findViewById(R.id.albumSongImgProfile);
+        TVNameArtist = (TextView)findViewById(R.id.albumSongName);
+        TVSongcount = (TextView)findViewById(R.id.albumSongcount);
     }
+
     private void BindData(){
-        if(artistModel != null){
-            TVNameArtist.setText(artistModel.getName());
-            TVSongcount.setText(artistModel.getSongCount() + " Bài hát");
+        if(albumModel != null){
+            TVNameArtist.setText(albumModel.getTitle());
+            TVSongcount.setText(albumModel.getNumberOfSongs() + " Bài hát");
 
             MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-            mediaMetadataRetriever.setDataSource(artistModel.getPath());
+            mediaMetadataRetriever.setDataSource(albumModel.getPath());
             if (mediaMetadataRetriever.getEmbeddedPicture() != null) {
                 InputStream inputStream = new ByteArrayInputStream(mediaMetadataRetriever.getEmbeddedPicture());
                 mediaMetadataRetriever.release();

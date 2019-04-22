@@ -1,43 +1,25 @@
 package com.example.musicforlife.artist;
 
+import android.graphics.Bitmap;
+
 import java.io.Serializable;
 
-public class ArtistViewModel implements Serializable {
+public class ArtistViewModel extends ArtistModel {
+    private Bitmap bitmap = null;
 
-    public ArtistViewModel(String name,String path,int count)
-    {
-        Name = name;
-        Path = path;
-        SongCount = count;
+    public ArtistViewModel(String name, String path, int count) {
+        super(name, path, count);
     }
 
-    private String Path;
-
-    public void setPath(String path) {
-        Path = path;
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
     }
 
-    public String getPath() {
-        return Path;
+    public Bitmap getBitmap() {
+        return bitmap;
     }
 
-    private String Name;
-
-    public void setName(String name) {
-        Name = name;
-    }
-
-    public String getName() {
-        return Name;
-    }
-
-    private int SongCount;
-
-    public void setSongCount(int songCount) {
-        SongCount = songCount;
-    }
-
-    public int getSongCount() {
-        return SongCount;
+    public ArtistModel getArtistModel(){
+        return new ArtistModel(super.getName(),super.getPath(),super.getSongCount());
     }
 }

@@ -16,4 +16,8 @@ public class AlbumViewModel extends AlbumModel {
         return bitmap;
     }
 
+    public AlbumModel getAlbumModel(){
+        return new AlbumModel(super.getTitle(),super.getArtist(),super.getNumberOfSongs(),super.getPath());
+    }
+
 }

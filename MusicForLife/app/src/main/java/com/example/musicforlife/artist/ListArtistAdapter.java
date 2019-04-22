@@ -20,8 +20,8 @@ import java.util.List;
 
 public class ListArtistAdapter extends RecyclerView.Adapter<ListArtistAdapter.ArtistViewHolder> {
     private Context myContext;
-    private List<ArtistModel> artistList;
-    public ListArtistAdapter(Context context,List<ArtistModel> list){
+    private List<ArtistViewModel> artistList;
+    public ListArtistAdapter(Context context,List<ArtistViewModel> list){
         myContext = context;
         artistList = list;
     }
@@ -53,8 +53,8 @@ public class ListArtistAdapter extends RecyclerView.Adapter<ListArtistAdapter.Ar
             TVArtistCount = (TextView)itemView.findViewById(R.id.txtArtistCount);
             IVArtist = (ImageView)itemView.findViewById(R.id.imgartist);
         }
-        public void BindData(List<ArtistModel> artistList,int position){
-            ArtistModel artistModel = artistList.get(position);
+        public void BindData(List<ArtistViewModel> artistList,int position){
+            ArtistViewModel artistModel = artistList.get(position);
 
             TVArtistName.setText(artistModel.getName());
             TVArtistCount.setText(artistModel.getSongCount() + " Bài hát");

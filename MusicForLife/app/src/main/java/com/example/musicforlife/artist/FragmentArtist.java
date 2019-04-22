@@ -24,7 +24,7 @@ public class FragmentArtist extends Fragment {
     public static final String SENDER="FRAGMENT_ARTIST";
 
     View view;
-    ArrayList<ArtistModel> arrArtist;
+    ArrayList<ArtistViewModel> arrArtist;
     RecyclerView LVArtist;
     Context context;
     @Nullable
@@ -56,9 +56,8 @@ public class FragmentArtist extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(context,ArtistSongsActivity.class);
-                ArtistModel artistModel = arrArtist.get(position);
-                ArtistViewModel artistViewModel = new ArtistViewModel(artistModel.getName(),artistModel.getPath(),artistModel.getSongCount());
-                intent.putExtra("infoArtist", artistViewModel);
+                ArtistModel artistModel = arrArtist.get(position).getArtistModel();
+                intent.putExtra("infoArtist", artistModel);
                 startActivityForResult(intent,ArtistModel.RequestCode);
             }
 

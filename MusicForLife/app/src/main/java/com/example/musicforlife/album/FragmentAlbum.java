@@ -1,6 +1,7 @@
 package com.example.musicforlife.album;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.example.musicforlife.MainActivity;
 import com.example.musicforlife.R;
+import com.example.musicforlife.listsong.RecyclerItemClickListener;
 
 import java.util.ArrayList;
 
@@ -47,5 +49,24 @@ public class FragmentAlbum extends Fragment {
         RCalbum.setLayoutManager(new LinearLayoutManager(context));
         RCalbum.setAdapter(albumListAdapter);
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        RCalbum.addOnItemTouchListener(new RecyclerItemClickListener(context, RCalbum, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent intent = new Intent(context,AlbumSongsActivity.class);
+                AlbumModel albumModel = (AlbumModel)arrAlbum.get(position).getAlbumModel();
+                intent.putExtra("infoAlbum", albumModel);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+        }));
     }
 }

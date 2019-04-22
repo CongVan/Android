@@ -1,6 +1,8 @@
 package com.example.musicforlife.album;
 
-public class AlbumModel {
+import java.io.Serializable;
+
+public class AlbumModel implements Serializable {
     private String title;
     private String artist;
     private int numberOfSongs;
