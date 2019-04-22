@@ -76,6 +76,7 @@
                             android:id="@+id/txtAlbumArtist"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textColor="@color/colorTitleSecondary"
                             android:text="Tên ca sĩ"/>
                         <TextView
                             android:layout_width="wrap_content"
@@ -87,6 +88,7 @@
                             android:id="@+id/txtAlbumSongCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textColor="@color/colorTitleSecondary"
                             android:text="0 bài hát"/>
                     </LinearLayout>
                 </LinearLayout>

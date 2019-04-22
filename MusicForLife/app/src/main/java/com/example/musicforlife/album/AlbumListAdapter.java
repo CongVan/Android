@@ -79,7 +79,7 @@ public class AlbumListAdapter extends RecyclerView.Adapter<AlbumListAdapter.Albu
                     albumList.get(position).setBitmap(bitmap);
                 } else {
                     //set default if can't getEmbeddedPicture()
-                    IVAlbum.setImageResource(R.mipmap.musical_note_light_64);
+                    IVAlbum.setImageResource(R.mipmap.album_128);
                 }
             }
             else{

@@ -65,6 +65,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Tên ca sĩ"
+                        android:textColor="@color/colorTitlePrimary"
                         android:textSize="@dimen/text_size_small"
                         android:textStyle="bold"
 
@@ -74,6 +75,7 @@
                         android:id="@+id/txtArtistCount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/colorTitleSecondary"
                         android:text="0 bài hát"
                         android:textSize="@dimen/text_size_small"
 
