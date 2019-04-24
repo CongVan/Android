@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.media.MediaMetadataRetriever;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -515,12 +516,34 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
 //            BitmapDrawable background = new BitmapDrawable(blurBitmap);
             mImageViewSongMinimize.setImageBitmap(bitmap);
 //            mLayoutPlayingMinimizie.setBackground(background);
-            mLayoutPlayingMinimizie.setVisibility(View.VISIBLE);
-            mViewPager.setPadding(0, 0, 0, mLayoutPlayingMinimizie.getHeight());
+
+
+
+//            mLayoutPlayingMinimizie.setBackground(ImageHelper.getMimimizeBackgroundDrawable());
+//
+
+            mLayoutPlayingMinimizie.post(new Runnable() {
+                @Override
+                public void run() {
+                    mViewPager.setPadding(0, 0, 0, mLayoutPlayingMinimizie.getMeasuredHeight());
+
+                    mLayoutPlayingMinimizie.setVisibility(View.VISIBLE);
+                    Log.d(TAG, "togglePlayingMinimize: HEIGHT"+mLayoutPlayingMinimizie.getMeasuredHeight());
+                }
+            });
         } else {
-            mLayoutPlayingMinimizie.setVisibility(View.GONE);
-            mViewPager.setPadding(0, 0, 0, 0);
+            mLayoutPlayingMinimizie.post(new Runnable() {
+                @Override
+                public void run() {
+                    mViewPager.setPadding(0, 0, 0, 0);
+                    mLayoutPlayingMinimizie.setVisibility(View.GONE);
+                    Log.d(TAG, "togglePlayingMinimize: HEIGHT"+mLayoutPlayingMinimizie.getMeasuredHeight());
+                }
+            });
         }
+
+
+
     }
 
     private void handleShowPlayActivityWithSongList(SongModel songPlay, ArrayList<SongModel> songList, int typeShow) {

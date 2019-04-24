@@ -6,7 +6,7 @@
     android:id="@+id/bottomSheetPlay"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/transparent"
+    android:background="@color/colorWhiteGlassDark"
     android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground"
     android:paddingHorizontal="@dimen/margin_size_small">
@@ -21,8 +21,8 @@
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
         app:cardBackgroundColor="@color/colorTranparent"
-        app:cardCornerRadius="@dimen/border_radius_small"
-        app:cardElevation="@dimen/elevation_small"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="0dp"
         app:cardPreventCornerOverlap="false"
         app:cardUseCompatPadding="true">
 
@@ -68,7 +68,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Tiêu đề bài hát"
-                        android:textColor="@color/colorTitlePrimaryLight"
+                        android:textColor="@color/colorTitleWhitePrimary"
                         android:textSize="@dimen/text_size_normal"
                         android:textStyle="bold" />
 

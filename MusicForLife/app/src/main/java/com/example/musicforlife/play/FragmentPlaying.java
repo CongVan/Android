@@ -148,11 +148,11 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
         Bitmap bitmapBlurBgPlaying = ImageHelper.blurBitmap(bitmapBgPlaying, 1.0f, 100);
 //        Bitmap bitmapOverlay = ImageHelper.createImage(bitmapBgPlaying.getWidth(), bitmapBgPlaying.getHeight(), Color.argb(100, 0, 0, 0));
 //        mImageBgPlaying.setImageBitmap(bitmapBlurBgPlaying);
-        if (ImageHelper.isDarkBitmap(bitmapBgPlaying)) {
-            mTableLayoutControlPlaying.setBackgroundColor(Color.argb(40, 255, 255, 255));
-        } else {
-            mTableLayoutControlPlaying.setBackgroundColor(Color.TRANSPARENT);
-        }
+//        if (ImageHelper.isDarkBitmap(bitmapBgPlaying)) {
+//            mTableLayoutControlPlaying.setBackgroundColor(Color.argb(40, 255, 255, 255));
+//        } else {
+//            mTableLayoutControlPlaying.setBackgroundColor(Color.TRANSPARENT);
+//        }
         Log.d(TAG, "setResourceImagePlaying: ISDARK" + ImageHelper.isDarkBitmap(bitmapPlaying));
     }
 

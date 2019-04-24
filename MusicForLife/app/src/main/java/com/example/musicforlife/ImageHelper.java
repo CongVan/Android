@@ -42,22 +42,34 @@ public class ImageHelper {
         }
         return bitmap;
     }
-    public static BitmapDrawable getMainBackgroundDrawable(){
+
+    public static BitmapDrawable getMainBackgroundDrawable() {
         Bitmap bitmap = ImageHelper.drawableToBitmap(R.drawable.highcompress_background_test);
 
         Bitmap bitmapBg = ImageHelper.blurBitmap(bitmap, 1.0f, 20);
 
 
         BitmapDrawable bitmapDrawable = new BitmapDrawable(bitmapBg);
-        return  bitmapDrawable;
+        return bitmapDrawable;
     }
 
-    public static Bitmap drawableToBitmap (int drawableId) {
+    public static BitmapDrawable getMimimizeBackgroundDrawable() {
+
+        Bitmap bitmap = ImageHelper.drawableToBitmap(R.drawable.highcompress_background_test);
+        Bitmap bitmapWhiteGlass = ImageHelper.createImage(bitmap.getWidth(), bitmap.getHeight(), Color.argb(50, 255, 255, 255));
+        Bitmap bitmapBg = ImageHelper.blurBitmap(bitmap, 1.0f, 20);
+
+        Bitmap bitmapOverlay = ImageHelper.overlayBitmapToCenter(bitmapBg, bitmapWhiteGlass);
+        BitmapDrawable bitmapDrawable = new BitmapDrawable(bitmapWhiteGlass);
+        return bitmapDrawable;
+    }
+
+    public static Bitmap drawableToBitmap(int drawableId) {
 
         Drawable drawable = mContext.getResources().getDrawable(drawableId);
 
         if (drawable instanceof BitmapDrawable) {
-            return ((BitmapDrawable)drawable).getBitmap();
+            return ((BitmapDrawable) drawable).getBitmap();
         }
 
         Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
@@ -67,6 +79,7 @@ public class ImageHelper {
 
         return bitmap;
     }
+
     /**
      * Stack Blur v1.0 from
      * http://www.quasimondo.com/StackBlurForCanvas/StackBlurDemo.html
