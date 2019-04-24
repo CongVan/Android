@@ -58,32 +58,10 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
         mLayoutPlay=findViewById(R.id.layoutPlayActivity);
 
         Utility.setTransparentStatusBar(PlayActivity.this);
+        mLayoutPlay.setPadding(0,Utility.getStatusbarHeight(this),0,0);
+
         mLayoutPlay.setBackground(ImageHelper.getMainBackgroundDrawable());
-//        final Bitmap bitmapBackgroundMain= BitmapFactory.decodeResource(PlayActivity.this.getResources(), R.drawable.background_1);
-//        //BitmapFactory.decodeResource(MainActivity.this.getResources(), R.drawable.background);
-//        //getBitmap(R.drawable.background_gradient);
-//        imageViewBackgroundMain=findViewById(R.id.imageViewBackgroundMain);
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-////        getSupportActionBar().hide();
-//
-//        imageViewBackgroundMain.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
-//        imageViewBackgroundMain.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
-//        imageViewBackgroundMain.setAdjustViewBounds(false);
-//        imageViewBackgroundMain.setScaleType(ImageView.ScaleType.FIT_XY);
-//        final CoordinatorLayout mainLayout= findViewById(R.id.mainContent);
-//        mainLayout.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                Blurry.with(MainActivity.this)
-//                        .radius(10)
-//                        .sampling(10)
-//                        .from(bitmapBackgroundMain)
-////                        .color(Color.argb(66, 255, 255, 0))
-////                        .async()
-//                        .into(imageViewBackgroundMain );
-//            }
-//        });
+
         mPager = (ViewPager) findViewById(R.id.pager);
         mDatabaseHelper = DatabaseHelper.newInstance(getApplicationContext());
         mPlayService = PlayService.newInstance(PlayActivity.this.getApplicationContext(), PlayActivity.this, mDatabaseHelper);

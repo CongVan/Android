@@ -33,6 +33,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.text.Html;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -123,208 +124,19 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         super.onCreate(savedInstanceState);
 //
         setContentView(R.layout.activity_main);
-        mToolBar = findViewById(R.id.tool_bar_main);
-        mViewPager = findViewById(R.id.pagerMainContent);
-        mLayoutPlayingMinimizie = findViewById(R.id.bottomSheetPlay);
-        mTextViewTitleSongMinimize = findViewById(R.id.txtTitleMinimize);
-        mTextViewArtistMinimize = findViewById(R.id.txtArtistMinimize);
-        mImageViewSongMinimize = findViewById(R.id.imgSongMinimize);
-        mCardViewPlayingMinimize = findViewById(R.id.cardViewPlayingMinimize);
-        mLayoutMainContent = findViewById(R.id.mainContent);
+        initFindView();
         mLayoutPlayingMinimizie.setOnClickListener(this);
         mCardViewPlayingMinimize.setOnClickListener(this);
         mMainActivity = MainActivity.this;
-        togglePlayingMinimize("MAIN");
 
-
-        mLayoutMainContent.setBackground(ImageHelper.getMainBackgroundDrawable());
-//        bottomSheetBehaviorPlay=BottomSheetBehavior.from(mLayoutPlayingMinimizie);
-
-
-//        final Bitmap bitmapBackgroundMain=BitmapFactory.decodeResource(MainActivity.this.getResources(), R.drawable.background_1);
-        //BitmapFactory.decodeResource(MainActivity.this.getResources(), R.drawable.background);
-        //getBitmap(R.drawable.background_gradient);
-//        imageViewBackgroundMain=findViewById(R.id.imageViewBackgroundMain);
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-////        getSupportActionBar().hide();
-//
-//        imageViewBackgroundMain.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
-//        imageViewBackgroundMain.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
-//        imageViewBackgroundMain.setAdjustViewBounds(false);
-//        imageViewBackgroundMain.setScaleType(ImageView.ScaleType.FIT_XY);
-//        final CoordinatorLayout mainLayout= findViewById(R.id.mainContent);
-//        mainLayout.post(new Runnable() {
-//            @Override
-//            public void run() {
-////                Blurry.with(MainActivity.this)
-////                        .radius(10)
-////                        .sampling(10)
-////                        .from(bitmapBackgroundMain)
-//////                        .color(Color.argb(66, 255, 255, 0))
-//////                        .async()
-////                        .into(imageViewBackgroundMain);
-//                Blurry.with(MainActivity.this)
-//                        .radius(10)
-//                        .sampling(8)
-//                        .color(Color.argb(1, 47, 47, 47))
-//                        .async()
-//                        .animate(500)
-//                        .onto();
-//            }
-//        });
-
-//        SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
-//        mDatabaseHelper.onUpgrade(db,2,3);
-
-//        frameLayoutContainer = findViewById(R.id.frame_container);
-
-//        mBottomNavigationView = findViewById(R.id.navigation_main);
-//        mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-//                currentFragmentContentId = menuItem.getItemId();
-////                menuItem.setCheckable(true);
-////                for (int i = 0; i < mBottomNavigationView.getMenu().size(); i++) {
-////                    MenuItem item = mBottomNavigationView.getMenu().getItem(i);
-////                    boolean isChecked = item.getItemId() == menuItem.getItemId();
-////                    menuItem.setChecked(isChecked);
-////                }
-//                switch (menuItem.getItemId()) {
-//                    // NAV - Gần đây
-//                    case R.id.navigation_recent: {
-////                        if (mBottomNavigationView.getSelectedItemId() == R.id.navigation_recent &&
-////                                getFragmentManager().findFragmentByTag(FragmentRecent.SENDER) != null
-////                        ) {
-////                            break;
-////                        }
-////                        if (mFragmentRecent == null) {
-////                            mFragmentRecent = new FragmentRecent();
-////                        }
-////                        if (getFragmentManager().findFragmentByTag(FragmentRecent.SENDER) == null) {
-////                            loadFragment(mFragmentRecent, FragmentRecent.SENDER);
-////                        } else {
-////                            getFragmentManager().popBackStack(FragmentRecent.SENDER, 0);
-////                        }
-//                        mViewPager.setCurrentItem(0);
-//                        break;
-//                    }
-//                    // NAV - Bài hát
-//                    case R.id.navigation_song: {
-////                        if (mBottomNavigationView.getSelectedItemId() == R.id.navigation_song
-////                                && getFragmentManager().findFragmentByTag(FragmentListSong.SENDER) != null
-////                        ) {
-////                            break;
-////                        }
-////                        if (mFragmentListSong == null) {
-////                            mFragmentListSong = FragmentListSong.newInstance();
-////                        }
-////                        if (getFragmentManager().findFragmentByTag(FragmentListSong.SENDER) == null) {
-////                            loadFragment(mFragmentListSong, FragmentListSong.SENDER);
-////                        } else {
-////                            getFragmentManager().popBackStack(FragmentListSong.SENDER, 0);
-////                        }
-//
-////                        Toast.makeText(MainActivity.this, "HOME", Toast.LENGTH_SHORT).show();
-//////                        fragmentThread.run();
-//                        mViewPager.setCurrentItem(1);
-//                        break;
-//                    }
-//                    // NAV - Ca sĩ
-//                    case R.id.navigation_artist: {
-////                        if (mBottomNavigationView.getSelectedItemId() == R.id.navigation_artist &&
-////                                getFragmentManager().findFragmentByTag(FragmentRecent.SENDER) != null
-////                        ) {
-////                            break;
-////                        }
-////                        if (mFramentArtist == null) {
-////                            mFramentArtist = new FragmentArtist();
-////                        }
-////                        if (getFragmentManager().findFragmentByTag(FragmentArtist.SENDER) == null) {
-////                            loadFragment(mFramentArtist, FragmentArtist.SENDER);
-////                        } else {
-////                            getFragmentManager().popBackStack(FragmentArtist.SENDER, 0);
-////                        }
-//                        mViewPager.setCurrentItem(2);
-//                        break;
-//                    }
-//                    // NAV - album
-//                    case R.id.navigation_album: {
-////                        Toast.makeText(MainActivity.this, "ALBUM", Toast.LENGTH_SHORT).show();
-////                        if (mBottomNavigationView.getSelectedItemId() == R.id.navigation_album &&
-////                                getFragmentManager().findFragmentByTag(FragmentRecent.SENDER) != null
-////                        ) {
-////                            break;
-////                        }
-////                        if (mFragmentAlbum == null) {
-////                            mFragmentAlbum = new FragmentAlbum();
-////                        }
-////                        if (getFragmentManager().findFragmentByTag(FragmentAlbum.SENDER) == null) {
-////                            loadFragment(mFragmentAlbum, FragmentAlbum.SENDER);
-////                        } else {
-////                            getFragmentManager().popBackStack(FragmentAlbum.SENDER, 0);
-////                        }
-//                        mViewPager.setCurrentItem(4);
-//                        break;
-//                    }
-//                    // NAV - Thư mục
-//                    case R.id.navigation_folder: {
-////                        if (mBottomNavigationView.getSelectedItemId() == R.id.navigation_folder &&
-////                                getFragmentManager().findFragmentByTag(FragmentRecent.SENDER) != null
-////                        ) {
-////                            break;
-////                        }
-////                        if (mFragmentFolder == null) {
-////                            mFragmentFolder = new FragmentFolder();
-////                        }
-////                        if (getFragmentManager().findFragmentByTag(FragmentFolder.SENDER) == null) {
-////                            loadFragment(mFragmentFolder, FragmentFolder.SENDER);
-////                        } else {
-////                            getFragmentManager().popBackStack(FragmentFolder.SENDER, 0);
-////                        }
-//                        mViewPager.setCurrentItem(5);
-//                        break;
-//                    }
-//                }
-//
-//                return true;
-//            }
-//        });
-//        mBottomNavigationView.setSelectedItemId(R.id.navigation_recent);
-//        mBottomNavigationView.getMenu().getItem(0).setChecked(true);
-//        View view=mBottomNavigationView.findViewById(R.id.navigation_recent);
-//        view.performClick();
-//        loadFragment(mFragmentRecent,FragmentRecent.SENDER);
-
-
+//        togglePlayingMinimize("MAIN");
         pagerAdapter = new PagerMainAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(pagerAdapter);
         mViewPager.setPageTransformer(true, null);
         mViewPager.setOffscreenPageLimit(1);
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int i, float v, int i1) {
 
-            }
-
-            @Override
-            public void onPageSelected(int i) {
-//                if (mPrevMenuBottomNavigation != null)
-//                    mPrevMenuBottomNavigation.setChecked(false);
-//                else
-//                    mBottomNavigationView.getMenu().getItem(0).setChecked(false);
-//
-//                mBottomNavigationView.getMenu().getItem(i).setChecked(true);
-//                mPrevMenuBottomNavigation = mBottomNavigationView.getMenu().getItem(i);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int i) {
-
-            }
-        });
         mDatabaseHelper = DatabaseHelper.newInstance(getApplicationContext());
-        new intitSongFromDevice().execute();
+        //new intitSongFromDevice().execute();
 //        new Thread(new Runnable() {
 //            @Override
 //            public void run() {
@@ -337,22 +149,40 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
 //            }
 //        }).run();
 
-        mToolBar.setTitle("Music for life");
-        setSupportActionBar(mToolBar);
-        getSupportActionBar().setTitle("Music for life");
-        mTabLayout = findViewById(R.id.tablayout_main);
-        mTabLayout.setupWithViewPager(mViewPager);
-//        for (int i = 0; i < mTabIcons.length; i++) {
-//            mTabLayout.getTabAt(i).setIcon(mTabIcons[i]);
-//        }
-        //Set status bar color
-//        Window window = MainActivity.this.getWindow();
-//        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-//        window.setStatusBarColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
-//        window.setBackgroundDrawable(MainActivity.this.getDrawable(R.drawable));
 
+        setSupportActionBar(mToolBar);
+
+        mTabLayout.setupWithViewPager(mViewPager);
+        setupLayoutTransparent();
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.top_toolbar, menu);
+        return true;
+    }
+
+    private void setupLayoutTransparent(){
         Utility.setTransparentStatusBar(MainActivity.this);
+        mLayoutMainContent.setPadding(0,Utility.getStatusbarHeight(this),0,0);
+        mLayoutMainContent.setBackground(ImageHelper.getMainBackgroundDrawable());
+    }
+
+    private void initFindView(){
+        mToolBar = findViewById(R.id.tool_bar_main);
+        mViewPager = findViewById(R.id.pagerMainContent);
+        mLayoutPlayingMinimizie = findViewById(R.id.bottomSheetPlay);
+        mTextViewTitleSongMinimize = findViewById(R.id.txtTitleMinimize);
+        mTextViewArtistMinimize = findViewById(R.id.txtArtistMinimize);
+        mImageViewSongMinimize = findViewById(R.id.imgSongMinimize);
+        mCardViewPlayingMinimize = findViewById(R.id.cardViewPlayingMinimize);
+        mLayoutMainContent = findViewById(R.id.mainContent);
+        mTabLayout = findViewById(R.id.tablayout_main);
+    }
+
+    private void initDataBaseFromDevice(){
+
     }
 
     @Override
