@@ -49,6 +49,12 @@ public class CacheHelper {
         }
     }
 
+    public void addBitmapToMemoryCacheById(String key,Bitmap bitmap) {
+        if (getBitmapFromMemCache(key) == null) {
+                memoryCache.put(key, bitmap);
+        }
+    }
+
     public Bitmap getBitmapFromMemCache(String key) {
         return memoryCache.get(key);
     }

@@ -61,37 +61,36 @@ public class ListArtistAdapter extends RecyclerView.Adapter<ListArtistAdapter.Ar
             TVArtistCount.setText(artistModel.getSongCount() + " Bài hát");
 
             //new code
-            String path = artistList.get(position).getPath();
-            Bitmap bitmap = CacheHelper.Instance().getBitmapFromMemCache(path);
-            if (bitmap != null){
-                IVArtist.setImageBitmap(bitmap);
-            }
-            else{
-                CacheHelper.Instance().addBitmapToMemoryCache(path);
-                IVArtist.setImageResource(R.mipmap.musical_note_light_64);
-            }
-            //new code
-            //get Image from path if exists getBitmap()
-//            if(artistModel.getBitmap() == null){
-//                MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-//                mediaMetadataRetriever.setDataSource(artistList.get(position).getPath());
-//                if (mediaMetadataRetriever.getEmbeddedPicture() != null) {
-//                    InputStream inputStream = new ByteArrayInputStream(mediaMetadataRetriever.getEmbeddedPicture());
-//                    mediaMetadataRetriever.release();
-//                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-//                    IVArtist.setImageBitmap(bitmap);
-//                    //set bitmap for list
-//                    artistList.get(position).setBitmap(bitmap);
-//                } else {
-//                    //set default if can't getEmbeddedPicture()
-//                    IVArtist.setImageResource(R.mipmap.musical_note_light_64);
-//                }
+//            String path = artistList.get(position).getPath();
+//            Bitmap bitmap = CacheHelper.Instance().getBitmapFromMemCache(path);
+//            if (bitmap != null){
+//                IVArtist.setImageBitmap(bitmap);
 //            }
 //            else{
-//                //set Image from bitmap model
-//                IVArtist.setImageBitmap(artistModel.getBitmap());
+//                CacheHelper.Instance().addBitmapToMemoryCache(path);
+//                IVArtist.setImageResource(R.mipmap.musical_note_light_64);
 //            }
-
+            //new code
+            //get Image from path if exists getBitmap()
+            if(artistModel.getBitmap() == null){
+                MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+                mediaMetadataRetriever.setDataSource(artistList.get(position).getPath());
+                if (mediaMetadataRetriever.getEmbeddedPicture() != null) {
+                    InputStream inputStream = new ByteArrayInputStream(mediaMetadataRetriever.getEmbeddedPicture());
+                    mediaMetadataRetriever.release();
+                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                    IVArtist.setImageBitmap(bitmap);
+                    //set bitmap for list
+                    artistList.get(position).setBitmap(bitmap);
+                } else {
+                    //set default if can't getEmbeddedPicture()
+                    IVArtist.setImageResource(R.mipmap.musical_note_light_64);
+                }
+            }
+            else{
+                //set Image from bitmap model
+                IVArtist.setImageBitmap(artistModel.getBitmap());
+            }
         }
     }
 }
