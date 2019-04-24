@@ -75,7 +75,7 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
     }
 
     @Nullable
-    @Override
+    @Override()
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
 //        ViewGroup viewGroup= (ViewGroup)inflater.inflate(R.layout.fragment_playlist, container, false);
@@ -118,7 +118,7 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
                         mSongPlaying = mListSong.get(position);
                         mPlayActivity.controlSong(FragmentListPlaying.SENDER, mSongPlaying, PlayService.ACTION_PLAY);
                         mPlayActivity.updateControlPlaying(SENDER, mSongPlaying);
-                        mListSongAdapter.notifyDataSetChanged();
+                            mListSongAdapter.notifyDataSetChanged();
                     }
 
                     @Override

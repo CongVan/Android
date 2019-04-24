@@ -111,7 +111,7 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
 
         public void bindContent(SongModel songModel) {
             this.titleSong.setText(songModel.getTitle());
-            this.artist.setText(songModel.getArtist());
+            this.artist.setText(songModel.getArtist()+"_"+songModel.getAlbumArt());
             this.duration.setText(SongModel.formateMilliSeccond(songModel.getDuration()));
 
 //            if (imageView.getResources()==null){

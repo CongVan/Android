@@ -45,7 +45,7 @@ public class ListPlayingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         if (i == VIEW_TYPE_ITEM) {
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_item_song, viewGroup, false);
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_item_song_playing, viewGroup, false);
 //            ViewHolderRecycler viewHolder = new ViewHolderRecycler(view);
             return new ViewHolderRecycler(view);
         } else {
@@ -100,7 +100,7 @@ public class ListPlayingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         TextView album;
         TextView artist;
         TextView duration;
-        ImageView imageView;
+//        ImageView imageView;
         ImageView imgStatusPlaying;
 
         public ViewHolderRecycler(@NonNull View itemView) {
@@ -108,7 +108,7 @@ public class ListPlayingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             this.titleSong = (TextView) itemView.findViewById(R.id.txtTitle);
 //            this.album=album;
             this.artist = (TextView) itemView.findViewById(R.id.txtArtist);
-            this.imageView = (ImageView) itemView.findViewById(R.id.imgSong);
+//            this.imageView = (ImageView) itemView.findViewById(R.id.imgSong);
             this.duration = (TextView) itemView.findViewById(R.id.txtDuration);
             this.imgStatusPlaying = (ImageView) itemView.findViewById(R.id.imgStatusPlaying);
         }
@@ -121,20 +121,20 @@ public class ListPlayingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             if (songModel != null && PlayService.getCurrentSongPlaying() != null) {
                 if (songModel.getSongId() == PlayService.getCurrentSongPlaying().getSongId()) {
                     this.imgStatusPlaying.setVisibility(View.VISIBLE);
-                    this.titleSong.setTextColor(mContext.getResources().getColor(R.color.colorPrimaryDark));
+                    this.titleSong.setTextColor(mContext.getResources().getColor(R.color.colorTitleWhitePrimary));
                 } else {
-                    this.titleSong.setTextColor(mContext.getResources().getColor(R.color.colorTitlePrimary));
+                    this.titleSong.setTextColor(mContext.getResources().getColor(R.color.colorTitleWhitePrimary));
                     this.imgStatusPlaying.setVisibility(View.GONE);
                 }
             }
 
 //            if (imageView.getResources()==null){
-            if (cancelPotentialWork(songModel.getPath(), imageView)) {
-                final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
-                final AsyncDrawable asyncDrawable = new AsyncDrawable(null, task);
-                imageView.setImageDrawable(asyncDrawable);
-                task.execute(songModel.getPath());
-            }
+//            if (cancelPotentialWork(songModel.getPath(), imageView)) {
+//                final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
+//                final AsyncDrawable asyncDrawable = new AsyncDrawable(null, task);
+//                imageView.setImageDrawable(asyncDrawable);
+//                task.execute(songModel.getPath());
+//            }
 //            }
 
 //            new BitmapWorkerTask(imageView).execute(songModel.getPath());

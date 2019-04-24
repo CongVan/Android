@@ -6,6 +6,7 @@
     <dimen name="text_size_large">18dp</dimen>
     <dimen name="text_size_xlarge">24dp</dimen>
 
+    <dimen name="margin_size_xsmall">2dp</dimen>
     <dimen name="margin_size_small">4dp</dimen>
     <dimen name="margin_size_normal">12dp</dimen>
     <dimen name="margin_size_large">18dp</dimen>

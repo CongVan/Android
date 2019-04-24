@@ -28,7 +28,7 @@ public class SongModel implements Serializable {
     public static final String COLUMN_DURATION = "duration";
     public static final String COLUMN_FOLDER = "folder";
     public static final String COLUMN_PATH = "path";
-
+    public static final String COLUMN_ALBUM_ART = "album_art";
 
     public static final String SCRIPT_CREATE_TABLE = new StringBuilder("CREATE TABLE ")
             .append(TABLE_NAME).append("(")
@@ -39,7 +39,8 @@ public class SongModel implements Serializable {
             .append(COLUMN_ARTIST).append(" TEXT,")
             .append(COLUMN_DURATION).append(" INTEGER,")
             .append(COLUMN_FOLDER).append(" TEXT ,")
-            .append(COLUMN_PATH).append(" TEXT ")
+            .append(COLUMN_PATH).append(" TEXT ,")
+            .append(COLUMN_ALBUM_ART).append(" TEXT ")
             .append(" )")
             .toString();
     private static final String TAG = "SONG_MODEL";
@@ -53,6 +54,7 @@ public class SongModel implements Serializable {
     private int id;
     private int songId;
     private String folder;
+    private String albumArt;
 
     public String getPath() {
         return path;
@@ -138,8 +140,7 @@ public class SongModel implements Serializable {
                 MediaStore.Audio.ArtistColumns.ARTIST,
                 MediaStore.Audio.AudioColumns.DURATION,
                 MediaStore.Audio.AudioColumns._ID,
-
-
+                MediaStore.Audio.AudioColumns.ALBUM_ID
         };
         String sortOrder = MediaStore.Audio.Media.TITLE + " ASC";
         String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0 ";
@@ -158,6 +159,7 @@ public class SongModel implements Serializable {
                 String artist = c.getString(3);//c.getColumnIndex(MediaStore.Audio.AudioColumns.ARTIST)
                 Long duration = c.getLong(4);//c.getColumnIndex(MediaStore.Audio.AudioColumns.DURATION)
                 int songId = c.getInt(5);
+                String albumArt=c.getString(6);
                 String parentPath = new File(path).getParent();
                 String folder = parentPath.substring(parentPath.lastIndexOf('/') + 1);
 //                MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
@@ -181,6 +183,7 @@ public class SongModel implements Serializable {
                 songModel.setDuration(duration);
                 songModel.setSongId(songId);
                 songModel.setFolder(folder);
+                songModel.setAlbumArt(albumArt);
 //                Log.e("Name :" + name, " Album :" + album);
 //                Log.e("Path :" + path, " artist :" + artist);
 
@@ -359,6 +362,7 @@ public class SongModel implements Serializable {
                 songModel.setFolder(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_FOLDER)));
                 songModel.setDuration(cursor.getLong(cursor.getColumnIndex(SongModel.COLUMN_DURATION)));
                 songModel.setPath(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_PATH)));
+                songModel.setAlbumArt(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_ALBUM_ART)));
                 songModelList.add(songModel);
             } while (cursor.moveToNext());
 
@@ -367,4 +371,11 @@ public class SongModel implements Serializable {
         return songModelList;
     }
 
+    public String getAlbumArt() {
+        return albumArt;
+    }
+
+    public void setAlbumArt(String albumArt) {
+        this.albumArt = albumArt;
+    }
 }

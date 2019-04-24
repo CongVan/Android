@@ -20,7 +20,7 @@
         android:layout_gravity="center"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        app:cardBackgroundColor="@color/colorWhite"
+        app:cardBackgroundColor="@color/colorTranparent"
         app:cardCornerRadius="@dimen/border_radius_small"
         app:cardElevation="@dimen/elevation_small"
         app:cardPreventCornerOverlap="false"

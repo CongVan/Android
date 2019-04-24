@@ -3,6 +3,7 @@ package com.example.musicforlife;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -12,6 +13,7 @@ import android.media.MediaMetadataRetriever;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
@@ -28,6 +30,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
 import android.support.v7.widget.CardView;
+import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,6 +52,7 @@ import com.example.musicforlife.listsong.FragmentListSong;
 import com.example.musicforlife.listsong.SongModel;
 import com.example.musicforlife.play.PlayService;
 import com.example.musicforlife.playlist.FragmentPlaylist;
+import com.example.musicforlife.utilitys.Utility;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -70,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     private TextView mTextViewArtistMinimize;
     private ImageView mImageViewSongMinimize;
     private CardView mCardViewPlayingMinimize;
+    private CoordinatorLayout mLayoutMainContent;
     private static MainActivity mMainActivity;
     //    @BindView(R.id.bottom_sheet)
     BottomSheetBehavior bottomSheetBehaviorPlay;
@@ -124,11 +129,14 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         mTextViewArtistMinimize = findViewById(R.id.txtArtistMinimize);
         mImageViewSongMinimize = findViewById(R.id.imgSongMinimize);
         mCardViewPlayingMinimize = findViewById(R.id.cardViewPlayingMinimize);
+        mLayoutMainContent = findViewById(R.id.mainContent);
         mLayoutPlayingMinimizie.setOnClickListener(this);
         mCardViewPlayingMinimize.setOnClickListener(this);
         mMainActivity = MainActivity.this;
         togglePlayingMinimize("MAIN");
 
+
+        mLayoutMainContent.setBackground(ImageHelper.getMainBackgroundDrawable());
 //        bottomSheetBehaviorPlay=BottomSheetBehavior.from(mLayoutPlayingMinimizie);
 
 
@@ -315,7 +323,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
             }
         });
         mDatabaseHelper = DatabaseHelper.newInstance(getApplicationContext());
-        //new intitSongFromDevice().execute();
+        new intitSongFromDevice().execute();
 //        new Thread(new Runnable() {
 //            @Override
 //            public void run() {
@@ -337,11 +345,13 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
 //            mTabLayout.getTabAt(i).setIcon(mTabIcons[i]);
 //        }
         //Set status bar color
-        Window window = MainActivity.this.getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
+//        Window window = MainActivity.this.getWindow();
+//        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+//        window.setStatusBarColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
 //        window.setBackgroundDrawable(MainActivity.this.getDrawable(R.drawable));
+
+        Utility.setTransparentStatusBar(MainActivity.this);
     }
 
     @Override

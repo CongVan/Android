@@ -27,6 +27,10 @@
     <color name="colorTitlePrimary">#212121</color>
     <color name="colorTitleSecondary">#616161</color>
 
+
+    <color name="colorTitleWhitePrimary">#fafafa</color>
+    <color name="colorTitleWhiteSecondary">#bdbdbd</color>
+
     <color name="colorCardBackgroundDark">#322F2F2F</color>
     <drawable name="backgroundPrimary">@drawable/background_gradient</drawable>
 </resources>

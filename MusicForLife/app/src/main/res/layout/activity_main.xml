@@ -5,11 +5,83 @@
     android:id="@+id/mainContent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
-    android:fitsSystemWindows="true"
+    android:background="@drawable/highcompress_background_test"
+
     android:gravity="center"
     android:orientation="vertical"
+    android:paddingTop="@dimen/margin_size_small"
+    android:theme="@style/AppTheme"
     tools:context=".MainActivity">
+    <!--android:fitsSystemWindows="true"-->
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/layoutAppbarMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorTranparent"
+        android:gravity="top"
+        android:outlineProvider="bounds"
+        app:elevation="4dp">
+        <!--app:contentScrim="@android:color/transparent"-->
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/tool_bar_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorTranparent"
+            android:outlineProvider="bounds"
+            android:theme="@style/AppTheme.Toolbar"
+
+            app:title="Music For Life">
+            <!--app:layout_scrollFlags="scroll|enterAlways"-->
+            <android.support.v7.widget.SearchView
+                android:id="@+id/search_main"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                >
+
+            </android.support.v7.widget.SearchView>
+        </android.support.v7.widget.Toolbar>
+
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tablayout_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:background="@color/colorTranparent"
+            app:tabGravity="fill"
+            app:tabIndicatorColor="@color/colorWhite"
+            app:tabIndicatorFullWidth="false"
+            app:tabIndicatorHeight="0dp"
+            app:tabMode="scrollable"
+            app:tabPaddingEnd="@dimen/margin_size_xlarge"
+            app:tabPaddingStart="@dimen/margin_size_normal"
+            app:tabSelectedTextColor="@color/colorWhite"
+            app:tabTextAppearance="@style/TabLayoutAppearance"
+            app:tabTextColor="@color/colorPrimaryLight">
+            <!--app:tabSelectedTextColor="@android:color/white"-->
+            <!--app:tabTextAppearance="@style/TabLayoutAppearance"-->
+            <!--app:tabTextColor="@android:color/darker_gray"-->
+        </android.support.design.widget.TabLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pagerMainContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:background="@color/colorTranparent"
+        />
+    <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
+    <include
+        layout="@layout/layout_playing_minimize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom">
+
+    </include>
+
 
     <!--<ImageView-->
     <!--android:id="@+id/imageViewBackgroundMain"-->
@@ -27,71 +99,6 @@
     <!--android:name="com.example.musicforlife.listsong.FragmentListSong"-->
     <!--&gt;-->
     <!--</fragment>-->
-
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:outlineProvider="bounds"
-        app:elevation="4dp">
-        <!--app:contentScrim="@android:color/transparent"-->
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/tool_bar_main"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:outlineProvider="bounds"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:title="Music For Life">
-
-            <android.support.v7.widget.SearchView
-                android:id="@+id/search_main"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-
-                >
-
-            </android.support.v7.widget.SearchView>
-        </android.support.v7.widget.Toolbar>
-
-
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tablayout_main"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            app:tabGravity="fill"
-            app:tabIndicatorColor="@color/colorWhite"
-            app:tabIndicatorFullWidth="true"
-            app:tabMode="scrollable"
-            app:tabPaddingEnd="@dimen/margin_size_xlarge"
-            app:tabPaddingStart="@dimen/margin_size_normal"
-            app:tabSelectedTextColor="@color/colorWhite"
-            app:tabTextAppearance="@style/TabLayoutAppearance"
-            app:tabTextColor="@color/colorPrimaryLight">
-
-            <!--app:tabSelectedTextColor="@android:color/white"-->
-            <!--app:tabTextAppearance="@style/TabLayoutAppearance"-->
-            <!--app:tabTextColor="@android:color/darker_gray"-->
-        </android.support.design.widget.TabLayout>
-
-    </android.support.design.widget.AppBarLayout>
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/pagerMainContent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorWhiteLight"
-
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-    <include
-        android:layout_gravity="bottom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        layout="@layout/layout_playing_minimize"
-       >
-
-    </include>
 
 
     <!--<Button-->

@@ -1,12 +1,15 @@
 package com.example.musicforlife;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.util.Log;
 
@@ -18,25 +21,52 @@ public class ImageHelper {
     private static Context mContext = MainActivity.getMainActivity().getApplicationContext();
 
     public static Bitmap getBitmapFromPath(String pathImage, int resourceDefaultId) {
-        if (pathImage == null || pathImage.isEmpty()) {
-            return null;
-        }
         MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-        mediaMetadataRetriever.setDataSource(pathImage);
-        InputStream inputStream;
-        Bitmap bitmap;
+        Bitmap bitmap = null;
+        if (pathImage != null && !pathImage.isEmpty()) {
 
-        if (mediaMetadataRetriever.getEmbeddedPicture() != null) {
-            inputStream = new ByteArrayInputStream(mediaMetadataRetriever.getEmbeddedPicture());
-            mediaMetadataRetriever.release();
-            bitmap = BitmapFactory.decodeStream(inputStream);
+
+            mediaMetadataRetriever.setDataSource(pathImage);
+            InputStream inputStream;
+
+
+            if (mediaMetadataRetriever.getEmbeddedPicture() != null) {
+                inputStream = new ByteArrayInputStream(mediaMetadataRetriever.getEmbeddedPicture());
+                mediaMetadataRetriever.release();
+                bitmap = BitmapFactory.decodeStream(inputStream);
+            } else {
+                bitmap = BitmapFactory.decodeResource(mContext.getResources(), resourceDefaultId);
+            }
         } else {
             bitmap = BitmapFactory.decodeResource(mContext.getResources(), resourceDefaultId);
         }
+        return bitmap;
+    }
+    public static BitmapDrawable getMainBackgroundDrawable(){
+        Bitmap bitmap = ImageHelper.drawableToBitmap(R.drawable.highcompress_background_test);
+
+        Bitmap bitmapBg = ImageHelper.blurBitmap(bitmap, 1.0f, 20);
+
+
+        BitmapDrawable bitmapDrawable = new BitmapDrawable(bitmapBg);
+        return  bitmapDrawable;
+    }
+
+    public static Bitmap drawableToBitmap (int drawableId) {
+
+        Drawable drawable = mContext.getResources().getDrawable(drawableId);
+
+        if (drawable instanceof BitmapDrawable) {
+            return ((BitmapDrawable)drawable).getBitmap();
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
 
         return bitmap;
     }
-
     /**
      * Stack Blur v1.0 from
      * http://www.quasimondo.com/StackBlurForCanvas/StackBlurDemo.html
@@ -68,8 +98,8 @@ public class ImageHelper {
 
     public static Bitmap blurBitmap(Bitmap sentBitmap, float scale, int radius) {
 
-        int width = Math.round(sentBitmap.getWidth() * scale);
-        int height = Math.round(sentBitmap.getHeight() * scale);
+        int width = sentBitmap == null ? Resources.getSystem().getDisplayMetrics().widthPixels : Math.round(sentBitmap.getWidth() * scale);
+        int height = sentBitmap == null ? Resources.getSystem().getDisplayMetrics().heightPixels : Math.round(sentBitmap.getHeight() * scale);
         sentBitmap = Bitmap.createScaledBitmap(sentBitmap, width, height, false);
 
         Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
@@ -316,6 +346,7 @@ public class ImageHelper {
         canvas.drawBitmap(bitmap2, marginLeft, marginTop, null);
         return overlayBitmap;
     }
+
     public static Bitmap createImage(int width, int height, int color) {
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
