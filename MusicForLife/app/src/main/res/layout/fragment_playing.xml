@@ -100,7 +100,8 @@
                     android:layout_marginBottom="@dimen/margin_size_small"
                     android:gravity="center"
                     android:text="Tên bài hát tại đây"
-                    android:textColor="@color/colorTitlePrimary"
+                    android:textColor="@color/colorTitleWhitePrimary"
+                    android:textStyle="bold"
                     android:textSize="@dimen/text_size_large" />
 
                 <TextView
@@ -109,7 +110,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Tên ca sĩ tại đây"
-                    android:textColor="@color/colorTitlePrimaryLight"
+                    android:textColor="@color/colorTitleWhiteSecondary"
                     android:textSize="@dimen/text_size_normal"
 
                     />
@@ -127,17 +128,16 @@
                     android:layout_height="280dp"
                     android:layout_centerHorizontal="true"
                     android:layout_gravity="top"
-                    app:cardBackgroundColor="@color/colorTranparent"
-                    app:cardCornerRadius="140dp"
-                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/colorBlackGlassLight"
+                    app:cardCornerRadius="@dimen/border_radius_large"
+                    app:cardElevation="@dimen/elevation_large"
                     app:contentPadding="0dp">
 
                     <ImageView
                         android:id="@+id/imgPlaying"
                         android:layout_width="match_parent"
-                        android:layout_height="280dp"
+                        android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:background="@drawable/shape_circle"
                         android:scaleType="centerCrop"
                         android:src="@mipmap/music_circular_button_128" />
 
@@ -175,7 +175,7 @@
                     android:layout_weight="1"
                     android:minWidth="80dp"
                     android:text="00:00"
-                    android:textColor="@color/colorTitlePrimaryLight" />
+                    android:textColor="@color/colorTitleWhitePrimary" />
 
                 <SeekBar
 
@@ -194,7 +194,7 @@
                     android:gravity="right"
                     android:minWidth="80dp"
                     android:text="69:96"
-                    android:textColor="@color/colorTitlePrimaryLight" />
+                    android:textColor="@color/colorTitleWhitePrimary" />
             </LinearLayout>
 
             <TableLayout

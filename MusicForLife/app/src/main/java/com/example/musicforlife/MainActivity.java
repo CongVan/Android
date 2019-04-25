@@ -43,6 +43,7 @@ import android.widget.FrameLayout;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.support.v7.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -160,6 +161,8 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.top_toolbar, menu);
+        SearchView searchView = (SearchView)menu.findItem(R.id.action_search_main).getActionView();
+        searchView.setMaxWidth(Integer.MAX_VALUE);
         return true;
     }
 

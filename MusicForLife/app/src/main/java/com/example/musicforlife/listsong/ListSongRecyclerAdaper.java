@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.example.musicforlife.ImageHelper;
 import com.example.musicforlife.R;
+import com.example.musicforlife.utilitys.CacheHelper;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -114,13 +115,25 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
             this.artist.setText(songModel.getArtist()+"_"+songModel.getAlbumArt());
             this.duration.setText(SongModel.formateMilliSeccond(songModel.getDuration()));
 
-//            if (imageView.getResources()==null){
-            if (cancelPotentialWork(songModel.getPath(), imageView)) {
-                final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
-                final AsyncDrawable asyncDrawable = new AsyncDrawable(null, task);
-                imageView.setImageDrawable(asyncDrawable);
-                task.execute(songModel.getPath());
+//BITMAP WITH ASYNC TASK
+//            if (cancelPotentialWork(songModel.getPath(), imageView)) {
+//                final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
+//                final AsyncDrawable asyncDrawable = new AsyncDrawable(null, task);
+//                imageView.setImageDrawable(asyncDrawable);
+//                task.execute(songModel.getPath());
+//            }
+//BITMAP WITH ASYNC TASK
+//BITMAP CACHE
+            Bitmap bitmap = CacheHelper.Instance().getBitmapFromMemCache(songModel.getPath());
+            if (bitmap != null){
+                imageView.setImageBitmap(bitmap);
             }
+            else{
+                CacheHelper.Instance().addBitmapToMemoryCache(songModel.getPath());
+                imageView.setImageResource(R.mipmap.music_file_128);
+            }
+
+
 //            }
 
 //            new BitmapWorkerTask(imageView).execute(songModel.getPath());

@@ -18,6 +18,13 @@ public class Utility {
             window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
     }
+    public static void setTranslucentStatusBar(Activity activity){
+
+        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT){
+            Window window= activity.getWindow();
+            window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+    }
     public static int getStatusbarHeight(Activity activity){
         // status bar height
         int statusBarHeight = 0;

@@ -57,7 +57,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
 
         mLayoutPlay=findViewById(R.id.layoutPlayActivity);
 
-        Utility.setTransparentStatusBar(PlayActivity.this);
+        Utility.setTranslucentStatusBar(PlayActivity.this);
         mLayoutPlay.setPadding(0,Utility.getStatusbarHeight(this),0,0);
 
         mLayoutPlay.setBackground(ImageHelper.getMainBackgroundDrawable());
