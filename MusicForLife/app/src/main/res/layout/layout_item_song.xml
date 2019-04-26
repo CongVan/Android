@@ -29,7 +29,7 @@
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/margin_size_normal"
+            android:paddingHorizontal="@dimen/margin_size_xnormal"
             android:stretchColumns="1">
 
             <TableRow>
@@ -38,7 +38,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_size_small"
-                    android:layout_marginRight="@dimen/margin_size_normal"
+                    android:layout_marginRight="@dimen/margin_size_xnormal"
                     android:layout_marginBottom="@dimen/margin_size_small"
                     app:cardCornerRadius="@dimen/border_radius_small"
                     app:cardUseCompatPadding="true"
@@ -85,7 +85,7 @@
                             android:layout_gravity="bottom"
                             android:text="Tiêu đề bài hát"
                             android:textColor="@color/colorTitleWhitePrimary"
-                            android:textSize="@dimen/text_size_small"
+                            android:textSize="@dimen/text_size_normal"
                             android:textStyle="bold" />
                     </LinearLayout>
 

@@ -1,4 +1,5 @@
 package com.example.musicforlife.artist;
+
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -10,10 +11,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.musicforlife.ImageHelper;
+import com.example.musicforlife.MainActivity;
 import com.example.musicforlife.R;
+import com.example.musicforlife.utilitys.Utility;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -26,13 +31,16 @@ public class ArtistSongsActivity extends Activity {
     TextView TVNameArtist;
     TextView TVSongcount;
     ArtistModel artistModel;
+
+    LinearLayout layoutContentArtistSong;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_artist_songs);
 
         Intent intent = getIntent();
-        artistModel = (ArtistModel)intent.getSerializableExtra("infoArtist");
+        artistModel = (ArtistModel) intent.getSerializableExtra("infoArtist");
         InitControl();
         BindData();
 
@@ -40,9 +48,9 @@ public class ArtistSongsActivity extends Activity {
         final FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         FragmentArtistSong fragmentArtistSong = new FragmentArtistSong();
         Bundle bundle = new Bundle();
-        bundle.putString("artistQuery",artistModel.getName());
+        bundle.putString("artistQuery", artistModel.getName());
         fragmentArtistSong.setArguments(bundle);
-        fragmentTransaction.add(R.id.artistSongFragmentLayout,fragmentArtistSong);
+        fragmentTransaction.add(R.id.artistSongFragmentLayout, fragmentArtistSong);
         fragmentTransaction.commit();
         //Init Fragment
 
@@ -53,18 +61,29 @@ public class ArtistSongsActivity extends Activity {
                 finish();
             }
         });
+        setupLayoutTransparent();
+    }
+
+    private void InitControl() {
+        ImgBtnBack = (ImageButton) findViewById(R.id.artistSongBtnBack);
+        RLHeroImage = (RelativeLayout) findViewById(R.id.artistSongHeroImage);
+//        ImgProfile = (ImageView) findViewById(R.id.artistSongImgProfile);
+        TVNameArtist = (TextView) findViewById(R.id.artistSongNameArtist);
+        TVSongcount = (TextView) findViewById(R.id.artistSongcount);
+        layoutContentArtistSong = findViewById(R.id.layoutContentArtistSong);
 
     }
 
-    private void InitControl(){
-        ImgBtnBack = (ImageButton)findViewById(R.id.artistSongBtnBack);
-        RLHeroImage = (RelativeLayout)findViewById(R.id.artistSongHeroImage);
-        ImgProfile = (ImageView)findViewById(R.id.artistSongImgProfile);
-        TVNameArtist = (TextView)findViewById(R.id.artistSongNameArtist);
-        TVSongcount = (TextView)findViewById(R.id.artistSongcount);
+    private void setupLayoutTransparent() {
+        Utility.setTransparentStatusBar(ArtistSongsActivity.this);
+        Bitmap bitmapBg=ImageHelper.getBitmapFromPath(artistModel.getPath(),R.drawable.highcompress_background_test);
+        Bitmap bitmapBgBlur=ImageHelper.blurBitmap(bitmapBg,1.0f,140);
+        layoutContentArtistSong.setPadding(0, Utility.getStatusbarHeight(this), 0, 0);
+        layoutContentArtistSong.setBackground(ImageHelper.getMainBackgroundDrawableFromBitmap(bitmapBgBlur));
     }
-    private void BindData(){
-        if(artistModel != null){
+
+    private void BindData() {
+        if (artistModel != null) {
             TVNameArtist.setText(artistModel.getName());
             TVSongcount.setText(artistModel.getSongCount() + " Bài hát");
 
@@ -74,7 +93,7 @@ public class ArtistSongsActivity extends Activity {
                 InputStream inputStream = new ByteArrayInputStream(mediaMetadataRetriever.getEmbeddedPicture());
                 mediaMetadataRetriever.release();
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                ImgProfile.setBackground(new BitmapDrawable(getResources(), bitmap));
+//                ImgProfile.setBackground(new BitmapDrawable(getResources(), bitmap));
                 BitmapDrawable d = new BitmapDrawable(getResources(), bitmap);
                 RLHeroImage.setBackground(d);
             }

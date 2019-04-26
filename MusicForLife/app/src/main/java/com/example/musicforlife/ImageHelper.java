@@ -19,7 +19,7 @@ import java.net.ContentHandler;
 
 public class ImageHelper {
     private static Context mContext = MainActivity.getMainActivity().getApplicationContext();
-
+    private static final String TAG = "ImageHelper";
     public static Bitmap getBitmapFromPath(String pathImage, int resourceDefaultId) {
         MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
         Bitmap bitmap = null;
@@ -33,9 +33,12 @@ public class ImageHelper {
             if (mediaMetadataRetriever.getEmbeddedPicture() != null) {
                 inputStream = new ByteArrayInputStream(mediaMetadataRetriever.getEmbeddedPicture());
                 mediaMetadataRetriever.release();
-                bitmap = BitmapFactory.decodeStream(inputStream);
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inPreferredConfig = Bitmap.Config.RGB_565;
+                bitmap = BitmapFactory.decodeStream(inputStream,null,options);
             } else {
                 bitmap = BitmapFactory.decodeResource(mContext.getResources(), resourceDefaultId);
+                Log.d(TAG, "getBitmapFromPath: "+bitmap.getByteCount());
             }
         } else {
             bitmap = BitmapFactory.decodeResource(mContext.getResources(), resourceDefaultId);
@@ -45,6 +48,15 @@ public class ImageHelper {
 
     public static BitmapDrawable getMainBackgroundDrawable() {
         Bitmap bitmap = ImageHelper.drawableToBitmap(R.drawable.highcompress_background_test);
+
+        Bitmap bitmapBg = ImageHelper.blurBitmap(bitmap, 1.0f, 20);
+
+
+        BitmapDrawable bitmapDrawable = new BitmapDrawable(bitmapBg);
+        return bitmapDrawable;
+    }
+    public static BitmapDrawable getMainBackgroundDrawableFromBitmap(Bitmap bitmap) {
+//        Bitmap bitmap = ImageHelper.drawableToBitmap(R.drawable.highcompress_background_test);
 
         Bitmap bitmapBg = ImageHelper.blurBitmap(bitmap, 1.0f, 20);
 

@@ -25,7 +25,7 @@
     <color name="colorWhiteLight">#F5F5F5</color>
     <color name="colorWhiteGlassLight">#32FFFFFF</color>
     <color name="colorWhiteGlassDark">#08FFFFFF</color>
-    <color name="colorBlackGlassLight">#32000000</color>
+    <color name="colorBlackGlassLight">#10000000</color>
     <color name="colorBlackGlassDark">#02000000</color>
 
     <color name="colorTranparent">@android:color/transparent</color>

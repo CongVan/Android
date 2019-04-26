@@ -1,5 +1,6 @@
 package com.example.musicforlife.listsong;
 
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -84,7 +85,7 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        _listSong = SongModel.getSongsWithThreshold(MainActivity.mDatabaseHelper,0, mThreshHold);// getAllAudioFromDevice(_context);
+        _listSong = SongModel.getSongsWithThreshold(MainActivity.mDatabaseHelper, 0, mThreshHold);// getAllAudioFromDevice(_context);
 
 //        _layoutListSong = (NestedScrollView) _inflater.inflate(R.layout.fragment_list_song, null);
         _listViewSong = (RecyclerView) view.findViewById(R.id.lsvSongs);
@@ -93,6 +94,13 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks {
         _listSongAdapter = new ListSongRecyclerAdaper(_context, _listSong);
         _listViewSong.setLayoutManager(new LinearLayoutManager(_context));
         _listViewSong.setAdapter(_listSongAdapter);
+
+        _listViewSong.setItemViewCacheSize(240);
+        _listViewSong.setDrawingCacheEnabled(true);
+        _listViewSong.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
+
+//        _listSongAdapter.notifyItemRangeChanged();
+
         _listViewSong.addOnItemTouchListener(
                 new RecyclerItemClickListener(_context, _listViewSong, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
@@ -129,12 +137,11 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks {
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                Log.d(TAG, "onScrolled: " + linearLayoutManager + "__" + linearLayoutManager.findLastCompletelyVisibleItemPosition());
+                Log.d(TAG, "onScrolled: " + dx + "_" + dy + "___" + linearLayoutManager.findLastCompletelyVisibleItemPosition());
                 if (!mIsLoading) {
                     if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == _listSong.size() - 1) {
-                        mIsLoading = true;
                         loadMore();
-
+                        mIsLoading = true;
                     }
                 }
 
@@ -163,19 +170,31 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks {
     private void loadMore() {
         _listSong.add(null);
         _listSongAdapter.notifyItemInserted(_listSong.size() - 1);
-        ArrayList<SongModel> tempAudioList = SongModel.getSongsWithThreshold(MainActivity.mDatabaseHelper, _listSong.size(), mThreshHold);
-
-        _listSong.remove(_listSong.size() - 1);
-        _listSong.addAll(tempAudioList);
-        Log.i(TAG, "onPostExecute: SONGS--> " + _listSong.size());
+//        Handler handler = new Handler();
         _listViewSong.post(new Runnable() {
-                                       @Override
-                                       public void run() {
-                                           _listSongAdapter.notifyDataSetChanged();
-                                       }
-                                   });
-        Log.i(TAG, "onPostExecute: FINISHED");
-        mIsLoading = false;
+            @Override
+            public void run() {
+                _listSong.remove(_listSong.size() - 1);
+                int scollPosition = _listSong.size();
+                _listSongAdapter.notifyItemRemoved(scollPosition);
+                ArrayList<SongModel> tempAudioList = SongModel.getSongsWithThreshold(MainActivity.mDatabaseHelper, _listSong.size(), mThreshHold);
+                _listSong.addAll(tempAudioList);
+                _listSongAdapter.notifyDataSetChanged();
+                mIsLoading = false;
+            }
+        });
+
+
+//        Log.i(TAG, "onPostExecute: SONGS--> " + _listSong.size());
+//        _listViewSong.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                _listSongAdapter.notifyDataSetChanged();
+//            }
+//        });
+//        Log.i(TAG, "onPostExecute: FINISHED");
+
+//        new loadImageFromStorage().execute();
     }
 
     private class loadImageFromStorage extends AsyncTask<Void, Integer, ArrayList<SongModel>> {
@@ -184,14 +203,19 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks {
         protected void onPostExecute(ArrayList<SongModel> songModels) {
             super.onPostExecute(songModels);
             _listSong.remove(_listSong.size() - 1);
+            final int positionStart = _listSong.size() + 1;
             _listSong.addAll(songModels);
             Log.i(TAG, "onPostExecute: SONGS--> " + _listSong.size());
-            _listViewSong.post(new Runnable() {
+            _listViewSong.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    _listSongAdapter.notifyDataSetChanged();
+//                    _listSongAdapter.notifyDataSetChanged();
+                    _listSongAdapter.notifyItemRangeChanged(positionStart, _listSong.size());
+                    _listSongAdapter.notifyItemRemoved(positionStart);
+                    _listSongAdapter.notifyItemChanged(positionStart);
+                    _listSongAdapter.notifyItemInserted(positionStart);
                 }
-            });
+            }, 5000);
             Log.i(TAG, "onPostExecute: FINISHED");
             mIsLoading = false;
         }
@@ -204,7 +228,7 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks {
         @Override
         public ArrayList<SongModel> doInBackground(Void... voids) {
             _listSong.add(null);
-            _listSongAdapter.notifyItemInserted(_listSong.size() - 1);
+            _listSongAdapter.notifyItemInserted(_listSong.size());
             ArrayList<SongModel> tempAudioList = SongModel.getSongsWithThreshold(MainActivity.mDatabaseHelper, _listSong.size(), mThreshHold);
 
             return tempAudioList;

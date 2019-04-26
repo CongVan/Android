@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         mViewPager.setOffscreenPageLimit(1);
 
         mDatabaseHelper = DatabaseHelper.newInstance(getApplicationContext());
-        //new intitSongFromDevice().execute();
+//        new intitSongFromDevice().execute();
 //        new Thread(new Runnable() {
 //            @Override
 //            public void run() {
