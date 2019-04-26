@@ -11,6 +11,9 @@ import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
+import android.media.ThumbnailUtils;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import java.io.ByteArrayInputStream;
@@ -20,6 +23,8 @@ import java.net.ContentHandler;
 public class ImageHelper {
     private static Context mContext = MainActivity.getMainActivity().getApplicationContext();
     private static final String TAG = "ImageHelper";
+
+
     public static Bitmap getBitmapFromPath(String pathImage, int resourceDefaultId) {
         MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
         Bitmap bitmap = null;
@@ -29,20 +34,29 @@ public class ImageHelper {
             mediaMetadataRetriever.setDataSource(pathImage);
             InputStream inputStream;
 
+            try {
 
-            if (mediaMetadataRetriever.getEmbeddedPicture() != null) {
-                inputStream = new ByteArrayInputStream(mediaMetadataRetriever.getEmbeddedPicture());
-                mediaMetadataRetriever.release();
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inPreferredConfig = Bitmap.Config.RGB_565;
-                bitmap = BitmapFactory.decodeStream(inputStream,null,options);
-            } else {
+                if (mediaMetadataRetriever.getEmbeddedPicture() != null) {
+                    inputStream = new ByteArrayInputStream(mediaMetadataRetriever.getEmbeddedPicture());
+                    mediaMetadataRetriever.release();
+//                BitmapFactory.Options options = new BitmapFactory.Options();
+//                options.inPreferredConfig = Bitmap.Config.RGB_565;
+
+                    bitmap = BitmapFactory.decodeStream(inputStream);
+                } else {
+                    bitmap = BitmapFactory.decodeResource(mContext.getResources(), resourceDefaultId);
+                    Log.d(TAG, "getBitmapFromPath: " + bitmap.getByteCount());
+                }
+            } catch (Exception ex) {
                 bitmap = BitmapFactory.decodeResource(mContext.getResources(), resourceDefaultId);
-                Log.d(TAG, "getBitmapFromPath: "+bitmap.getByteCount());
             }
+
         } else {
             bitmap = BitmapFactory.decodeResource(mContext.getResources(), resourceDefaultId);
         }
+//        Bitmap thumbnail= ThumbnailUtils.extractThumbnail(bitmap,128,128,ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
+        mediaMetadataRetriever.release();
+
         return bitmap;
     }
 
@@ -55,6 +69,7 @@ public class ImageHelper {
         BitmapDrawable bitmapDrawable = new BitmapDrawable(bitmapBg);
         return bitmapDrawable;
     }
+
     public static BitmapDrawable getMainBackgroundDrawableFromBitmap(Bitmap bitmap) {
 //        Bitmap bitmap = ImageHelper.drawableToBitmap(R.drawable.highcompress_background_test);
 

@@ -3,14 +3,14 @@ package com.example.musicforlife.listsong;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 
-import com.example.musicforlife.db.DatabaseHelper;
-import com.example.musicforlife.play.PlayModel;
+import com.example.musicforlife.db.DatabaseManager;
 
 import java.io.File;
 import java.io.Serializable;
@@ -28,7 +28,7 @@ public class SongModel implements Serializable {
     public static final String COLUMN_DURATION = "duration";
     public static final String COLUMN_FOLDER = "folder";
     public static final String COLUMN_PATH = "path";
-    public static final String COLUMN_ALBUM_ART = "album_art";
+    public static final String COLUMN_ALBUM_ID = "album_id";
 
     public static final String SCRIPT_CREATE_TABLE = new StringBuilder("CREATE TABLE ")
             .append(TABLE_NAME).append("(")
@@ -40,7 +40,7 @@ public class SongModel implements Serializable {
             .append(COLUMN_DURATION).append(" INTEGER,")
             .append(COLUMN_FOLDER).append(" TEXT ,")
             .append(COLUMN_PATH).append(" TEXT ,")
-            .append(COLUMN_ALBUM_ART).append(" TEXT ")
+            .append(COLUMN_ALBUM_ID).append(" INTEGER ")
             .append(" )")
             .toString();
     private static final String TAG = "SONG_MODEL";
@@ -54,7 +54,7 @@ public class SongModel implements Serializable {
     private int id;
     private int songId;
     private String folder;
-    private String albumArt;
+    private int albumId;
 
     public String getPath() {
         return path;
@@ -140,7 +140,8 @@ public class SongModel implements Serializable {
                 MediaStore.Audio.ArtistColumns.ARTIST,
                 MediaStore.Audio.AudioColumns.DURATION,
                 MediaStore.Audio.AudioColumns._ID,
-                MediaStore.Audio.AudioColumns.ALBUM_ID
+                MediaStore.Audio.AudioColumns.ALBUM_ID,
+
         };
         String sortOrder = MediaStore.Audio.Media.TITLE + " ASC";
         String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0 ";
@@ -159,7 +160,8 @@ public class SongModel implements Serializable {
                 String artist = c.getString(3);//c.getColumnIndex(MediaStore.Audio.AudioColumns.ARTIST)
                 Long duration = c.getLong(4);//c.getColumnIndex(MediaStore.Audio.AudioColumns.DURATION)
                 int songId = c.getInt(5);
-                String albumArt=c.getString(6);
+                int albumId = c.getInt(c.getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM_ID));
+                Log.d(TAG, "getAllAudioFromDevice: ALBUM ID" + albumId);
                 String parentPath = new File(path).getParent();
                 String folder = parentPath.substring(parentPath.lastIndexOf('/') + 1);
 //                MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
@@ -183,7 +185,7 @@ public class SongModel implements Serializable {
                 songModel.setDuration(duration);
                 songModel.setSongId(songId);
                 songModel.setFolder(folder);
-                songModel.setAlbumArt(albumArt);
+                songModel.setAlbumId(albumId);
 //                Log.e("Name :" + name, " Album :" + album);
 //                Log.e("Path :" + path, " artist :" + artist);
 
@@ -228,9 +230,11 @@ public class SongModel implements Serializable {
         return finalTimerString;
     }
 
-    public static long insertSong(DatabaseHelper databaseHelper, SongModel songModel) {
-        if (!isSongExsist(databaseHelper, songModel)) {
-            SQLiteDatabase database = databaseHelper.getWritableDatabase();
+    public static long insertSong(DatabaseManager databaseManager, SongModel songModel) {
+
+        if (!isSongExsist(databaseManager, songModel)) {
+            SQLiteDatabase database = databaseManager.getWritableDatabase();
+
             ContentValues contentValues = new ContentValues();
             contentValues.put(SongModel.COLUMN_SONG_ID, songModel.getSongId());
             contentValues.put(SongModel.COLUMN_TITLE, songModel.getTitle());
@@ -239,15 +243,19 @@ public class SongModel implements Serializable {
             contentValues.put(SongModel.COLUMN_DURATION, songModel.getDuration());
             contentValues.put(SongModel.COLUMN_FOLDER, songModel.getFolder());
             contentValues.put(SongModel.COLUMN_PATH, songModel.getPath());
+            contentValues.put(SongModel.COLUMN_ALBUM_ID,songModel.getSongId());
             long id = database.insert(SongModel.TABLE_NAME, null, contentValues);
-            database.close();
+//            database.close();
             return id;
         }
         return 0;
     }
-
-    public static boolean isSongExsist(DatabaseHelper databaseHelper, SongModel song) {
-        SQLiteDatabase db = databaseHelper.getReadableDatabase();
+    public static void deleteAllSong(DatabaseManager databaseManager){
+        SQLiteDatabase database = databaseManager.getWritableDatabase();
+        database.delete(TABLE_NAME,null,null);
+    }
+    public static boolean isSongExsist(DatabaseManager databaseManager, SongModel song) {
+        SQLiteDatabase db = databaseManager.getReadableDatabase();
         boolean result = false;
         String query = MessageFormat.format("SELECT {0} FROM {1} WHERE {2}={3} ",
                 new String[]{SongModel.COLUMN_ID, SongModel.TABLE_NAME, SongModel.COLUMN_SONG_ID, String.valueOf(song.getSongId())});
@@ -255,13 +263,13 @@ public class SongModel implements Serializable {
         if (cursor.moveToFirst()) {
             result = true;
         }
-        cursor.close();
+        //databaseManager.closeDatabase();
         return result;
     }
 
-    public static SongModel getSongFromSongId(DatabaseHelper databaseHelper, int id) {
+    public static SongModel getSongFromSongId(DatabaseManager databaseManager, int id) {
         // get readable database as we are not inserting anything
-        SQLiteDatabase db = databaseHelper.getReadableDatabase();
+        SQLiteDatabase db = databaseManager.getReadableDatabase();
         String[] projection = {
                 SongModel.COLUMN_ID,
                 SongModel.COLUMN_SONG_ID,
@@ -273,7 +281,7 @@ public class SongModel implements Serializable {
                 SongModel.COLUMN_PATH
         };
         String sortOrder = SongModel.COLUMN_ID + " ASC";
-        String selection = SongModel.COLUMN_SONG_ID + " =  " +id;// ;
+        String selection = SongModel.COLUMN_SONG_ID + " =  " + id;// ;
 
 
         Cursor cursor = db.query(SongModel.TABLE_NAME,
@@ -291,7 +299,8 @@ public class SongModel implements Serializable {
             songModel.setFolder(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_FOLDER)));
             songModel.setDuration(cursor.getLong(cursor.getColumnIndex(SongModel.COLUMN_DURATION)));
             songModel.setPath(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_PATH)));
-            cursor.close();
+            songModel.setAlbumId(cursor.getInt(cursor.getColumnIndex(SongModel.COLUMN_ALBUM_ID)));
+            //databaseManager.closeDatabase();
 
             return songModel;
         } else {
@@ -302,9 +311,9 @@ public class SongModel implements Serializable {
     }
 
 
-    public static ArrayList<SongModel> getAllSongs(DatabaseHelper databaseHelper) {
+    public static ArrayList<SongModel> getAllSongs(DatabaseManager databaseManager) {
         ArrayList<SongModel> songModelList = new ArrayList<>();
-        SQLiteDatabase db = databaseHelper.getReadableDatabase();
+        SQLiteDatabase db = databaseManager.getReadableDatabase();
         String[] projection = {
                 SongModel.COLUMN_ID,
                 SongModel.COLUMN_SONG_ID,
@@ -331,13 +340,18 @@ public class SongModel implements Serializable {
             } while (cursor.moveToNext());
 
         }
-        cursor.close();
+        //databaseManager.closeDatabase();
         return songModelList;
     }
+    public static long getRowsSong(DatabaseManager databaseManager) {
+        SQLiteDatabase db = databaseManager.getReadableDatabase();
+        long count = DatabaseUtils.queryNumEntries(db, TABLE_NAME);
 
-    public static ArrayList<SongModel> getSongsWithThreshold(DatabaseHelper databaseHelper,int skip,int count) {
+        return count;
+    }
+    public static ArrayList<SongModel> getSongsWithThreshold(DatabaseManager databaseManager, int skip, int count) {
         ArrayList<SongModel> songModelList = new ArrayList<>();
-        SQLiteDatabase db = databaseHelper.getReadableDatabase();
+        SQLiteDatabase db = databaseManager.getReadableDatabase();
 //        String[] projection = {
 //                SongModel.COLUMN_ID,
 //                SongModel.COLUMN_SONG_ID,
@@ -349,7 +363,7 @@ public class SongModel implements Serializable {
 //                SongModel.COLUMN_PATH
 //        };
 //        Cursor cursor = db.query(TABLE_NAME, projection, null, null, null, null, null);
-        String query="SELECT * FROM "+SongModel.TABLE_NAME+" LIMIT "+skip+","+count;
+        String query = "SELECT * FROM " + SongModel.TABLE_NAME + " LIMIT " + skip + "," + count;
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
             do {
@@ -362,20 +376,21 @@ public class SongModel implements Serializable {
                 songModel.setFolder(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_FOLDER)));
                 songModel.setDuration(cursor.getLong(cursor.getColumnIndex(SongModel.COLUMN_DURATION)));
                 songModel.setPath(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_PATH)));
-                songModel.setAlbumArt(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_ALBUM_ART)));
+                songModel.setAlbumId(cursor.getInt(cursor.getColumnIndex(SongModel.COLUMN_ALBUM_ID)));
+                Log.d(TAG, "getSongsWithThreshold: HOLD ALBUMID"+ songModel.getAlbumId() );
                 songModelList.add(songModel);
             } while (cursor.moveToNext());
 
         }
-        cursor.close();
+        //databaseManager.closeDatabase();
         return songModelList;
     }
 
-    public String getAlbumArt() {
-        return albumArt;
+    public int getAlbumId() {
+        return albumId;
     }
 
-    public void setAlbumArt(String albumArt) {
-        this.albumArt = albumArt;
+    public void setAlbumId(int albumId) {
+        this.albumId = albumId;
     }
 }

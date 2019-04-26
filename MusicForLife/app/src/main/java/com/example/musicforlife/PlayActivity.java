@@ -5,20 +5,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 
-import com.example.musicforlife.db.DatabaseHelper;
+import com.example.musicforlife.db.DatabaseManager;
 import com.example.musicforlife.listsong.SongModel;
-import com.example.musicforlife.play.FragmentListPlaying;
 import com.example.musicforlife.play.FragmentPlayAdapter;
 import com.example.musicforlife.play.PlayService;
 import com.example.musicforlife.play.PlayInterface;
@@ -33,7 +29,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
     /**
      * The pager adapter, which provides the pages to the view pager widget.
      */
-    private DatabaseHelper mDatabaseHelper;
+    private DatabaseManager mDatabaseManager;
     private CoordinatorLayout mLayoutPlay;
     private PagerAdapter pagerAdapter;
     private PlayService mPlayService;
@@ -63,8 +59,8 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
         mLayoutPlay.setBackground(ImageHelper.getMainBackgroundDrawable());
 
         mPager = (ViewPager) findViewById(R.id.pager);
-        mDatabaseHelper = DatabaseHelper.newInstance(getApplicationContext());
-        mPlayService = PlayService.newInstance(PlayActivity.this.getApplicationContext(), PlayActivity.this, mDatabaseHelper);
+        mDatabaseManager = DatabaseManager.newInstance(getApplicationContext());
+        mPlayService = PlayService.newInstance(PlayActivity.this.getApplicationContext(), PlayActivity.this, mDatabaseManager);
 
 
         Intent intent = getIntent();

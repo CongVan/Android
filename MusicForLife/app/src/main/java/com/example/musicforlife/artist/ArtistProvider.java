@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.example.musicforlife.db.DatabaseHelper;
+import com.example.musicforlife.db.DatabaseManager;
 import com.example.musicforlife.listsong.SongModel;
 
 import java.text.MessageFormat;
@@ -13,8 +13,8 @@ import java.util.ArrayList;
 public class ArtistProvider {
     public static ArrayList<ArtistViewModel> getArtistModel(Context context) {
         ArrayList<ArtistViewModel> result = new ArrayList<ArtistViewModel>();
-        DatabaseHelper databaseHelper = DatabaseHelper.newInstance(context);
-        SQLiteDatabase db = databaseHelper.getReadableDatabase();
+        DatabaseManager databaseManager = DatabaseManager.newInstance(context);
+        SQLiteDatabase db = databaseManager.getReadableDatabase();
         String query = MessageFormat.format("select {0},{1},COUNT({2}) from {3} group by {0}"
                 , new String[]{SongModel.COLUMN_ARTIST, SongModel.COLUMN_PATH, SongModel.COLUMN_ID, SongModel.TABLE_NAME});
         Cursor cursor = db.rawQuery(query, null);
@@ -23,14 +23,14 @@ public class ArtistProvider {
                 result.add(new ArtistViewModel(cursor.getString(0), cursor.getString(1), cursor.getInt(2)));
             } while (cursor.moveToNext());
         }
-        db.close();
+//        DatabaseManager.getInstance().closeDatabase();
         return result;
     }
 
     public static ArrayList<SongModel> getArtistSongs(Context context, String artist) {
         ArrayList<SongModel> arr = new ArrayList<SongModel>();
-        DatabaseHelper databaseHelper = DatabaseHelper.newInstance(context);
-        SQLiteDatabase db = databaseHelper.getReadableDatabase();
+//        DatabaseManager databaseManager = DatabaseManager.newInstance(context);
+        SQLiteDatabase db = DatabaseManager.getInstance().getReadableDatabase();
         String query = MessageFormat.format("select {0},{1},{2},{3},{4},{5},{6},{7} from {8} where {9} = ?"
                 , new String[]{
                         SongModel.COLUMN_ID,
@@ -61,13 +61,13 @@ public class ArtistProvider {
                 arr.add(songModel);
             } while (cursor.moveToNext());
         }
-        db.close();
+//        DatabaseManager.getInstance().closeDatabase();
         return arr;
     }
 
-    public static SongModel GetSongFromSongModel(Context context, int id){
-        DatabaseHelper databaseHelper = DatabaseHelper.newInstance(context);
-        return SongModel.getSongFromSongId(databaseHelper,id);
+    public static SongModel GetSongFromSongModel(Context context, int id) {
+        DatabaseManager databaseManager = DatabaseManager.newInstance(context);
+        return SongModel.getSongFromSongId(databaseManager, id);
     }
 
 }

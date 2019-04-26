@@ -4,11 +4,8 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.example.musicforlife.artist.ArtistModel;
-import com.example.musicforlife.db.DatabaseHelper;
-import com.example.musicforlife.listsong.SongModel;
+import com.example.musicforlife.db.DatabaseManager;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 
 public class PlaylistModel {
@@ -26,7 +23,7 @@ public class PlaylistModel {
             .append(COLUMN_PATH_IMAGE).append(" TEXT ")
             .append(" )")
             .toString();
-    private static DatabaseHelper mDatabaseHelper = DatabaseHelper.getInstance();
+    private static DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
     private int id;
     private String title;
     private String pathImage;
@@ -57,7 +54,7 @@ public class PlaylistModel {
     }
 
     public static long createPlaylist(String title) {
-        SQLiteDatabase database = mDatabaseHelper.getWritableDatabase();
+        SQLiteDatabase database = mDatabaseManager.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_PLAYLIST_TITLE, title);
         long id = database.insert(TABLE_NAME, null, contentValues);
@@ -67,7 +64,7 @@ public class PlaylistModel {
 
     public static ArrayList<PlaylistModel> getAllPlaylist() {
         ArrayList<PlaylistModel> playlistModels = new ArrayList<PlaylistModel>();
-        SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
+        SQLiteDatabase db = mDatabaseManager.getReadableDatabase();
         String query = "SELECT P." + COLUMN_ID + ",P." + COLUMN_PLAYLIST_TITLE + ",P." + COLUMN_PATH_IMAGE + ",COUNT(PS." + PlaylistSongModel.COLUMN_ID + ") " + COLUMN_NUMBER_OF_SONG + " from " + TABLE_NAME + " P" +
                 " LEFT JOIN " + PlaylistSongModel.TABLE_NAME + " PS ON P." + COLUMN_ID + "=PS." + PlaylistSongModel.COLUMN_PLAYLIST_ID + "" +
                 " group by P." + COLUMN_ID + ",P." + COLUMN_PLAYLIST_TITLE + ",P." + COLUMN_PATH_IMAGE;

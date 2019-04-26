@@ -2,15 +2,9 @@ package com.example.musicforlife;
 
 
 import android.annotation.TargetApi;
-import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
-import android.media.MediaMetadataRetriever;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,20 +19,16 @@ import android.os.Handler;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.BottomSheetBehavior;
 
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
 import android.support.v7.widget.CardView;
-import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
@@ -50,16 +40,13 @@ import android.widget.Toast;
 import com.example.musicforlife.artist.ArtistModel;
 import com.example.musicforlife.artist.ArtistProvider;
 import com.example.musicforlife.callbacks.MainCallbacks;
-import com.example.musicforlife.db.DatabaseHelper;
+import com.example.musicforlife.db.DatabaseManager;
 import com.example.musicforlife.listsong.FragmentListSong;
 import com.example.musicforlife.listsong.SongModel;
 import com.example.musicforlife.play.PlayService;
 import com.example.musicforlife.playlist.FragmentPlaylist;
 import com.example.musicforlife.utilitys.Utility;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import static android.content.Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY;
@@ -103,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     private ImageView imageViewBackgroundMain;
 
 
-    public static DatabaseHelper mDatabaseHelper;
+    public static DatabaseManager mDatabaseManager;
 
     public static MainActivity getMainActivity() {
         return mMainActivity;
@@ -135,44 +122,44 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         mViewPager.setAdapter(pagerAdapter);
         mViewPager.setPageTransformer(true, null);
         mViewPager.setOffscreenPageLimit(1);
+        setSupportActionBar(mToolBar);
+        mTabLayout.setupWithViewPager(mViewPager);
+        setupLayoutTransparent();
+        mDatabaseManager = DatabaseManager.newInstance(getApplicationContext());
+        new intitSongFromDevice().execute();
 
-        mDatabaseHelper = DatabaseHelper.newInstance(getApplicationContext());
-//        new intitSongFromDevice().execute();
+//        AsyncTask.execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                SongModel.deleteAllSong(mDatabaseManager);
+//                new intitSongFromDevice().execute();
+//            }
+//        });
 //        new Thread(new Runnable() {
 //            @Override
 //            public void run() {
-//                if (!getApplicationContext().getDatabasePath(DatabaseHelper.DATABASE_NAME).exists()) {
-//                    Log.d(TAG, "run: NOT EXIST DATABASE: ");
 //
-//                    new intitSongFromDevice().execute();
-//                }
-////                Log.d(TAG, "run:  EXIST DATABASE: ");
 //            }
 //        }).run();
 
-
-        setSupportActionBar(mToolBar);
-
-        mTabLayout.setupWithViewPager(mViewPager);
-        setupLayoutTransparent();
 
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.top_toolbar, menu);
-        SearchView searchView = (SearchView)menu.findItem(R.id.action_search_main).getActionView();
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search_main).getActionView();
         searchView.setMaxWidth(Integer.MAX_VALUE);
         return true;
     }
 
-    private void setupLayoutTransparent(){
+    private void setupLayoutTransparent() {
         Utility.setTransparentStatusBar(MainActivity.this);
-        mLayoutMainContent.setPadding(0,Utility.getStatusbarHeight(this),0,0);
+        mLayoutMainContent.setPadding(0, Utility.getStatusbarHeight(this), 0, 0);
         mLayoutMainContent.setBackground(ImageHelper.getMainBackgroundDrawable());
     }
 
-    private void initFindView(){
+    private void initFindView() {
         mToolBar = findViewById(R.id.tool_bar_main);
         mViewPager = findViewById(R.id.pagerMainContent);
         mLayoutPlayingMinimizie = findViewById(R.id.bottomSheetPlay);
@@ -184,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         mTabLayout = findViewById(R.id.tablayout_main);
     }
 
-    private void initDataBaseFromDevice(){
+    private void initDataBaseFromDevice() {
 
     }
 
@@ -351,7 +338,6 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
 //            mLayoutPlayingMinimizie.setBackground(background);
 
 
-
 //            mLayoutPlayingMinimizie.setBackground(ImageHelper.getMimimizeBackgroundDrawable());
 //
 
@@ -361,7 +347,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
                     mViewPager.setPadding(0, 0, 0, mLayoutPlayingMinimizie.getMeasuredHeight());
 
                     mLayoutPlayingMinimizie.setVisibility(View.VISIBLE);
-                    Log.d(TAG, "togglePlayingMinimize: HEIGHT"+mLayoutPlayingMinimizie.getMeasuredHeight());
+                    Log.d(TAG, "togglePlayingMinimize: HEIGHT" + mLayoutPlayingMinimizie.getMeasuredHeight());
                 }
             });
         } else {
@@ -370,11 +356,10 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
                 public void run() {
                     mViewPager.setPadding(0, 0, 0, 0);
                     mLayoutPlayingMinimizie.setVisibility(View.GONE);
-                    Log.d(TAG, "togglePlayingMinimize: HEIGHT"+mLayoutPlayingMinimizie.getMeasuredHeight());
+                    Log.d(TAG, "togglePlayingMinimize: HEIGHT" + mLayoutPlayingMinimizie.getMeasuredHeight());
                 }
             });
         }
-
 
 
     }
@@ -445,11 +430,11 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
 
         @Override
         protected void onPostExecute(ArrayList<SongModel> songModels) {
-            super.onPostExecute(songModels);
-            for (SongModel song : songModels) {
-                long id = SongModel.insertSong(mDatabaseHelper, song);
-                Log.d(TAG, "onPostExecute: INSERT SONG FROM MAIN : " + id);
-            }
+//            super.onPostExecute(songModels);
+//            for (SongModel song : songModels) {
+//                long id = SongModel.insertSong(mDatabaseManager, song);
+//                Log.d(TAG, "onPostExecute: INSERT SONG FROM MAIN : " + id);
+//            }
 
         }
 
@@ -460,7 +445,14 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
 
         @Override
         public ArrayList<SongModel> doInBackground(Void... voids) {
+//            SongModel.deleteAllSong(mDatabaseManager);
+            Log.d(TAG, "doInBackground: SIZE AUDIOS " + SongModel.getRowsSong(mDatabaseManager));
             ArrayList<SongModel> tempAudioList = SongModel.getAllAudioFromDevice(getApplicationContext());
+            Log.d(TAG, "doInBackground: AUDIO " + tempAudioList.size());
+            for (SongModel song : tempAudioList) {
+                long id = SongModel.insertSong(mDatabaseManager, song);
+                Log.d(TAG, "onPostExecute: INSERT SONG FROM MAIN : " + id);
+            }
             return tempAudioList;
         }
 

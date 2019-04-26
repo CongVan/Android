@@ -6,7 +6,7 @@ import android.os.CountDownTimer;
 import android.util.Log;
 
 import com.example.musicforlife.PlayActivity;
-import com.example.musicforlife.db.DatabaseHelper;
+import com.example.musicforlife.db.DatabaseManager;
 import com.example.musicforlife.listsong.SongModel;
 
 import java.io.IOException;
@@ -22,7 +22,7 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
     private static PlayActivity mPlayActivity;
     private static MediaPlayer mMediaPlayer = null;
     private static PlayService mPlayService = null;
-    private static DatabaseHelper mDatabaseHelper = null;
+    private static DatabaseManager mDatabaseManager = null;
     private CountDownTimer mCountDownTimerUpdateSeekBar = null;
 
 
@@ -45,13 +45,13 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
     private static final String TAG = "PlayService";
     public static final String SENDER = "PLAY_CENTER";
 
-    public static PlayService newInstance(Context context, PlayActivity playActivity, DatabaseHelper databaseHelper) {
-        if (mContext == null || mPlayService == null || mMediaPlayer == null || mDatabaseHelper == null) {
+    public static PlayService newInstance(Context context, PlayActivity playActivity, DatabaseManager databaseManager) {
+        if (mContext == null || mPlayService == null || mMediaPlayer == null || mDatabaseManager == null) {
             mPlayService = new PlayService();
             mContext = context;
             mPlayActivity = playActivity;
             mMediaPlayer = new MediaPlayer();
-            mDatabaseHelper = databaseHelper;
+            mDatabaseManager = databaseManager;
 
         }
 
@@ -132,7 +132,7 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
             }
         }
 
-        mCurrentSongPlaying = SongModel.getSongFromSongId(mDatabaseHelper, mPlayingList.get(mCurrentIndexSong).getSongId());
+        mCurrentSongPlaying = SongModel.getSongFromSongId(mDatabaseManager, mPlayingList.get(mCurrentIndexSong).getSongId());
         play(mCurrentSongPlaying);
         mPlayActivity.updateControlPlaying(SENDER, mCurrentSongPlaying);
     }
@@ -161,7 +161,7 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
         } else {
             mCurrentIndexSong--;
         }
-        mCurrentSongPlaying = SongModel.getSongFromSongId(mDatabaseHelper, mPlayingList.get(mCurrentIndexSong).getSongId());
+        mCurrentSongPlaying = SongModel.getSongFromSongId(mDatabaseManager, mPlayingList.get(mCurrentIndexSong).getSongId());
         play(mCurrentSongPlaying);
         mPlayActivity.updateControlPlaying(SENDER, mCurrentSongPlaying);
     }

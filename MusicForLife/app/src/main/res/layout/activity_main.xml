@@ -92,6 +92,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
     <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
     <include
+        android:visibility="gone"
         layout="@layout/layout_playing_minimize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

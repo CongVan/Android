@@ -1,15 +1,22 @@
 package com.example.musicforlife.listsong;
 
+import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,17 +24,28 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.GenericTransitionOptions;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.GlideBuilder;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.bitmap_recycle.LruBitmapPool;
+import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory;
+import com.bumptech.glide.load.engine.cache.LruResourceCache;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.musicforlife.ImageHelper;
+import com.example.musicforlife.MainActivity;
 import com.example.musicforlife.R;
-import com.example.musicforlife.utilitys.CacheHelper;
+import com.squareup.picasso.Picasso;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private static final String TAG = "ListSongRecyclerAdaper";
     private static ArrayList<SongModel> mListSong;
     private static Context mContext;
 
@@ -35,8 +53,8 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
     private static final int VIEW_TYPE_LOADING = 1;
 
     public ListSongRecyclerAdaper(Context context, ArrayList<SongModel> listSong) {
-        this.mContext = context;
-        this.mListSong = listSong;
+        mContext = context;
+        mListSong = listSong;
     }
 
     @NonNull
@@ -79,6 +97,13 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
 
 
     @Override
+    public void onViewRecycled(@NonNull RecyclerView.ViewHolder holder) {
+        super.onViewRecycled(holder);
+//        Log.d(TAG, "onViewRecycled: ");
+
+    }
+
+    @Override
     public int getItemViewType(int position) {
         return mListSong.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
     }
@@ -94,27 +119,66 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     private static class ViewHolderRecycler extends RecyclerView.ViewHolder {
+
         TextView titleSong;
         TextView album;
         TextView artist;
         TextView duration;
         ImageView imageView;
 
-        public ViewHolderRecycler(@NonNull View itemView) {
+        ViewHolderRecycler(@NonNull View itemView) {
             super(itemView);
-            this.titleSong = (TextView) itemView.findViewById(R.id.txtTitle);
+            this.titleSong = itemView.findViewById(R.id.txtTitle);
 //            this.album=album;
-            this.artist = (TextView) itemView.findViewById(R.id.txtArtist);
-            this.imageView = (ImageView) itemView.findViewById(R.id.imgSong);
-            this.duration = (TextView) itemView.findViewById(R.id.txtDuration);
+            this.artist = itemView.findViewById(R.id.txtArtist);
+            this.imageView = itemView.findViewById(R.id.imgSong);
+            this.duration = itemView.findViewById(R.id.txtDuration);
 
         }
 
-        public void bindContent(SongModel songModel) {
+        @SuppressLint("SetTextI18n")
+        void bindContent(SongModel songModel) {
+            Log.d(TAG, "bindContent: BIND CONTENT");
             this.titleSong.setText(songModel.getTitle());
-            this.artist.setText(songModel.getArtist()+"_"+songModel.getAlbumArt());
+            this.artist.setText(songModel.getArtist() + "_" + songModel.getAlbumId());
             this.duration.setText(SongModel.formateMilliSeccond(songModel.getDuration()));
+//GLIDE
+//            MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+//            mediaMetadataRetriever.setDataSource(songModel.getPath());
+//            RequestOptions requestOptions = new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL);
+//            Glide
+//                    .with(mContext)
+//                    .load(mediaMetadataRetriever.getEmbeddedPicture())
+////                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+////                    .dontTransform()
+//                    .override(68, 68)
+//                    .thumbnail(1.0f)
+//                    .into(new SimpleTarget<Drawable>() {
+//                        @Override
+//                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+//                            imageView.setImageDrawable(resource);
+//                            imageView.setDrawingCacheEnabled(true);
+//
+//                        }
+//                    });
+//\GLIDE
+//PICASSO
+//            Uri sArtworkUri = Uri.parse("content://media//external/audio/albumart");
+//            Uri imageUri = Uri.withAppendedPath(sArtworkUri, String.valueOf(songModel.getAlbumId()));
+//            Bitmap bitmap = null;
+//            try {
+//                bitmap = BitmapFactory.decodeStream(MainActivity.getMainActivity().getContentResolver().openInputStream(imageUri));
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            Log.d(TAG, "bindContent: BITMAP URL"+ (bitmap != null ? bitmap.getByteCount() : 0));
+//            imageView.setImageBitmap(bitmap);
+//            imageView.setImageURI(imageUri);
+//            Log.d(TAG, "bindContent: URI IMAGE" + imageUri.toString());
+//            Picasso.get().load(imageUri).into(imageView);
 
+//\PICASSO
 //BITMAP WITH ASYNC TASK
             if (cancelPotentialWork(songModel.getPath(), imageView)) {
                 final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
@@ -122,6 +186,7 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
                 imageView.setImageDrawable(asyncDrawable);
                 task.execute(songModel.getPath());
             }
+
 //BITMAP WITH ASYNC TASK
 //BITMAP CACHE
 //            Bitmap bitmap = CacheHelper.Instance().getBitmapFromMemCache(songModel.getPath());
@@ -152,7 +217,7 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
     private class LoadingViewHolder extends RecyclerView.ViewHolder {
         ProgressBar progressBar;
 
-        public LoadingViewHolder(@NonNull View itemView) {
+        LoadingViewHolder(@NonNull View itemView) {
             super(itemView);
             progressBar = itemView.findViewById(R.id.progressBarCircle);
         }
@@ -162,13 +227,13 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
     private static class AsyncDrawable extends BitmapDrawable {
         private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskWeakReference;
 
-        public AsyncDrawable(Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
+        AsyncDrawable(Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
 //            super(resources, bitmap);
-            bitmapWorkerTaskWeakReference = new WeakReference<BitmapWorkerTask>(bitmapWorkerTask);
+            bitmapWorkerTaskWeakReference = new WeakReference<>(bitmapWorkerTask);
 
         }
 
-        public BitmapWorkerTask getBitmapWorkerTask() {
+        BitmapWorkerTask getBitmapWorkerTask() {
             return bitmapWorkerTaskWeakReference.get();
         }
 
@@ -201,6 +266,7 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
         return true;
 
     }
+
 
     private static class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
         private final WeakReference<ImageView> imageViewWeakReference;
@@ -241,7 +307,7 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
                 bitmap = null;
             }
 
-            if (imageViewWeakReference != null && bitmap != null) {
+            if (bitmap != null && imageViewWeakReference != null) {
                 final ImageView imageView = imageViewWeakReference.get();
                 final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
                 if (this == bitmapWorkerTask && imageView != null) {
