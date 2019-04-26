@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
@@ -66,8 +67,8 @@ public class ArtistSongsActivity extends Activity {
 
     private void InitControl() {
         ImgBtnBack = (ImageButton) findViewById(R.id.artistSongBtnBack);
-        RLHeroImage = (RelativeLayout) findViewById(R.id.artistSongHeroImage);
-//        ImgProfile = (ImageView) findViewById(R.id.artistSongImgProfile);
+//        RLHeroImage = (RelativeLayout) findViewById(R.id.artistSongHeroImage);
+        ImgProfile = (ImageView) findViewById(R.id.artistSongImgProfile);
         TVNameArtist = (TextView) findViewById(R.id.artistSongNameArtist);
         TVSongcount = (TextView) findViewById(R.id.artistSongcount);
         layoutContentArtistSong = findViewById(R.id.layoutContentArtistSong);
@@ -76,10 +77,12 @@ public class ArtistSongsActivity extends Activity {
 
     private void setupLayoutTransparent() {
         Utility.setTransparentStatusBar(ArtistSongsActivity.this);
-        Bitmap bitmapBg=ImageHelper.getBitmapFromPath(artistModel.getPath(),R.drawable.highcompress_background_test);
-        Bitmap bitmapBgBlur=ImageHelper.blurBitmap(bitmapBg,1.0f,140);
+        Bitmap bitmapBg = ImageHelper.getBitmapFromPath(artistModel.getPath(), R.drawable.highcompress_background_test);
+        Bitmap bitmapBgBlur = ImageHelper.blurBitmap(bitmapBg, 1.0f, 140);
+        Bitmap bitmapOverlay = ImageHelper.createImage(bitmapBgBlur.getWidth(), bitmapBgBlur.getHeight(), Color.argb(80, 255, 255, 255));
+        Bitmap bitmapBgOverlay = ImageHelper.overlayBitmapToCenter(bitmapBgBlur, bitmapOverlay);
         layoutContentArtistSong.setPadding(0, Utility.getStatusbarHeight(this), 0, 0);
-        layoutContentArtistSong.setBackground(ImageHelper.getMainBackgroundDrawableFromBitmap(bitmapBgBlur));
+        layoutContentArtistSong.setBackground(ImageHelper.getMainBackgroundDrawableFromBitmap(bitmapBgOverlay));
     }
 
     private void BindData() {
@@ -93,9 +96,9 @@ public class ArtistSongsActivity extends Activity {
                 InputStream inputStream = new ByteArrayInputStream(mediaMetadataRetriever.getEmbeddedPicture());
                 mediaMetadataRetriever.release();
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-//                ImgProfile.setBackground(new BitmapDrawable(getResources(), bitmap));
+                ImgProfile.setBackground(new BitmapDrawable(getResources(), bitmap));
                 BitmapDrawable d = new BitmapDrawable(getResources(), bitmap);
-                RLHeroImage.setBackground(d);
+//                RLHeroImage.setBackground(d);
             }
         }
     }
