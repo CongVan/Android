@@ -23,13 +23,11 @@ public class ArtistProvider {
                 result.add(new ArtistViewModel(cursor.getString(0), cursor.getString(1), cursor.getInt(2)));
             } while (cursor.moveToNext());
         }
-//        DatabaseManager.getInstance().closeDatabase();
         return result;
     }
 
     public static ArrayList<SongModel> getArtistSongs(Context context, String artist) {
         ArrayList<SongModel> arr = new ArrayList<SongModel>();
-//        DatabaseManager databaseManager = DatabaseManager.newInstance(context);
         SQLiteDatabase db = DatabaseManager.getInstance().getReadableDatabase();
         String query = MessageFormat.format("select {0},{1},{2},{3},{4},{5},{6},{7} from {8} where {9} = ?"
                 , new String[]{
@@ -61,13 +59,6 @@ public class ArtistProvider {
                 arr.add(songModel);
             } while (cursor.moveToNext());
         }
-//        DatabaseManager.getInstance().closeDatabase();
         return arr;
     }
-
-    public static SongModel GetSongFromSongModel(Context context, int id) {
-        DatabaseManager databaseManager = DatabaseManager.newInstance(context);
-        return SongModel.getSongFromSongId(databaseManager, id);
-    }
-
 }

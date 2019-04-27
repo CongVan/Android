@@ -18,7 +18,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="1dp"
         app:cardElevation="0dp"
-        card_view:cardBackgroundColor="@android:color/transparent"
+        card_view:cardBackgroundColor="@color/colorBlackGlassLight"
         card_view:cardCornerRadius="@dimen/margin_size_small"
         card_view:cardPreventCornerOverlap="false"
         card_view:contentPadding="1dp">
@@ -66,8 +66,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Tên album"
-                        android:textColor="@color/colorTitlePrimary"
-                        android:textSize="@dimen/text_size_small"
+                        android:textColor="@color/colorTitleWhitePrimary"
+                        android:textSize="14sp"
                         android:textStyle="bold" />
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -76,20 +76,26 @@
                             android:id="@+id/txtAlbumArtist"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/colorTitleSecondary"
+                            android:textColor="@color/colorTitleWhiteSecondary"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
                             android:text="Tên ca sĩ"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
                             android:layout_marginRight="5dp"
+                            android:textColor="@color/colorTitleWhiteSecondary"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
                             android:text="-"/>
                         <TextView
                             android:id="@+id/txtAlbumSongCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/colorTitleSecondary"
-                            android:text="0 bài hát"/>
+                            android:textColor="@color/colorTitleWhiteSecondary"
+                            android:text="0 bài hát"
+                            android:textSize="12sp"/>
                     </LinearLayout>
                 </LinearLayout>
             </TableRow>

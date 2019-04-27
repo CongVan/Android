@@ -14,7 +14,6 @@ public class AlbumProvider {
     public static ArrayList<AlbumViewModel> getListAlbum(Context context) {
         ArrayList<AlbumViewModel> arr = new ArrayList<AlbumViewModel>();
         //Init databasehelper
-//        DatabaseManager databaseManager = DatabaseManager.newInstance(context);
         SQLiteDatabase db = DatabaseManager.getInstance().getReadableDatabase();
         //Init databasehelper
 
@@ -31,7 +30,41 @@ public class AlbumProvider {
                         cursor.getInt(3)));
             } while (cursor.moveToNext());
         }
-//        DatabaseManager.getInstance().closeDatabase();
+        return arr;
+    }
+    public static ArrayList<SongModel> getALbumSongs(Context context, String album){
+        ArrayList<SongModel> arr = new ArrayList<SongModel>();
+        SQLiteDatabase db = DatabaseManager.getInstance().getReadableDatabase();
+        String query = MessageFormat.format("select {0},{1},{2},{3},{4},{5},{6},{7} from {8} where {9} = ?"
+                , new String[]{
+                        SongModel.COLUMN_ID,
+                        SongModel.COLUMN_SONG_ID,
+                        SongModel.COLUMN_TITLE,
+                        SongModel.COLUMN_ALBUM,
+                        SongModel.COLUMN_DURATION,
+                        SongModel.COLUMN_FOLDER,
+                        SongModel.COLUMN_ARTIST,
+                        SongModel.COLUMN_PATH,
+                        SongModel.TABLE_NAME,
+                        SongModel.COLUMN_ALBUM});
+        String[] whereArgs = new String[]{
+                album,
+        };
+        Cursor cursor = db.rawQuery(query, whereArgs);
+        if (cursor.moveToFirst()) {
+            do {
+                SongModel songModel = new SongModel();
+                songModel.setId(cursor.getInt(cursor.getColumnIndex(SongModel.COLUMN_ID)));
+                songModel.setSongId(cursor.getInt(cursor.getColumnIndex(SongModel.COLUMN_SONG_ID)));
+                songModel.setTitle(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_TITLE)));
+                songModel.setAlbum(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_ALBUM)));
+                songModel.setArtist(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_ARTIST)));
+                songModel.setFolder(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_FOLDER)));
+                songModel.setDuration(cursor.getLong(cursor.getColumnIndex(SongModel.COLUMN_DURATION)));
+                songModel.setPath(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_PATH)));
+                arr.add(songModel);
+            } while (cursor.moveToNext());
+        }
         return arr;
     }
 }

@@ -55,7 +55,6 @@ public class FragmentArtistSong extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 SongModel songModel = artistSongsList.get(position);
-                ArrayList<SongModel> listSongFromArtist = ArtistProvider.getArtistSongs(_artistSongsActivity, songModel.getArtist());
                 MainActivity _mainActivity =  MainActivity.getMainActivity();
                 _mainActivity.playSongsFromFragmentListToMain(FragmentPlaylist.SENDER,songModel,artistSongsList);
             }

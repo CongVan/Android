@@ -27,7 +27,6 @@ import java.io.InputStream;
 public class ArtistSongsActivity extends Activity {
 
     ImageButton ImgBtnBack;
-    RelativeLayout RLHeroImage;
     ImageView ImgProfile;
     TextView TVNameArtist;
     TextView TVSongcount;
@@ -67,7 +66,6 @@ public class ArtistSongsActivity extends Activity {
 
     private void InitControl() {
         ImgBtnBack = (ImageButton) findViewById(R.id.artistSongBtnBack);
-//        RLHeroImage = (RelativeLayout) findViewById(R.id.artistSongHeroImage);
         ImgProfile = (ImageView) findViewById(R.id.artistSongImgProfile);
         TVNameArtist = (TextView) findViewById(R.id.artistSongNameArtist);
         TVSongcount = (TextView) findViewById(R.id.artistSongcount);
@@ -98,7 +96,6 @@ public class ArtistSongsActivity extends Activity {
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                 ImgProfile.setBackground(new BitmapDrawable(getResources(), bitmap));
                 BitmapDrawable d = new BitmapDrawable(getResources(), bitmap);
-//                RLHeroImage.setBackground(d);
             }
         }
     }
