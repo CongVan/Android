@@ -16,7 +16,7 @@ public class ArtistProvider {
         DatabaseManager databaseManager = DatabaseManager.newInstance(context);
         SQLiteDatabase db = databaseManager.getReadableDatabase();
         String query = MessageFormat.format("select {0},{1},COUNT({2}) from {3} group by {0}"
-                , new String[]{SongModel.COLUMN_ARTIST, SongModel.COLUMN_PATH, SongModel.COLUMN_ID, SongModel.TABLE_NAME});
+                , new Object[]{SongModel.COLUMN_ARTIST, SongModel.COLUMN_PATH, SongModel.COLUMN_ID, SongModel.TABLE_NAME});
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
             do {
@@ -30,7 +30,7 @@ public class ArtistProvider {
         ArrayList<SongModel> arr = new ArrayList<SongModel>();
         SQLiteDatabase db = DatabaseManager.getInstance().getReadableDatabase();
         String query = MessageFormat.format("select {0},{1},{2},{3},{4},{5},{6},{7} from {8} where {9} = ?"
-                , new String[]{
+                , new Object[]{
                         SongModel.COLUMN_ID,
                         SongModel.COLUMN_SONG_ID,
                         SongModel.COLUMN_TITLE,
