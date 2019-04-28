@@ -278,7 +278,8 @@ public class SongModel implements Serializable {
                 SongModel.COLUMN_DURATION,
                 SongModel.COLUMN_FOLDER,
                 SongModel.COLUMN_ARTIST,
-                SongModel.COLUMN_PATH
+                SongModel.COLUMN_PATH,
+                SongModel.COLUMN_ALBUM_ID
         };
         String sortOrder = SongModel.COLUMN_ID + " ASC";
         String selection = SongModel.COLUMN_SONG_ID + " =  " + id;// ;

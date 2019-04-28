@@ -107,7 +107,7 @@ public class PlayModel {
             } while (cursor.moveToNext());
 
         }
-        cursor.close();
+//        cursor.close();
         return playingList;
     }
 
@@ -131,7 +131,7 @@ public class PlayModel {
                 songModelList.add(songModel);
             } while (cursor.moveToNext());
         }
-        cursor.close();
+//        cursor.close();
         return songModelList;
     }
 
@@ -148,7 +148,7 @@ public class PlayModel {
             contentValues.put(PlayModel.COLUMN_CURRENT_DURATION, 0);
             contentValues.put(PlayModel.COLUMN_CREATE_DATE, getDateTimeNow());
             long id = database.insert(PlayModel.TABLE_NAME, null, contentValues);
-            database.close();
+//            database.close();
             return id;
         }
         return -1;
@@ -165,7 +165,7 @@ public class PlayModel {
             contentValues.put(PlayModel.COLUMN_CREATE_DATE, getDateTimeNow());
             database.insert(PlayModel.TABLE_NAME, null, contentValues);
         }
-        database.close();
+//        database.close();
         return 0;
     }
 
@@ -185,7 +185,7 @@ public class PlayModel {
         if (cursor.moveToFirst()) {
             result = true;
         }
-        cursor.close();
+//        cursor.close();
         return result;
     }
 
