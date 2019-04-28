@@ -31,6 +31,7 @@ import com.bumptech.glide.load.engine.bitmap_recycle.LruBitmapPool;
 import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory;
 import com.bumptech.glide.load.engine.cache.LruResourceCache;
 import com.example.musicforlife.callbacks.FragmentCallbacks;
+import com.example.musicforlife.play.PlayService;
 import com.example.musicforlife.playlist.FragmentPlaylist;
 import com.example.musicforlife.MainActivity;
 import com.example.musicforlife.R;
@@ -50,6 +51,7 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Rec
     public static final String SENDER = "FRAGMENT_LIST_SONG";
     private static final int mThreshHold = 10;
     private static boolean mIsLoading;
+    private static PlayService mPlayService;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,9 +67,10 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Rec
 
     public static FragmentListSong newInstance() {
         FragmentListSong fragmentListSong = new FragmentListSong();
-        Bundle args = new Bundle();
-        args.putString("Key1", "OK");
-        fragmentListSong.setArguments(args);
+//        Bundle args = new Bundle();
+//        args.putString("Key1", "OK");
+//        fragmentListSong.setArguments(args);
+        mPlayService = PlayService.newInstance();
         return fragmentListSong;
     }
 
@@ -95,27 +98,17 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Rec
         View view = inflater.inflate(R.layout.fragment_list_song, container, false);
         _txtSizeOfListSong = view.findViewById(R.id.txtSizeOfListSong);
         _listViewSong = view.findViewById(R.id.lsvSongs);
-        _listSong = SongModel.getSongsWithThreshold(MainActivity.mDatabaseManager, 0, mThreshHold);// getAllAudioFromDevice(_context);
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                _listSong = SongModel.getSongsWithThreshold(MainActivity.mDatabaseManager, 0, mThreshHold);
+                _listSongAdapter = new ListSongRecyclerAdaper(_context, _listSong);
+                _listViewSong.setLayoutManager(new LinearLayoutManager(_context));
+                _listViewSong.setAdapter(_listSongAdapter);
+                _txtSizeOfListSong.setText("Tìm thấy " + String.valueOf(SongModel.getRowsSong(MainActivity.mDatabaseManager)) + " bài hát");
 
-//        _layoutListSong = (NestedScrollView) _inflater.inflate(R.layout.fragment_list_song, null);
-
-//        _listViewSong.addItemDecoration(new DividerItemDecoration(_listViewSong.getContext(), DividerItemDecoration.VERTICAL));
-
-        _listSongAdapter = new ListSongRecyclerAdaper(_context, _listSong);
-        _listViewSong.setLayoutManager(new LinearLayoutManager(_context));
-        _listViewSong.setAdapter(_listSongAdapter);
-
-//        _listViewSong.setItemViewCacheSize(240);
-//        _listViewSong.setDrawingCacheEnabled(true);
-//        _listViewSong.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
-
-//        _listSongAdapter.notifyItemRangeChanged();
-//        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
-//        itemAnimator.setAddDuration(1000);
-//        itemAnimator.setRemoveDuration(1000);
-//        _listViewSong.setItemAnimator(itemAnimator);
-
-        _txtSizeOfListSong.setText("Tìm thấy " + String.valueOf(SongModel.getRowsSong(MainActivity.mDatabaseManager)) + " bài hát");
+            }
+        });
         _listViewSong.addOnItemTouchListener(new RecyclerItemClickListener(_context, _listViewSong, this));
         _listViewSong.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -140,6 +133,25 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Rec
 
             }
         });
+
+        // getAllAudioFromDevice(_context);
+
+//        _layoutListSong = (NestedScrollView) _inflater.inflate(R.layout.fragment_list_song, null);
+
+//        _listViewSong.addItemDecoration(new DividerItemDecoration(_listViewSong.getContext(), DividerItemDecoration.VERTICAL));
+
+
+//        _listViewSong.setItemViewCacheSize(240);
+//        _listViewSong.setDrawingCacheEnabled(true);
+//        _listViewSong.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
+
+//        _listSongAdapter.notifyItemRangeChanged();
+//        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
+//        itemAnimator.setAddDuration(1000);
+//        itemAnimator.setRemoveDuration(1000);
+//        _listViewSong.setItemAnimator(itemAnimator);
+
+
 //        buildGlide();
 //        Glide.get(_context).clearMemory();
 //        new Thread(new Runnable() {
@@ -169,19 +181,7 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Rec
         _listSong.add(null);
         _listSongAdapter.notifyItemInserted(_listSong.size() - 1);
 //        Handler handler = new Handler();
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                _listSong.remove(_listSong.size() - 1);
-//                int scollPosition = _listSong.size();
-//                _listSongAdapter.notifyItemRemoved(scollPosition);
-//                ArrayList<SongModel> tempAudioList = SongModel.getSongsWithThreshold(MainActivity.mDatabaseManager, _listSong.size(), mThreshHold);
-//                _listSong.addAll(tempAudioList);
-////                _listSongAdapter.notifyDataSetChanged();
-//                mIsLoading = false;
-//            }
-//        }, 2000);
-        _listViewSong.post(new Runnable() {
+        new Handler().post(new Runnable() {
             @Override
             public void run() {
                 _listSong.remove(_listSong.size() - 1);
@@ -191,9 +191,21 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Rec
                 _listSong.addAll(tempAudioList);
 //                _listSongAdapter.notifyDataSetChanged();
                 mIsLoading = false;
-//                _skeletonScreen.hide();
             }
         });
+//        _listViewSong.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                _listSong.remove(_listSong.size() - 1);
+//                int scollPosition = _listSong.size();
+//                _listSongAdapter.notifyItemRemoved(scollPosition);
+//                ArrayList<SongModel> tempAudioList = SongModel.getSongsWithThreshold(MainActivity.mDatabaseManager, _listSong.size(), mThreshHold);
+//                _listSong.addAll(tempAudioList);
+////                _listSongAdapter.notifyDataSetChanged();
+//                mIsLoading = false;
+////                _skeletonScreen.hide();
+//            }
+//        });
 
 
 //        Log.i(TAG, "onPostExecute: SONGS--> " + _listSong.size());
@@ -210,7 +222,8 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Rec
 
     @Override
     public void onItemClick(View view, int position) {
-        _mainActivity.playSongsFromFragmentListToMain(FragmentPlaylist.SENDER, _listSong.get(position), _listSong);
+        mPlayService.play(_listSong.get(position));
+//        _mainActivity.playSongsFromFragmentListToMain(FragmentPlaylist.SENDER, _listSong.get(position), _listSong);
     }
 
     @Override

@@ -45,22 +45,28 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
     public static final int TYPE_SHOW_RESUME = 2;
 
     private SongModel mSongPlaying = null;
+    private static PlayActivity mPlayActivity;
+
+    public static PlayActivity getActivity() {
+        return mPlayActivity;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
 
-        mLayoutPlay=findViewById(R.id.layoutPlayActivity);
+        mLayoutPlay = findViewById(R.id.layoutPlayActivity);
 
         Utility.setTranslucentStatusBar(PlayActivity.this);
-        mLayoutPlay.setPadding(0,Utility.getStatusbarHeight(this),0,0);
+        mLayoutPlay.setPadding(0, Utility.getStatusbarHeight(this), 0, 0);
 
         mLayoutPlay.setBackground(ImageHelper.getMainBackgroundDrawable());
 
         mPager = (ViewPager) findViewById(R.id.pager);
         mDatabaseManager = DatabaseManager.newInstance(getApplicationContext());
-        mPlayService = PlayService.newInstance(PlayActivity.this.getApplicationContext(), PlayActivity.this, mDatabaseManager);
+        mPlayActivity = this;
+        mPlayService = PlayService.newInstance();
 
 
         Intent intent = getIntent();
@@ -95,7 +101,6 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
         }
 
 
-
 //        Log.d(TAG, "onCreate: " + "PLAY SONG " + mSongPlaying.getTitle());
 
 //        TextView textView=findViewById(R.id.txtTest);
@@ -122,6 +127,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
 //        int highScore = sharedPref.getInt("TEST", 0);
 //        Log.d(TAG, "onCreate: TEST SHARE "+ highScore);
     }
+
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {

@@ -59,10 +59,11 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
     private LruCache<Long, Bitmap> mBitmapCache;
     private BitmapDrawable mPlaceholder;
     private ImageCacheHelper mImageCacheHelper;
+
     public ListSongRecyclerAdaper(Context context, ArrayList<SongModel> listSong) {
         mContext = context;
         mListSong = listSong;
-        mImageCacheHelper=new ImageCacheHelper(R.mipmap.music_file_128);
+        mImageCacheHelper = new ImageCacheHelper(R.mipmap.music_file_128);
 //        int maxSize = (int) (Runtime.getRuntime().maxMemory() / 1024);
 //        // Divide the maximum size by eight to get a adequate size the LRU cache should reach before it starts to evict bitmaps.
 //        int cacheSize = maxSize / 8;
@@ -166,7 +167,7 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
             if (bitmap != null) {
                 this.imageView.setImageBitmap(bitmap);
             } else {
-                mImageCacheHelper.loadAlbumArt(imageView,songModel);
+                mImageCacheHelper.loadAlbumArt(imageView, songModel);
 //                loadAlbumArt(this.imageView, songModel);
             }
 

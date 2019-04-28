@@ -15,7 +15,7 @@ import com.example.musicforlife.recent.FragmentRecent;
 
 public class PagerMainAdapter extends FragmentStatePagerAdapter {
     private static final int NUM_PAGES = 6;
-    private Fragment mFragmentListSong, mFragmentRecent, mFramentArtist, mFragmentAlbum, mFragmentFolder, mFragmentPlaylist;
+    private Fragment mFragmentListSong, mFragmentRecent, mFragmentArtist, mFragmentAlbum, mFragmentFolder, mFragmentPlaylist;
     FragmentManager mFragmentManager;
     private int[] iconsId = {R.id.navigation_recent, R.id.navigation_song, R.id.navigation_album, R.id.navigation_artist, R.id.navigation_album, R.id.navigation_folder};
 
@@ -40,7 +40,7 @@ public class PagerMainAdapter extends FragmentStatePagerAdapter {
                 break;
             case 3:
 
-                fragment = mFramentArtist == null ? mFramentArtist = new FragmentArtist() : mFramentArtist;
+                fragment = mFragmentArtist == null ? mFragmentArtist = new FragmentArtist() : mFragmentArtist;
                 break;
             case 4:
                 fragment = mFragmentAlbum == null ? mFragmentAlbum = new FragmentAlbum() : mFragmentAlbum;

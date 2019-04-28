@@ -13,12 +13,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
+public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, PlayServiceInterface {
     private static ArrayList<PlayModel> mPlayingList;
     private static SongModel mCurrentSongPlaying;
     private static SongModel mOldSongPlaying;
     private static int mCurrentIndexSong;
-    private static Context mContext;
+
     private static PlayActivity mPlayActivity;
     private static MediaPlayer mMediaPlayer = null;
     private static PlayService mPlayService = null;
@@ -45,18 +45,16 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
     private static final String TAG = "PlayService";
     public static final String SENDER = "PLAY_CENTER";
 
-    public static PlayService newInstance(Context context, PlayActivity playActivity, DatabaseManager databaseManager) {
-        if (mContext == null || mPlayService == null || mMediaPlayer == null || mDatabaseManager == null) {
+    public static PlayService newInstance() {
+        if (mPlayService == null) {
             mPlayService = new PlayService();
-            mContext = context;
-            mPlayActivity = playActivity;
+            mPlayActivity = PlayActivity.getActivity();
             mMediaPlayer = new MediaPlayer();
-            mDatabaseManager = databaseManager;
-
+            mDatabaseManager = DatabaseManager.getInstance();
         }
-
         return mPlayService;
     }
+
 
     public static int getLoopType() {
         return loopType;
@@ -66,14 +64,15 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
         PlayService.loopType = loopType;
     }
 
+
     public void play(final SongModel songModel) {
 //        Log.d(TAG, "play: "+songModel.getPath());
 //        Log.d(TAG, "play: "+ Uri.parse(songModel.getPath()));
 //        File path = Environment.getExternalStorageDirectory();
 //        Log.d(TAG, "play: "+ path+songModel.getPath());
         try {
-            if (mOldSongPlaying==null){
-                mOldSongPlaying=songModel;
+            if (mOldSongPlaying == null) {
+                mOldSongPlaying = songModel;
             }
             mCurrentSongPlaying = songModel;
 
@@ -234,7 +233,10 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
 
     @Override
     public void updateSeekbar(String sender, int duration) {
-        mPlayActivity.updateSeekbar(sender, duration);
+        if (mPlayActivity!=null){
+            mPlayActivity.updateSeekbar(sender, duration);
+        }
+
     }
 
     @Override
@@ -243,12 +245,14 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
     }
 
     private void setIndexSongInPlayingList() {
-
-        for (int i = 0; i < mPlayingList.size(); i++) {
-            if (mPlayingList.get(i).getSongId() == mCurrentSongPlaying.getSongId()) {
-                mCurrentIndexSong = i;
+        if (mPlayActivity != null) {
+            for (int i = 0; i < mPlayingList.size(); i++) {
+                if (mPlayingList.get(i).getSongId() == mCurrentSongPlaying.getSongId()) {
+                    mCurrentIndexSong = i;
+                }
             }
         }
+
     }
 
     @Override
@@ -272,7 +276,10 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
 
         }
         mp.start();
-        mPlayActivity.updateButtonPlay(SENDER);
+        if (mPlayActivity!=null){
+            mPlayActivity.updateButtonPlay(SENDER);
+        }
+
     }
 
 
@@ -282,4 +289,33 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
         next(ACTION_FROM_SYSTEM);
     }
 
+    @Override
+    public void playSong(SongModel song) {
+        play(song);
+    }
+
+    @Override
+    public void nextSong() {
+
+    }
+
+    @Override
+    public void prevSong() {
+
+    }
+
+    @Override
+    public void pauseSong() {
+        pause();
+    }
+
+    @Override
+    public void stopSong() {
+
+    }
+
+    @Override
+    public void initListPlaying(ArrayList<SongModel> listPlaying) {
+
+    }
 }
