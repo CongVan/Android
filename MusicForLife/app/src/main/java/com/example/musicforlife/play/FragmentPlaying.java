@@ -118,7 +118,8 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
                     mPlayActivity.updateDuration(SENDER, progress);
                     if (!PlayService.isPlaying()) {
                         mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_RESUME);
-                        mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_pause_black_70dp));
+                        setButtonPause();
+                        //mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_pause_black_70dp));
 
                     }
 
@@ -139,11 +140,17 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
     }
 
     private void setResourceImagePlaying() {
-        Bitmap bitmapPlaying = ImageHelper.getBitmapFromPath(mSongPlaying.getPath(), R.mipmap.music_circular_button_128);
-
-        Bitmap bitmapBgPlaying = ImageHelper.getBitmapFromPath(mSongPlaying.getPath(), R.drawable.background_1);
+        Bitmap bitmapPlaying = ImageHelper.getBitmapFromPath(mSongPlaying.getPath());
+//        Bitmap bitmapBgPlaying = ImageHelper.getBitmapFromPath(mSongPlaying.getPath(), R.drawable.background_1);
+        if (bitmapPlaying==null){
+            bitmapPlaying=ImageHelper.drawableToBitmap(R.mipmap.music_128);
+            mImagePlaying.setScaleType(ImageView.ScaleType.CENTER);
+        }else{
+            mImagePlaying.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        }
         mImagePlaying.setImageBitmap(bitmapPlaying);
-        Bitmap bitmapBlurBgPlaying = ImageHelper.blurBitmap(bitmapBgPlaying, 1.0f, 100);
+
+//        Bitmap bitmapBlurBgPlaying = ImageHelper.blurBitmap(bitmapBgPlaying, 1.0f, 100);
 //        Bitmap bitmapOverlay = ImageHelper.createImage(bitmapBgPlaying.getWidth(), bitmapBgPlaying.getHeight(), Color.argb(100, 0, 0, 0));
 //        mImageBgPlaying.setImageBitmap(bitmapBlurBgPlaying);
 //        if (ImageHelper.isDarkBitmap(bitmapBgPlaying)) {
@@ -215,10 +222,22 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
     public void updateButtonPlay() {
         Log.d(TAG, "updateButtonPlay: " + PlayService.isPlaying());
         if (PlayService.isPlaying()) {
-            mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_pause_black_70dp));
+            setButtonPause();
+//            mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_pause_black_70dp));
         } else {
-            mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_play_arrow_black_70dp));
+            setButtonPlay();
+//            mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_play_arrow_black_70dp));
         }
+    }
+
+    private void setButtonPlay() {
+        mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_play_circle_outline_black_64dp));
+
+    }
+
+    private void setButtonPause() {
+        mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_pause_circle_outline_black_64dp));
+
     }
 
     @Override
@@ -229,15 +248,17 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
                 Log.d(TAG, "onClick: DURATION PLAY" + PlayService.getCurrentDuration());
                 if (PlayService.isPlaying()) {// song is playing then stop
                     mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_PAUSE);
+                    setButtonPlay();
 //                    mPlayService.pause();
-                    mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_play_arrow_black_70dp));
                 } else if (PlayService.isPause()) { //resume
                     mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_RESUME);
+                    setButtonPause();
 //                    mPlayService.resurme();
-                    mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_pause_black_70dp));
+//                    mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_pause_circle_outline_black_64dp));
                 } else {
                     mPlayActivity.controlSong(SENDER, PlayService.getCurrentSongPlaying(), PlayService.ACTION_PLAY);
-                    mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_pause_black_70dp));
+                    setButtonPause();
+//                    mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_pause_circle_outline_black_64dp));
                 }
                 break;
             case R.id.btnPrevSong:

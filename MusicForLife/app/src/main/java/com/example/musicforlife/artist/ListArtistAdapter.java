@@ -28,7 +28,7 @@ public class ListArtistAdapter extends RecyclerView.Adapter<ListArtistAdapter.Ar
     public ListArtistAdapter(Context context,List<ArtistViewModel> list){
         myContext = context;
         artistList = list;
-        mImageCacheHelper=new ImageCacheHelper(R.mipmap.music_file_128);
+        mImageCacheHelper=new ImageCacheHelper(R.mipmap.microphone_128);
     }
 
     @NonNull

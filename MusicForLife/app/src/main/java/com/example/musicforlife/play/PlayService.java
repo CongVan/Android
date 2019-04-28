@@ -49,7 +49,6 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
     public static PlayService newInstance() {
         if (mPlayService == null) {
             mPlayService = new PlayService();
-
             mMediaPlayer = new MediaPlayer();
             mDatabaseManager = DatabaseManager.getInstance();
         }
@@ -291,7 +290,7 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
                 mCurrentIndexSong = i;
             }
         }
-        
+
     }
 
     @Override

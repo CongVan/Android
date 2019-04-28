@@ -23,23 +23,17 @@
     <color name="colorPrimary">#08708A</color>
     <color name="colorPrimaryDark">#032B2F</color>
     <color name="colorPrimaryLight">#56B1BF</color>
-    <color name="colorAccent">#FE424D</color>
+    <color name="colorAccent">#FFBF5D</color>
 
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorWhiteLight">#F5F5F5</color>
-    <color name="colorWhiteGlassLight">#32FFFFFF</color>
-    <color name="colorWhiteGlassDark">#08FFFFFF</color>
     <color name="colorBlackGlassLight">#10000000</color>
-    <color name="colorBlackGlassDark">#02000000</color>
 
     <color name="colorTranparent">@android:color/transparent</color>
-    <color name="colorTitlePrimaryLight">#2F2F2F</color>
     <color name="colorTitlePrimary">#212121</color>
     <color name="colorTitleSecondary">#616161</color>
 
     <color name="colorTitleWhitePrimary">#fafafa</color>
     <color name="colorTitleWhiteSecondary">#e0e0e0</color>
 
-    <color name="colorCardBackgroundDark">#322F2F2F</color>
-    <drawable name="backgroundPrimary">@drawable/background_gradient</drawable>
 </resources>

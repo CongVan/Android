@@ -17,7 +17,7 @@ public class PagerMainAdapter extends FragmentStatePagerAdapter {
     private static final int NUM_PAGES = 6;
     private Fragment mFragmentListSong, mFragmentRecent, mFragmentArtist, mFragmentAlbum, mFragmentFolder, mFragmentPlaylist;
     FragmentManager mFragmentManager;
-    private int[] iconsId = {R.id.navigation_recent, R.id.navigation_song, R.id.navigation_album, R.id.navigation_artist, R.id.navigation_album, R.id.navigation_folder};
+//    private int[] iconsId = {R.id.navigation_recent, R.id.navigation_song, R.id.navigation_album, R.id.navigation_artist, R.id.navigation_album, R.id.navigation_folder};
 
     public PagerMainAdapter(FragmentManager fm) {
         super(fm);
@@ -101,9 +101,7 @@ public class PagerMainAdapter extends FragmentStatePagerAdapter {
         return title;
     }
 
-    public  int getTabIconId(int position) {
-        return iconsId[position];
-    }
+
 
     public Fragment getFragmentAtIndex(int index){
         Fragment fragment = null;

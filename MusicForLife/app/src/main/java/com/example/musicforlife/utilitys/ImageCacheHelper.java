@@ -19,8 +19,10 @@ import java.lang.ref.WeakReference;
 public class ImageCacheHelper {
     private LruCache<Long, Bitmap> mBitmapCache;
     private BitmapDrawable mPlaceholder;
-    private Context mContext; 
-    public ImageCacheHelper(int imagePlaceHolderId){
+    private Context mContext;
+    private int mImagePlaceHolderId;
+
+    public ImageCacheHelper(int imagePlaceHolderId) {
         int maxSize = (int) (Runtime.getRuntime().maxMemory() / 1024);
         // Divide the maximum size by eight to get a adequate size the LRU cache should reach before it starts to evict bitmaps.
         int cacheSize = maxSize / 8;
@@ -31,13 +33,15 @@ public class ImageCacheHelper {
                 return value.getByteCount() / 1024;
             }
         };
-        mContext=MainActivity.getMainActivity().getApplicationContext();
-        mPlaceholder= (BitmapDrawable)mContext.getResources().getDrawable(imagePlaceHolderId);
-        
+        mContext = MainActivity.getMainActivity().getApplicationContext();
+        mPlaceholder = (BitmapDrawable) mContext.getResources().getDrawable(imagePlaceHolderId);
+        mImagePlaceHolderId = imagePlaceHolderId;
     }
-    public Bitmap getBitmapCache(long albumId){
+
+    public Bitmap getBitmapCache(long albumId) {
         return mBitmapCache.get(albumId);
     }
+
     public void loadAlbumArt(ImageView icon, SongModel songModel) {
         // Check the current album art task if any and cancel it, if it is loading album art that doesn't match the specified album id.
         if (cancelLoadTask(icon, songModel.getAlbumId())) {
@@ -49,6 +53,7 @@ public class ImageCacheHelper {
             loadAlbumArt.execute(songModel);
         }
     }
+
     public boolean cancelLoadTask(ImageView icon, long albumId) {
         LoadAlbumArt loadAlbumArt = (LoadAlbumArt) getLoadTask(icon);
         // If the task is null return true because we want to try and load the album art.
@@ -64,6 +69,7 @@ public class ImageCacheHelper {
         }
         return false;
     }
+
     private static class AsyncDrawable extends BitmapDrawable {
         WeakReference<LoadAlbumArt> loadArtworkTaskWeakReference;
 
@@ -77,6 +83,7 @@ public class ImageCacheHelper {
             return loadArtworkTaskWeakReference.get();
         }
     }
+
     public AsyncTask getLoadTask(ImageView icon) {
         LoadAlbumArt task = null;
         Drawable drawable = icon.getDrawable();
@@ -85,6 +92,7 @@ public class ImageCacheHelper {
         }
         return task;
     }
+
     private class LoadAlbumArt extends AsyncTask<SongModel, Void, Bitmap> {
 
         // URI that points to the AlbumArt database.
@@ -146,7 +154,7 @@ public class ImageCacheHelper {
 //            } catch (IOException e) {
 //                e.printStackTrace();
 //            }
-            Bitmap bmp = ImageHelper.getBitmapFromPath(params[0].getPath(), R.mipmap.music_file_128);
+            Bitmap bmp = ImageHelper.getBitmapFromPath(params[0].getPath(), mImagePlaceHolderId);
             return bmp;
         }
     }

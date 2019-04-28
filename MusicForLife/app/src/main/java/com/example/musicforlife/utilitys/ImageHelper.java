@@ -28,11 +28,8 @@ public class ImageHelper {
         MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
         Bitmap bitmap = null;
         if (pathImage != null && !pathImage.isEmpty()) {
-
-
             mediaMetadataRetriever.setDataSource(pathImage);
             InputStream inputStream;
-
             try {
 
                 if (mediaMetadataRetriever.getEmbeddedPicture() != null) {
@@ -58,7 +55,37 @@ public class ImageHelper {
 
         return bitmap;
     }
+    public static Bitmap getBitmapFromPath(String pathImage) {
+        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+        Bitmap bitmap = null;
+        if (pathImage != null && !pathImage.isEmpty()) {
+            mediaMetadataRetriever.setDataSource(pathImage);
+            InputStream inputStream;
+            try {
 
+                if (mediaMetadataRetriever.getEmbeddedPicture() != null) {
+                    inputStream = new ByteArrayInputStream(mediaMetadataRetriever.getEmbeddedPicture());
+                    mediaMetadataRetriever.release();
+//                BitmapFactory.Options options = new BitmapFactory.Options();
+//                options.inPreferredConfig = Bitmap.Config.RGB_565;
+
+                    bitmap = BitmapFactory.decodeStream(inputStream);
+                } else {
+                    bitmap = null;
+                    Log.d(TAG, "getBitmapFromPath: " + bitmap.getByteCount());
+                }
+            } catch (Exception ex) {
+                bitmap = null;//BitmapFactory.decodeResource(mContext.getResources(), resourceDefaultId);
+            }
+
+        } else {
+            bitmap = null;
+        }
+//        Bitmap thumbnail= ThumbnailUtils.extractThumbnail(bitmap,128,128,ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
+        mediaMetadataRetriever.release();
+
+        return bitmap;
+    }
     public static BitmapDrawable getMainBackgroundDrawable() {
         Bitmap bitmap = ImageHelper.createImage(480,960,Color.argb(100,71,72,81));//ImageHelper.drawableToBitmap(R.drawable.highcompress_background_test);//highcompress_background_test
 

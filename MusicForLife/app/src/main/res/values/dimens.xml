@@ -11,10 +11,8 @@
     <dimen name="margin_size_xnormal">8dp</dimen>
     <dimen name="margin_size_normal">12dp</dimen>
     <dimen name="margin_size_large">18dp</dimen>
-    <dimen name="pre_margin_size_large">-18dp</dimen>
     <dimen name="margin_size_xlarge">32dp</dimen>
 
-    <dimen name="height_collapse_played">80dp</dimen>
     <dimen name="tab_text_size">18dp</dimen>
 
     <dimen name="border_radius_small">08dp</dimen>
@@ -22,11 +20,9 @@
     <dimen name="border_radius_large">32dp</dimen>
 
     <dimen name="elevation_xsmall">02dp</dimen>
-    <dimen name="elevation_small">04dp</dimen>
-    <dimen name="elevation_normal">08dp</dimen>
     <dimen name="elevation_large">12dp</dimen>
 
-    <dimen name="image_icon_item">52dp</dimen>
-    <dimen name="image_card_item">52dp</dimen>
-    <dimen name="image_card_item_playlist">62dp</dimen>
+    <dimen name="image_icon_item">48dp</dimen>
+    <dimen name="image_card_item">48dp</dimen>
+    <dimen name="image_card_item_playlist">64dp</dimen>
 </resources>

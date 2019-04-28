@@ -31,7 +31,7 @@ public class AlbumListAdapter extends RecyclerView.Adapter<AlbumListAdapter.Albu
     {
         myContext = context;
         albumList = list;
-        mImageCacheHelper=new ImageCacheHelper(R.mipmap.music_file_128);
+        mImageCacheHelper=new ImageCacheHelper(R.mipmap.album_128);
     }
     @NonNull
     @Override

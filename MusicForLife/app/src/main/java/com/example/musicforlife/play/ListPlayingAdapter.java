@@ -116,10 +116,12 @@ public class ListPlayingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             if (songModel != null && PlayService.getCurrentSongPlaying() != null) {
                 if (songModel.getSongId() == PlayService.getCurrentSongPlaying().getSongId()) {
                     this.imgStatusPlaying.setVisibility(View.VISIBLE);
-                    this.titleSong.setTextColor(mContext.getResources().getColor(R.color.colorTitleWhitePrimary));
+                    this.duration.setVisibility(View.GONE);
+                    this.titleSong.setTextColor(mContext.getResources().getColor(R.color.colorAccent));
                 } else {
                     this.titleSong.setTextColor(mContext.getResources().getColor(R.color.colorTitleWhitePrimary));
                     this.imgStatusPlaying.setVisibility(View.GONE);
+                    this.duration.setVisibility(View.VISIBLE);
                 }
             }
 
