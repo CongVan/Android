@@ -40,18 +40,12 @@ public class FragmentArtist extends Fragment {
         LVArtist = (RecyclerView) view.findViewById(R.id.lvArtistList);
 
         //get list artist from db
-        arrArtist = ArtistProvider.getArtistModel(context);
+        arrArtist = ArtistProvider.getArtistModelPaging(context,0,10);
 
         //map layout with adapter
         ListArtistAdapter listArtistAdapter = new ListArtistAdapter(context,arrArtist);
         LVArtist.setLayoutManager(new LinearLayoutManager(context));
         LVArtist.setAdapter(listArtistAdapter);
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         LVArtist.addOnItemTouchListener(new RecyclerItemClickListener(context, LVArtist, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -66,6 +60,7 @@ public class FragmentArtist extends Fragment {
 
             }
         }));
+        return view;
     }
 
     public static FragmentArtist newInstance() {

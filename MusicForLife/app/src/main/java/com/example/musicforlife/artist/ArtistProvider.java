@@ -31,6 +31,33 @@ public class ArtistProvider {
         return result;
     }
 
+    public static ArrayList<ArtistViewModel> getArtistModelPaging(Context context,int skip,int take) {
+        ArrayList<ArtistViewModel> result = new ArrayList<ArtistViewModel>();
+        DatabaseManager databaseManager = DatabaseManager.newInstance(context);
+        SQLiteDatabase db = databaseManager.getReadableDatabase();
+        String query = MessageFormat.format("select {0},{1},{2},COUNT({3}) from {4} group by {0} LIMIT {5},{6}"
+                , new Object[]{SongModel.COLUMN_ARTIST,
+                        SongModel.COLUMN_PATH,
+                        SongModel.COLUMN_ALBUM_ID,
+                        SongModel.COLUMN_ID,
+                        SongModel.TABLE_NAME,
+                        skip + "",
+                        take+ ""
+        });
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+                result.add(new ArtistViewModel(
+                        cursor.getString(0),
+                        cursor.getString(1),
+                        cursor.getInt(2),
+                        cursor.getInt(3)
+                ));
+            } while (cursor.moveToNext());
+        }
+        return result;
+    }
+
     public static ArrayList<SongModel> getArtistSongs(Context context, String artist) {
         ArrayList<SongModel> arr = new ArrayList<SongModel>();
         SQLiteDatabase db = DatabaseManager.getInstance().getReadableDatabase();
