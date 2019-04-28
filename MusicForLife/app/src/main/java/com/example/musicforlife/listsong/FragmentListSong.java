@@ -105,7 +105,7 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Rec
                 _listSongAdapter = new ListSongRecyclerAdaper(_context, _listSong);
                 _listViewSong.setLayoutManager(new LinearLayoutManager(_context));
                 _listViewSong.setAdapter(_listSongAdapter);
-                _txtSizeOfListSong.setText("Tìm thấy " + String.valueOf(SongModel.getRowsSong(MainActivity.mDatabaseManager)) + " bài hát");
+
 
             }
         });
@@ -165,15 +165,9 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Rec
 
     }
 
-
     @Override
-    public void TestMessageFromFragmentToActivity(String message) {
-
-    }
-
-    @Override
-    public void playSongFromFragmentListToMain(SongModel songModel) {
-
+    public void updateSizeOfListSong() {
+        _txtSizeOfListSong.setText("Tìm thấy " + String.valueOf(SongModel.getRowsSong(MainActivity.mDatabaseManager)) + " bài hát");
     }
 
     private void loadMore() {
@@ -232,7 +226,7 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Rec
             }
         }).start();
 
-        _mainActivity.playSongsFromFragmentListToMain(FragmentPlaylist.SENDER, songPlay, _listSong);
+        _mainActivity.playSongsFromFragmentListToMain(FragmentPlaylist.SENDER);
     }
 
     @Override

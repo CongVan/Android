@@ -3,6 +3,7 @@ package com.example.musicforlife.album;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +14,12 @@ import android.widget.ListView;
 import com.example.musicforlife.MainActivity;
 import com.example.musicforlife.R;
 import com.example.musicforlife.listsong.SongModel;
+import com.example.musicforlife.play.PlayService;
 import com.example.musicforlife.playlist.FragmentPlaylist;
 
 import java.util.ArrayList;
+
+import static android.support.constraint.Constraints.TAG;
 
 public class FragmentAlbumSong extends Fragment {
     View view;
@@ -23,6 +27,7 @@ public class FragmentAlbumSong extends Fragment {
     ListView LVAlbumSongList;
     String albumQuery = "";
     AlbumSongsActivity _albumSongsActivity;
+    PlayService mPlayService;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -36,7 +41,7 @@ public class FragmentAlbumSong extends Fragment {
         if(bundle != null){
             albumQuery = bundle.getString("albumQuery");
         }
-
+        mPlayService = PlayService.newInstance();
         LVAlbumSongList = view.findViewById(R.id.lvAlbumSongList);
         final ArrayList<SongModel> albumSongsList = AlbumProvider.getALbumSongs(context,albumQuery);
         AlbumSongAdapter albumSongAdapter = new AlbumSongAdapter(context,albumSongsList);
@@ -46,7 +51,18 @@ public class FragmentAlbumSong extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 SongModel songModel = albumSongsList.get(position);
                 MainActivity _mainActivity =  MainActivity.getMainActivity();
-                _mainActivity.playSongsFromFragmentListToMain(FragmentPlaylist.SENDER,songModel,albumSongsList);
+                mPlayService.play(songModel);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPlayService.initListPlaying(albumSongsList);
+                        Log.d(TAG, "run: ");
+                    }
+                }).start();
+
+                _mainActivity.playSongsFromFragmentListToMain(FragmentPlaylist.SENDER);
+
+//                _mainActivity.playSongsFromFragmentListToMain(FragmentPlaylist.SENDER);
             }
         });
         return view;

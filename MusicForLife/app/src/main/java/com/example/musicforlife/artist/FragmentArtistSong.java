@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +17,12 @@ import android.widget.ListView;
 import com.example.musicforlife.MainActivity;
 import com.example.musicforlife.R;
 import com.example.musicforlife.listsong.SongModel;
+import com.example.musicforlife.play.PlayService;
 import com.example.musicforlife.playlist.FragmentPlaylist;
 
 import java.util.ArrayList;
+
+import static android.support.constraint.Constraints.TAG;
 
 public class FragmentArtistSong extends Fragment {
     View view;
@@ -26,34 +30,48 @@ public class FragmentArtistSong extends Fragment {
     ListView LVArtistSongList;
     String artistQuery = "";
     ArtistSongsActivity _artistSongsActivity;
+    PlayService mPlayService;
     private Intent mIntentPlayActivity;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         //
-        _artistSongsActivity = (ArtistSongsActivity)getActivity();
+        _artistSongsActivity = (ArtistSongsActivity) getActivity();
         //get context activity
-        context = (ArtistSongsActivity)getActivity();
+        context = (ArtistSongsActivity) getActivity();
 
         //get view from infalter
-        view = inflater.inflate(R.layout.fragment_artist_song,container,false);
+        view = inflater.inflate(R.layout.fragment_artist_song, container, false);
 
         //get bunlde
         Bundle bundle = getArguments();
-        if(bundle != null){
+        if (bundle != null) {
             artistQuery = bundle.getString("artistQuery");
         }
+        mPlayService = PlayService.newInstance();
 
-        LVArtistSongList = (ListView)view.findViewById(R.id.lvArtistSongList);
-        final ArrayList<SongModel> artistSongsList = ArtistProvider.getArtistSongs(context,artistQuery);
-        ArtistSongsAdapter artistSongsAdapter = new ArtistSongsAdapter(context,artistSongsList);
+        LVArtistSongList = (ListView) view.findViewById(R.id.lvArtistSongList);
+        final ArrayList<SongModel> artistSongsList = ArtistProvider.getArtistSongs(context, artistQuery);
+        ArtistSongsAdapter artistSongsAdapter = new ArtistSongsAdapter(context, artistSongsList);
         LVArtistSongList.setAdapter(artistSongsAdapter);
         LVArtistSongList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 SongModel songModel = artistSongsList.get(position);
-                MainActivity _mainActivity =  MainActivity.getMainActivity();
-                _mainActivity.playSongsFromFragmentListToMain(FragmentPlaylist.SENDER,songModel,artistSongsList);
+                MainActivity _mainActivity = MainActivity.getMainActivity();
+//                _mainActivity.playSongsFromFragmentListToMain(FragmentPlaylist.SENDER,songModel,artistSongsList);
+
+                mPlayService.play(songModel);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPlayService.initListPlaying(artistSongsList);
+                        Log.d(TAG, "run: ");
+                    }
+                }).start();
+
+                _mainActivity.playSongsFromFragmentListToMain(FragmentPlaylist.SENDER);
             }
         });
 

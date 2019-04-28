@@ -105,4 +105,34 @@ public class PagerMainAdapter extends FragmentStatePagerAdapter {
         return iconsId[position];
     }
 
+    public Fragment getFragmentAtIndex(int index){
+        Fragment fragment = null;
+        switch (index) {
+            case 0:
+                fragment = mFragmentRecent;
+                break;
+            case 1:
+
+                fragment = mFragmentListSong;
+                break;
+            case 2:
+                fragment = mFragmentPlaylist ;
+                break;
+            case 3:
+
+                fragment = mFragmentArtist;
+                break;
+            case 4:
+                fragment = mFragmentAlbum;
+
+                break;
+            case 5:
+                fragment = mFragmentFolder;
+                break;
+
+            default:
+                break;
+        }
+        return fragment;
+    }
 }

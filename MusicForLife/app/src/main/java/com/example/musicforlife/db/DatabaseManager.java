@@ -22,7 +22,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     // Database Version
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 10;
 
     // Database Name
     public static final String DATABASE_NAME = "music_of_life_db.db";

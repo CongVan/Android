@@ -3,8 +3,6 @@ package com.example.musicforlife;
 
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -35,7 +33,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.support.v7.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.musicforlife.artist.ArtistModel;
 import com.example.musicforlife.artist.ArtistProvider;
@@ -50,8 +47,6 @@ import com.example.musicforlife.utilitys.ImageHelper;
 import com.example.musicforlife.utilitys.Utility;
 
 import java.util.ArrayList;
-
-import static android.content.Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY;
 
 
 public class MainActivity extends AppCompatActivity implements MainCallbacks, View.OnClickListener {
@@ -74,12 +69,10 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
 
     //    private FragmentTransaction mFragmentTransaction;
     private Intent mIntentPlayActivity;
-    private Fragment mFragmentListSong, mFragmentRecent, mFramentArtist, mFragmentAlbum, mFragmentFolder;
-    private int currentFragmentContentId;
-    private BottomNavigationView mBottomNavigationView;
-    private MenuItem mPrevMenuBottomNavigation;
+
+
     private ViewPager mViewPager;
-    private PagerAdapter pagerAdapter;
+    private PagerAdapter mPagerAdapter;
     private TabLayout mTabLayout;
     private Toolbar mToolBar;
     private int[] mTabIcons = {
@@ -89,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
             R.drawable.ic_album_black_24dp,
             R.drawable.ic_folder_black_24dp,
     };
-    private ImageView imageViewBackgroundMain;
+
 
 
     public static DatabaseManager mDatabaseManager;
@@ -120,31 +113,15 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         mMainActivity = MainActivity.this;
 
 //        togglePlayingMinimize("MAIN");
-        pagerAdapter = new PagerMainAdapter(getSupportFragmentManager());
-        mViewPager.setAdapter(pagerAdapter);
+        mPagerAdapter = new PagerMainAdapter(getSupportFragmentManager());
+        mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setPageTransformer(true, null);
         mViewPager.setOffscreenPageLimit(1);
-        setSupportActionBar(mToolBar);
         mTabLayout.setupWithViewPager(mViewPager);
+
+        setSupportActionBar(mToolBar);
         setupLayoutTransparent();
-        mDatabaseManager = DatabaseManager.newInstance(getApplicationContext());
-        new intitSongFromDevice().execute();
-
-//        AsyncTask.execute(new Runnable() {
-//            @Override
-//            public void run() {
-//                SongModel.deleteAllSong(mDatabaseManager);
-//                new intitSongFromDevice().execute();
-//            }
-//        });
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//            }
-//        }).run();
-
-
+        initDataBaseFromDevice();
     }
 
     @Override
@@ -155,12 +132,18 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         return true;
     }
 
+    /**
+     * làm status bar trong suốt và set padding cho layout main
+     */
     private void setupLayoutTransparent() {
         Utility.setTransparentStatusBar(MainActivity.this);
         mLayoutMainContent.setPadding(0, Utility.getStatusbarHeight(this), 0, 0);
 //        mLayoutMainContent.setBackground(ImageHelper.getMainBackgroundDrawable());
     }
 
+    /**
+     * Khởi tạo View
+     */
     private void initFindView() {
         mToolBar = findViewById(R.id.tool_bar_main);
         mViewPager = findViewById(R.id.pagerMainContent);
@@ -173,8 +156,12 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         mTabLayout = findViewById(R.id.tablayout_main);
     }
 
+    /**
+     * Khởi tạo data đọc từ bộ nhớ
+     */
     private void initDataBaseFromDevice() {
-
+        mDatabaseManager = DatabaseManager.newInstance(getApplicationContext());
+        new intitSongFromDevice().execute();
     }
 
     @Override
@@ -188,65 +175,10 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         if (resultCode == ArtistModel.RequestCode) { // == 2
             songModelFromArtist = (SongModel) data.getSerializableExtra(ArtistModel.RequestCodeString);
             ArrayList<SongModel> listSongFromArtist = ArtistProvider.getArtistSongs(MainActivity.this, songModelFromArtist.getArtist());
-            playSongsFromFragmentListToMain(FragmentPlaylist.SENDER, songModelFromArtist, listSongFromArtist);
+            playSongsFromFragmentListToMain(FragmentPlaylist.SENDER);
             Log.d(TAG, "onActivityResult: PLAY FROM ARTIST: " + songModelFromArtist.getTitle() + "_" + listSongFromArtist.size());
         }
     }
-
-    //    private boolean requestPermission(){
-//        // Here, thisActivity is the current activity
-//        if (ContextCompat.checkSelfPermission(MainActivity.this,
-//                Manifest.permission.READ_EXTERNAL_STORAGE)
-//                != PackageManager.PERMISSION_GRANTED) {
-//
-//            // Permission is not granted
-//            // Should we show an explanation?
-//            if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,
-//                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
-//                // Show an explanation to the user *asynchronously* -- don't block
-//                // this thread waiting for the user's response! After the user
-//                // sees the explanation, try again to request the permission.
-//            } else {
-//                // No explanation needed; request the permission
-//                ActivityCompat.requestPermissions(MainActivity.this,
-//                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-//                        MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-//
-//                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-//                // app-defined int constant. The callback method gets the
-//                // result of the request.
-//            }
-//        } else {
-//            // Permission has already been granted
-//            return true;
-//        }
-//    }
-
-    private Bitmap getBitmap(int drawableRes) {
-        Drawable drawable = getResources().getDrawable(drawableRes);
-        Canvas canvas = new Canvas();
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        canvas.setBitmap(bitmap);
-        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-        drawable.draw(canvas);
-
-        return bitmap;
-    }
-
-    public static final String TEST_MESSAGE = "PlayModel";
-
-//    private void loadFragment(Fragment fragment, String tag) {
-//        //load fragment
-//        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-////        fragmentListSong = FragmentListSong.newInstance();
-//        transaction.add(R.id.frame_container, fragment, tag);
-//        transaction.addToBackStack(tag);
-//        transaction.commit();
-//
-//    }
-
-    //    @RequiresApi(api = Build.VERSION_CODES.O)
-
 
     @Override
     protected void onResume() {
@@ -254,6 +186,9 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         togglePlayingMinimize("MAIN");
     }
 
+    /**
+     * Sự kiện nhấn nút quay lại
+     */
     @Override
     public void onBackPressed() {
         if (mViewPager.getCurrentItem() == 0) {
@@ -272,58 +207,20 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
 //        handleShowPlayActivity();
 //    }
 
-    private void handleShowPlayActivity(ArrayList<SongModel> songs) {
-        if (mIntentPlayActivity == null) {
-            mIntentPlayActivity = new Intent(MainActivity.this, PlayActivity.class);
-            mIntentPlayActivity.setFlags(FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
-
-        }
-//        Intent intent=new Intent(MainActivity.this,PlayActivity.class);
-        mIntentPlayActivity.putExtra(PlayActivity.EXTRA_PLAYING_LIST, songs);
-        startActivity(mIntentPlayActivity);
-
-//        TaskStackBuilder.create(this)
-//                .addParentStack(MainActivity.class)
-//                .addNextIntent(new Intent(this, MainActivity.class)
-//                        )
-//                .startActivities();
-//
-//        ActivityManager am = (ActivityManager)this.getSystemService(Context.ACTIVITY_SERVICE);
-//
-//        int sizeStack =  am.getRunningTasks(2).size();
-//
-//        for(int i = 0;i < sizeStack;i++){
-//
-//            ComponentName cn = am.getRunningTasks(2).get(i).topActivity;
-//            Log.d("MAIN_ACTIVITY", cn.getClassName());
-//        }
-    }
-
-
+    /**
+     * Hiện PlayActivity
+     * @param Sender
+     */
     @Override
-    public void TestMessageFromFragmentToActivity(String sender) {
-
+    public void playSongsFromFragmentListToMain(String Sender) {
+//        Log.d(TAG, "playSongsFromFragmentListToMain: " + "SONG " + songPlay.getTitle() + " LIST " + songList.size());
+        handleShowPlayActivityWithSongList();
     }
 
-    @Override
-    public void playSongFromFragmentListToMain(String sender, SongModel songModel) {
-        Toast.makeText(MainActivity.this, "Playsong form Main SONG ID: " + songModel.getSongId(), Toast.LENGTH_SHORT).show();
-        ArrayList<SongModel> songModelArrayList = new ArrayList<SongModel>();
-        songModelArrayList.add(songModel);
-        handleShowPlayActivity(songModelArrayList);
-    }
-
-    @Override
-    public void playSongsFromFragmentListToMain(String Sender, SongModel songPlay, ArrayList<SongModel> songList) {
-        Log.d(TAG, "playSongsFromFragmentListToMain: " + "SONG " + songPlay.getTitle() + " LIST " + songList.size());
-        handleShowPlayActivityWithSongList(songPlay, songList, PlayActivity.TYPE_SHOW_NEW);
-    }
-
-    @Override
-    public void playSongsIdFromFragmentListToMain(String Sender, SongModel songPlay, ArrayList<Integer> songsId) {
-        handleShowPlayActivityWithSongIdList(songPlay, songsId);
-    }
-
+    /**
+     * Ẩn/ hiện mimimize playing
+     * @param sender
+     */
     @Override
     public void togglePlayingMinimize(String sender) {
 
@@ -366,34 +263,29 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
 
     }
 
-    private void handleShowPlayActivityWithSongList(SongModel songPlay, ArrayList<SongModel> songList, int typeShow) {
+    /**
+     * Hiện Play Activity
+     */
+    private void handleShowPlayActivityWithSongList() {
         if (mIntentPlayActivity == null) {
             mIntentPlayActivity = new Intent(MainActivity.this, PlayActivity.class);
             mIntentPlayActivity.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         }
 //        Intent intent=new Intent(MainActivity.this,PlayActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("PLAY_LIST", songList);
-        bundle.putSerializable("PLAY_SONG", songPlay);
-        bundle.putInt("TYPE_SHOW", typeShow);
-
-        mIntentPlayActivity.putExtras(bundle);
+//        Bundle bundle = new Bundle();
+////        bundle.putSerializable("PLAY_LIST", songList);
+////        bundle.putSerializable("PLAY_SONG", songPlay);
+////        bundle.putInt("TYPE_SHOW", typeShow);
+////
+////        mIntentPlayActivity.putExtras(bundle);
         startActivity(mIntentPlayActivity);
     }
 
-    private void handleShowPlayActivityWithSongIdList(SongModel songPlay, ArrayList<Integer> songIdList) {
-        if (mIntentPlayActivity == null) {
-            mIntentPlayActivity = new Intent(MainActivity.this, PlayActivity.class);
-            mIntentPlayActivity.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        }
-//        Intent intent=new Intent(MainActivity.this,PlayActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("PLAY_LIST", songIdList);
-        bundle.putSerializable("PLAY_SONG", songPlay);
-        mIntentPlayActivity.putExtras(bundle);
-        startActivity(mIntentPlayActivity);
-    }
 
+    /**
+     * Sự kiện khi nhấn vào minimize play
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -402,7 +294,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
                 if (PlayService.getCurrentSongPlaying() == null) {
                     break;
                 }
-                handleShowPlayActivityWithSongList(null, null, PlayActivity.TYPE_SHOW_RESUME);
+                handleShowPlayActivityWithSongList();
                 break;
 
             default:
@@ -437,7 +329,10 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
 //                long id = SongModel.insertSong(mDatabaseManager, song);
 //                Log.d(TAG, "onPostExecute: INSERT SONG FROM MAIN : " + id);
 //            }
-
+            FragmentListSong fragmentListSong= (FragmentListSong) ((PagerMainAdapter)mPagerAdapter).getFragmentAtIndex(1);
+            if (fragmentListSong!=null){
+                fragmentListSong.updateSizeOfListSong();
+            }
         }
 
         @Override
