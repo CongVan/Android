@@ -13,13 +13,10 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.musicforlife.ImageHelper;
+import com.example.musicforlife.utilitys.ImageHelper;
 import com.example.musicforlife.R;
-import com.example.musicforlife.artist.ArtistSongsActivity;
-import com.example.musicforlife.artist.FragmentArtistSong;
 import com.example.musicforlife.utilitys.Utility;
 
 import java.io.ByteArrayInputStream;

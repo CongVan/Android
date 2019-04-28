@@ -13,11 +13,9 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.musicforlife.ImageHelper;
-import com.example.musicforlife.MainActivity;
+import com.example.musicforlife.utilitys.ImageHelper;
 import com.example.musicforlife.R;
 import com.example.musicforlife.utilitys.Utility;
 

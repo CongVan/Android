@@ -222,8 +222,17 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Rec
 
     @Override
     public void onItemClick(View view, int position) {
-        mPlayService.play(_listSong.get(position));
-//        _mainActivity.playSongsFromFragmentListToMain(FragmentPlaylist.SENDER, _listSong.get(position), _listSong);
+        final SongModel songPlay=_listSong.get(position);
+        mPlayService.play(songPlay);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mPlayService.initListPlaying(_listSong);
+                Log.d(TAG, "run: ");
+            }
+        }).start();
+
+        _mainActivity.playSongsFromFragmentListToMain(FragmentPlaylist.SENDER, songPlay, _listSong);
     }
 
     @Override

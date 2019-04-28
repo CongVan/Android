@@ -8,4 +8,5 @@ public interface PlayInterface {
     void updateDuration(String sender, int progress);
     void updateSeekbar(String sender, int duration);
     void updateButtonPlay(String sender);
+    void updateSongPlayingList();
 }

@@ -17,7 +17,7 @@
         <activity android:name=".album.AlbumSongsActivity"/>
         <activity android:name=".artist.ArtistSongsActivity" />
         <activity
-            android:name=".PlayActivity"
+            android:name=".play.PlayActivity"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

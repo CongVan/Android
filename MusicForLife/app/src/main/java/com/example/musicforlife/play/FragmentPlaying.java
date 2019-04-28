@@ -2,7 +2,6 @@ package com.example.musicforlife.play;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,19 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.SeekBar;
-import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.musicforlife.ImageHelper;
-import com.example.musicforlife.PlayActivity;
+import com.example.musicforlife.utilitys.ImageHelper;
 import com.example.musicforlife.R;
 import com.example.musicforlife.listsong.SongModel;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -74,8 +69,9 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
             mPlayActivity = (PlayActivity) getActivity();
 
         }
-        Bundle bundle = getArguments();
-        mSongPlaying = (SongModel) bundle.getSerializable("PLAY_SONG");
+//        Bundle bundle = getArguments();
+//        mSongPlaying = (SongModel) bundle.getSerializable("PLAY_SONG");
+        mSongPlaying = PlayService.getCurrentSongPlaying();
     }
 
     @Nullable
@@ -184,6 +180,16 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
 //        }
         updateControlPlaying(mSongPlaying);
         updateButtonPlay();
+    }
+
+    @Override
+    public void updateListPlaying() {
+
+    }
+
+    @Override
+    public void refreshListPlaying() {
+
     }
 
     @Override

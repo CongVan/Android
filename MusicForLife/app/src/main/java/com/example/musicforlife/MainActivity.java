@@ -43,8 +43,10 @@ import com.example.musicforlife.callbacks.MainCallbacks;
 import com.example.musicforlife.db.DatabaseManager;
 import com.example.musicforlife.listsong.FragmentListSong;
 import com.example.musicforlife.listsong.SongModel;
+import com.example.musicforlife.play.PlayActivity;
 import com.example.musicforlife.play.PlayService;
 import com.example.musicforlife.playlist.FragmentPlaylist;
+import com.example.musicforlife.utilitys.ImageHelper;
 import com.example.musicforlife.utilitys.Utility;
 
 import java.util.ArrayList;

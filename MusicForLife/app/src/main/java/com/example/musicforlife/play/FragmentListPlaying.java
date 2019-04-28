@@ -1,5 +1,6 @@
 package com.example.musicforlife.play;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,7 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.musicforlife.MainActivity;
-import com.example.musicforlife.PlayActivity;
 import com.example.musicforlife.R;
 import com.example.musicforlife.listsong.RecyclerItemClickListener;
 import com.example.musicforlife.listsong.SongModel;
@@ -34,12 +34,13 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
     private LinearLayout mLayoutListSong;
     private RecyclerView mListViewSong;
     private ListPlayingAdapter mListSongAdapter;
-    private LoadImageFromStorage loadImageFromStorage;
+    private LoadListPlaying loadListPlaying;
     private TextView txtSizePlayingList;
     private static SongModel mSongPlaying = null;
     private boolean playFirst = true;
     public static final String SENDER = "FRAGMENT_PLAYING_LIST";
     private static final String TAG = "FragmentListPlaying";
+    private int oldSizeListPlaying;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,7 +49,7 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
         try {
             mContext = getActivity();
             mPlayActivity = (PlayActivity) getActivity();
-            loadImageFromStorage = new LoadImageFromStorage();
+            loadListPlaying = new LoadListPlaying();
 
 
         } catch (IllegalStateException e) {
@@ -57,12 +58,12 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
 
     }
 
-    public static FragmentListPlaying newInstance(SongModel songPlaying) {
+    public static FragmentListPlaying newInstance() {
         FragmentListPlaying fragmentListPlaying = new FragmentListPlaying();
 //        Bundle args = new Bundle();
 //        args.putString("Key1", "OK");
 //        fragmentListPlaying.setArguments(args);
-        mSongPlaying = songPlaying;
+        mSongPlaying = PlayService.getCurrentSongPlaying();
         return fragmentListPlaying;
     }
 
@@ -70,7 +71,8 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
     public void onResume() {
         super.onResume();
         Log.i(TAG, "onResume: STARTED");
-
+//        new LoadListPlaying().execute();
+        updateListPlaying();
 
     }
 
@@ -94,7 +96,7 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
 //
 //            }
 //        });
-//        loadImageFromStorage.execute();
+//        LoadListPlaying.execute();
 //        return mLayoutListSong;
     }
 
@@ -102,10 +104,11 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         txtSizePlayingList = mPlayActivity.findViewById(R.id.txtSizePlayingList);
+        mListViewSong = (RecyclerView) view.findViewById(R.id.lsvPlaying);
         mListSong = new ArrayList<>();// getAllAudioFromDevice(_context);
 
 //        _layoutListSong = (NestedScrollView) _inflater.inflate(R.layout.fragment_list_song, null);
-        mListViewSong = (RecyclerView) view.findViewById(R.id.lsvPlaying);
+
         mListSongAdapter = new ListPlayingAdapter(mContext, mListSong);
         mListViewSong.setLayoutManager(new LinearLayoutManager(mContext));
         mListViewSong.setAdapter(mListSongAdapter);
@@ -118,7 +121,7 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
                         mSongPlaying = mListSong.get(position);
                         mPlayActivity.controlSong(FragmentListPlaying.SENDER, mSongPlaying, PlayService.ACTION_PLAY);
                         mPlayActivity.updateControlPlaying(SENDER, mSongPlaying);
-                            mListSongAdapter.notifyDataSetChanged();
+                        mListSongAdapter.notifyDataSetChanged();
                     }
 
                     @Override
@@ -128,14 +131,14 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
                     }
                 })
         );
-        if (mSongPlaying != null && PlayService.getCurrentSongPlaying() != null) {
-            if (mSongPlaying.getSongId() == PlayService.getCurrentSongPlaying().getSongId()) {
-                playFirst = false;
+        updateListPlaying();
+//        if (mSongPlaying != null && PlayService.getCurrentSongPlaying() != null) {
+//            if (mSongPlaying.getSongId() == PlayService.getCurrentSongPlaying().getSongId()) {
+//                playFirst = false;
+//            }
+//        }
 
-            }
-        }
-
-        new LoadImageFromStorage().execute();
+//        new LoadListPlaying().execute();
 
     }
 
@@ -149,9 +152,25 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
     @Override
     public void onDestroy() {
         super.onDestroy();
-        loadImageFromStorage.cancel(true);
+        loadListPlaying.cancel(true);
     }
 
+
+    @Override
+    public void updateListPlaying() {
+        new LoadListPlaying().execute();
+    }
+
+    @Override
+    public void refreshListPlaying() {
+        mPlayActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mListSongAdapter.notifyDataSetChanged();
+            }
+        });
+
+    }
 
     @Override
     public void updateControlPlaying(SongModel songModel) {
@@ -168,11 +187,16 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
 
     }
 
-    private class LoadImageFromStorage extends AsyncTask<Void, Integer, ArrayList<SongModel>> {
+    private class LoadListPlaying extends AsyncTask<Void, Integer, ArrayList<SongModel>> {
 
+        @SuppressLint("SetTextI18n")
         @Override
         protected void onPostExecute(ArrayList<SongModel> songModels) {
             super.onPostExecute(songModels);
+           if (songModels==null){
+               return;
+           }
+            mListSong.clear();
             mListSong.addAll(songModels);
             txtSizePlayingList.setText(" (" + mListSong.size() + ") ");
             Log.i(TAG, "onPostExecute: SONGS--> " + mListSong.size());
@@ -184,12 +208,12 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
             });
             Log.i(TAG, "onPostExecute: FINISHED");
             //play song if songPlaying !=null
-            if (playFirst) {
-                mPlayActivity.controlSong(FragmentListPlaying.SENDER, mSongPlaying, PlayService.ACTION_PLAY);
-                mPlayActivity.updateControlPlaying(SENDER, mSongPlaying);
-            }
-
-            playFirst = false;
+//            if (playFirst) {
+//                mPlayActivity.controlSong(FragmentListPlaying.SENDER, mSongPlaying, PlayService.ACTION_PLAY);
+//                mPlayActivity.updateControlPlaying(SENDER, mSongPlaying);
+//            }
+//
+//            playFirst = false;
 //            if (mSongPlaying != null && !PlayService.isPlaying()) {
 //                Log.d(TAG, "onPostExecute: DURATION " + PlayService.getCurrentDuration());
 //                if (PlayService.getCurrentSongPlaying() != null && PlayService.getCurrentDuration() > 0) {
@@ -216,7 +240,7 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
         @Override
         public ArrayList<SongModel> doInBackground(Void... voids) {
 
-            return PlayModel.getSongPlayingList();
+            return PlayService.getListPlaying();
         }
     }
 

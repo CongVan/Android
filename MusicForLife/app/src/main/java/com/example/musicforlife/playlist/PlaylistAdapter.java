@@ -16,9 +16,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.musicforlife.ImageHelper;
+import com.example.musicforlife.utilitys.ImageHelper;
 import com.example.musicforlife.R;
-import com.example.musicforlife.listsong.SongModel;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

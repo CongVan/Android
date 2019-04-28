@@ -1,4 +1,4 @@
-package com.example.musicforlife;
+package com.example.musicforlife.utilitys;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -11,15 +11,13 @@ import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
-import android.media.ThumbnailUtils;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
-import android.widget.ImageView;
+
+import com.example.musicforlife.MainActivity;
+import com.example.musicforlife.R;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.net.ContentHandler;
 
 public class ImageHelper {
     private static Context mContext = MainActivity.getMainActivity().getApplicationContext();

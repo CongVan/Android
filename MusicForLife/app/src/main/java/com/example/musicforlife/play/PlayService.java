@@ -1,11 +1,9 @@
 package com.example.musicforlife.play;
 
-import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.CountDownTimer;
 import android.util.Log;
 
-import com.example.musicforlife.PlayActivity;
 import com.example.musicforlife.db.DatabaseManager;
 import com.example.musicforlife.listsong.SongModel;
 
@@ -15,11 +13,12 @@ import java.util.ArrayList;
 
 public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, PlayServiceInterface {
     private static ArrayList<PlayModel> mPlayingList;
+    private static ArrayList<SongModel> mSongPlayingList;
     private static SongModel mCurrentSongPlaying;
     private static SongModel mOldSongPlaying;
     private static int mCurrentIndexSong;
 
-    private static PlayActivity mPlayActivity;
+
     private static MediaPlayer mMediaPlayer = null;
     private static PlayService mPlayService = null;
     private static DatabaseManager mDatabaseManager = null;
@@ -48,7 +47,7 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
     public static PlayService newInstance() {
         if (mPlayService == null) {
             mPlayService = new PlayService();
-            mPlayActivity = PlayActivity.getActivity();
+
             mMediaPlayer = new MediaPlayer();
             mDatabaseManager = DatabaseManager.getInstance();
         }
@@ -113,7 +112,11 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
 
     public void next(int actionFrom) {
         resetMediaPlayer();
+        if (mPlayingList == null) {
+            return;
+        }
         mOldSongPlaying = mCurrentSongPlaying;
+
         if (actionFrom == ACTION_FROM_USER) {
             setNextIndexSong();
         } else {
@@ -123,9 +126,11 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
                 mCurrentIndexSong = mCurrentIndexSong;
             } else {
                 mMediaPlayer.seekTo(0);
-                mPlayActivity.updateControlPlaying(SENDER, mCurrentSongPlaying);
-                mPlayActivity.updateButtonPlay(SENDER);
-                mPlayActivity.updateSeekbar(SENDER, mMediaPlayer.getCurrentPosition());
+                if (PlayActivity.getActivity() != null) {
+                    PlayActivity.getActivity().updateControlPlaying(SENDER, mCurrentSongPlaying);
+                    PlayActivity.getActivity().updateButtonPlay(SENDER);
+                    PlayActivity.getActivity().updateSeekbar(SENDER, mMediaPlayer.getCurrentPosition());
+                }
                 pause();
                 return;
             }
@@ -133,7 +138,9 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
 
         mCurrentSongPlaying = SongModel.getSongFromSongId(mDatabaseManager, mPlayingList.get(mCurrentIndexSong).getSongId());
         play(mCurrentSongPlaying);
-        mPlayActivity.updateControlPlaying(SENDER, mCurrentSongPlaying);
+        if (PlayActivity.getActivity() != null) {
+            PlayActivity.getActivity().updateControlPlaying(SENDER, mCurrentSongPlaying);
+        }
     }
 
     private void resetMediaPlayer() {
@@ -154,6 +161,9 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
 
     public void prev(int actionFrom) {
         resetMediaPlayer();
+        if (mPlayingList == null || PlayActivity.getActivity() == null) {
+            return;
+        }
         mOldSongPlaying = mCurrentSongPlaying;
         if (mCurrentIndexSong == 0) {
             mCurrentIndexSong = mPlayingList.size() - 1;
@@ -162,7 +172,9 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
         }
         mCurrentSongPlaying = SongModel.getSongFromSongId(mDatabaseManager, mPlayingList.get(mCurrentIndexSong).getSongId());
         play(mCurrentSongPlaying);
-        mPlayActivity.updateControlPlaying(SENDER, mCurrentSongPlaying);
+        if (PlayActivity.getActivity() != null) {
+            PlayActivity.getActivity().updateControlPlaying(SENDER, mCurrentSongPlaying);
+        }
     }
 
     public static int addSongsToPlayingList(ArrayList<SongModel> songs) {
@@ -186,6 +198,8 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
 
     private static int updatePlayingList() {
         mPlayingList = PlayModel.getListPlaying();
+        mSongPlayingList = PlayModel.getSongPlayingList();
+        setIndexSongInPlayingList();
         Log.d(TAG, "updatePlayingList: SIZE PLAYING LIST" + mPlayingList.size());
         return mPlayingList.size();
     }
@@ -233,8 +247,8 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
 
     @Override
     public void updateSeekbar(String sender, int duration) {
-        if (mPlayActivity!=null){
-            mPlayActivity.updateSeekbar(sender, duration);
+        if (PlayActivity.getActivity() != null) {
+            PlayActivity.getActivity().updateSeekbar(sender, duration);
         }
 
     }
@@ -244,8 +258,13 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
 
     }
 
-    private void setIndexSongInPlayingList() {
-        if (mPlayActivity != null) {
+    @Override
+    public void updateSongPlayingList() {
+
+    }
+
+    private static void setIndexSongInPlayingList() {
+        if (PlayActivity.getActivity() != null) {
             for (int i = 0; i < mPlayingList.size(); i++) {
                 if (mPlayingList.get(i).getSongId() == mCurrentSongPlaying.getSongId()) {
                     mCurrentIndexSong = i;
@@ -276,8 +295,8 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
 
         }
         mp.start();
-        if (mPlayActivity!=null){
-            mPlayActivity.updateButtonPlay(SENDER);
+        if (PlayActivity.getActivity() != null) {
+            PlayActivity.getActivity().updateButtonPlay(SENDER);
         }
 
     }
@@ -315,7 +334,16 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
     }
 
     @Override
-    public void initListPlaying(ArrayList<SongModel> listPlaying) {
+    public void initListPlaying(final ArrayList<SongModel> listPlaying) {
+        PlayModel.clearPlayingList();
+        PlayModel.createPlaylistFromSongs(listPlaying);
+        updatePlayingList();
+        if (PlayActivity.getActivity() != null) {
+            PlayActivity.getActivity().updateSongPlayingList();
+        }
+    }
 
+    public static ArrayList<SongModel> getListPlaying() {
+        return mSongPlayingList;
     }
 }

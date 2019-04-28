@@ -12,9 +12,9 @@ public class FragmentPlayAdapter extends FragmentStatePagerAdapter {
     private static final int NUM_PAGES = 2;
     private SongModel mSongPlaying;
 
-    public FragmentPlayAdapter(FragmentManager fm, SongModel songPlaying) {
+    public FragmentPlayAdapter(FragmentManager fm) {
         super(fm);
-        mSongPlaying = songPlaying;
+
     }
 
     private static Fragment mFragmentListPlaying, mFragmentPlaying;
@@ -24,7 +24,7 @@ public class FragmentPlayAdapter extends FragmentStatePagerAdapter {
         Fragment fragment = null;
         switch (i) {
             case 0:
-                mFragmentListPlaying = FragmentListPlaying.newInstance(mSongPlaying);
+                mFragmentListPlaying = FragmentListPlaying.newInstance();
                 fragment = mFragmentListPlaying;
 //                Bundle bundle=new Bundle();
 //                bundle.putBoolean("PLAY_FISR",);
@@ -50,5 +50,8 @@ public class FragmentPlayAdapter extends FragmentStatePagerAdapter {
 
     public FragmentPlaying getFragmentPlaying() {
         return (FragmentPlaying) mFragmentPlaying;
+    }
+    public FragmentListPlaying getFragmentListPlaying(){
+        return (FragmentListPlaying) mFragmentListPlaying;
     }
 }

@@ -1,9 +1,7 @@
-package com.example.musicforlife;
+package com.example.musicforlife.play;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -13,11 +11,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.example.musicforlife.MainActivity;
+import com.example.musicforlife.R;
 import com.example.musicforlife.db.DatabaseManager;
 import com.example.musicforlife.listsong.SongModel;
-import com.example.musicforlife.play.FragmentPlayAdapter;
-import com.example.musicforlife.play.PlayService;
-import com.example.musicforlife.play.PlayInterface;
 import com.example.musicforlife.utilitys.Utility;
 
 import java.util.ArrayList;
@@ -31,7 +28,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
      */
     private DatabaseManager mDatabaseManager;
     private CoordinatorLayout mLayoutPlay;
-    private PagerAdapter pagerAdapter;
+    private PagerAdapter mPagerAdapter;
     private PlayService mPlayService;
     private ImageView imageViewBackgroundMain;
     private MainActivity mMainActivity;
@@ -57,48 +54,72 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
         setContentView(R.layout.activity_play);
 
         mLayoutPlay = findViewById(R.id.layoutPlayActivity);
+        mPager = (ViewPager) findViewById(R.id.pager);
 
         Utility.setTranslucentStatusBar(PlayActivity.this);
         mLayoutPlay.setPadding(0, Utility.getStatusbarHeight(this), 0, 0);
 
-        mLayoutPlay.setBackground(ImageHelper.getMainBackgroundDrawable());
+//        mLayoutPlay.setBackground(ImageHelper.getMainBackgroundDrawable());
 
-        mPager = (ViewPager) findViewById(R.id.pager);
+
         mDatabaseManager = DatabaseManager.newInstance(getApplicationContext());
         mPlayActivity = this;
         mPlayService = PlayService.newInstance();
 
+        mSongPlaying = PlayService.getCurrentSongPlaying();
+        mPagerAdapter = new FragmentPlayAdapter(getSupportFragmentManager());
+        mPager.setAdapter(mPagerAdapter);
+        mPager.setCurrentItem(1);
 
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
+        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
 
-
-        int typeShow = -1;
-        typeShow = bundle.getInt("TYPE_SHOW");
-        Log.d(TAG, "onCreate: TYPE SHOW" + typeShow);
-        if (typeShow == TYPE_SHOW_NEW) {
-            if (bundle.getSerializable("PLAY_LIST") != null) {
-                mPlayList = (ArrayList<SongModel>) bundle.getSerializable("PLAY_LIST");
-            } else {
-                mPlayList = (ArrayList<SongModel>) intent.getSerializableExtra(PlayActivity.EXTRA_PLAYING_LIST);
             }
-            Log.d(TAG, "onCreate: " + "PLAY LIST " + mPlayList.size());
-            if (bundle.getSerializable("PLAY_SONG") != null) {
-                mSongPlaying = (SongModel) bundle.getSerializable("PLAY_SONG");
-            } else {
-                if (mPlayList.size() > 0) {
-                    mSongPlaying = mPlayList.get(0);
-                }
+
+            @Override
+            public void onPageSelected(int i) {
+//                if (i==0){//Page list playing
+//                    ((FragmentPlayAdapter) mPagerAdapter).getFragmentListPlaying().updateListPlaying();
+//                }
             }
-            new InitPlaylist().execute(mPlayList);
-        } else if (typeShow == TYPE_SHOW_RESUME) {
-            Log.d(TAG, "onCreate: RESUME " + PlayService.getCurrentSongPlaying());
-            mSongPlaying = PlayService.getCurrentSongPlaying();
-            pagerAdapter = new FragmentPlayAdapter(getSupportFragmentManager(), mSongPlaying);
-            mPager.setAdapter(pagerAdapter);
-            ((FragmentPlayAdapter) pagerAdapter).getFragmentPlaying().updateButtonPlay();
-            mPager.setCurrentItem(1);
-        }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
+
+//        Intent intent = getIntent();
+//        Bundle bundle = intent.getExtras();
+//
+//
+//        int typeShow = -1;
+//        typeShow = bundle.getInt("TYPE_SHOW");
+//        Log.d(TAG, "onCreate: TYPE SHOW" + typeShow);
+//        if (typeShow == TYPE_SHOW_NEW) {
+//            if (bundle.getSerializable("PLAY_LIST") != null) {
+//                mPlayList = (ArrayList<SongModel>) bundle.getSerializable("PLAY_LIST");
+//            } else {
+//                mPlayList = (ArrayList<SongModel>) intent.getSerializableExtra(PlayActivity.EXTRA_PLAYING_LIST);
+//            }
+//            Log.d(TAG, "onCreate: " + "PLAY LIST " + mPlayList.size());
+//            if (bundle.getSerializable("PLAY_SONG") != null) {
+//                mSongPlaying = (SongModel) bundle.getSerializable("PLAY_SONG");
+//            } else {
+//                if (mPlayList.size() > 0) {
+//                    mSongPlaying = mPlayList.get(0);
+//                }
+//            }
+//            new InitPlaylist().execute(mPlayList);
+//        } else if (typeShow == TYPE_SHOW_RESUME) {
+//            Log.d(TAG, "onCreate: RESUME " + PlayService.getCurrentSongPlaying());
+//            mSongPlaying = PlayService.getCurrentSongPlaying();
+//            mPagerAdapter = new FragmentPlayAdapter(getSupportFragmentManager(), mSongPlaying);
+//            mPager.setAdapter(mPagerAdapter);
+//            ((FragmentPlayAdapter) mPagerAdapter).getFragmentPlaying().updateButtonPlay();
+//            mPager.setCurrentItem(1);
+//        }
 
 
 //        Log.d(TAG, "onCreate: " + "PLAY SONG " + mSongPlaying.getTitle());
@@ -193,7 +214,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
                 break;
             case PlayService.ACTION_PREV:
                 mPlayService.prev(PlayService.ACTION_FROM_USER);
-
+                ((FragmentPlayAdapter) mPagerAdapter).getFragmentListPlaying().refreshListPlaying();
                 break;
             case PlayService.ACTION_NEXT:
                 mPlayService.next(PlayService.ACTION_FROM_USER);
@@ -206,7 +227,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
 
     @Override
     public void updateControlPlaying(String sender, SongModel songModel) {
-        ((FragmentPlayAdapter) pagerAdapter).getFragmentPlaying().updateControlPlaying(songModel);
+        ((FragmentPlayAdapter) mPagerAdapter).getFragmentPlaying().updateControlPlaying(songModel);
         MainActivity.getMainActivity().togglePlayingMinimize(sender);
     }
 
@@ -217,33 +238,18 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
 
     @Override
     public void updateSeekbar(String sender, int duration) {
-        ((FragmentPlayAdapter) pagerAdapter).getFragmentPlaying().updateSeekbar(duration);
+        ((FragmentPlayAdapter) mPagerAdapter).getFragmentPlaying().updateSeekbar(duration);
     }
 
     @Override
     public void updateButtonPlay(String sender) {
-        ((FragmentPlayAdapter) pagerAdapter).getFragmentPlaying().updateButtonPlay();
+        ((FragmentPlayAdapter) mPagerAdapter).getFragmentPlaying().updateButtonPlay();
     }
 
-    private class InitPlaylist extends AsyncTask<ArrayList<SongModel>, Integer, Void> {
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            pagerAdapter = new FragmentPlayAdapter(getSupportFragmentManager(), mSongPlaying);
-            mPager.setAdapter(pagerAdapter);
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
-        }
-
-        @Override
-        protected Void doInBackground(ArrayList<SongModel>... arrayLists) {
-            PlayService.createPlayingList(arrayLists[0]);
-
-            return null;
-        }
+    @Override
+    public void updateSongPlayingList() {
+        ((FragmentPlayAdapter) mPagerAdapter).getFragmentListPlaying().updateListPlaying();
     }
+
+
 }

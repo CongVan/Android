@@ -10,10 +10,8 @@ import android.os.AsyncTask;
 import android.util.LruCache;
 import android.widget.ImageView;
 
-import com.example.musicforlife.ImageHelper;
 import com.example.musicforlife.MainActivity;
 import com.example.musicforlife.R;
-import com.example.musicforlife.listsong.ListSongRecyclerAdaper;
 import com.example.musicforlife.listsong.SongModel;
 
 import java.lang.ref.WeakReference;
