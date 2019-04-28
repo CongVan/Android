@@ -18,7 +18,13 @@ public class AlbumProvider {
         //Init databasehelper
 
         String query = MessageFormat.format("select {0},{1},{2},{3},COUNT({4}) from {5} group by {0}"
-                , new Object[]{SongModel.COLUMN_ALBUM, SongModel.COLUMN_ARTIST, SongModel.COLUMN_PATH,SongModel.COLUMN_ALBUM_ID, SongModel.COLUMN_ID, SongModel.TABLE_NAME});
+                , new Object[]{
+                        SongModel.COLUMN_ALBUM,
+                        SongModel.COLUMN_ARTIST,
+                        SongModel.COLUMN_PATH,
+                        SongModel.COLUMN_ALBUM_ID,
+                        SongModel.COLUMN_ID,
+                        SongModel.TABLE_NAME});
 
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
@@ -33,6 +39,36 @@ public class AlbumProvider {
         }
         return arr;
     }
+
+    public static ArrayList<AlbumViewModel> getAlbumModelPaging(Context context,int skip,int take) {
+        ArrayList<AlbumViewModel> result = new ArrayList<AlbumViewModel>();
+        DatabaseManager databaseManager = DatabaseManager.newInstance(context);
+        SQLiteDatabase db = databaseManager.getReadableDatabase();
+        String query = MessageFormat.format("select {0},{1},{2},{3},COUNT({4}) from {5} group by {0} LIMIT {6},{7}"
+                , new Object[]{
+                        SongModel.COLUMN_ALBUM,
+                        SongModel.COLUMN_ARTIST,
+                        SongModel.COLUMN_PATH,
+                        SongModel.COLUMN_ALBUM_ID,
+                        SongModel.COLUMN_ID,
+                        SongModel.TABLE_NAME,
+                        skip + "",
+                        take+ ""
+                });
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+                result.add(new AlbumViewModel(
+                        cursor.getString(0),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getInt(3),
+                        cursor.getInt(4)));
+            } while (cursor.moveToNext());
+        }
+        return result;
+    }
+
     public static ArrayList<SongModel> getALbumSongs(Context context, String album){
         ArrayList<SongModel> arr = new ArrayList<SongModel>();
         SQLiteDatabase db = DatabaseManager.getInstance().getReadableDatabase();

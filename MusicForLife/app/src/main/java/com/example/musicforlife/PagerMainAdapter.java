@@ -40,10 +40,10 @@ public class PagerMainAdapter extends FragmentStatePagerAdapter {
                 break;
             case 3:
 
-                fragment = mFragmentArtist == null ? mFragmentArtist = new FragmentArtist() : mFragmentArtist;
+                fragment = mFragmentArtist == null ? mFragmentArtist = FragmentArtist.newInstance() : mFragmentArtist;
                 break;
             case 4:
-                fragment = mFragmentAlbum == null ? mFragmentAlbum = new FragmentAlbum() : mFragmentAlbum;
+                fragment = mFragmentAlbum == null ? mFragmentAlbum =  FragmentAlbum.newInstance() : mFragmentAlbum;
 
                 break;
             case 5:

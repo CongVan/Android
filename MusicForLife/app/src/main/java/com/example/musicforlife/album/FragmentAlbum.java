@@ -2,6 +2,7 @@ package com.example.musicforlife.album;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -26,9 +27,9 @@ public class FragmentAlbum extends Fragment {
     ArrayList<AlbumViewModel> arrAlbum;
     RecyclerView RCalbum;
     Context context;
-    public FragmentAlbum(){
-
-    }
+    AlbumListAdapter albumListAdapter;
+    static boolean mIsLoading;
+    static int take = 10;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -39,21 +40,15 @@ public class FragmentAlbum extends Fragment {
         view = inflater.inflate(R.layout.fragment_album,container,false);
 
         //get list artist from db
-        arrAlbum = AlbumProvider.getListAlbum(context);
+        arrAlbum = AlbumProvider.getAlbumModelPaging(context,0,20);
 
         //get RecyclerView Album by id
         RCalbum = (RecyclerView)view.findViewById(R.id.rvAlbumList);
 
         //map layout with adapter
-        AlbumListAdapter albumListAdapter = new AlbumListAdapter(context,arrAlbum);
+        albumListAdapter = new AlbumListAdapter(context,arrAlbum);
         RCalbum.setLayoutManager(new LinearLayoutManager(context));
         RCalbum.setAdapter(albumListAdapter);
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         RCalbum.addOnItemTouchListener(new RecyclerItemClickListener(context, RCalbum, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -68,5 +63,39 @@ public class FragmentAlbum extends Fragment {
 
             }
         }));
+        RCalbum.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (!mIsLoading && linearLayoutManager != null && linearLayoutManager.getItemCount() - 1 <= linearLayoutManager.findLastVisibleItemPosition()) {
+                    loadMore();
+                    mIsLoading = true;
+                }
+            }
+        });
+        return view;
     }
+    private void loadMore() {
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<AlbumViewModel> tempAudioList = AlbumProvider.getAlbumModelPaging(context, arrAlbum.size(), take);
+                arrAlbum.addAll(tempAudioList);
+                albumListAdapter.notifyItemInserted(arrAlbum.size());
+                mIsLoading = false;
+            }
+        });
+    }
+
+    public static FragmentAlbum newInstance() {
+        FragmentAlbum fragmentAlbum = new FragmentAlbum();
+        return fragmentAlbum;
+    }
+
 }

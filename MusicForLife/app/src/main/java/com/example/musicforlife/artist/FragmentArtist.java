@@ -2,6 +2,7 @@ package com.example.musicforlife.artist;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,10 +12,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.musicforlife.MainActivity;
 import com.example.musicforlife.R;
 import com.example.musicforlife.listsong.RecyclerItemClickListener;
+import com.example.musicforlife.listsong.SongModel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -25,8 +28,11 @@ public class FragmentArtist extends Fragment {
 
     View view;
     ArrayList<ArtistViewModel> arrArtist;
+    ListArtistAdapter listArtistAdapter;
     RecyclerView LVArtist;
     Context context;
+    static boolean mIsLoading;
+    static int take = 10;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -40,10 +46,10 @@ public class FragmentArtist extends Fragment {
         LVArtist = (RecyclerView) view.findViewById(R.id.lvArtistList);
 
         //get list artist from db
-        arrArtist = ArtistProvider.getArtistModelPaging(context,0,10);
+        arrArtist = ArtistProvider.getArtistModelPaging(context,0,20);
 
         //map layout with adapter
-        ListArtistAdapter listArtistAdapter = new ListArtistAdapter(context,arrArtist);
+        listArtistAdapter = new ListArtistAdapter(context,arrArtist);
         LVArtist.setLayoutManager(new LinearLayoutManager(context));
         LVArtist.setAdapter(listArtistAdapter);
         LVArtist.addOnItemTouchListener(new RecyclerItemClickListener(context, LVArtist, new RecyclerItemClickListener.OnItemClickListener() {
@@ -60,14 +66,38 @@ public class FragmentArtist extends Fragment {
 
             }
         }));
+        LVArtist.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (!mIsLoading && linearLayoutManager != null && linearLayoutManager.getItemCount() - 1 <= linearLayoutManager.findLastVisibleItemPosition()) {
+                    loadMore();
+                    mIsLoading = true;
+                }
+            }
+        });
         return view;
     }
 
+    private void loadMore() {
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<ArtistViewModel> tempAudioList = ArtistProvider.getArtistModelPaging(context, arrArtist.size(), take);
+                arrArtist.addAll(tempAudioList);
+                listArtistAdapter.notifyItemInserted(arrArtist.size());
+                mIsLoading = false;
+            }
+        });
+    }
     public static FragmentArtist newInstance() {
         FragmentArtist fragmentArtist = new FragmentArtist();
-        Bundle args = new Bundle();
-        args.putString("Key2", "OK");
-        fragmentArtist.setArguments(args);
         return fragmentArtist;
     }
 }
