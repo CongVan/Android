@@ -2,6 +2,7 @@ package com.example.musicforlife.listsong;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -48,7 +49,7 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Rec
     private static final String TAG = "FRAGMENT_LIST_SONG";
     public static final String SENDER = "FRAGMENT_LIST_SONG";
     private static final int mThreshHold = 10;
-    private static boolean mIsLoading = false;
+    private static boolean mIsLoading;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -109,10 +110,10 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Rec
 //        _listViewSong.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
 
 //        _listSongAdapter.notifyItemRangeChanged();
-        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
-        itemAnimator.setAddDuration(1000);
-        itemAnimator.setRemoveDuration(1000);
-        _listViewSong.setItemAnimator(itemAnimator);
+//        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
+//        itemAnimator.setAddDuration(1000);
+//        itemAnimator.setRemoveDuration(1000);
+//        _listViewSong.setItemAnimator(itemAnimator);
 
         _txtSizeOfListSong.setText("Tìm thấy " + String.valueOf(SongModel.getRowsSong(MainActivity.mDatabaseManager)) + " bài hát");
         _listViewSong.addOnItemTouchListener(new RecyclerItemClickListener(_context, _listViewSong, this));
@@ -128,14 +129,14 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Rec
                 super.onScrolled(recyclerView, dx, dy);
                 LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 if (linearLayoutManager != null) {
-                    Log.d(TAG, "onScrolled: " + dx + "_" + dy + "___" + linearLayoutManager.findLastCompletelyVisibleItemPosition());
+                    Log.d(TAG, "onScrolled: " + dx + "_" + dy + "___" + linearLayoutManager.getItemCount() + "_" + linearLayoutManager.findLastVisibleItemPosition());
                 }
-                if (!mIsLoading) {
-                    if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == _listSong.size() - 1) {
-                        loadMore();
-                        mIsLoading = true;
-                    }
+
+                if (!mIsLoading && linearLayoutManager != null && linearLayoutManager.getItemCount() - 1 <= linearLayoutManager.findLastVisibleItemPosition()) {
+                    loadMore();
+                    mIsLoading = true;
                 }
+
 
             }
         });
@@ -168,6 +169,18 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Rec
         _listSong.add(null);
         _listSongAdapter.notifyItemInserted(_listSong.size() - 1);
 //        Handler handler = new Handler();
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                _listSong.remove(_listSong.size() - 1);
+//                int scollPosition = _listSong.size();
+//                _listSongAdapter.notifyItemRemoved(scollPosition);
+//                ArrayList<SongModel> tempAudioList = SongModel.getSongsWithThreshold(MainActivity.mDatabaseManager, _listSong.size(), mThreshHold);
+//                _listSong.addAll(tempAudioList);
+////                _listSongAdapter.notifyDataSetChanged();
+//                mIsLoading = false;
+//            }
+//        }, 2000);
         _listViewSong.post(new Runnable() {
             @Override
             public void run() {
@@ -214,7 +227,7 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Rec
             final int positionStart = _listSong.size() + 1;
             _listSong.addAll(songModels);
             Log.i(TAG, "onPostExecute: SONGS--> " + _listSong.size());
-            _listViewSong.postDelayed(new Runnable() {
+            _listViewSong.post(new Runnable() {
                 @Override
                 public void run() {
 //                    _listSongAdapter.notifyDataSetChanged();
@@ -223,7 +236,7 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Rec
                     _listSongAdapter.notifyItemChanged(positionStart);
                     _listSongAdapter.notifyItemInserted(positionStart);
                 }
-            }, 5000);
+            });
             Log.i(TAG, "onPostExecute: FINISHED");
             mIsLoading = false;
         }
