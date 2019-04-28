@@ -92,7 +92,7 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Rec
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView: STARTED CREATE VIEW");
         View view = inflater.inflate(R.layout.fragment_list_song, container, false);
-        _txtSizeOfListSong=view.findViewById(R.id.txtSizeOfListSong);
+        _txtSizeOfListSong = view.findViewById(R.id.txtSizeOfListSong);
         _listViewSong = view.findViewById(R.id.lsvSongs);
         _listSong = SongModel.getSongsWithThreshold(MainActivity.mDatabaseManager, 0, mThreshHold);// getAllAudioFromDevice(_context);
 
@@ -114,7 +114,7 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Rec
         itemAnimator.setRemoveDuration(1000);
         _listViewSong.setItemAnimator(itemAnimator);
 
-        _txtSizeOfListSong.setText("Tìm thấy "+String.valueOf(SongModel.getRowsSong(MainActivity.mDatabaseManager)) +" bài hát");
+        _txtSizeOfListSong.setText("Tìm thấy " + String.valueOf(SongModel.getRowsSong(MainActivity.mDatabaseManager)) + " bài hát");
         _listViewSong.addOnItemTouchListener(new RecyclerItemClickListener(_context, _listViewSong, this));
         _listViewSong.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -203,33 +203,6 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Rec
     @Override
     public void onLongItemClick(View view, int position) {
         Toast.makeText(_context, "LONG CLICK ITEM SONG" + position, Toast.LENGTH_SHORT).show();
-    }
-    private void buildGlide(){
-        GlideBuilder gb = new GlideBuilder();
-
-        //set mem cache size to 8% of available memory
-        LruResourceCache lruMemCache = new LruResourceCache(getMemCacheSize(8));
-        gb.setMemoryCache(lruMemCache);
-
-        //set disk cache 300 mb
-        InternalCacheDiskCacheFactory diskCacheFactory =
-                new InternalCacheDiskCacheFactory(_context, 300);
-        gb.setDiskCache(diskCacheFactory);
-
-        //set BitmapPool with 1/10th of memory cache's size
-        LruBitmapPool bitmapPool = new LruBitmapPool(getMemCacheSize(8)/10);
-        gb.setBitmapPool(bitmapPool);
-
-        //set custom Glide as global singleton
-        Glide.init(_context, gb);
-    }
-    private int getMemCacheSize(int percent){
-        ActivityManager.MemoryInfo mi = new ActivityManager.MemoryInfo();
-        ((ActivityManager)
-                _context.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryInfo(mi);
-
-        double availableMemory= mi.availMem;
-        return (int)(percent*availableMemory/100);
     }
 
     private class loadImageFromStorage extends AsyncTask<Void, Integer, ArrayList<SongModel>> {

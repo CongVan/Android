@@ -40,6 +40,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.example.musicforlife.ImageHelper;
 import com.example.musicforlife.MainActivity;
 import com.example.musicforlife.R;
+import com.example.musicforlife.utilitys.ImageCacheHelper;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -57,22 +58,22 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
 
     private LruCache<Long, Bitmap> mBitmapCache;
     private BitmapDrawable mPlaceholder;
-
+    private ImageCacheHelper mImageCacheHelper;
     public ListSongRecyclerAdaper(Context context, ArrayList<SongModel> listSong) {
         mContext = context;
         mListSong = listSong;
-
-        int maxSize = (int) (Runtime.getRuntime().maxMemory() / 1024);
-        // Divide the maximum size by eight to get a adequate size the LRU cache should reach before it starts to evict bitmaps.
-        int cacheSize = maxSize / 8;
-        mBitmapCache = new LruCache<Long, Bitmap>(cacheSize) {
-            @Override
-            protected int sizeOf(Long key, Bitmap value) {
-                // returns the size of bitmaps in kilobytes.
-                return value.getByteCount() / 1024;
-            }
-        };
-        mPlaceholder = (BitmapDrawable) mContext.getResources().getDrawable(R.mipmap.music_file_128);
+        mImageCacheHelper=new ImageCacheHelper(R.mipmap.music_file_128);
+//        int maxSize = (int) (Runtime.getRuntime().maxMemory() / 1024);
+//        // Divide the maximum size by eight to get a adequate size the LRU cache should reach before it starts to evict bitmaps.
+//        int cacheSize = maxSize / 8;
+//        mBitmapCache = new LruCache<Long, Bitmap>(cacheSize) {
+//            @Override
+//            protected int sizeOf(Long key, Bitmap value) {
+//                // returns the size of bitmaps in kilobytes.
+//                return value.getByteCount() / 1024;
+//            }
+//        };
+//        mPlaceholder = (BitmapDrawable) mContext.getResources().getDrawable();
     }
 
     @NonNull
@@ -161,11 +162,12 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
             this.artist.setText(songModel.getArtist() + "_" + songModel.getAlbumId());
             this.duration.setText(SongModel.formateMilliSeccond(songModel.getDuration()));
 //CACHE
-            final Bitmap bitmap = mBitmapCache.get((long) songModel.getAlbumId());
+            final Bitmap bitmap = mImageCacheHelper.getBitmapCache(songModel.getAlbumId());//  mBitmapCache.get((long) songModel.getAlbumId());
             if (bitmap != null) {
                 this.imageView.setImageBitmap(bitmap);
             } else {
-                loadAlbumArt(this.imageView, songModel);
+                mImageCacheHelper.loadAlbumArt(imageView,songModel);
+//                loadAlbumArt(this.imageView, songModel);
             }
 
 //\CACHE
@@ -300,7 +302,7 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
         }
         return task;
     }
-    
+
     private class LoadAlbumArt extends AsyncTask<SongModel, Void, Bitmap> {
 
         // URI that points to the AlbumArt database.
