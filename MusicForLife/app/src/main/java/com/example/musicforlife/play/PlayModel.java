@@ -196,6 +196,7 @@ public class PlayModel {
     }
 
     public static boolean updateStatusPlaying(int oldSongId, int newSongId) {
+        Log.d(TAG, "updateStatusPlaying: OLD= " + oldSongId + ", New=" + newSongId);
         SQLiteDatabase db = mDatabaseManager.getReadableDatabase();
 //        boolean result = false;
         ContentValues oldValue = new ContentValues();
@@ -205,5 +206,30 @@ public class PlayModel {
         int oldResult = db.update(TABLE_NAME, oldValue, COLUMN_SONG_ID + "=" + oldSongId, null);
         int newResult = db.update(TABLE_NAME, newValue, COLUMN_SONG_ID + "=" + newSongId, null);
         return oldResult > 0 && newResult > 0;
+    }
+
+    public static SongModel getSongIsPlaying() {
+//        ArrayList<SongModel> songModelList = new ArrayList<>();
+        SQLiteDatabase db = mDatabaseManager.getReadableDatabase();
+        String query = "SELECT s.* FROM " + PlayModel.TABLE_NAME + " pm INNER JOIN " + SongModel.TABLE_NAME + " s ON pm." + PlayModel.COLUMN_SONG_ID
+                + "= s." + SongModel.COLUMN_SONG_ID + " WHERE pm." + COLUMN_IS_PLAYING + "=1" + " ORDER BY s." + SongModel.COLUMN_TITLE + " ";
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+
+                SongModel songModel = new SongModel();
+                songModel.setId(cursor.getInt(cursor.getColumnIndex(SongModel.COLUMN_ID)));
+                songModel.setSongId(cursor.getInt(cursor.getColumnIndex(SongModel.COLUMN_SONG_ID)));
+                songModel.setTitle(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_TITLE)));
+                songModel.setAlbum(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_ALBUM)));
+                songModel.setArtist(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_ARTIST)));
+                songModel.setFolder(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_FOLDER)));
+                songModel.setDuration(cursor.getLong(cursor.getColumnIndex(SongModel.COLUMN_DURATION)));
+                songModel.setPath(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_PATH)));
+                return songModel;
+            } while (cursor.moveToNext());
+        }
+//        cursor.close();
+        return null;
     }
 }

@@ -2,6 +2,8 @@ package com.example.musicforlife.play;
 
 import android.media.MediaPlayer;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.example.musicforlife.db.DatabaseManager;
@@ -17,7 +19,7 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
     private static SongModel mCurrentSongPlaying;
     private static SongModel mOldSongPlaying;
     private static int mCurrentIndexSong;
-
+    private static boolean mIsPause;
 
     private static MediaPlayer mMediaPlayer = null;
     private static PlayService mPlayService = null;
@@ -69,6 +71,7 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
 //        Log.d(TAG, "play: "+ Uri.parse(songModel.getPath()));
 //        File path = Environment.getExternalStorageDirectory();
 //        Log.d(TAG, "play: "+ path+songModel.getPath());
+        mIsPause = false;
         try {
             if (mOldSongPlaying == null) {
                 mOldSongPlaying = songModel;
@@ -86,20 +89,26 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
         } catch (IOException e) {
             e.printStackTrace();
         }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (mOldSongPlaying.getSongId() != mCurrentSongPlaying.getSongId()) {
+                    boolean resultUpdateStatus = PlayModel.updateStatusPlaying(mOldSongPlaying.getSongId(), mCurrentSongPlaying.getSongId());
+                    Log.d(TAG, "initListPlaying: UPDATE STATUS" + resultUpdateStatus);
+                }
 
-        if (mOldSongPlaying.getSongId() != mCurrentSongPlaying.getSongId()) {
-            boolean resultUpdateStatus = PlayModel.updateStatusPlaying(mOldSongPlaying.getSongId(), mCurrentSongPlaying.getSongId());
-            Log.d(TAG, "play: UPDATE STATUS" + resultUpdateStatus);
-        }
+            }
+        }).start();
+
     }
 
     public void pause() {
         mMediaPlayer.pause();
-
+        mIsPause = true;
     }
 
     public void resurme() {
-
+        mIsPause = false;
         if (mCurrentSongPlaying != null && mMediaPlayer != null) {
             mMediaPlayer.seekTo(mMediaPlayer.getCurrentPosition());
             mMediaPlayer.start();
@@ -111,6 +120,7 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
     }
 
     public void next(int actionFrom) {
+        mIsPause = false;
         resetMediaPlayer();
         if (mPlayingList == null) {
             return;
@@ -136,7 +146,7 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
             }
         }
 
-        mCurrentSongPlaying = SongModel.getSongFromSongId(mDatabaseManager, mPlayingList.get(mCurrentIndexSong).getSongId());
+        mCurrentSongPlaying = mSongPlayingList.get(mCurrentIndexSong); //SongModel.getSongFromSongId(mDatabaseManager, mPlayingList.get(mCurrentIndexSong).getSongId());
         play(mCurrentSongPlaying);
         if (PlayActivity.getActivity() != null) {
             PlayActivity.getActivity().updateControlPlaying(SENDER, mCurrentSongPlaying);
@@ -160,6 +170,7 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
     }
 
     public void prev(int actionFrom) {
+        mIsPause = false;
         resetMediaPlayer();
         if (mPlayingList == null || PlayActivity.getActivity() == null) {
             return;
@@ -170,7 +181,7 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
         } else {
             mCurrentIndexSong--;
         }
-        mCurrentSongPlaying = SongModel.getSongFromSongId(mDatabaseManager, mPlayingList.get(mCurrentIndexSong).getSongId());
+        mCurrentSongPlaying = mSongPlayingList.get(mCurrentIndexSong);//SongModel.getSongFromSongId(mDatabaseManager, mPlayingList.get(mCurrentIndexSong).getSongId());
         play(mCurrentSongPlaying);
         if (PlayActivity.getActivity() != null) {
             PlayActivity.getActivity().updateControlPlaying(SENDER, mCurrentSongPlaying);
@@ -213,12 +224,22 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
         return mMediaPlayer.isPlaying();
     }
 
+    public static boolean isPause() {
+        return mIsPause;
+    }
+
     public static int getCurrentDuration() {
         return mMediaPlayer.getCurrentPosition();
     }
 
     public static SongModel getCurrentSongPlaying() {
         return mCurrentSongPlaying;
+    }
+
+
+    public static void revertListSongPlaying() {
+        mCurrentSongPlaying = PlayModel.getSongIsPlaying();
+        updatePlayingList();
     }
 
     public void updateDuration(int progress) {
@@ -264,14 +285,13 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
     }
 
     private static void setIndexSongInPlayingList() {
-        if (PlayActivity.getActivity() != null) {
-            for (int i = 0; i < mPlayingList.size(); i++) {
-                if (mPlayingList.get(i).getSongId() == mCurrentSongPlaying.getSongId()) {
-                    mCurrentIndexSong = i;
-                }
+
+        for (int i = 0; i < mSongPlayingList.size(); i++) {
+            if (mSongPlayingList.get(i).getSongId() == mCurrentSongPlaying.getSongId()) {
+                mCurrentIndexSong = i;
             }
         }
-
+        
     }
 
     @Override
@@ -308,7 +328,7 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
         next(ACTION_FROM_SYSTEM);
     }
 
-//    @Override
+    //    @Override
 //    public void playSong(SongModel song) {
 //        play(song);
 //    }
@@ -344,9 +364,21 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
         if (PlayActivity.getActivity() != null) {
             PlayActivity.getActivity().updateSongPlayingList();
         }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean resultUpdateStatus = PlayModel.updateStatusPlaying(mOldSongPlaying.getSongId(), mCurrentSongPlaying.getSongId());
+                Log.d(TAG, "initListPlaying: UPDATE STATUS" + resultUpdateStatus);
+            }
+        }).start();
     }
 
     public static ArrayList<SongModel> getListPlaying() {
         return mSongPlayingList;
     }
+
+    public static SongModel getSongIsPlaying() {
+        return PlayModel.getSongIsPlaying();
+    }
+
 }

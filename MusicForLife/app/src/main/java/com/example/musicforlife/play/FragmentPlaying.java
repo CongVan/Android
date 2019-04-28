@@ -226,13 +226,17 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
         switch (v.getId()) {
             case R.id.btnPlaySong:
                 Toast.makeText(mContext, "PLAY CLICK", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onClick: DURATION PLAY" + PlayService.getCurrentDuration());
                 if (PlayService.isPlaying()) {// song is playing then stop
                     mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_PAUSE);
 //                    mPlayService.pause();
                     mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_play_arrow_black_70dp));
-                } else { //resume
+                } else if (PlayService.isPause()) { //resume
                     mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_RESUME);
 //                    mPlayService.resurme();
+                    mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_pause_black_70dp));
+                } else {
+                    mPlayActivity.controlSong(SENDER, PlayService.getCurrentSongPlaying(), PlayService.ACTION_PLAY);
                     mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_pause_black_70dp));
                 }
                 break;
