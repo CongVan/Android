@@ -3,6 +3,7 @@ package com.example.musicforlife.listsong;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -83,6 +84,14 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Rec
 //        }
 
 //        AlbumModel.getAllAlbumFromDevice(_context);
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                _txtSizeOfListSong.setText("Tìm thấy " + String.valueOf(SongModel.getRowsSong(MainActivity.mDatabaseManager)) + " bài hát");
+            }
+        });
+
+
     }
 
     @Override
@@ -105,8 +114,7 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Rec
                 _listSongAdapter = new ListSongRecyclerAdaper(_context, _listSong);
                 _listViewSong.setLayoutManager(new LinearLayoutManager(_context));
                 _listViewSong.setAdapter(_listSongAdapter);
-
-
+                _txtSizeOfListSong.setText("Tìm thấy " + String.valueOf(SongModel.getRowsSong(MainActivity.mDatabaseManager)) + " bài hát");
             }
         });
         _listViewSong.addOnItemTouchListener(new RecyclerItemClickListener(_context, _listViewSong, this));

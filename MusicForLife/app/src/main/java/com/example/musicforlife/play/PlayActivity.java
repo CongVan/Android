@@ -214,20 +214,31 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
                 break;
             case PlayService.ACTION_PREV:
                 mPlayService.prev(PlayService.ACTION_FROM_USER);
-                ((FragmentPlayAdapter) mPagerAdapter).getFragmentListPlaying().refreshListPlaying();
+                refreshListPlaying();
                 break;
             case PlayService.ACTION_NEXT:
                 mPlayService.next(PlayService.ACTION_FROM_USER);
-                ((FragmentPlayAdapter) mPagerAdapter).getFragmentListPlaying().refreshListPlaying();
+                refreshListPlaying();
                 break;
             default:
                 break;
         }
     }
 
+    private void refreshListPlaying() {
+        FragmentListPlaying fragmentListPlaying = ((FragmentPlayAdapter) mPagerAdapter).getFragmentListPlaying();
+        if (fragmentListPlaying != null) {
+            fragmentListPlaying.refreshListPlaying();
+        }
+    }
+
     @Override
     public void updateControlPlaying(String sender, SongModel songModel) {
-        ((FragmentPlayAdapter) mPagerAdapter).getFragmentPlaying().updateControlPlaying(songModel);
+        FragmentPlaying fragmentPlaying = ((FragmentPlayAdapter) mPagerAdapter).getFragmentPlaying();
+        if (fragmentPlaying != null) {
+            fragmentPlaying.updateControlPlaying(songModel);
+        }
+//        ((FragmentPlayAdapter) mPagerAdapter).getFragmentPlaying().updateControlPlaying(songModel);
         MainActivity.getMainActivity().togglePlayingMinimize(sender);
     }
 
@@ -238,17 +249,27 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
 
     @Override
     public void updateSeekbar(String sender, int duration) {
-        ((FragmentPlayAdapter) mPagerAdapter).getFragmentPlaying().updateSeekbar(duration);
+        FragmentPlaying fragmentPlaying = ((FragmentPlayAdapter) mPagerAdapter).getFragmentPlaying();
+        if (fragmentPlaying != null) {
+            fragmentPlaying.updateSeekbar(duration);
+        }
     }
 
     @Override
     public void updateButtonPlay(String sender) {
-        ((FragmentPlayAdapter) mPagerAdapter).getFragmentPlaying().updateButtonPlay();
+        FragmentPlaying fragmentPlaying = ((FragmentPlayAdapter) mPagerAdapter).getFragmentPlaying();
+        if (fragmentPlaying != null) {
+            fragmentPlaying.updateButtonPlay();
+        }
+//        ((FragmentPlayAdapter) mPagerAdapter).getFragmentPlaying().updateButtonPlay();
     }
 
     @Override
     public void updateSongPlayingList() {
-        ((FragmentPlayAdapter) mPagerAdapter).getFragmentListPlaying().updateListPlaying();
+        FragmentListPlaying fragmentListPlaying = ((FragmentPlayAdapter) mPagerAdapter).getFragmentListPlaying();
+        if (fragmentListPlaying != null) {
+            fragmentListPlaying.updateListPlaying();
+        }
     }
 
 
