@@ -218,7 +218,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
                 break;
             case PlayService.ACTION_NEXT:
                 mPlayService.next(PlayService.ACTION_FROM_USER);
-
+                ((FragmentPlayAdapter) mPagerAdapter).getFragmentListPlaying().refreshListPlaying();
                 break;
             default:
                 break;

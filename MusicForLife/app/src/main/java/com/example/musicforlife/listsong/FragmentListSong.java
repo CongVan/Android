@@ -222,7 +222,7 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Rec
 
     @Override
     public void onItemClick(View view, int position) {
-        final SongModel songPlay=_listSong.get(position);
+        final SongModel songPlay = _listSong.get(position);
         mPlayService.play(songPlay);
         new Thread(new Runnable() {
             @Override

@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, PlayServiceInterface {
+public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
     private static ArrayList<PlayModel> mPlayingList;
     private static ArrayList<SongModel> mSongPlayingList;
     private static SongModel mCurrentSongPlaying;
@@ -308,32 +308,35 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
         next(ACTION_FROM_SYSTEM);
     }
 
-    @Override
-    public void playSong(SongModel song) {
-        play(song);
-    }
-
-    @Override
-    public void nextSong() {
-
-    }
-
-    @Override
-    public void prevSong() {
-
-    }
-
-    @Override
-    public void pauseSong() {
-        pause();
-    }
-
-    @Override
-    public void stopSong() {
-
-    }
-
-    @Override
+//    @Override
+//    public void playSong(SongModel song) {
+//        play(song);
+//    }
+//
+//    @Override
+//    public void nextSong() {
+//        next(ACTION_FROM_SYSTEM);
+//    }
+//
+//    @Override
+//    public void prevSong() {
+//        prev(ACTION_FROM_SYSTEM);
+//    }
+//
+//    @Override
+//    public void pauseSong() {
+//
+//        mMediaPlayer.pause();
+//    }
+//
+//    @Override
+//    public void stopSong() {
+//        mMediaPlayer.seekTo(0);
+//        mMediaPlayer.stop();
+//
+//    }
+//
+//
     public void initListPlaying(final ArrayList<SongModel> listPlaying) {
         PlayModel.clearPlayingList();
         PlayModel.createPlaylistFromSongs(listPlaying);

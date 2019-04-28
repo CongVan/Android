@@ -42,6 +42,7 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
     private ImageButton mImageButtonLoopType;
     private ImageView mImagePlaying;
     private ImageView mImageBgPlaying;
+    private PlayService mPlayService;
 
     private SongModel mSongPlaying;
 
@@ -72,6 +73,7 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
 //        Bundle bundle = getArguments();
 //        mSongPlaying = (SongModel) bundle.getSerializable("PLAY_SONG");
         mSongPlaying = PlayService.getCurrentSongPlaying();
+        mPlayService = PlayService.newInstance();
     }
 
     @Nullable
@@ -226,16 +228,20 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
                 Toast.makeText(mContext, "PLAY CLICK", Toast.LENGTH_SHORT).show();
                 if (PlayService.isPlaying()) {// song is playing then stop
                     mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_PAUSE);
+//                    mPlayService.pause();
                     mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_play_arrow_black_70dp));
                 } else { //resume
                     mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_RESUME);
+//                    mPlayService.resurme();
                     mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_pause_black_70dp));
                 }
                 break;
             case R.id.btnPrevSong:
                 mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_PREV);
+//                mPlayService.prev(PlayService.ACTION_FROM_USER);
                 break;
             case R.id.btnNextSong:
+//                mPlayService.next(PlayService.ACTION_FROM_USER);
                 mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_NEXT);
                 break;
             case R.id.btnLoopType:
