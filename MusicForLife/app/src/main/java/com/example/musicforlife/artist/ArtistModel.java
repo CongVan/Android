@@ -7,10 +7,20 @@ public class ArtistModel implements Serializable {
     public static final int RequestCode = 2;
     public static final String RequestCodeString = "SongFromArtist";
 
-    public ArtistModel(String name,String path,int count){
+    public ArtistModel(String name,String path,int albumid,int count){
         this.Name = name;
         this.SongCount = count;
         this.Path = path;
+        this.albumId = albumid;
+    }
+    private int albumId;
+
+    public void setAlbumId(int albumId) {
+        this.albumId = albumId;
+    }
+
+    public int getAlbumId() {
+        return albumId;
     }
 
     private String Path;

@@ -13,7 +13,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.musicforlife.R;
+import com.example.musicforlife.listsong.SongModel;
 import com.example.musicforlife.utilitys.CacheHelper;
+import com.example.musicforlife.utilitys.ImageCacheHelper;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -22,9 +24,11 @@ import java.util.List;
 public class ListArtistAdapter extends RecyclerView.Adapter<ListArtistAdapter.ArtistViewHolder> {
     private Context myContext;
     private List<ArtistViewModel> artistList;
+    private ImageCacheHelper mImageCacheHelper;
     public ListArtistAdapter(Context context,List<ArtistViewModel> list){
         myContext = context;
         artistList = list;
+        mImageCacheHelper=new ImageCacheHelper(R.mipmap.music_file_128);
     }
 
     @NonNull
@@ -44,7 +48,7 @@ public class ListArtistAdapter extends RecyclerView.Adapter<ListArtistAdapter.Ar
         return artistList.size();
     }
 
-    public static class ArtistViewHolder extends RecyclerView.ViewHolder{
+    public class ArtistViewHolder extends RecyclerView.ViewHolder{
         TextView TVArtistName;
         TextView TVArtistCount;
         ImageView IVArtist;
@@ -60,36 +64,14 @@ public class ListArtistAdapter extends RecyclerView.Adapter<ListArtistAdapter.Ar
             TVArtistName.setText(artistModel.getName());
             TVArtistCount.setText(artistModel.getSongCount() + " Bài hát");
 
-            //new code
-//            String path = artistList.get(position).getPath();
-//            Bitmap bitmap = CacheHelper.Instance().getBitmapFromMemCache(path);
-//            if (bitmap != null){
-//                IVArtist.setImageBitmap(bitmap);
-//            }
-//            else{
-//                CacheHelper.Instance().addBitmapToMemoryCache(path);
-//                IVArtist.setImageResource(R.mipmap.musical_note_light_64);
-//            }
-            //new code
-            //get Image from path if exists getBitmap()
-            if(artistModel.getBitmap() == null){
-                MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-                mediaMetadataRetriever.setDataSource(artistList.get(position).getPath());
-                if (mediaMetadataRetriever.getEmbeddedPicture() != null) {
-                    InputStream inputStream = new ByteArrayInputStream(mediaMetadataRetriever.getEmbeddedPicture());
-                    mediaMetadataRetriever.release();
-                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                    IVArtist.setImageBitmap(bitmap);
-                    //set bitmap for list
-                    artistList.get(position).setBitmap(bitmap);
-                } else {
-                    //set default if can't getEmbeddedPicture()
-                    IVArtist.setImageResource(R.mipmap.musical_note_light_64);
-                }
-            }
-            else{
-                //set Image from bitmap model
-                IVArtist.setImageBitmap(artistModel.getBitmap());
+            SongModel songModel = new SongModel();
+            songModel.setAlbumId(artistModel.getAlbumId());
+            songModel.setPath(artistModel.getPath());
+            final Bitmap bitmap = mImageCacheHelper.getBitmapCache(songModel.getAlbumId());
+            if (bitmap != null) {
+                this.IVArtist.setImageBitmap(bitmap);
+            } else {
+                mImageCacheHelper.loadAlbumArt(IVArtist,songModel);
             }
         }
     }

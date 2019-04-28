@@ -3,8 +3,8 @@ package com.example.musicforlife.album;
 import android.graphics.Bitmap;
 
 public class AlbumViewModel extends AlbumModel {
-    public AlbumViewModel(String title, String artist,String path, int numberOfSongs ) {
-        super(title, artist, numberOfSongs,path);
+    public AlbumViewModel(String title, String artist,String path ,int albumid, int numberOfSongs) {
+        super(title, artist,path,albumid, numberOfSongs);
     }
     private Bitmap bitmap = null;
 
@@ -17,7 +17,7 @@ public class AlbumViewModel extends AlbumModel {
     }
 
     public AlbumModel getAlbumModel(){
-        return new AlbumModel(super.getTitle(),super.getArtist(),super.getNumberOfSongs(),super.getPath());
+        return new AlbumModel(super.getTitle(),super.getArtist(),super.getPath(),super.getAlbumId(),super.getNumberOfSongs());
     }
 
 }

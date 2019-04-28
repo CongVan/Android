@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import com.example.musicforlife.R;
 import com.example.musicforlife.artist.ArtistModel;
+import com.example.musicforlife.listsong.SongModel;
+import com.example.musicforlife.utilitys.ImageCacheHelper;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -24,11 +26,12 @@ import java.util.List;
 public class AlbumListAdapter extends RecyclerView.Adapter<AlbumListAdapter.AlbumViewHolder>{
     private Context myContext;
     private List<AlbumViewModel> albumList;
-
+    private ImageCacheHelper mImageCacheHelper;
     public AlbumListAdapter(Context context,List<AlbumViewModel> list)
     {
         myContext = context;
         albumList = list;
+        mImageCacheHelper=new ImageCacheHelper(R.mipmap.music_file_128);
     }
     @NonNull
     @Override
@@ -67,24 +70,14 @@ public class AlbumListAdapter extends RecyclerView.Adapter<AlbumListAdapter.Albu
             TVAlbumCount.setText(albumViewModel.getNumberOfSongs() + " Bài hát");
             TVAlbumArtist.setText(albumViewModel.getArtist());
 
-            if(albumViewModel.getBitmap() == null){
-                MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-                mediaMetadataRetriever.setDataSource(albumViewModel.getPath());
-                if (mediaMetadataRetriever.getEmbeddedPicture() != null) {
-                    InputStream inputStream = new ByteArrayInputStream(mediaMetadataRetriever.getEmbeddedPicture());
-                    mediaMetadataRetriever.release();
-                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                    IVAlbum.setImageBitmap(bitmap);
-                    //set bitmap for list
-                    albumList.get(position).setBitmap(bitmap);
-                } else {
-                    //set default if can't getEmbeddedPicture()
-                    IVAlbum.setImageResource(R.mipmap.album_128);
-                }
-            }
-            else{
-                //set Image from bitmap model
-                IVAlbum.setImageBitmap(albumViewModel.getBitmap());
+            SongModel songModel = new SongModel();
+            songModel.setAlbumId(albumViewModel.getAlbumId());
+            songModel.setPath(albumViewModel.getPath());
+            final Bitmap bitmap = mImageCacheHelper.getBitmapCache(songModel.getAlbumId());//  mBitmapCache.get((long) songModel.getAlbumId());
+            if (bitmap != null) {
+                this.IVAlbum.setImageBitmap(bitmap);
+            } else {
+                mImageCacheHelper.loadAlbumArt(IVAlbum,songModel);
             }
         }
     }

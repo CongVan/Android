@@ -7,8 +7,8 @@ import java.io.Serializable;
 public class ArtistViewModel extends ArtistModel {
     private Bitmap bitmap = null;
 
-    public ArtistViewModel(String name, String path, int count) {
-        super(name, path, count);
+    public ArtistViewModel(String name, String path,int albumid, int count) {
+        super(name, path,albumid, count);
     }
 
     public void setBitmap(Bitmap bitmap) {
@@ -20,6 +20,6 @@ public class ArtistViewModel extends ArtistModel {
     }
 
     public ArtistModel getArtistModel(){
-        return new ArtistModel(super.getName(),super.getPath(),super.getSongCount());
+        return new ArtistModel(super.getName(),super.getPath(),getAlbumId(),super.getSongCount());
     }
 }

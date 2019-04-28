@@ -8,11 +8,21 @@ public class AlbumModel implements Serializable {
     private int numberOfSongs;
     private String Path;
 
-    public AlbumModel(String title,String artist,int numberOfSongs,String path){
+    public AlbumModel(String title,String artist,String path,int albumid,int numberOfSongs){
         this.title=title;
         this.artist=artist;
         this.numberOfSongs=numberOfSongs;
         this.Path = path;
+        this.albumId = albumid;
+    }
+    private int albumId;
+
+    public void setAlbumId(int albumId) {
+        this.albumId = albumId;
+    }
+
+    public int getAlbumId() {
+        return albumId;
     }
 
     public String getTitle() {
