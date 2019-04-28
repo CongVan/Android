@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     private void setupLayoutTransparent() {
         Utility.setTransparentStatusBar(MainActivity.this);
         mLayoutMainContent.setPadding(0, Utility.getStatusbarHeight(this), 0, 0);
-        mLayoutMainContent.setBackground(ImageHelper.getMainBackgroundDrawable());
+//        mLayoutMainContent.setBackground(ImageHelper.getMainBackgroundDrawable());
     }
 
     private void initFindView() {

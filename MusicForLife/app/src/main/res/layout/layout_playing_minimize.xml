@@ -6,7 +6,7 @@
     android:id="@+id/bottomSheetPlay"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorWhiteGlassLight"
+    android:background="@color/colorBgSecondary"
     android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground"
     >

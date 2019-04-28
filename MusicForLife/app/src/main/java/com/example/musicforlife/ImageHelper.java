@@ -15,6 +15,7 @@ import android.media.ThumbnailUtils;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
+import android.widget.ImageView;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -61,12 +62,12 @@ public class ImageHelper {
     }
 
     public static BitmapDrawable getMainBackgroundDrawable() {
-        Bitmap bitmap = ImageHelper.drawableToBitmap(R.drawable.highcompress_background_test);
+        Bitmap bitmap = ImageHelper.createImage(480,960,Color.argb(100,71,72,81));//ImageHelper.drawableToBitmap(R.drawable.highcompress_background_test);//highcompress_background_test
 
-        Bitmap bitmapBg = ImageHelper.blurBitmap(bitmap, 1.0f, 20);
+//        Bitmap bitmapBg = ImageHelper.blurBitmap(bitmap, 1.0f, 10);
 
 
-        BitmapDrawable bitmapDrawable = new BitmapDrawable(bitmapBg);
+        BitmapDrawable bitmapDrawable = new BitmapDrawable(bitmap);
         return bitmapDrawable;
     }
 
@@ -150,6 +151,8 @@ public class ImageHelper {
 
         int w = bitmap.getWidth();
         int h = bitmap.getHeight();
+
+
 
         int[] pix = new int[w * h];
         Log.e("pix", w + " " + h + " " + pix.length);

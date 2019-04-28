@@ -16,6 +16,10 @@
     <!--<color name="colorPrimaryLight">#689AD2</color>-->
     <!--<color name="colorAccent">#FFBF5D</color>-->
 
+    <color name="colorBgPrimary">#263238</color>
+    <color name="colorBgSecondary">#37474f</color>
+
+
     <color name="colorPrimary">#08708A</color>
     <color name="colorPrimaryDark">#032B2F</color>
     <color name="colorPrimaryLight">#56B1BF</color>
@@ -33,9 +37,8 @@
     <color name="colorTitlePrimary">#212121</color>
     <color name="colorTitleSecondary">#616161</color>
 
-    <color name="colorTitleWhitePrimary">#F2F3F6</color>
-
-    <color name="colorTitleWhiteSecondary">#EDEDED</color>
+    <color name="colorTitleWhitePrimary">#fafafa</color>
+    <color name="colorTitleWhiteSecondary">#e0e0e0</color>
 
     <color name="colorCardBackgroundDark">#322F2F2F</color>
     <drawable name="backgroundPrimary">@drawable/background_gradient</drawable>

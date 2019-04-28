@@ -2,7 +2,9 @@ package com.example.musicforlife.listsong;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
+import android.content.ContentUris;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -17,6 +19,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,9 +55,24 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
     private static final int VIEW_TYPE_ITEM = 0;
     private static final int VIEW_TYPE_LOADING = 1;
 
+    private LruCache<Long, Bitmap> mBitmapCache;
+    private BitmapDrawable mPlaceholder;
+
     public ListSongRecyclerAdaper(Context context, ArrayList<SongModel> listSong) {
         mContext = context;
         mListSong = listSong;
+
+        int maxSize = (int) (Runtime.getRuntime().maxMemory() / 1024);
+        // Divide the maximum size by eight to get a adequate size the LRU cache should reach before it starts to evict bitmaps.
+        int cacheSize = maxSize / 8;
+        mBitmapCache = new LruCache<Long, Bitmap>(cacheSize) {
+            @Override
+            protected int sizeOf(Long key, Bitmap value) {
+                // returns the size of bitmaps in kilobytes.
+                return value.getByteCount() / 1024;
+            }
+        };
+        mPlaceholder = (BitmapDrawable) mContext.getResources().getDrawable(R.mipmap.music_file_128);
     }
 
     @NonNull
@@ -118,7 +136,7 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
         return position;
     }
 
-    private static class ViewHolderRecycler extends RecyclerView.ViewHolder {
+    private class ViewHolderRecycler extends RecyclerView.ViewHolder {
 
         TextView titleSong;
         TextView album;
@@ -142,6 +160,16 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
             this.titleSong.setText(songModel.getTitle());
             this.artist.setText(songModel.getArtist() + "_" + songModel.getAlbumId());
             this.duration.setText(SongModel.formateMilliSeccond(songModel.getDuration()));
+//CACHE
+            final Bitmap bitmap = mBitmapCache.get((long) songModel.getAlbumId());
+            if (bitmap != null) {
+                this.imageView.setImageBitmap(bitmap);
+            } else {
+                loadAlbumArt(this.imageView, songModel);
+            }
+
+//\CACHE
+
 //GLIDE
 //            MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
 //            mediaMetadataRetriever.setDataSource(songModel.getPath());
@@ -180,12 +208,12 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
 
 //\PICASSO
 //BITMAP WITH ASYNC TASK
-            if (cancelPotentialWork(songModel.getPath(), imageView)) {
-                final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
-                final AsyncDrawable asyncDrawable = new AsyncDrawable(null, task);
-                imageView.setImageDrawable(asyncDrawable);
-                task.execute(songModel.getPath());
-            }
+//            if (cancelPotentialWork(songModel.getPath(), imageView)) {
+//                final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
+//                final AsyncDrawable asyncDrawable = new AsyncDrawable(null, task);
+//                imageView.setImageDrawable(asyncDrawable);
+//                task.execute(songModel.getPath());
+//            }
 
 //BITMAP WITH ASYNC TASK
 //BITMAP CACHE
@@ -214,6 +242,133 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
 
     }
 
+    //CACHE
+
+    /**
+     * Helper method for asynchronously loading album art.
+     *
+     * @param icon
+     * @param songModel
+     */
+    public void loadAlbumArt(ImageView icon, SongModel songModel) {
+        // Check the current album art task if any and cancel it, if it is loading album art that doesn't match the specified album id.
+        if (cancelLoadTask(icon, songModel.getAlbumId())) {
+            // There was either no task running or it was loading a different image so create a new one to load the proper image.
+            LoadAlbumArt loadAlbumArt = new LoadAlbumArt(icon, mContext);
+            // Store the task inside of the async drawable.
+            AsyncDrawable drawable = new AsyncDrawable(mContext.getResources(), mPlaceholder.getBitmap(), loadAlbumArt);
+            icon.setImageDrawable(drawable);
+            loadAlbumArt.execute(songModel);
+        }
+    }
+
+    public boolean cancelLoadTask(ImageView icon, long albumId) {
+        LoadAlbumArt loadAlbumArt = (LoadAlbumArt) getLoadTask(icon);
+        // If the task is null return true because we want to try and load the album art.
+        if (loadAlbumArt == null) {
+            return true;
+        }
+        if (loadAlbumArt != null) {
+            // If the album id differs cancel this task because it cannot be recycled for this imageview.
+            if (loadAlbumArt.albumId != albumId) {
+                loadAlbumArt.cancel(true);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static class AsyncDrawable extends BitmapDrawable {
+        WeakReference<LoadAlbumArt> loadArtworkTaskWeakReference;
+
+        public AsyncDrawable(Resources resources, Bitmap bitmap, LoadAlbumArt task) {
+            super(resources, bitmap);
+            // Store the LoadArtwork task inside of a weak reference so it can still be garbage collected.
+            loadArtworkTaskWeakReference = new WeakReference<LoadAlbumArt>(task);
+        }
+
+        public LoadAlbumArt getLoadArtworkTask() {
+            return loadArtworkTaskWeakReference.get();
+        }
+    }
+
+    public AsyncTask getLoadTask(ImageView icon) {
+        LoadAlbumArt task = null;
+        Drawable drawable = icon.getDrawable();
+        if (drawable instanceof AsyncDrawable) {
+            task = ((AsyncDrawable) drawable).getLoadArtworkTask();
+        }
+        return task;
+    }
+    
+    private class LoadAlbumArt extends AsyncTask<SongModel, Void, Bitmap> {
+
+        // URI that points to the AlbumArt database.
+        private final Uri albumArtURI = Uri.parse("content://media/external/audio/albumart");
+        public WeakReference<ImageView> mIcon;
+        // Holds a publicly accessible albumId to be checked against.
+        public long albumId;
+        private Context mContext;
+        int width, height;
+
+        public LoadAlbumArt(ImageView icon, Context context) {
+            // Store a weak reference to the imageView.
+            mIcon = new WeakReference<ImageView>(icon);
+            // Store the width and height of the imageview.
+            // This is necessary for properly scalling the bitmap.
+            width = icon.getWidth();
+            height = icon.getHeight();
+            mContext = context;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            if (isCancelled() || bitmap == null) {
+                return;
+            }
+            // Check to make sure that the imageview has not been garbage collected as well as the
+            // LoadArtworkTask is the same as this one.
+            if (mIcon != null && mIcon.get() != null) {
+                ImageView icon = mIcon.get();
+                Drawable drawable = icon.getDrawable();
+                if (drawable instanceof AsyncDrawable) {
+                    LoadAlbumArt task = ((AsyncDrawable) drawable).getLoadArtworkTask();
+                    // Make sure that this is the same task as the one current stored inside of the ImageView's drawable.
+                    if (task != null && task == this) {
+                        icon.setImageBitmap(bitmap);
+                    }
+                }
+            }
+            mBitmapCache.put(albumId, bitmap);
+            super.onPostExecute(bitmap);
+        }
+
+        @Override
+        protected Bitmap doInBackground(SongModel... params) {
+            // AsyncTask are not guaranteed to start immediately and could be cancelled somewhere in between calling doInBackground.
+            if (isCancelled()) {
+                return null;
+            }
+            albumId = params[0].getAlbumId();
+            // Append the albumId to the end of the albumArtURI to create a new Uri that should point directly to the album art if it exist.
+//            Uri albumArt = ContentUris.withAppendedId(albumArtURI, albumId);
+//            Bitmap bmp = null;
+//            try {
+//                // Decode the bitmap.
+//                bmp = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), albumArt);
+//                // Create a scalled down version of the bitmap to be more memory efficient.
+//                // THe smaller the bitmap the more items we can store inside of the LRU cache.
+//                bmp = Bitmap.createScaledBitmap(bmp, width, height, true);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+            Bitmap bmp = ImageHelper.getBitmapFromPath(params[0].getPath(), R.mipmap.music_file_128);
+            return bmp;
+        }
+    }
+
+
+    //\CACHE
     private class LoadingViewHolder extends RecyclerView.ViewHolder {
         ProgressBar progressBar;
 
@@ -224,29 +379,29 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
 
-    private static class AsyncDrawable extends BitmapDrawable {
-        private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskWeakReference;
-
-        AsyncDrawable(Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
-//            super(resources, bitmap);
-            bitmapWorkerTaskWeakReference = new WeakReference<>(bitmapWorkerTask);
-
-        }
-
-        BitmapWorkerTask getBitmapWorkerTask() {
-            return bitmapWorkerTaskWeakReference.get();
-        }
-
-    }
+//    private static class AsyncDrawable extends BitmapDrawable {
+//        private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskWeakReference;
+//
+//        AsyncDrawable(Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
+////            super(resources, bitmap);
+//            bitmapWorkerTaskWeakReference = new WeakReference<>(bitmapWorkerTask);
+//
+//        }
+//
+//        BitmapWorkerTask getBitmapWorkerTask() {
+//            return bitmapWorkerTaskWeakReference.get();
+//        }
+//
+//    }
 
     private static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
-        if (imageView != null) {
-            final Drawable drawable = imageView.getDrawable();
-            if (drawable instanceof AsyncDrawable) {
-                final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
-                return asyncDrawable.getBitmapWorkerTask();
-            }
-        }
+//        if (imageView != null) {
+//            final Drawable drawable = imageView.getDrawable();
+//            if (drawable instanceof AsyncDrawable) {
+//                final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
+//                return asyncDrawable.getBitmapWorkerTask();
+//            }
+//        }
         return null;
     }
 
