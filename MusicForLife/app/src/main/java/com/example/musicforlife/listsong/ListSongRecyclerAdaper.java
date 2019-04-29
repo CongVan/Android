@@ -15,10 +15,13 @@ import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.musicforlife.play.FragmentListPlaying;
 import com.example.musicforlife.utilitys.ImageHelper;
 import com.example.musicforlife.R;
 import com.example.musicforlife.utilitys.ImageCacheHelper;
@@ -124,6 +127,7 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
         TextView artist;
         TextView duration;
         ImageView imageView;
+        ImageButton btnOptionSong;
 
         ViewHolderRecycler(@NonNull View itemView) {
             super(itemView);
@@ -132,6 +136,10 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
             this.artist = itemView.findViewById(R.id.txtArtist);
             this.imageView = itemView.findViewById(R.id.imgSong);
             this.duration = itemView.findViewById(R.id.txtDuration);
+            this.btnOptionSong = itemView.findViewById(R.id.btnOptionSong);
+//            this.duration.setVisibility(View.GONE);
+//            this.imageView.setVisibility(View.VISIBLE);
+
 
         }
 
@@ -140,7 +148,7 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
             Log.d(TAG, "bindContent: BIND CONTENT");
             this.titleSong.setText(songModel.getTitle());
             this.artist.setText(songModel.getArtist() + "_" + songModel.getAlbumId());
-            this.duration.setText(SongModel.formateMilliSeccond(songModel.getDuration()));
+//            this.duration.setText(SongModel.formateMilliSeccond(songModel.getDuration()));
 //CACHE
             final Bitmap bitmap = mImageCacheHelper.getBitmapCache(songModel.getAlbumId());//  mBitmapCache.get((long) songModel.getAlbumId());
             if (bitmap != null) {
@@ -223,7 +231,6 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
 
 
     }
-
 
 
     private class LoadingViewHolder extends RecyclerView.ViewHolder {

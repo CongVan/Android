@@ -66,7 +66,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
+                        android:gravity="left"
                         android:orientation="horizontal">
 
                         <ImageView
@@ -79,9 +79,10 @@
 
                         <TextView
                             android:id="@+id/txtTitle"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
+                            android:layout_gravity="bottom|left"
+                            android:gravity="left"
                             android:text="Tiêu đề bài hát"
                             android:textColor="@color/colorTitleWhitePrimary"
                             android:textSize="@dimen/text_size_normal"
@@ -91,9 +92,10 @@
 
                     <TextView
                         android:id="@+id/txtArtist"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Ca sĩ"
+                        android:layout_gravity="left"
                         android:textColor="@color/colorTitleWhiteSecondary"
                         android:textSize="@dimen/text_size_small"
 
@@ -112,6 +114,7 @@
 
                 <LinearLayout
                     android:layout_gravity="center"
+                    android:orientation="horizontal"
                     android:paddingHorizontal="@dimen/margin_size_small">
 
                     <TextView
@@ -121,8 +124,19 @@
                         android:gravity="center_vertical"
                         android:text="Thời gian"
                         android:textColor="@color/colorTitleWhiteSecondary"
-                        android:textSize="@dimen/text_size_small" />
+                        android:textSize="@dimen/text_size_small"
+                        android:visibility="gone" />
 
+                    <ImageButton
+                        android:id="@+id/btnOptionSong"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:background="@color/colorTranparent"
+                        android:clickable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:padding="@dimen/margin_size_xsmall"
+                        android:src="@drawable/ic_more_vert_black_24dp" />
 
                 </LinearLayout>
 
