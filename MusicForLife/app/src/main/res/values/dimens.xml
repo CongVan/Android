@@ -3,12 +3,13 @@
 
     <dimen name="text_size_small">12sp</dimen>
     <dimen name="text_size_normal">14sp</dimen>
+    <dimen name="text_size_xnormal">16sp</dimen>
     <dimen name="text_size_large">18sp</dimen>
     <dimen name="text_size_xlarge">24sp</dimen>
 
     <dimen name="margin_size_xsmall">2dp</dimen>
     <dimen name="margin_size_small">4dp</dimen>
-    <dimen name="margin_size_xnormal">8dp</dimen>
+    <dimen name="margin_size_snormal">8dp</dimen>
     <dimen name="margin_size_normal">12dp</dimen>
     <dimen name="margin_size_large">18dp</dimen>
     <dimen name="margin_size_xlarge">32dp</dimen>
@@ -24,5 +25,5 @@
 
     <dimen name="image_icon_item">48dp</dimen>
     <dimen name="image_card_item">48dp</dimen>
-    <dimen name="image_card_item_playlist">64dp</dimen>
+    <dimen name="image_card_item_playlist">128dp</dimen>
 </resources>

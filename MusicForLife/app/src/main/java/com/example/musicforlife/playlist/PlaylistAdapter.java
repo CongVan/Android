@@ -16,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.musicforlife.listsong.SongModel;
+import com.example.musicforlife.utilitys.ImageCacheHelper;
 import com.example.musicforlife.utilitys.ImageHelper;
 import com.example.musicforlife.R;
 
@@ -27,11 +29,13 @@ public class PlaylistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static ArrayList<PlaylistModel> mPlaylist;
     private static Context mContext;
     private static final String TAG = "PlaylistAdapter";
+    private ImageCacheHelper mImageCacheHelper;
 
     public PlaylistAdapter(Context context, ArrayList<PlaylistModel> playlist) {
         this.mContext = context;
         this.mPlaylist = playlist;
-        Log.d(TAG, "PlaylistAdapter: Context "+ mContext + "LIST "+ mPlaylist.size());
+        mImageCacheHelper = new ImageCacheHelper(R.mipmap.playlist_128);
+        Log.d(TAG, "PlaylistAdapter: Context " + mContext + "LIST " + mPlaylist.size());
     }
 
     @NonNull
@@ -42,7 +46,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 //        ViewHolderRecycler viewHolder = new ViewHolderRecycler(view);
 //        Log.d(TAG, "onCreateViewHolder: PLAYLIST ADAPTER " + viewGroup.getId());
 //        return viewHolder;
-        final View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_item_playlist,viewGroup, false);
+        final View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_item_playlist, viewGroup, false);
         return new ViewHolderRecycler(view);
 
     }
@@ -55,7 +59,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private void showSongItem(ViewHolderRecycler viewHolder, int position) {
         PlaylistModel playlistModel = mPlaylist.get(position);
-        Log.d(TAG, "showSongItem: "+ playlistModel +" View "+viewHolder);
+        Log.d(TAG, "showSongItem: " + playlistModel + " View " + viewHolder);
 
         viewHolder.bindContent(playlistModel);
     }
@@ -80,7 +84,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return position;
     }
 
-    private  class ViewHolderRecycler extends RecyclerView.ViewHolder {
+    private class ViewHolderRecycler extends RecyclerView.ViewHolder {
         TextView titlePlaylist;
         TextView numberOfSong;
         ImageView imagePlaylist;
@@ -96,8 +100,18 @@ public class PlaylistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         public void bindContent(PlaylistModel playlistModel) {
             this.titlePlaylist.setText(playlistModel.getTitle());
-            this.numberOfSong.setText(String.valueOf(playlistModel.getNumberOfSongs()));
+            this.numberOfSong.setText(String.valueOf(playlistModel.getNumberOfSongs()) + " bài hát");
             this.imagePlaylist.setImageBitmap(ImageHelper.getBitmapFromPath(playlistModel.getPathImage(), -1));
+            SongModel tempSong = new SongModel();
+            tempSong.setAlbumId(playlistModel.getId());
+            tempSong.setPath(playlistModel.getPathImage());
+            final Bitmap bitmap = mImageCacheHelper.getBitmapCache(tempSong.getAlbumId());//  mBitmapCache.get((long) songModel.getAlbumId());
+            if (bitmap != null) {
+                this.imagePlaylist.setImageBitmap(bitmap);
+            } else {
+                mImageCacheHelper.loadAlbumArt(imagePlaylist, tempSong);
+//                loadAlbumArt(this.imageView, songModel);
+            }
         }
 
 

@@ -17,7 +17,7 @@
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/margin_size_xnormal"
+            android:paddingHorizontal="@dimen/margin_size_snormal"
             android:paddingVertical="@dimen/margin_size_small"
             android:stretchColumns="1">
 

@@ -3,16 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingVertical="@dimen/margin_size_xnormal"
+    android:paddingVertical="@dimen/margin_size_snormal"
     android:paddingHorizontal="@dimen/margin_size_normal"
+    android:background="@color/colorBgPrimary"
     >
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingVertical="@dimen/text_size_normal"
         android:text="Tạo mới Playlist"
-        android:textColor="@color/colorTitlePrimary"
-        android:textSize="@dimen/text_size_normal" />
+        android:textColor="@color/colorTitleWhitePrimary"
+        android:textSize="@dimen/text_size_large" />
 
     <EditText
         android:id="@+id/txtTilePlaylistCreate"
@@ -38,7 +40,7 @@
             android:background="@android:color/transparent"
             android:text="Hủy"
             android:padding="@dimen/margin_size_small"
-            android:textColor="@color/colorTitlePrimary" />
+            android:textColor="@color/colorTitleWhitePrimary" />
 
         <Button
             android:id="@+id/btnSubmitCreatePlaylist"
@@ -48,7 +50,7 @@
             android:background="@color/colorTranparent"
             android:padding="@dimen/margin_size_small"
             android:text="Hoàn tất"
-            android:textColor="@color/colorPrimaryDark" />
+            android:textColor="@color/colorAccent" />
 
 
     </LinearLayout>

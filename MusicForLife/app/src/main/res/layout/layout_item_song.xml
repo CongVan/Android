@@ -18,18 +18,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/margin_size_xsmall"
         app:cardCornerRadius="@dimen/border_radius_small"
         app:cardElevation="0dp"
-        card_view:cardBackgroundColor="@color/colorBlackGlassLight"
-        card_view:cardPreventCornerOverlap="false"
+        card_view:cardBackgroundColor="@color/colorTranparent"
 
-        android:layout_marginBottom="@dimen/margin_size_xsmall"
-        >
+        card_view:cardPreventCornerOverlap="false">
         <!--card_view:cardCornerRadius="@dimen/border_radius_large"-->
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/margin_size_xnormal"
+            android:paddingHorizontal="@dimen/margin_size_snormal"
+            android:paddingVertical="@dimen/margin_size_small"
             android:stretchColumns="1">
 
             <TableRow>
@@ -38,13 +38,12 @@
                     android:layout_width="@dimen/image_card_item"
                     android:layout_height="@dimen/image_card_item"
                     android:layout_marginTop="@dimen/margin_size_small"
-                    android:layout_marginRight="@dimen/margin_size_xnormal"
+                    android:layout_marginRight="@dimen/margin_size_snormal"
                     android:layout_marginBottom="@dimen/margin_size_small"
                     app:cardCornerRadius="@dimen/border_radius_small"
                     app:cardUseCompatPadding="false"
                     card_view:cardBackgroundColor="@color/colorBlackGlassLight"
-                    card_view:cardElevation="@dimen/elevation_xsmall"
-
+                    card_view:cardElevation="0dp"
                     card_view:contentPadding="0dp">
 
                     <ImageView
@@ -71,12 +70,12 @@
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:visibility="gone"
                             android:id="@+id/imgStatusPlaying"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
-                            android:src="@drawable/ic_equalizer_black_24dp" />
+                            android:src="@drawable/ic_equalizer_black_24dp"
+                            android:visibility="gone" />
 
                         <TextView
                             android:id="@+id/txtTitle"
@@ -100,7 +99,6 @@
 
                         />
 
-
                     <!--<TextView-->
                     <!--android:id="@+id/txtAlbum"-->
                     <!--android:layout_width="match_parent"-->
@@ -120,11 +118,12 @@
                         android:id="@+id/txtDuration"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
                         android:gravity="center_vertical"
                         android:text="Thời gian"
                         android:textColor="@color/colorTitleWhiteSecondary"
                         android:textSize="@dimen/text_size_small" />
+
+
                 </LinearLayout>
 
             </TableRow>

@@ -284,12 +284,14 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
     }
 
     private static void setIndexSongInPlayingList() {
-
-        for (int i = 0; i < mSongPlayingList.size(); i++) {
-            if (mSongPlayingList.get(i).getSongId() == mCurrentSongPlaying.getSongId()) {
-                mCurrentIndexSong = i;
+        if (mSongPlayingList!=null){
+            for (int i = 0; i < mSongPlayingList.size(); i++) {
+                if (mSongPlayingList.get(i).getSongId() == mCurrentSongPlaying.getSongId()) {
+                    mCurrentIndexSong = i;
+                }
             }
         }
+
 
     }
 

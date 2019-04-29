@@ -7,10 +7,14 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="actionModeBackground">@color/colorWhiteLight</item>
-
+        <item name="android:popupMenuStyle">@style/PopupMenu</item>
     </style>
 
+    <style name="PopupMenu" parent="Widget.AppCompat.PopupMenu">
+        <item name="android:popupBackground">@color/colorBgPrimary</item>
 
+        <item name="android:textColor">@color/colorTitleWhitePrimary</item>
+    </style>
     <style name="AppTheme.Toolbar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:textColorPrimary" >@color/colorWhite</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
@@ -34,8 +38,8 @@
     </style>
 
     <style name="EditText.Primary" parent="Widget.AppCompat.EditText">
-        <item name="android:textColor">@color/colorTitlePrimary</item>
-        <item name="android:textColorHint">@color/colorTitlePrimary</item>
+        <item name="android:textColor">@color/colorTitleWhitePrimary</item>
+        <item name="android:textColorHint">@color/colorTitleWhitePrimary</item>
         <item name="colorAccent">@color/colorPrimary</item>
         <item name="colorControlNormal">@color/colorPrimary</item>
         <item name="colorControlActivated">@color/colorPrimary</item>

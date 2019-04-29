@@ -14,9 +14,12 @@ import android.os.Bundle;
 
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.ContextThemeWrapper;
+import android.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -33,6 +36,7 @@ import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory;
 import com.bumptech.glide.load.engine.cache.LruResourceCache;
 import com.example.musicforlife.callbacks.FragmentCallbacks;
 import com.example.musicforlife.play.PlayService;
+import com.example.musicforlife.playlist.BottomSheetOptionSong;
 import com.example.musicforlife.playlist.FragmentPlaylist;
 import com.example.musicforlife.MainActivity;
 import com.example.musicforlife.R;
@@ -240,6 +244,23 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Rec
     @Override
     public void onLongItemClick(View view, int position) {
         Toast.makeText(_context, "LONG CLICK ITEM SONG" + position, Toast.LENGTH_SHORT).show();
+
+//        Context wrapper = new ContextThemeWrapper(_mainActivity, R.style.PopupMenu);
+//
+//        PopupMenu popup = new PopupMenu(wrapper, view);
+//        popup.getMenuInflater().inflate(R.menu.menu_option_song, popup.getMenu());
+//
+//        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//            public boolean onMenuItemClick(MenuItem item) {
+//                Toast.makeText(_mainActivity, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+//                return true;
+//            }
+//        });
+//        popup.show();//showing popup menu
+        final SongModel songPlay = _listSong.get(position);
+        BottomSheetOptionSong bottomSheetDialogFragment = new BottomSheetOptionSong(songPlay);
+        bottomSheetDialogFragment.show(_mainActivity.getSupportFragmentManager(), "Bottom Sheet Dialog Fragment");
+
     }
 
     private class loadImageFromStorage extends AsyncTask<Void, Integer, ArrayList<SongModel>> {

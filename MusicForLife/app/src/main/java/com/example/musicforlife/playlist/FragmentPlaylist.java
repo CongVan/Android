@@ -1,7 +1,10 @@
 package com.example.musicforlife.playlist;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
@@ -9,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,6 +24,7 @@ import com.example.musicforlife.MainActivity;
 import com.example.musicforlife.R;
 
 import com.example.musicforlife.listsong.RecyclerItemClickListener;
+import com.example.musicforlife.play.PlayActivity;
 
 import java.util.ArrayList;
 
@@ -68,18 +73,21 @@ public class FragmentPlaylist extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mPlaylist = PlaylistModel.getAllPlaylist();
+
         mRecyclerViewPlaylist = view.findViewById(R.id.rcvPlaylist);
         mButtonCreatePlaylist = view.findViewById(R.id.btnCreatePlaylist);
 
+
+        mPlaylist = new ArrayList<>();
         mPlaylistAdapter = new PlaylistAdapter(mContext, mPlaylist);
-        mRecyclerViewPlaylist.setLayoutManager(new LinearLayoutManager(mContext));
+        mRecyclerViewPlaylist.setLayoutManager(new GridLayoutManager(mContext, 2));
         mRecyclerViewPlaylist.setAdapter(mPlaylistAdapter);
         mRecyclerViewPlaylist.addOnItemTouchListener(new RecyclerItemClickListener(mContext, mRecyclerViewPlaylist, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 // do whatever
                 Toast.makeText(mContext, "Playlist", Toast.LENGTH_SHORT).show();
+                showPlaylistSongActivity();
             }
 
             @Override
@@ -95,17 +103,32 @@ public class FragmentPlaylist extends Fragment {
                 dialogCreatePlaylist.show(mMainActivity.getSupportFragmentManager(), "CreatePlaylist");
             }
         });
+        refreshPlaylist();
     }
 
+    private void showPlaylistSongActivity() {
+        Intent intent = new Intent(MainActivity.getMainActivity(), PlaylistSongActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+
+    }
+
+
     public static void refreshPlaylist() {
-        mPlaylist = PlaylistModel.getAllPlaylist();
-        mRecyclerViewPlaylist.post(new Runnable() {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                mPlaylistAdapter.notifyDataSetChanged();
+                ArrayList<PlaylistModel> playlistModels = PlaylistModel.getAllPlaylist();
+                mPlaylist.clear();
+                mPlaylist.addAll(playlistModels);
+                mRecyclerViewPlaylist.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPlaylistAdapter.notifyDataSetChanged();
+                    }
+                });
             }
         });
-
     }
 
 }

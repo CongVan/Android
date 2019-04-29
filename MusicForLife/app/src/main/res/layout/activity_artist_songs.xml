@@ -52,7 +52,7 @@
                     android:id="@+id/artistSongNameArtist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_size_xnormal"
+                    android:layout_marginBottom="@dimen/margin_size_snormal"
                     android:text="Tên ca sĩ"
                     android:textAlignment="center"
                     android:textColor="@color/colorTitleWhitePrimary"
