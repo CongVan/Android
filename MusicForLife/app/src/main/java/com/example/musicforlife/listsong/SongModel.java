@@ -243,17 +243,19 @@ public class SongModel implements Serializable {
             contentValues.put(SongModel.COLUMN_DURATION, songModel.getDuration());
             contentValues.put(SongModel.COLUMN_FOLDER, songModel.getFolder());
             contentValues.put(SongModel.COLUMN_PATH, songModel.getPath());
-            contentValues.put(SongModel.COLUMN_ALBUM_ID,songModel.getSongId());
+            contentValues.put(SongModel.COLUMN_ALBUM_ID, songModel.getSongId());
             long id = database.insert(SongModel.TABLE_NAME, null, contentValues);
 //            database.close();
             return id;
         }
         return 0;
     }
-    public static void deleteAllSong(DatabaseManager databaseManager){
+
+    public static void deleteAllSong(DatabaseManager databaseManager) {
         SQLiteDatabase database = databaseManager.getWritableDatabase();
-        database.delete(TABLE_NAME,null,null);
+        database.delete(TABLE_NAME, null, null);
     }
+
     public static boolean isSongExsist(DatabaseManager databaseManager, SongModel song) {
         SQLiteDatabase db = databaseManager.getReadableDatabase();
         boolean result = false;
@@ -344,12 +346,14 @@ public class SongModel implements Serializable {
         //databaseManager.closeDatabase();
         return songModelList;
     }
+
     public static long getRowsSong(DatabaseManager databaseManager) {
         SQLiteDatabase db = databaseManager.getReadableDatabase();
         long count = DatabaseUtils.queryNumEntries(db, TABLE_NAME);
 
         return count;
     }
+
     public static ArrayList<SongModel> getSongsWithThreshold(DatabaseManager databaseManager, int skip, int count) {
         ArrayList<SongModel> songModelList = new ArrayList<>();
         SQLiteDatabase db = databaseManager.getReadableDatabase();
@@ -364,7 +368,7 @@ public class SongModel implements Serializable {
 //                SongModel.COLUMN_PATH
 //        };
 //        Cursor cursor = db.query(TABLE_NAME, projection, null, null, null, null, null);
-        String query = "SELECT * FROM " + SongModel.TABLE_NAME + " LIMIT " + skip + "," + count;
+        String query = "SELECT * FROM " + SongModel.TABLE_NAME + " ORDER BY "+SongModel.COLUMN_TITLE+" ASC  LIMIT " + skip + "," + count;
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
             do {
@@ -378,7 +382,7 @@ public class SongModel implements Serializable {
                 songModel.setDuration(cursor.getLong(cursor.getColumnIndex(SongModel.COLUMN_DURATION)));
                 songModel.setPath(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_PATH)));
                 songModel.setAlbumId(cursor.getInt(cursor.getColumnIndex(SongModel.COLUMN_ALBUM_ID)));
-                Log.d(TAG, "getSongsWithThreshold: HOLD ALBUMID"+ songModel.getAlbumId() );
+                Log.d(TAG, "getSongsWithThreshold: HOLD ALBUMID" + songModel.getAlbumId());
                 songModelList.add(songModel);
             } while (cursor.moveToNext());
 

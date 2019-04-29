@@ -85,16 +85,16 @@ public class ArtistSongsActivity extends Activity {
         if (artistModel != null) {
             TVNameArtist.setText(artistModel.getName());
             TVSongcount.setText(artistModel.getSongCount() + " Bài hát");
-
-            MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-            mediaMetadataRetriever.setDataSource(artistModel.getPath());
-            if (mediaMetadataRetriever.getEmbeddedPicture() != null) {
-                InputStream inputStream = new ByteArrayInputStream(mediaMetadataRetriever.getEmbeddedPicture());
-                mediaMetadataRetriever.release();
-                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                ImgProfile.setBackground(new BitmapDrawable(getResources(), bitmap));
-                BitmapDrawable d = new BitmapDrawable(getResources(), bitmap);
-            }
+            ImgProfile.setImageBitmap(ImageHelper.getBitmapFromPath(artistModel.getPath(), R.mipmap.microphone_128));
+//            MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+//            mediaMetadataRetriever.setDataSource(artistModel.getPath());
+//            if (mediaMetadataRetriever.getEmbeddedPicture() != null) {
+//                InputStream inputStream = new ByteArrayInputStream(mediaMetadataRetriever.getEmbeddedPicture());
+//                mediaMetadataRetriever.release();
+//                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+//                ImgProfile.setBackground(new BitmapDrawable(getResources(), bitmap));
+//                BitmapDrawable d = new BitmapDrawable(getResources(), bitmap);
+//            }
         }
     }
 }

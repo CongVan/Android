@@ -63,8 +63,8 @@ public class FragmentDiaglogPlaylist extends DialogFragment {
                         // do whatever
                         Toast.makeText(mContext, "Playlist", Toast.LENGTH_SHORT).show();
                         PlaylistModel playlist = mPlaylist.get(position);
-                        boolean isExists=PlaylistSongModel.isSongExisitPlaylist(mCurrentSong.getSongId(),playlist.getId());
-                        if (isExists){
+                        boolean isExists = PlaylistSongModel.isSongExisitPlaylist(mCurrentSong.getSongId(), playlist.getId());
+                        if (isExists) {
                             Toast.makeText(mContext, "Bài hát đã tồn tại trong Playlist", Toast.LENGTH_LONG).show();
                             FragmentDiaglogPlaylist.this.dismiss();
                             return;
@@ -73,9 +73,11 @@ public class FragmentDiaglogPlaylist extends DialogFragment {
 
                         if (result > 0) {
                             Toast.makeText(mContext, "Thành công", Toast.LENGTH_SHORT).show();
+
                         } else {
                             Toast.makeText(mContext, "Thất bại", Toast.LENGTH_SHORT).show();
                         }
+                        FragmentPlaylist.refreshPlaylist();
                         FragmentDiaglogPlaylist.this.dismiss();
                     }
 

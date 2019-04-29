@@ -35,6 +35,7 @@ import com.bumptech.glide.load.engine.bitmap_recycle.LruBitmapPool;
 import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory;
 import com.bumptech.glide.load.engine.cache.LruResourceCache;
 import com.example.musicforlife.callbacks.FragmentCallbacks;
+import com.example.musicforlife.db.DatabaseManager;
 import com.example.musicforlife.play.PlayService;
 import com.example.musicforlife.playlist.BottomSheetOptionSong;
 import com.example.musicforlife.playlist.FragmentPlaylist;
@@ -195,6 +196,7 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Rec
                 _listSongAdapter.notifyItemRemoved(scollPosition);
                 ArrayList<SongModel> tempAudioList = SongModel.getSongsWithThreshold(MainActivity.mDatabaseManager, _listSong.size(), mThreshHold);
                 _listSong.addAll(tempAudioList);
+
 //                _listSongAdapter.notifyDataSetChanged();
                 mIsLoading = false;
             }
@@ -233,7 +235,7 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Rec
         new Thread(new Runnable() {
             @Override
             public void run() {
-                mPlayService.initListPlaying(_listSong);
+                mPlayService.initListPlaying(SongModel.getAllSongs(DatabaseManager.getInstance()));
                 Log.d(TAG, "run: ");
             }
         }).start();

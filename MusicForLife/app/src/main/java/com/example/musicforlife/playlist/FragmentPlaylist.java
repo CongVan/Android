@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,11 +78,16 @@ public class FragmentPlaylist extends Fragment {
         mRecyclerViewPlaylist = view.findViewById(R.id.rcvPlaylist);
         mButtonCreatePlaylist = view.findViewById(R.id.btnCreatePlaylist);
 
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                mPlaylist = PlaylistModel.getAllPlaylist();
+                mPlaylistAdapter = new PlaylistAdapter(mContext, mPlaylist);
+                mRecyclerViewPlaylist.setLayoutManager(new LinearLayoutManager(mContext));
+                mRecyclerViewPlaylist.setAdapter(mPlaylistAdapter);
+            }
+        });
 
-        mPlaylist = new ArrayList<>();
-        mPlaylistAdapter = new PlaylistAdapter(mContext, mPlaylist);
-        mRecyclerViewPlaylist.setLayoutManager(new LinearLayoutManager(mContext));
-        mRecyclerViewPlaylist.setAdapter(mPlaylistAdapter);
         mRecyclerViewPlaylist.addOnItemTouchListener(new RecyclerItemClickListener(mContext, mRecyclerViewPlaylist, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -103,7 +109,7 @@ public class FragmentPlaylist extends Fragment {
                 dialogCreatePlaylist.show(mMainActivity.getSupportFragmentManager(), "CreatePlaylist");
             }
         });
-        refreshPlaylist();
+//        refreshPlaylist();
     }
 
     private void showPlaylistSongActivity() {
@@ -113,14 +119,22 @@ public class FragmentPlaylist extends Fragment {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
 
-    public static void refreshPlaylist() {
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
+    }
+
+    public synchronized static void refreshPlaylist() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 ArrayList<PlaylistModel> playlistModels = PlaylistModel.getAllPlaylist();
+                Log.d(TAG, "run: REFRESH PLAYLIST SIZE " + playlistModels.get(playlistModels.size() - 1).getNumberOfSongs());
                 mPlaylist.clear();
                 mPlaylist.addAll(playlistModels);
+                Log.d(TAG, "run: SIZE PLAYLIST 1 - " + mPlaylist.get(mPlaylist.size() - 1).getNumberOfSongs());
+//                mPlaylistAdapter.notifyDataSetChanged();
                 mRecyclerViewPlaylist.post(new Runnable() {
                     @Override
                     public void run() {
@@ -128,7 +142,10 @@ public class FragmentPlaylist extends Fragment {
                     }
                 });
             }
-        });
+        }).start();
+
+
+
     }
 
 }

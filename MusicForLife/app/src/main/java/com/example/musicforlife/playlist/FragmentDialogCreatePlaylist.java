@@ -60,15 +60,16 @@ public class FragmentDialogCreatePlaylist extends DialogFragment implements View
                 FragmentDialogCreatePlaylist.this.getDialog().cancel();
                 break;
             case R.id.btnSubmitCreatePlaylist:
-                String title = txtTitlePlaylist.getText().toString();
+                String title = txtTitlePlaylist.getText().toString().trim();
                 if (!title.isEmpty()) {
-                    long result=PlaylistModel.createPlaylist(title);
-                    if (result>0){
+                    long result = PlaylistModel.createPlaylist(title);
+                    if (result > 0) {
                         FragmentPlaylist.refreshPlaylist();
-                        Toast.makeText(getActivity().getApplicationContext(), String.valueOf(result), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getActivity().getApplicationContext(), String.valueOf(result), Toast.LENGTH_SHORT).show();
                     }
+                    FragmentDialogCreatePlaylist.this.getDialog().cancel();
                 }
-                FragmentDialogCreatePlaylist.this.getDialog().cancel();
+
 
                 break;
             default:

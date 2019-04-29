@@ -137,15 +137,16 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
             }
         });
         setResourceImagePlaying();
+        updateControlPlaying(mSongPlaying);
     }
 
     private void setResourceImagePlaying() {
         Bitmap bitmapPlaying = ImageHelper.getBitmapFromPath(mSongPlaying.getPath());
 //        Bitmap bitmapBgPlaying = ImageHelper.getBitmapFromPath(mSongPlaying.getPath(), R.drawable.background_1);
-        if (bitmapPlaying==null){
-            bitmapPlaying=ImageHelper.drawableToBitmap(R.mipmap.music_128);
+        if (bitmapPlaying == null) {
+            bitmapPlaying = ImageHelper.drawableToBitmap(R.mipmap.music_128);
             mImagePlaying.setScaleType(ImageView.ScaleType.CENTER);
-        }else{
+        } else {
             mImagePlaying.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
         mImagePlaying.setImageBitmap(bitmapPlaying);
@@ -203,10 +204,11 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
 
     @Override
     public void updateControlPlaying(SongModel songModel) {
+        Log.d(TAG, "updateControlPlaying: " + songModel.getDuration());
         mSongPlaying = songModel;
         mTxtTitleSongPlaying.setText(mSongPlaying.getTitle());
         mTxtArtistSongPlaying.setText(mSongPlaying.getArtist());
-        mTxtDurationSongPlaying.setText(mSongPlaying.formateMilliSeccond(songModel.getDuration()));
+        mTxtDurationSongPlaying.setText(SongModel.formateMilliSeccond(songModel.getDuration()));
         mSebDurationSongPlaying.setMax(mSongPlaying.getDuration().intValue() / 1000);
         setResourceImagePlaying();
         //
