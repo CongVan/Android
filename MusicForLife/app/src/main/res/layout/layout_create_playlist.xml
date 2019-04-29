@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="@dimen/margin_size_normal">
+    android:paddingVertical="@dimen/margin_size_xnormal"
+    android:paddingHorizontal="@dimen/margin_size_normal"
+    >
 
     <TextView
         android:layout_width="match_parent"
@@ -35,6 +37,7 @@
             android:layout_margin="@dimen/margin_size_small"
             android:background="@android:color/transparent"
             android:text="Hủy"
+            android:padding="@dimen/margin_size_small"
             android:textColor="@color/colorTitlePrimary" />
 
         <Button
@@ -42,9 +45,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_size_small"
-            android:background="@color/colorPrimary"
+            android:background="@color/colorTranparent"
+            android:padding="@dimen/margin_size_small"
             android:text="Hoàn tất"
-            android:textColor="@color/colorWhiteLight" />
+            android:textColor="@color/colorPrimaryDark" />
 
 
     </LinearLayout>

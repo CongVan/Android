@@ -28,6 +28,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
@@ -124,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         setSupportActionBar(mToolBar);
         setupLayoutTransparent();
         initDataBaseFromDevice();
-        initMinimizePlaying();
+//        initMinimizePlaying();
     }
 
     @Override
@@ -169,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
 
     private void initMinimizePlaying() {
         Log.d(TAG, "initMinimizePlaying: ");
-        new Handler().post(
+        new Handler(Looper.getMainLooper()).post(
                 new Runnable() {
                     @Override
                     public void run() {
@@ -182,6 +183,8 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
 
                                 PlayService.revertListSongPlaying();
                             }
+                        }else{
+                            hideMinimizePlaying();
                         }
                         Log.d(TAG, "initMinimizePlaying: null");
                     }
@@ -208,7 +211,8 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     @Override
     protected void onResume() {
         super.onResume();
-        togglePlayingMinimize("MAIN");
+//        togglePlayingMinimize("MAIN");
+        initMinimizePlaying();
     }
 
     /**
@@ -250,15 +254,15 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
      */
     @Override
     public void togglePlayingMinimize(String sender) {
-        if (PlayService.getCurrentSongPlaying() != null) {
-            showMinimizePlaying(PlayService.getCurrentSongPlaying());
-        } else {
-            hideMinimizePlaying();
-        }
+//        if (PlayService.getCurrentSongPlaying() != null) {
+//            showMinimizePlaying(PlayService.getCurrentSongPlaying());
+//        } else {
+//            hideMinimizePlaying();
+//        }
     }
 
     private void showMinimizePlaying(SongModel songPlaying) {
-//        Log.d(TAG, "togglePlayingMinimize:  SONG PLAYING " + PlayService.getCurrentSongPlaying().getTitle());
+        Log.d(TAG, "togglePlayingMinimize:  SONG PLAYING " + songPlaying.getTitle());
 
         mTextViewTitleSongMinimize.setText(songPlaying.getTitle());
         mTextViewArtistMinimize.setText(songPlaying.getArtist());
@@ -267,12 +271,26 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         mLayoutPlayingMinimizie.post(new Runnable() {
             @Override
             public void run() {
+                mLayoutPlayingMinimizie.measure(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+                Log.d(TAG, "run: SET PADDING MINIMIZE " + mLayoutPlayingMinimizie.getMeasuredHeight());
                 mViewPager.setPadding(0, 0, 0, mLayoutPlayingMinimizie.getMeasuredHeight());
                 mLayoutPlayingMinimizie.setVisibility(View.VISIBLE);
-                Log.d(TAG, "togglePlayingMinimize: HEIGHT" + mLayoutPlayingMinimizie.getMeasuredHeight());
             }
         });
+
+
+//        mLayoutPlayingMinimizie.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//
+//            @Override
+//            public void onGlobalLayout() {
+////                mLayoutPlayingMinimizie.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+//
+//
+//            }
+//        });
+
     }
+
 
     private void hideMinimizePlaying() {
         mLayoutPlayingMinimizie.post(new Runnable() {
