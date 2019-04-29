@@ -3,6 +3,7 @@ package com.example.musicforlife.utilitys;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
+import android.view.Display;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -33,5 +34,13 @@ public class Utility {
             statusBarHeight = activity.getResources().getDimensionPixelSize(resourceId);
         }
         return  statusBarHeight;
+    }
+
+    public static int getDisplayHeight(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        int height = display.getHeight();
+
+        return height;
     }
 }

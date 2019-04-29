@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBgSecondary"
+    android:background="@color/colorBgPrimaryTranslucent"
     android:orientation="vertical"
     android:padding="@dimen/text_size_normal">
 
@@ -16,8 +16,8 @@
         android:paddingBottom="@dimen/margin_size_normal">
 
         <android.support.v7.widget.CardView
-            android:layout_width="@dimen/image_card_item"
-            android:layout_height="@dimen/image_card_item"
+            android:layout_width="@dimen/image_optiton_sheet"
+            android:layout_height="@dimen/image_optiton_sheet"
             android:layout_marginTop="@dimen/margin_size_small"
             android:layout_marginRight="@dimen/margin_size_snormal"
             android:layout_marginBottom="@dimen/margin_size_small"
@@ -29,8 +29,8 @@
 
             <ImageView
                 android:id="@+id/imgSong"
-                android:layout_width="@dimen/image_card_item"
-                android:layout_height="@dimen/image_card_item"
+                android:layout_width="@dimen/image_optiton_sheet"
+                android:layout_height="@dimen/image_optiton_sheet"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
                 tools:srcCompat="@mipmap/music_128" />
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:text="Tiêu đề bài hát"
                 android:textColor="@color/colorTitleWhitePrimary"
-                android:textSize="@dimen/text_size_normal"
+                android:textSize="@dimen/text_size_xnormal"
                 android:textStyle="bold" />
 
             <TextView
@@ -74,7 +74,7 @@
 
         <TableRow
             android:id="@+id/btnAddSongToQueue"
-            android:paddingBottom="@dimen/margin_size_snormal"
+            android:padding="@dimen/margin_size_snormal"
             android:clickable="true"
             android:foreground="?attr/selectableItemBackground"
             >
@@ -99,7 +99,7 @@
 
         <TableRow
             android:id="@+id/btnAddSongToPlaylist"
-            android:paddingBottom="@dimen/margin_size_snormal"
+            android:padding="@dimen/margin_size_snormal"
             android:clickable="true"
             android:foreground="?attr/selectableItemBackground"
             >
@@ -123,7 +123,7 @@
 
         <TableRow
             android:id="@+id/btnMakeRingTone"
-            android:paddingBottom="@dimen/margin_size_snormal"
+            android:padding="@dimen/margin_size_snormal"
             android:clickable="true"
             android:foreground="?attr/selectableItemBackground"
             >
@@ -147,7 +147,7 @@
 
         <TableRow
             android:id="@+id/btnDeleteSong"
-            android:paddingBottom="@dimen/text_size_large"
+            android:padding="@dimen/margin_size_snormal"
             android:clickable="true"
             android:foreground="?attr/selectableItemBackground"
             >

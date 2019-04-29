@@ -1,5 +1,15 @@
 package com.example.musicforlife.playlist;
 
+import android.annotation.SuppressLint;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.example.musicforlife.db.DatabaseManager;
+import com.example.musicforlife.listsong.SongModel;
+
+import java.text.MessageFormat;
+
 public class PlaylistSongModel {
     public static final String TABLE_NAME = "playlist_song";
     public static final String COLUMN_ID = "id";
@@ -39,5 +49,27 @@ public class PlaylistSongModel {
 
     public void setSongId(int songId) {
         this.songId = songId;
+    }
+
+    public static long addSongToPlaylist(int songId, int playlistId){
+        SQLiteDatabase db = DatabaseManager.getInstance().getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_SONG_ID, songId);
+        contentValues.put(COLUMN_PLAYLIST_ID, playlistId);
+        long id = db.insert(TABLE_NAME, null, contentValues);
+        return id;
+    }
+    public static boolean isSongExisitPlaylist(int songId,int playlistId){
+        SQLiteDatabase db = DatabaseManager.getInstance().getReadableDatabase();
+        boolean result = false;
+        String query = MessageFormat.format("SELECT {0} FROM {1} WHERE {2}={3} AND {4}={5}",
+                new String[]{COLUMN_ID, TABLE_NAME, COLUMN_SONG_ID, String.valueOf(songId),COLUMN_PLAYLIST_ID,String.valueOf(playlistId)});
+        @SuppressLint("Recycle")
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            result = true;
+        }
+        //databaseManager.closeDatabase();
+        return result;
     }
 }

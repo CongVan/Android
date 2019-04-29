@@ -45,6 +45,7 @@ import com.example.musicforlife.listsong.SongModel;
 import com.example.musicforlife.play.PlayActivity;
 import com.example.musicforlife.play.PlayService;
 import com.example.musicforlife.playlist.FragmentPlaylist;
+import com.example.musicforlife.playlist.PlaylistSongActivity;
 import com.example.musicforlife.utilitys.ImageHelper;
 import com.example.musicforlife.utilitys.Utility;
 
@@ -170,14 +171,17 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         new intitSongFromDevice().execute();
     }
 
-    private void initMinimizePlaying() {
+    private  void initMinimizePlaying() {
         Log.d(TAG, "initMinimizePlaying: ");
         new Handler(Looper.getMainLooper()).post(
                 new Runnable() {
                     @Override
                     public void run() {
-                        SongModel songPlay = PlayService.getSongIsPlaying();
-
+                        SongModel songPlay = null;
+                        songPlay = PlayService.getCurrentSongPlaying();
+                        if (songPlay == null) {
+                            songPlay = PlayService.getSongIsPlaying();
+                        }
                         if (songPlay != null) {
                             Log.d(TAG, "initMinimizePlaying: " + songPlay.getTitle());
                             showMinimizePlaying(songPlay);
@@ -185,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
 
                                 PlayService.revertListSongPlaying();
                             }
-                        }else{
+                        } else {
                             hideMinimizePlaying();
                         }
                         Log.d(TAG, "initMinimizePlaying: null");
@@ -256,11 +260,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
      */
     @Override
     public void togglePlayingMinimize(String sender) {
-//        if (PlayService.getCurrentSongPlaying() != null) {
-//            showMinimizePlaying(PlayService.getCurrentSongPlaying());
-//        } else {
-//            hideMinimizePlaying();
-//        }
+        initMinimizePlaying();
     }
 
     private void showMinimizePlaying(SongModel songPlaying) {

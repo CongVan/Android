@@ -90,4 +90,6 @@ public class PlaylistModel {
     public void setNumberOfSongs(int numberOfSongs) {
         this.numberOfSongs = numberOfSongs;
     }
+
+
 }

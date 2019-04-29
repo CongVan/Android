@@ -6,6 +6,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import com.example.musicforlife.MainActivity;
+import com.example.musicforlife.callbacks.MainCallbacks;
 import com.example.musicforlife.db.DatabaseManager;
 import com.example.musicforlife.listsong.SongModel;
 
@@ -147,6 +149,7 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
 
         mCurrentSongPlaying = mSongPlayingList.get(mCurrentIndexSong); //SongModel.getSongFromSongId(mDatabaseManager, mPlayingList.get(mCurrentIndexSong).getSongId());
         play(mCurrentSongPlaying);
+        MainActivity.getMainActivity().togglePlayingMinimize(SENDER);
         if (PlayActivity.getActivity() != null) {
             PlayActivity.getActivity().updateControlPlaying(SENDER, mCurrentSongPlaying);
         }
@@ -182,6 +185,7 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
         }
         mCurrentSongPlaying = mSongPlayingList.get(mCurrentIndexSong);//SongModel.getSongFromSongId(mDatabaseManager, mPlayingList.get(mCurrentIndexSong).getSongId());
         play(mCurrentSongPlaying);
+        MainActivity.getMainActivity().togglePlayingMinimize(SENDER);
         if (PlayActivity.getActivity() != null) {
             PlayActivity.getActivity().updateControlPlaying(SENDER, mCurrentSongPlaying);
         }
@@ -284,7 +288,7 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
     }
 
     private static void setIndexSongInPlayingList() {
-        if (mSongPlayingList!=null){
+        if (mSongPlayingList != null) {
             for (int i = 0; i < mSongPlayingList.size(); i++) {
                 if (mSongPlayingList.get(i).getSongId() == mCurrentSongPlaying.getSongId()) {
                     mCurrentIndexSong = i;

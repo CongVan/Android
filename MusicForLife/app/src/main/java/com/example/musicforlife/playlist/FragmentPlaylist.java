@@ -80,7 +80,7 @@ public class FragmentPlaylist extends Fragment {
 
         mPlaylist = new ArrayList<>();
         mPlaylistAdapter = new PlaylistAdapter(mContext, mPlaylist);
-        mRecyclerViewPlaylist.setLayoutManager(new GridLayoutManager(mContext, 2));
+        mRecyclerViewPlaylist.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerViewPlaylist.setAdapter(mPlaylistAdapter);
         mRecyclerViewPlaylist.addOnItemTouchListener(new RecyclerItemClickListener(mContext, mRecyclerViewPlaylist, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
