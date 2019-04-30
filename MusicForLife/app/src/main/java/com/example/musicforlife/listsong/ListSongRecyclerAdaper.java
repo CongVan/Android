@@ -137,7 +137,6 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
     private class ViewHolderRecycler extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         TextView titleSong;
-        TextView album;
         TextView artist;
         TextView duration;
         ImageView imageView;

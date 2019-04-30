@@ -25,6 +25,7 @@ import com.example.musicforlife.MainActivity;
 import com.example.musicforlife.R;
 
 import com.example.musicforlife.listsong.RecyclerItemClickListener;
+import com.example.musicforlife.listsong.SongModel;
 import com.example.musicforlife.play.PlayActivity;
 
 import java.util.ArrayList;
@@ -37,7 +38,8 @@ public class FragmentPlaylist extends Fragment {
     private static RecyclerView mRecyclerViewPlaylist;
     private static PlaylistAdapter mPlaylistAdapter;
     private FloatingActionButton mButtonCreatePlaylist;
-
+    private final int mThreshold = 10;
+    private static boolean mIsLoading;
     private static ArrayList<PlaylistModel> mPlaylist;
 
     public FragmentPlaylist() {
@@ -68,26 +70,18 @@ public class FragmentPlaylist extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_playlist, container, false);
-        return viewGroup;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        mRecyclerViewPlaylist = view.findViewById(R.id.rcvPlaylist);
-        mButtonCreatePlaylist = view.findViewById(R.id.btnCreatePlaylist);
+        mRecyclerViewPlaylist = viewGroup.findViewById(R.id.rcvPlaylist);
+        mButtonCreatePlaylist = viewGroup.findViewById(R.id.btnCreatePlaylist);
 
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                mPlaylist = PlaylistModel.getAllPlaylist();
+                mPlaylist = PlaylistModel.getAllPlaylist(0, mThreshold);
                 mPlaylistAdapter = new PlaylistAdapter(mContext, mPlaylist);
                 mRecyclerViewPlaylist.setLayoutManager(new LinearLayoutManager(mContext));
                 mRecyclerViewPlaylist.setAdapter(mPlaylistAdapter);
             }
         });
-
         mRecyclerViewPlaylist.addOnItemTouchListener(new RecyclerItemClickListener(mContext, mRecyclerViewPlaylist, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -109,17 +103,61 @@ public class FragmentPlaylist extends Fragment {
                 dialogCreatePlaylist.show(mMainActivity.getSupportFragmentManager(), "CreatePlaylist");
             }
         });
+        mRecyclerViewPlaylist.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (!mIsLoading && linearLayoutManager != null && linearLayoutManager.getItemCount() - 1 <= linearLayoutManager.findLastVisibleItemPosition()) {
+                    loadMore();
+                    mIsLoading = true;
+                }
+            }
+        });
+        return viewGroup;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+
 //        refreshPlaylist();
     }
 
     private void showPlaylistSongActivity(int playlistId) {
         Intent intent = new Intent(MainActivity.getMainActivity(), PlaylistSongActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        Bundle bundle =new Bundle();
-        bundle.putInt("playlistId",playlistId);
+        Bundle bundle = new Bundle();
+        bundle.putInt("playlistId", playlistId);
         intent.putExtras(bundle);
         startActivity(intent);
 
+    }
+
+    private void loadMore() {
+//        _skeletonScreen = Skeleton.bind(_listViewSong).adapter(_listSongAdapter).load(R.layout.layout_item_song).show();
+        mPlaylist.add(null);
+        mPlaylistAdapter.notifyItemInserted(mPlaylist.size() - 1);
+//        Handler handler = new Handler();
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                mPlaylist.remove(mPlaylist.size() - 1);
+                int scollPosition = mPlaylist.size();
+                mPlaylistAdapter.notifyItemRemoved(scollPosition);
+                ArrayList<PlaylistModel> playlistModels = PlaylistModel.getAllPlaylist(mPlaylist.size(), mThreshold);
+                mPlaylist.addAll(playlistModels);
+//                mPlaylistAdapter.notifyDataSetChanged();
+                mIsLoading = false;
+            }
+        });
+//
     }
 
     @Override
@@ -146,7 +184,6 @@ public class FragmentPlaylist extends Fragment {
                 });
             }
         }).start();
-
 
 
     }

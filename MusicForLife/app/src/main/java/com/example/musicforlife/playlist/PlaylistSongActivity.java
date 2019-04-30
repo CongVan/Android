@@ -68,13 +68,16 @@ public class PlaylistSongActivity extends AppCompatActivity implements MultiClic
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
                 if (Math.abs(i) - appBarLayout.getTotalScrollRange() == 0) {
-//                    Log.d(TAG, "onOffsetChanged: COLLPASED");
+                    Log.d(TAG, "onOffsetChanged: COLLPASED");
                     //Collapsed
+
                     getSupportActionBar().setTitle(mCurrentPlaylist.getTitle());
+
                 } else {
                     //Expanded
 //                    Log.d(TAG, "onOffsetChanged: EXPANDED");
                     getSupportActionBar().setTitle(" ");
+
                 }
             }
         });
