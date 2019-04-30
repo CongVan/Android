@@ -140,5 +140,30 @@ public class PlaylistModel {
         this.numberOfSongs = numberOfSongs;
     }
 
+    public static long updateImageCoverPlaylist(int playlistId, String pathImage) {
+        SQLiteDatabase db = DatabaseManager.getInstance().getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(PlaylistModel.COLUMN_PATH_IMAGE, pathImage);
 
+        long id = db.update(PlaylistModel.TABLE_NAME, contentValues, PlaylistModel.COLUMN_ID + " =? ", new String[]{String.valueOf(playlistId)});
+        return id;
+    }
+
+    public static PlaylistModel getInfoPlaylistById(int playlistId) {
+
+        SQLiteDatabase db = DatabaseManager.getInstance().getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_ID + "=" + playlistId;
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            PlaylistModel playlist = new PlaylistModel();
+            playlist.setId(cursor.getInt(cursor.getColumnIndex(PlaylistModel.COLUMN_ID)));
+            playlist.setTitle(cursor.getString(cursor.getColumnIndex(PlaylistModel.COLUMN_PLAYLIST_TITLE)));
+            playlist.setPathImage(cursor.getString(cursor.getColumnIndex(PlaylistModel.COLUMN_PATH_IMAGE)));
+            return playlist;
+
+        }
+
+        return null;
+    }
 }

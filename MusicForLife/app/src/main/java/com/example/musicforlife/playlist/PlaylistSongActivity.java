@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.musicforlife.MainActivity;
@@ -22,6 +23,7 @@ import com.example.musicforlife.listsong.MultiClickAdapterListener;
 import com.example.musicforlife.listsong.SongModel;
 import com.example.musicforlife.play.PlayActivity;
 import com.example.musicforlife.play.PlayService;
+import com.example.musicforlife.utilitys.ImageHelper;
 import com.example.musicforlife.utilitys.Utility;
 
 import java.util.ArrayList;
@@ -39,6 +41,7 @@ public class PlaylistSongActivity extends AppCompatActivity implements MultiClic
     TextView mTxtTitlePlaylist;
     TextView mTxtNumberOfSongPlaylist;
     AppBarLayout mAppbarLayoutPlaylist;
+    ImageView mImageCoverPlaylist;
     private static PlayService mPlayService;
     private static final String TAG = "PlaylistSongActivity";
 
@@ -63,6 +66,7 @@ public class PlaylistSongActivity extends AppCompatActivity implements MultiClic
         mTxtTitlePlaylist = findViewById(R.id.txtTitlePlaylist);
         mTxtNumberOfSongPlaylist = findViewById(R.id.txtNumberOfSongPlaylist);
         mAppbarLayoutPlaylist = findViewById(R.id.htab_appbar);
+        mImageCoverPlaylist = findViewById(R.id.imageCoverPlaylist);
 
         mAppbarLayoutPlaylist.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
@@ -85,10 +89,11 @@ public class PlaylistSongActivity extends AppCompatActivity implements MultiClic
             @Override
             public void onClick(View v) {
                 // do something here, such as start an Intent to the parent activity.
-                onBackPressed();
+                finish();
             }
         });
         mPlayService = PlayService.newInstance();
+
     }
 
     private void initToolBarParalax() {
@@ -97,9 +102,18 @@ public class PlaylistSongActivity extends AppCompatActivity implements MultiClic
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         Utility.setTransparentStatusBar(this);
+//        mAppbarLayoutPlaylist.setPadding(0,Utility.getStatusbarHeight(this),0,0);
+//        mToolbar.setPadding(0, Utility.getStatusbarHeight(this), 0, Utility.getStatusbarHeight(this));
         mLayoutSongPlaylist.setPadding(0, Utility.getStatusbarHeight(this), 0, 0);
         mTxtTitlePlaylist.setText(mCurrentPlaylist.getTitle());
         mTxtNumberOfSongPlaylist.setText(String.valueOf(mCurrentPlaylist.getNumberOfSongs()) + " bài hát");
+
+        mImageCoverPlaylist.post(new Runnable() {
+            @Override
+            public void run() {
+                mImageCoverPlaylist.setImageBitmap(ImageHelper.getBitmapFromPath(mCurrentPlaylist.getPathImage(), R.mipmap.playlist_128));
+            }
+        });
     }
 
     private void initRecyclerViewListSong() {
@@ -110,6 +124,7 @@ public class PlaylistSongActivity extends AppCompatActivity implements MultiClic
         mRecylerViewListSong.setLayoutManager(new LinearLayoutManager(this));
         mRecylerViewListSong.setHasFixedSize(true);
         mRecylerViewListSong.setAdapter(mSongPlaylistAdapter);
+
     }
 
     private void showBottomSheetOptionSong(SongModel song) {

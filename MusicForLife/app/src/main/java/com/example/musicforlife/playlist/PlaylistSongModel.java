@@ -52,14 +52,23 @@ public class PlaylistSongModel {
         this.songId = songId;
     }
 
-    public static long addSongToPlaylist(int songId, int playlistId) {
+    public static long addSongToPlaylist(int songId, int playlistId, String pathSong) {
         SQLiteDatabase db = DatabaseManager.getInstance().getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_SONG_ID, songId);
         contentValues.put(COLUMN_PLAYLIST_ID, playlistId);
         long id = db.insert(TABLE_NAME, null, contentValues);
+        if (id > 0) {
+            PlaylistModel playlistModel = PlaylistModel.getInfoPlaylistById(playlistId);
+            if (playlistModel != null && (playlistModel.getPathImage() == null || playlistModel.getPathImage().isEmpty())) {
+                PlaylistModel.updateImageCoverPlaylist(playlistId, pathSong);
+            }
+        }
+
+
         return id;
     }
+
 
     public static boolean isSongExisitPlaylist(int songId, int playlistId) {
         SQLiteDatabase db = DatabaseManager.getInstance().getReadableDatabase();

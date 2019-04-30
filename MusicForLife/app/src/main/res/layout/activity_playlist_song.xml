@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBgPrimary"
+    android:fitsSystemWindows="true"
     tools:context=".playlist.PlaylistSongActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -20,15 +21,15 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/htab_collapse_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="256dp"
+            android:layout_height="320dp"
             android:fitsSystemWindows="true"
             android:theme="@style/AppTheme.Toolbar"
-            app:contentScrim="@color/colorTranparent"
+            app:contentScrim="@color/colorBgPrimaryTranslucent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:titleEnabled="false">
 
             <ImageView
-                android:id="@+id/htab_header"
+                android:id="@+id/imageCoverPlaylist"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/colorBgPrimaryTranslucent"
@@ -66,6 +67,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_gravity="top"
+
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/AppTheme"
                 app:title=" "

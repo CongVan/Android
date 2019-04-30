@@ -132,7 +132,7 @@ public class FragmentPlaylist extends Fragment {
 
     private void showPlaylistSongActivity(int playlistId) {
         Intent intent = new Intent(MainActivity.getMainActivity(), PlaylistSongActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         Bundle bundle = new Bundle();
         bundle.putInt("playlistId", playlistId);
         intent.putExtras(bundle);

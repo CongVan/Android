@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBgPrimary"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".play.PlayActivity">
 
@@ -16,6 +17,7 @@
         android:background="@color/colorTranparent"
         android:gravity="top"
         android:outlineProvider="bounds"
+        android:theme="@style/AppTheme.Toolbar"
         app:elevation="0dp">
         <!--app:contentScrim="@android:color/transparent"-->
         <android.support.v7.widget.Toolbar

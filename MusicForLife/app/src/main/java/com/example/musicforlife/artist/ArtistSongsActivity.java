@@ -8,13 +8,17 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaMetadataRetriever;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.support.v7.widget.Toolbar;
 
+import com.example.musicforlife.play.PlayActivity;
 import com.example.musicforlife.utilitys.ImageHelper;
 import com.example.musicforlife.R;
 import com.example.musicforlife.utilitys.Utility;
@@ -22,14 +26,14 @@ import com.example.musicforlife.utilitys.Utility;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-public class ArtistSongsActivity extends Activity {
+public class ArtistSongsActivity extends AppCompatActivity {
 
     ImageButton ImgBtnBack;
     ImageView ImgProfile;
     TextView TVNameArtist;
     TextView TVSongcount;
     ArtistModel artistModel;
-
+    Toolbar mToolbarArtistSong;
     LinearLayout layoutContentArtistSong;
 
     @Override
@@ -53,32 +57,51 @@ public class ArtistSongsActivity extends Activity {
         //Init Fragment
 
         //set button Back
-        ImgBtnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+//        ImgBtnBack.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                finish();
+//            }
+//        });
         setupLayoutTransparent();
+
     }
 
     private void InitControl() {
-        ImgBtnBack = (ImageButton) findViewById(R.id.artistSongBtnBack);
+//        ImgBtnBack = (ImageButton) findViewById(R.id.artistSongBtnBack);
         ImgProfile = (ImageView) findViewById(R.id.artistSongImgProfile);
         TVNameArtist = (TextView) findViewById(R.id.artistSongNameArtist);
         TVSongcount = (TextView) findViewById(R.id.artistSongcount);
         layoutContentArtistSong = findViewById(R.id.layoutContentArtistSong);
+        mToolbarArtistSong=findViewById(R.id.toolbarArtistSong);
+
+
 
     }
 
     private void setupLayoutTransparent() {
         Utility.setTransparentStatusBar(ArtistSongsActivity.this);
         Bitmap bitmapBg = ImageHelper.getBitmapFromPath(artistModel.getPath(), R.drawable.highcompress_background_test);
-        Bitmap bitmapBgBlur = ImageHelper.blurBitmap(bitmapBg, 1.0f, 140);
-        Bitmap bitmapOverlay = ImageHelper.createImage(bitmapBgBlur.getWidth(), bitmapBgBlur.getHeight(), Color.argb(80, 255, 255, 255));
+        Bitmap bitmapBgBlur = ImageHelper.blurBitmap(bitmapBg, 1.0f, 30);
+        Bitmap bitmapOverlay = ImageHelper.createImage(bitmapBgBlur.getWidth(), bitmapBgBlur.getHeight(), getResources().getColor(R.color.colorBgPrimaryOverlay));
         Bitmap bitmapBgOverlay = ImageHelper.overlayBitmapToCenter(bitmapBgBlur, bitmapOverlay);
         layoutContentArtistSong.setPadding(0, Utility.getStatusbarHeight(this), 0, 0);
         layoutContentArtistSong.setBackground(ImageHelper.getMainBackgroundDrawableFromBitmap(bitmapBgOverlay));
+
+        setSupportActionBar(mToolbarArtistSong);
+        getSupportActionBar().setTitle(" ");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        mToolbarArtistSong.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+//        getSupportActionBar().setElevation(0);
+//        mLayoutPlay.setPadding(0, Utility.getStatusbarHeight(this), 0, 0);
     }
 
     private void BindData() {

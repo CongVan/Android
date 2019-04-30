@@ -2,6 +2,7 @@ package com.example.musicforlife.play;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;

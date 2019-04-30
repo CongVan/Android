@@ -67,7 +67,7 @@ public class FragmentDialogPlaylist extends DialogFragment {
                             FragmentDialogPlaylist.this.dismiss();
                             return;
                         }
-                        long result = PlaylistSongModel.addSongToPlaylist(mCurrentSong.getSongId(), playlist.getId());
+                        long result = PlaylistSongModel.addSongToPlaylist(mCurrentSong.getSongId(), playlist.getId(), mCurrentSong.getPath());
 
                         if (result > 0) {
                             Toast.makeText(mContext, "Thành công", Toast.LENGTH_SHORT).show();

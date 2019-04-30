@@ -29,6 +29,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageButton;
@@ -131,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     private void setupLayoutTransparent() {
         Utility.setTransparentStatusBar(MainActivity.this);
         mLayoutMainContent.setPadding(0, Utility.getStatusbarHeight(this), 0, 0);
+
 //        mLayoutMainContent.setBackground(ImageHelper.getMainBackgroundDrawable());
     }
 
