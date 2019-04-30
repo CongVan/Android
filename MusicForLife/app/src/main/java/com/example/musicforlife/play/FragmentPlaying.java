@@ -81,6 +81,7 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         mViewGroupMain = (ViewGroup) inflater.inflate(R.layout.fragment_playing, container, false);
+        mPlayActivity.updateToolbarTitle();
         return mViewGroupMain;
     }
 

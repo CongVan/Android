@@ -290,6 +290,11 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
 
     }
 
+    @Override
+    public void updateToolbarTitle() {
+
+    }
+
     private static void setIndexSongInPlayingList() {
         if (mSongPlayingList != null) {
             for (int i = 0; i < mSongPlayingList.size(); i++) {

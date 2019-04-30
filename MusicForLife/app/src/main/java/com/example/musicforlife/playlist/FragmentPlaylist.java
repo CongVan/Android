@@ -78,7 +78,7 @@ public class FragmentPlaylist extends Fragment {
         mRecyclerViewPlaylist = view.findViewById(R.id.rcvPlaylist);
         mButtonCreatePlaylist = view.findViewById(R.id.btnCreatePlaylist);
 
-        new Handler().post(new Runnable() {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
                 mPlaylist = PlaylistModel.getAllPlaylist();
@@ -93,7 +93,7 @@ public class FragmentPlaylist extends Fragment {
             public void onItemClick(View view, int position) {
                 // do whatever
                 Toast.makeText(mContext, "Playlist", Toast.LENGTH_SHORT).show();
-                showPlaylistSongActivity();
+                showPlaylistSongActivity(mPlaylist.get(position).getId());
             }
 
             @Override
@@ -112,9 +112,12 @@ public class FragmentPlaylist extends Fragment {
 //        refreshPlaylist();
     }
 
-    private void showPlaylistSongActivity() {
+    private void showPlaylistSongActivity(int playlistId) {
         Intent intent = new Intent(MainActivity.getMainActivity(), PlaylistSongActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        Bundle bundle =new Bundle();
+        bundle.putInt("playlistId",playlistId);
+        intent.putExtras(bundle);
         startActivity(intent);
 
     }

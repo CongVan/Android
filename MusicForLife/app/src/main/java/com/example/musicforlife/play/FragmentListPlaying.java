@@ -82,6 +82,7 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
 
 //        ViewGroup viewGroup= (ViewGroup)inflater.inflate(R.layout.fragment_playlist, container, false);
         View view = inflater.inflate(R.layout.fragment_list_playing, container, false);
+        mPlayActivity.updateToolbarTitle();
         return view;
 //        Log.i(TAG, "onCreateView PLAYLIST: OKOKOKO");
 //        mListSong = new ArrayList<>();// getAllAudioFromDevice(_context);
@@ -103,7 +104,7 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        txtSizePlayingList = mPlayActivity.findViewById(R.id.txtSizePlayingList);
+//        txtSizePlayingList = mPlayActivity.findViewById(R.id.txtSizePlayingList);
         mListViewSong = (RecyclerView) view.findViewById(R.id.lsvPlaying);
         mListSong = new ArrayList<>();// getAllAudioFromDevice(_context);
 
@@ -198,7 +199,7 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
            }
             mListSong.clear();
             mListSong.addAll(songModels);
-            txtSizePlayingList.setText(" (" + mListSong.size() + ") ");
+//            txtSizePlayingList.setText(" (" + mListSong.size() + ") ");
             Log.i(TAG, "onPostExecute: SONGS--> " + mListSong.size());
             mListViewSong.post(new Runnable() {
                 @Override

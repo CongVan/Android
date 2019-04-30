@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.support.v7.widget.Toolbar;
 
 import com.example.musicforlife.MainActivity;
 import com.example.musicforlife.R;
@@ -43,6 +44,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
 
     private SongModel mSongPlaying = null;
     private static PlayActivity mPlayActivity;
+    private Toolbar mToolbar;
 
     public static PlayActivity getActivity() {
         return mPlayActivity;
@@ -52,12 +54,27 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
-
+        mToolbar = findViewById(R.id.toolbarListPlaying);
         mLayoutPlay = findViewById(R.id.layoutPlayActivity);
         mPager = (ViewPager) findViewById(R.id.pager);
 
-        Utility.setTranslucentStatusBar(PlayActivity.this);
+
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setTitle("Đang phát");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        Utility.setTransparentStatusBar(PlayActivity.this);
+//        getSupportActionBar().setElevation(0);
         mLayoutPlay.setPadding(0, Utility.getStatusbarHeight(this), 0, 0);
+
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // do something here, such as start an Intent to the parent activity.
+                onBackPressed();
+            }
+        });
+//        mLayoutPlay.setPadding(0, Utility.getStatusbarHeight(this), 0, 0);
 
 //        mLayoutPlay.setBackground(ImageHelper.getMainBackgroundDrawable());
 
@@ -82,6 +99,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
 //                if (i==0){//Page list playing
 //                    ((FragmentPlayAdapter) mPagerAdapter).getFragmentListPlaying().updateListPlaying();
 //                }
+                updateToolbarTitle();
             }
 
             @Override
@@ -269,6 +287,16 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
         FragmentListPlaying fragmentListPlaying = ((FragmentPlayAdapter) mPagerAdapter).getFragmentListPlaying();
         if (fragmentListPlaying != null) {
             fragmentListPlaying.updateListPlaying();
+        }
+    }
+
+    @Override
+    public void updateToolbarTitle() {
+        int index = mPager.getCurrentItem();
+        if (index == 0) {
+            getSupportActionBar().setTitle("Danh sách phát");
+        } else if (index == 1) {
+            getSupportActionBar().setTitle("Đang phát");
         }
     }
 
