@@ -44,18 +44,11 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
     private LruCache<Long, Bitmap> mBitmapCache;
     private BitmapDrawable mPlaceholder;
     private ImageCacheHelper mImageCacheHelper;
-    public MyAdapterListener mListener;
+    public MultiClickAdapterListener mListener;
 
-    public interface MyAdapterListener {
 
-        void optionMenuClick(View v, int position);
 
-        void layoutItemClick(View v, int position);
-
-        void layoutItemLongClick(View v, int position);
-    }
-
-    public ListSongRecyclerAdaper(Context context, ArrayList<SongModel> listSong, MyAdapterListener listener) {
+    public ListSongRecyclerAdaper(Context context, ArrayList<SongModel> listSong, MultiClickAdapterListener listener) {
         mContext = context;
         mListSong = listSong;
         mImageCacheHelper = new ImageCacheHelper(R.mipmap.music_128);
@@ -152,7 +145,7 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
 
         CardView layoutItemSong;
 
-        ViewHolderRecycler(@NonNull View itemView, MyAdapterListener listenerCustom) {
+        ViewHolderRecycler(@NonNull View itemView, MultiClickAdapterListener listenerCustom) {
             super(itemView);
 
             this.titleSong = itemView.findViewById(R.id.txtTitle);

@@ -46,7 +46,7 @@ import com.example.musicforlife.R;
 import java.util.ArrayList;
 
 
-public class FragmentListSong extends Fragment implements FragmentCallbacks, ListSongRecyclerAdaper.MyAdapterListener {
+public class FragmentListSong extends Fragment implements FragmentCallbacks, MultiClickAdapterListener {
     MainActivity _mainActivity;
     Context _context;
     ArrayList<SongModel> _listSong;
@@ -59,7 +59,7 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Lis
     private static final int mThreshHold = 10;
     private static boolean mIsLoading;
     private static PlayService mPlayService;
-    private ListSongRecyclerAdaper.MyAdapterListener myAdapterListener;
+    private MultiClickAdapterListener myAdapterListener;
     private static Thread mThreadInitListPlaying;
 
     @Override

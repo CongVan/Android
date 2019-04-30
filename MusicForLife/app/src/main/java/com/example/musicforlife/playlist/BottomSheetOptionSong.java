@@ -6,13 +6,11 @@ import android.app.Dialog;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.design.widget.BottomSheetDialogFragment;
-import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.example.musicforlife.MainActivity;
 import com.example.musicforlife.R;
 import com.example.musicforlife.listsong.SongModel;
 import com.example.musicforlife.utilitys.ImageHelper;
@@ -79,8 +77,8 @@ public class BottomSheetOptionSong extends BottomSheetDialogFragment implements 
 
                 break;
             case R.id.btnAddSongToPlaylist:
-                FragmentDiaglogPlaylist fragmentDiaglogPlaylist = new FragmentDiaglogPlaylist(mCurrentSong);
-                fragmentDiaglogPlaylist.show(MainActivity.getMainActivity().getSupportFragmentManager(), "ADD_SONG_TO_LIST_QUEUE");
+                FragmentDialogPlaylist fragmentDialogPlaylist = new FragmentDialogPlaylist(mCurrentSong);
+                fragmentDialogPlaylist.show(getActivity().getSupportFragmentManager(), "ADD_SONG_TO_LIST_QUEUE");
                 BottomSheetOptionSong.this.dismiss();
                 break;
             case R.id.btnMakeRingTone:

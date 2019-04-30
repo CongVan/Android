@@ -15,19 +15,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.musicforlife.MainActivity;
 import com.example.musicforlife.R;
 import com.example.musicforlife.listsong.RecyclerItemClickListener;
 import com.example.musicforlife.listsong.SongModel;
-import com.example.musicforlife.utilitys.Utility;
 
 import java.util.ArrayList;
 
 @SuppressLint("ValidFragment")
-public class FragmentDiaglogPlaylist extends DialogFragment {
+public class FragmentDialogPlaylist extends DialogFragment {
     private Context mContext;
     private static RecyclerView mRecyclerViewPlaylist;
     private static PlaylistAdapter mPlaylistAdapter;
@@ -35,7 +33,7 @@ public class FragmentDiaglogPlaylist extends DialogFragment {
     private SongModel mCurrentSong;
 
     @SuppressLint("ValidFragment")
-    public FragmentDiaglogPlaylist(SongModel currentSong) {
+    public FragmentDialogPlaylist(SongModel currentSong) {
         mCurrentSong = currentSong;
     }
 
@@ -66,7 +64,7 @@ public class FragmentDiaglogPlaylist extends DialogFragment {
                         boolean isExists = PlaylistSongModel.isSongExisitPlaylist(mCurrentSong.getSongId(), playlist.getId());
                         if (isExists) {
                             Toast.makeText(mContext, "Bài hát đã tồn tại trong Playlist", Toast.LENGTH_LONG).show();
-                            FragmentDiaglogPlaylist.this.dismiss();
+                            FragmentDialogPlaylist.this.dismiss();
                             return;
                         }
                         long result = PlaylistSongModel.addSongToPlaylist(mCurrentSong.getSongId(), playlist.getId());
@@ -78,7 +76,7 @@ public class FragmentDiaglogPlaylist extends DialogFragment {
                             Toast.makeText(mContext, "Thất bại", Toast.LENGTH_SHORT).show();
                         }
                         FragmentPlaylist.refreshPlaylist();
-                        FragmentDiaglogPlaylist.this.dismiss();
+                        FragmentDialogPlaylist.this.dismiss();
                     }
 
                     @Override

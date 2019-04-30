@@ -6,16 +6,19 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.musicforlife.R;
+import com.example.musicforlife.listsong.MultiClickAdapterListener;
 import com.example.musicforlife.listsong.SongModel;
 import com.example.musicforlife.play.PlayService;
 import com.example.musicforlife.utilitys.ImageHelper;
@@ -31,19 +34,22 @@ public class SongPlaylistAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final int VIEW_TYPE_ITEM = 0;
     private static final int VIEW_TYPE_LOADING = 1;
     private static final String TAG = "ListPlayingAdapter";
+    public MultiClickAdapterListener mListener;
 
-    public SongPlaylistAdapter(Context context, ArrayList<SongModel> listSong) {
+
+    public SongPlaylistAdapter(Context context, ArrayList<SongModel> listSong,MultiClickAdapterListener listener) {
         this.mContext = context;
         this.mListSong = listSong;
+        mListener = listener;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         if (i == VIEW_TYPE_ITEM) {
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_item_song, viewGroup, false);
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_item_song_playlist, viewGroup, false);
 //            ViewHolderRecycler viewHolder = new ViewHolderRecycler(view);
-            return new ViewHolderRecycler(view);
+            return new ViewHolderRecycler(view,mListener);
         } else {
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.progressbar_circle, viewGroup, false);
             return new LoadingViewHolder(view);
@@ -90,31 +96,54 @@ public class SongPlaylistAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return position;
     }
 
-    private static class ViewHolderRecycler extends RecyclerView.ViewHolder {
+    private class ViewHolderRecycler extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         TextView titleSong;
         TextView album;
         TextView artist;
         TextView duration;
+        TextView txtRowCount;
+        ImageButton btnOptionSong;
 
-
-        public ViewHolderRecycler(@NonNull View itemView) {
+        CardView layoutItemSong;
+        public ViewHolderRecycler(@NonNull View itemView,MultiClickAdapterListener listenerCustom) {
             super(itemView);
-            this.titleSong = (TextView) itemView.findViewById(R.id.txtTitle);
+            titleSong = (TextView) itemView.findViewById(R.id.txtTitle);
 //            this.album=album;
-            this.artist = (TextView) itemView.findViewById(R.id.txtArtist);
+            artist = (TextView) itemView.findViewById(R.id.txtArtist);
 //            this.imageView = (ImageView) itemView.findViewById(R.id.imgSong);
-            this.duration = (TextView) itemView.findViewById(R.id.txtDuration);
-
+            duration = (TextView) itemView.findViewById(R.id.txtDuration);
+            txtRowCount = itemView.findViewById(R.id.txtRowCount);
+            btnOptionSong = itemView.findViewById(R.id.btnOptionSong);
+            layoutItemSong = itemView.findViewById(R.id.layoutItemSong);
+            btnOptionSong.setOnClickListener(this);
+            layoutItemSong.setOnClickListener(this);
+            layoutItemSong.setOnLongClickListener(this);
         }
 
         public void bindContent(SongModel songModel) {
             this.titleSong.setText(songModel.getTitle());
             this.artist.setText(songModel.getArtist());
             this.duration.setText(SongModel.formateMilliSeccond(songModel.getDuration()));
-
+            this.txtRowCount.setText(String.valueOf(getAdapterPosition() + 1));
         }
 
 
+        @Override
+        public void onClick(View v) {
+            if (v.getId() == R.id.btnOptionSong) {
+                Log.d(TAG, "onClick: CLICK OPTION MENU");
+                mListener.optionMenuClick(v, getAdapterPosition());
+            } else {
+                Log.d(TAG, "onClick: ITEM SONG");
+                mListener.layoutItemClick(v, getAdapterPosition());
+            }
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            mListener.layoutItemLongClick(v, getAdapterPosition());
+            return true;
+        }
     }
 
     private class LoadingViewHolder extends RecyclerView.ViewHolder {
