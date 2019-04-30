@@ -183,8 +183,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
                         if (songPlay != null) {
                             Log.d(TAG, "initMinimizePlaying: " + songPlay.getTitle());
                             showMinimizePlaying(songPlay);
-                            if (PlayService.getCurrentSongPlaying() == null) {
-
+                            if (PlayService.getListPlaying() == null) {
                                 PlayService.revertListSongPlaying();
                             }
                         } else {
@@ -258,7 +257,14 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
      */
     @Override
     public void togglePlayingMinimize(String sender) {
-        initMinimizePlaying();
+        SongModel songPlay = PlayService.getCurrentSongPlaying();
+        if (songPlay != null) {
+            showMinimizePlaying(songPlay);
+
+        } else {
+            hideMinimizePlaying();
+        }
+
     }
 
     private void showMinimizePlaying(SongModel songPlaying) {
@@ -268,6 +274,15 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         mTextViewArtistMinimize.setText(songPlaying.getArtist());
         Bitmap bitmap = ImageHelper.getBitmapFromPath(songPlaying.getPath(), R.mipmap.music_file_128);
         mImageViewSongMinimize.setImageBitmap(bitmap);
+
+        //update controls play
+        if (PlayService.isPlaying()) {
+
+            mButtonPlayMinimize.setImageDrawable(MainActivity.this.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
+        } else {
+            mButtonPlayMinimize.setImageDrawable(MainActivity.this.getDrawable(R.drawable.ic_play_circle_outline_black_32dp));
+        }
+        //\ update controls play
         mLayoutPlayingMinimizie.post(new Runnable() {
             @Override
             public void run() {
@@ -354,7 +369,6 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
                     mPlayService.play(songPlay);
                     mButtonPlayMinimize.setImageDrawable(MainActivity.this.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
                 }
-
                 break;
             case R.id.btnNextSong:
                 mPlayService.next(PlayService.ACTION_FROM_USER);
@@ -366,7 +380,6 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
                 break;
         }
     }
-
 
     //    private class FragmentThread extends Thread {
 //        @Override
