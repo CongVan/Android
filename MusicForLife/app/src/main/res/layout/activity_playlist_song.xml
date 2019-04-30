@@ -38,29 +38,41 @@
                 android:src="@mipmap/playlist_128"
                 app:layout_collapseMode="parallax" />
 
-            <TextView
-                android:id="@+id/txtTitlePlaylist"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="@dimen/margin_size_xlarge"
-                android:gravity="center"
-                android:textColor="@color/colorTitleWhiteSecondary"
-                android:textSize="@dimen/text_size_xlarge"
-                app:layout_collapseMode="none" />
-
-            <TextView
-                android:id="@+id/txtNumberOfSongPlaylist"
-
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:background="@color/colorBlackGlassLight"
                 android:layout_marginHorizontal="@dimen/margin_size_xlarge"
-                android:layout_marginTop="@dimen/margin_size_xlarge"
+                android:layout_marginVertical="@dimen/text_size_normal"
                 android:gravity="center"
-                android:textColor="@color/colorTitleWhiteSecondary"
-                android:textSize="@dimen/text_size_normal"
-                app:layout_collapseMode="none" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtTitlePlaylist"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/margin_size_snormal"
+                    android:gravity="center"
+                    android:textColor="@color/colorTitleWhiteSecondary"
+                    android:textSize="@dimen/text_size_xlarge"
+                    android:textStyle="bold"
+                    app:layout_collapseMode="none" />
+
+                <TextView
+                    android:id="@+id/txtNumberOfSongPlaylist"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/margin_size_snormal"
+                    android:gravity="center"
+                    android:textColor="@color/colorTitleWhiteSecondary"
+                    android:textSize="@dimen/text_size_large"
+                    app:layout_collapseMode="none" />
+            </LinearLayout>
+
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/htab_toolbar"
