@@ -284,25 +284,19 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Lis
 //    }
 
     private void playSong(SongModel songPlay) {
-
         mPlayService.play(songPlay);
 
-        if (mThreadInitListPlaying == null) {
-            mThreadInitListPlaying = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    mPlayService.initListPlaying(SongModel.getAllSongs(DatabaseManager.getInstance()));
-                }
-            });
-            mThreadInitListPlaying.start();
-        } else {
-            if (mThreadInitListPlaying.isAlive()) {
-                mThreadInitListPlaying.interrupt();
-            }
-            mThreadInitListPlaying.start();
+        if (mThreadInitListPlaying != null && mThreadInitListPlaying.isAlive()) {
+            mThreadInitListPlaying.interrupt();
         }
 
-
+        mThreadInitListPlaying = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mPlayService.initListPlaying(SongModel.getAllSongs(DatabaseManager.getInstance()));
+            }
+        });
+        mThreadInitListPlaying.start();
         _mainActivity.playSongsFromFragmentListToMain(FragmentPlaylist.SENDER);
     }
 

@@ -97,9 +97,12 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
                     boolean resultUpdateStatus = PlayModel.updateStatusPlaying(mOldSongPlaying.getSongId(), mCurrentSongPlaying.getSongId());
                     Log.d(TAG, "initListPlaying: UPDATE STATUS" + resultUpdateStatus);
                 }
-
+                if (mPlayingList == null || mSongPlayingList == null) {
+                    updatePlayingList();
+                }
             }
         }).start();
+
 
     }
 
@@ -379,6 +382,7 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
             }
         }).start();
     }
+
 
     public static ArrayList<SongModel> getListPlaying() {
         return mSongPlayingList;
