@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.ContextThemeWrapper;
+import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -45,7 +46,7 @@ import com.example.musicforlife.R;
 import java.util.ArrayList;
 
 
-public class FragmentListSong extends Fragment implements FragmentCallbacks, RecyclerItemClickListener.OnItemClickListener {
+public class FragmentListSong extends Fragment implements FragmentCallbacks, ListSongRecyclerAdaper.MyAdapterListener {
     MainActivity _mainActivity;
     Context _context;
     ArrayList<SongModel> _listSong;
@@ -58,6 +59,8 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Rec
     private static final int mThreshHold = 10;
     private static boolean mIsLoading;
     private static PlayService mPlayService;
+    private ListSongRecyclerAdaper.MyAdapterListener myAdapterListener;
+    private static Thread mThreadInitListPlaying;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,6 +80,7 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Rec
 //        args.putString("Key1", "OK");
 //        fragmentListSong.setArguments(args);
         mPlayService = PlayService.newInstance();
+
         return fragmentListSong;
     }
 
@@ -116,13 +120,46 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Rec
             @Override
             public void run() {
                 _listSong = SongModel.getSongsWithThreshold(MainActivity.mDatabaseManager, 0, mThreshHold);
-                _listSongAdapter = new ListSongRecyclerAdaper(_context, _listSong);
+                _listSongAdapter = new ListSongRecyclerAdaper(_context, _listSong, FragmentListSong.this);
                 _listViewSong.setLayoutManager(new LinearLayoutManager(_context));
                 _listViewSong.setAdapter(_listSongAdapter);
                 _txtSizeOfListSong.setText("Tìm thấy " + String.valueOf(SongModel.getRowsSong(MainActivity.mDatabaseManager)) + " bài hát");
             }
         });
-        _listViewSong.addOnItemTouchListener(new RecyclerItemClickListener(_context, _listViewSong, this));
+//        _listViewSong.addOnItemTouchListener(new RecyclerItemClickListener(_context, _listViewSong, new RecyclerItemClickListener.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(View view, int position) {
+//                boolean isOptionMenuClick=false;
+//                ImageButton btnOption = view.findViewById(R.id.btnOptionSong);
+//                btnOption.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//
+////                        Toast.makeText(MainActivity.getMainActivity(), "CLICK OPTION MENU", Toast.LENGTH_SHORT).show();
+//                        Log.d(TAG, "onClick: OPTION MENU CLICK " + v.getId());
+//                    }
+//                });
+////
+//                Toast.makeText(_context, "CLICK SONG " + view.getId() + "_" + view.getTag() + "_" + R.id.btnOptionSong, Toast.LENGTH_SHORT).show();
+//////        Log.d(TAG, "onItemClick: CLICK SONG TAG: " + view.getTag());
+////                final SongModel songPlay = _listSong.get(position);
+////                mPlayService.play(songPlay);
+////                new Thread(new Runnable() {
+////                    @Override
+////                    public void run() {
+////                        mPlayService.initListPlaying(SongModel.getAllSongs(DatabaseManager.getInstance()));
+////                        Log.d(TAG, "run: ");
+////                    }
+////                }).start();
+////
+////                _mainActivity.playSongsFromFragmentListToMain(FragmentPlaylist.SENDER);
+//            }
+//
+//            @Override
+//            public void onLongItemClick(View view, int position) {
+//
+//            }
+//        }));
         _listViewSong.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -228,41 +265,90 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Rec
 //        new loadImageFromStorage().execute();
     }
 
-    @Override
-    public void onItemClick(View view, int position) {
-        final SongModel songPlay = _listSong.get(position);
+    //    @Override
+//    public void onItemClick(View view, final int position) {
+//
+////        ImageButton btnOption = view.findViewById(R.id.btnOptionSong);
+////        btnOption.setOnClickListener(new View.OnClickListener() {
+////            @Override
+////            public void onClick(View v) {
+////
+////                Toast.makeText(MainActivity.getMainActivity(), "CLICK OPTION MENU", Toast.LENGTH_SHORT).show();
+////                Log.d(TAG, "onClick: OPTION MENU CLICK " + v.getId());
+////            }
+////        });
+//
+//        Toast.makeText(_context, "CLICK SONG " + view.getId() + "_" + view.getTag() + "_" + R.id.btnOptionSong, Toast.LENGTH_SHORT).show();
+////        Log.d(TAG, "onItemClick: CLICK SONG TAG: " + view.getTag());
+//
+//    }
+
+    private void playSong(SongModel songPlay) {
+
         mPlayService.play(songPlay);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                mPlayService.initListPlaying(SongModel.getAllSongs(DatabaseManager.getInstance()));
-                Log.d(TAG, "run: ");
+
+        if (mThreadInitListPlaying == null) {
+            mThreadInitListPlaying = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    mPlayService.initListPlaying(SongModel.getAllSongs(DatabaseManager.getInstance()));
+                }
+            });
+            mThreadInitListPlaying.start();
+        } else {
+            if (mThreadInitListPlaying.isAlive()) {
+                mThreadInitListPlaying.interrupt();
             }
-        }).start();
+            mThreadInitListPlaying.start();
+        }
+
 
         _mainActivity.playSongsFromFragmentListToMain(FragmentPlaylist.SENDER);
     }
 
-    @Override
-    public void onLongItemClick(View view, int position) {
-        Toast.makeText(_context, "LONG CLICK ITEM SONG" + position, Toast.LENGTH_SHORT).show();
+    private void showBottomSheetOptionSong(SongModel song) {
 
-//        Context wrapper = new ContextThemeWrapper(_mainActivity, R.style.PopupMenu);
-//
-//        PopupMenu popup = new PopupMenu(wrapper, view);
-//        popup.getMenuInflater().inflate(R.menu.menu_option_song, popup.getMenu());
-//
-//        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-//            public boolean onMenuItemClick(MenuItem item) {
-//                Toast.makeText(_mainActivity, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
-//                return true;
-//            }
-//        });
-//        popup.show();//showing popup menu
-        final SongModel songPlay = _listSong.get(position);
-        BottomSheetOptionSong bottomSheetDialogFragment = new BottomSheetOptionSong(songPlay);
+        BottomSheetOptionSong bottomSheetDialogFragment = new BottomSheetOptionSong(song);
         bottomSheetDialogFragment.show(_mainActivity.getSupportFragmentManager(), "Bottom Sheet Dialog Fragment");
+    }
 
+//    @Override
+//    public void onLongItemClick(View view, final int position) {
+//        final SongModel songChose = _listSong.get(position);
+//        showBottomSheetOptionSong(songChose);
+//
+////        Context wrapper = new ContextThemeWrapper(_mainActivity, R.style.PopupMenu);
+////
+////        PopupMenu popup = new PopupMenu(wrapper, view);
+////        popup.getMenuInflater().inflate(R.menu.menu_option_song, popup.getMenu());
+////
+////        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+////            public boolean onMenuItemClick(MenuItem item) {
+////                Toast.makeText(_mainActivity, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+////                return true;
+////            }
+////        });
+////        popup.show();//showing popup menu
+//
+//
+//    }
+
+    @Override
+    public void optionMenuClick(View v, int position) {
+        final SongModel songChose = _listSong.get(position);
+        showBottomSheetOptionSong(songChose);
+    }
+
+    @Override
+    public void layoutItemClick(View v, int position) {
+        final SongModel songChose = _listSong.get(position);
+        playSong(songChose);
+    }
+
+    @Override
+    public void layoutItemLongClick(View v, int position) {
+        final SongModel songChose = _listSong.get(position);
+        showBottomSheetOptionSong(songChose);
     }
 
     private class loadImageFromStorage extends AsyncTask<Void, Integer, ArrayList<SongModel>> {

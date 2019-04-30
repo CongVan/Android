@@ -3,26 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clickable="true"
-    android:focusable="true"
-    android:foreground="?android:attr/selectableItemBackground"
-    android:orientation="vertical"
 
-    >
+    android:orientation="vertical">
     <!--android:clickable="true"-->
     <!--android:foreground="?android:attr/selectableItemBackground"-->
     <android.support.v7.widget.CardView
-
+        android:id="@+id/layoutItemSong"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="@dimen/margin_size_xsmall"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
         app:cardCornerRadius="@dimen/border_radius_small"
         app:cardElevation="0dp"
         card_view:cardBackgroundColor="@color/colorTranparent"
-
         card_view:cardPreventCornerOverlap="false">
         <!--card_view:cardCornerRadius="@dimen/border_radius_large"-->
         <TableLayout
@@ -94,8 +93,8 @@
                         android:id="@+id/txtArtist"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Ca sĩ"
                         android:layout_gravity="left"
+                        android:text="Ca sĩ"
                         android:textColor="@color/colorTitleWhiteSecondary"
                         android:textSize="@dimen/text_size_small"
 
@@ -121,11 +120,12 @@
                         android:id="@+id/txtDuration"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:gravity="center_vertical"
+                        android:padding="@dimen/margin_size_small"
                         android:text="Thời gian"
                         android:textColor="@color/colorTitleWhiteSecondary"
-                        android:textSize="@dimen/text_size_small"
-                        android:visibility="gone" />
+                        android:textSize="@dimen/text_size_small" />
 
                     <ImageButton
                         android:id="@+id/btnOptionSong"
@@ -134,8 +134,10 @@
                         android:layout_gravity="center_vertical"
                         android:background="@color/colorTranparent"
                         android:clickable="true"
+                        android:focusable="true"
                         android:foreground="?attr/selectableItemBackground"
-                        android:padding="@dimen/margin_size_xsmall"
+                        android:gravity="center_vertical"
+                        android:padding="@dimen/margin_size_snormal"
                         android:src="@drawable/ic_more_vert_black_24dp" />
 
                 </LinearLayout>

@@ -141,15 +141,18 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
     }
 
     private void setResourceImagePlaying() {
-        Bitmap bitmapPlaying = ImageHelper.getBitmapFromPath(mSongPlaying.getPath());
+        if (mSongPlaying != null) {
+            Bitmap bitmapPlaying = ImageHelper.getBitmapFromPath(mSongPlaying.getPath());
 //        Bitmap bitmapBgPlaying = ImageHelper.getBitmapFromPath(mSongPlaying.getPath(), R.drawable.background_1);
-        if (bitmapPlaying == null) {
-            bitmapPlaying = ImageHelper.drawableToBitmap(R.mipmap.music_128);
-            mImagePlaying.setScaleType(ImageView.ScaleType.CENTER);
-        } else {
-            mImagePlaying.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            if (bitmapPlaying == null) {
+                bitmapPlaying = ImageHelper.drawableToBitmap(R.mipmap.music_128);
+                mImagePlaying.setScaleType(ImageView.ScaleType.CENTER);
+            } else {
+                mImagePlaying.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            }
+            mImagePlaying.setImageBitmap(bitmapPlaying);
         }
-        mImagePlaying.setImageBitmap(bitmapPlaying);
+
 
 //        Bitmap bitmapBlurBgPlaying = ImageHelper.blurBitmap(bitmapBgPlaying, 1.0f, 100);
 //        Bitmap bitmapOverlay = ImageHelper.createImage(bitmapBgPlaying.getWidth(), bitmapBgPlaying.getHeight(), Color.argb(100, 0, 0, 0));
@@ -159,7 +162,7 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
 //        } else {
 //            mTableLayoutControlPlaying.setBackgroundColor(Color.TRANSPARENT);
 //        }
-        Log.d(TAG, "setResourceImagePlaying: ISDARK" + ImageHelper.isDarkBitmap(bitmapPlaying));
+//        Log.d(TAG, "setResourceImagePlaying: ISDARK" + ImageHelper.isDarkBitmap(bitmapPlaying));
     }
 
     @Override

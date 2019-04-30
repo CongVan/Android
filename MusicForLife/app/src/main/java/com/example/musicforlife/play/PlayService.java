@@ -330,7 +330,9 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
     @Override
     public void onCompletion(MediaPlayer mp) {
         Log.d(TAG, "onCompletion: NEXT -> ");
+        mCountDownTimerUpdateSeekBar.cancel();
         next(ACTION_FROM_SYSTEM);
+
     }
 
     //    @Override
