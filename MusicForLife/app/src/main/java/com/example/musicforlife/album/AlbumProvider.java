@@ -96,9 +96,9 @@ public class AlbumProvider {
                 songModel.setSongId(cursor.getInt(1));
                 songModel.setTitle(cursor.getString(2));
                 songModel.setAlbum(cursor.getString(3));
-                songModel.setArtist(cursor.getString(4));
+                songModel.setDuration(cursor.getLong(4));
                 songModel.setFolder(cursor.getString(5));
-                songModel.setDuration(cursor.getLong(6));
+                songModel.setArtist(cursor.getString(6));
                 songModel.setPath(cursor.getString(7));
                 songModel.setAlbumId(cursor.getInt(8));
                 arr.add(songModel);
