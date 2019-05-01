@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         mPagerAdapter = new PagerMainAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setPageTransformer(true, null);
-        mViewPager.setOffscreenPageLimit(1);
+        mViewPager.setOffscreenPageLimit(mPagerAdapter.getCount());
         mTabLayout.setupWithViewPager(mViewPager);
         mPlayService = PlayService.newInstance();
 

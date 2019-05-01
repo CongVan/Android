@@ -6,9 +6,11 @@
     android:id="@+id/bottomSheetPlay"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorBgSecondary"
+    android:background="@color/colorTranparent"
     android:clickable="true"
-    android:foreground="?android:attr/selectableItemBackground">
+
+    android:foreground="?android:attr/selectableItemBackground"
+    android:focusable="true">
 
     <!--app:behavior_peekHeight="80dp"-->
     <!--app:layout_behavior="android.support.design.widget.BottomSheetBehavior"-->
@@ -17,12 +19,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:clickable="true"
-        android:foreground="?android:attr/selectableItemBackground"
-        app:cardBackgroundColor="@color/colorTranparent"
-        app:cardCornerRadius="@dimen/border_radius_normal"
+        app:cardBackgroundColor="@color/colorBgSecondary"
+        app:cardCornerRadius="@dimen/border_radius_xnormal"
         app:cardElevation="0dp"
-        app:cardPreventCornerOverlap="false">
+
+        app:cardPreventCornerOverlap="true">
 
         <TableLayout
             android:layout_width="match_parent"
@@ -34,10 +35,7 @@
                 <android.support.v7.widget.CardView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_size_small"
-                    android:layout_marginTop="@dimen/margin_size_small"
-                    android:layout_marginRight="@dimen/margin_size_snormal"
-                    android:layout_marginBottom="@dimen/margin_size_small"
+                    android:layout_margin="@dimen/margin_size_small"
                     app:cardCornerRadius="@dimen/border_radius_small"
                     app:cardUseCompatPadding="true"
                     card_view:cardBackgroundColor="@color/colorWhiteLight"
@@ -59,6 +57,7 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_size_small"
                     android:layout_gravity="center_vertical"
                     android:orientation="vertical">
 
@@ -70,7 +69,7 @@
 
                         <TextView
                             android:id="@+id/txtTitleMinimize"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom|left"
                             android:gravity="left"

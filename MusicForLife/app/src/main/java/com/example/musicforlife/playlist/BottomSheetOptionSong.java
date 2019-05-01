@@ -74,6 +74,7 @@ public class BottomSheetOptionSong extends BottomSheetDialogFragment implements 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnAddSongToQueue:
+
                 break;
             case R.id.btnAddSongToPlaylist:
                 FragmentDialogPlaylist fragmentDialogPlaylist = new FragmentDialogPlaylist(mCurrentSong);

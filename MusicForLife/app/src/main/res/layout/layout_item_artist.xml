@@ -7,8 +7,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:clickable="true"
-    android:foreground="?android:attr/selectableItemBackground"
     android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
     android:orientation="vertical">
 
     <android.support.v7.widget.CardView
@@ -16,11 +16,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/margin_size_xsmall"
         app:cardCornerRadius="@dimen/border_radius_small"
         app:cardElevation="0dp"
         card_view:cardBackgroundColor="@color/colorTranparent"
-        card_view:cardPreventCornerOverlap="false"
-        android:layout_marginBottom="@dimen/margin_size_xsmall">
+        card_view:cardPreventCornerOverlap="false">
 
         <TableLayout
             android:layout_width="match_parent"
@@ -32,10 +32,7 @@
                 <android.support.v7.widget.CardView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_size_small"
-                    android:layout_marginTop="@dimen/margin_size_small"
-                    android:layout_marginRight="@dimen/margin_size_normal"
-                    android:layout_marginBottom="@dimen/margin_size_small"
+                    android:layout_margin="@dimen/margin_size_snormal"
                     app:cardCornerRadius="@dimen/border_radius_small"
                     app:cardUseCompatPadding="false"
                     card_view:cardBackgroundColor="@color/colorTranparent"
@@ -47,9 +44,8 @@
                         android:layout_width="@dimen/image_card_item_playlist"
                         android:layout_height="@dimen/image_card_item_playlist"
                         android:adjustViewBounds="true"
-
                         android:scaleType="fitCenter"
-                        tools:srcCompat="@mipmap/microphone_128"/>
+                        tools:srcCompat="@mipmap/microphone_128" />
 
                 </android.support.v7.widget.CardView>
 
@@ -58,6 +54,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/margin_size_small"
                     android:orientation="vertical">
 
                     <TextView
@@ -75,8 +72,8 @@
                         android:id="@+id/txtArtistCount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/colorTitleWhiteSecondary"
                         android:text="0 bài hát"
+                        android:textColor="@color/colorTitleWhiteSecondary"
                         android:textSize="@dimen/text_size_small"
 
                         />

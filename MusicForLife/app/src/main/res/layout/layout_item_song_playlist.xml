@@ -35,14 +35,15 @@
 
                 <TextView
                     android:id="@+id/txtRowCount"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/margin_size_large"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_size_snormal"
-
-                    android:textSize="@dimen/text_size_normal"
-                    android:textColor="@color/colorTitleWhiteSecondary"
                     android:layout_gravity="center"
-                    android:text="1" />
+                    android:gravity="right"
+
+                    android:layout_margin="@dimen/margin_size_snormal"
+                    android:text="1"
+                    android:textColor="@color/colorTitleWhiteSecondary"
+                    android:textSize="@dimen/text_size_small" />
 
                 <android.support.v7.widget.CardView
                     android:layout_width="@dimen/image_card_item"

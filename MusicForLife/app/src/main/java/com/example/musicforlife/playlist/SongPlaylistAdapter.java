@@ -37,7 +37,7 @@ public class SongPlaylistAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public MultiClickAdapterListener mListener;
 
 
-    public SongPlaylistAdapter(Context context, ArrayList<SongModel> listSong,MultiClickAdapterListener listener) {
+    public SongPlaylistAdapter(Context context, ArrayList<SongModel> listSong, MultiClickAdapterListener listener) {
         this.mContext = context;
         this.mListSong = listSong;
         mListener = listener;
@@ -49,7 +49,7 @@ public class SongPlaylistAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (i == VIEW_TYPE_ITEM) {
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_item_song_playlist, viewGroup, false);
 //            ViewHolderRecycler viewHolder = new ViewHolderRecycler(view);
-            return new ViewHolderRecycler(view,mListener);
+            return new ViewHolderRecycler(view, mListener);
         } else {
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.progressbar_circle, viewGroup, false);
             return new LoadingViewHolder(view);
@@ -105,7 +105,8 @@ public class SongPlaylistAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ImageButton btnOptionSong;
 
         CardView layoutItemSong;
-        public ViewHolderRecycler(@NonNull View itemView,MultiClickAdapterListener listenerCustom) {
+
+        public ViewHolderRecycler(@NonNull View itemView, MultiClickAdapterListener listenerCustom) {
             super(itemView);
             titleSong = (TextView) itemView.findViewById(R.id.txtTitle);
 //            this.album=album;
