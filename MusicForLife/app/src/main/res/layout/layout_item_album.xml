@@ -18,7 +18,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="1dp"
         app:cardElevation="0dp"
-        card_view:cardBackgroundColor="@color/colorBlackGlassLight"
+        card_view:cardBackgroundColor="@color/colorTranparent"
         card_view:cardCornerRadius="@dimen/margin_size_small"
         card_view:cardPreventCornerOverlap="false"
         card_view:contentPadding="1dp">
@@ -38,9 +38,9 @@
                     android:layout_marginRight="@dimen/margin_size_normal"
                     android:layout_marginBottom="@dimen/margin_size_small"
                     app:cardCornerRadius="@dimen/border_radius_small"
-                    app:cardUseCompatPadding="true"
+                    app:cardUseCompatPadding="false"
                     card_view:cardBackgroundColor="@color/colorTranparent"
-                    card_view:cardElevation="@dimen/elevation_xsmall"
+                    card_view:cardElevation="0dp"
                     card_view:contentPadding="0dp">
 
                     <ImageView

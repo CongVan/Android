@@ -18,11 +18,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="@dimen/margin_size_xsmall"
+        android:layout_marginHorizontal="@dimen/margin_size_small"
+        android:layout_marginVertical="@dimen/margin_size_xsmall"
         app:cardCornerRadius="@dimen/border_radius_small"
         app:cardElevation="0dp"
         app:contentPadding="@dimen/margin_size_snormal"
-        card_view:cardBackgroundColor="@color/colorBlackGlassLight"
+        card_view:cardBackgroundColor="@color/colorTranparent"
         card_view:cardPreventCornerOverlap="false"
 
         >

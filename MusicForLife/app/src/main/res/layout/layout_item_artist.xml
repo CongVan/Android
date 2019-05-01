@@ -18,14 +18,13 @@
         android:layout_gravity="center"
         app:cardCornerRadius="@dimen/border_radius_small"
         app:cardElevation="0dp"
-        card_view:cardBackgroundColor="@color/colorBlackGlassLight"
+        card_view:cardBackgroundColor="@color/colorTranparent"
         card_view:cardPreventCornerOverlap="false"
         android:layout_marginBottom="@dimen/margin_size_xsmall">
 
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/margin_size_snormal"
             android:stretchColumns="1">
 
             <TableRow>
@@ -38,9 +37,9 @@
                     android:layout_marginRight="@dimen/margin_size_normal"
                     android:layout_marginBottom="@dimen/margin_size_small"
                     app:cardCornerRadius="@dimen/border_radius_small"
-                    app:cardUseCompatPadding="true"
+                    app:cardUseCompatPadding="false"
                     card_view:cardBackgroundColor="@color/colorTranparent"
-                    card_view:cardElevation="@dimen/elevation_xsmall"
+                    card_view:cardElevation="0dp"
                     card_view:contentPadding="0dp">
 
                     <ImageView

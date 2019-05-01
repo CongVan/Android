@@ -2,11 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBgPrimaryTranslucent"
     android:orientation="vertical"
-    android:paddingVertical="@dimen/margin_size_snormal"
     android:paddingHorizontal="@dimen/margin_size_normal"
-    android:background="@color/colorBgPrimary"
-    >
+    android:paddingVertical="@dimen/margin_size_snormal">
 
     <TextView
         android:layout_width="match_parent"
@@ -18,13 +17,12 @@
 
     <EditText
         android:id="@+id/txtTilePlaylistCreate"
+        style="@style/EditText.Primary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawableTint="@color/colorPrimary"
         android:foregroundTint="@color/colorPrimary"
-        style="@style/EditText.Primary"
-        android:theme="@style/EditText.Primary"
-        />
+        android:theme="@style/EditText.Primary" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,8 +36,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_size_small"
             android:background="@android:color/transparent"
-            android:text="Hủy"
             android:padding="@dimen/margin_size_small"
+            android:text="Hủy"
             android:textColor="@color/colorTitleWhitePrimary" />
 
         <Button
@@ -50,7 +48,7 @@
             android:background="@color/colorTranparent"
             android:padding="@dimen/margin_size_small"
             android:text="Hoàn tất"
-            android:textColor="@color/colorAccent" />
+            android:textColor="@color/colorTitleWhitePrimary" />
 
 
     </LinearLayout>

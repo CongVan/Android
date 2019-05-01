@@ -101,10 +101,10 @@ public class PlaylistSongActivity extends AppCompatActivity implements MultiClic
         setSupportActionBar(mToolbar);
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        Utility.setTransparentStatusBar(this);
+        Utility.setTranslucentStatusBar(this);
 //        mAppbarLayoutPlaylist.setPadding(0,Utility.getStatusbarHeight(this),0,0);
 //        mToolbar.setPadding(0, Utility.getStatusbarHeight(this), 0, Utility.getStatusbarHeight(this));
-        mLayoutSongPlaylist.setPadding(0, Utility.getStatusbarHeight(this), 0, 0);
+//        mLayoutSongPlaylist.setPadding(0, Utility.getStatusbarHeight(this), 0, 0);
         mTxtTitlePlaylist.setText(mCurrentPlaylist.getTitle());
         mTxtNumberOfSongPlaylist.setText(String.valueOf(mCurrentPlaylist.getNumberOfSongs()) + " bài hát");
 

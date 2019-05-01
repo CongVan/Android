@@ -95,10 +95,10 @@
                     android:layout_height="320dp"
                     android:layout_centerHorizontal="true"
                     android:layout_gravity="center"
-
+                    app:cardUseCompatPadding="false"
                     app:cardBackgroundColor="@color/colorBlackGlassLight"
                     app:cardCornerRadius="@dimen/border_radius_large"
-                    app:cardElevation="@dimen/elevation_large"
+                    app:cardElevation="0dp"
                     app:contentPadding="0dp">
 
                     <ImageView
