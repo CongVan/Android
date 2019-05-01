@@ -128,7 +128,7 @@ public class PlaylistSongActivity extends AppCompatActivity implements MultiClic
     }
 
     private void showBottomSheetOptionSong(SongModel song) {
-        BottomSheetOptionSong bottomSheetDialogFragment = new BottomSheetOptionSong(song);
+        BottomSheetOptionSongPlaylist bottomSheetDialogFragment = new BottomSheetOptionSongPlaylist(song, mCurrentPlaylist);
         bottomSheetDialogFragment.show(getSupportFragmentManager(), "Bottom Sheet Dialog Fragment");
     }
 

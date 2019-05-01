@@ -59,7 +59,7 @@ public class FragmentDialogPlaylist extends DialogFragment {
                     @Override
                     public void onItemClick(View view, int position) {
                         // do whatever
-                        Toast.makeText(mContext, "Playlist", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "Playlist", Toast.LENGTH_LONG).show();
                         PlaylistModel playlist = mPlaylist.get(position);
                         boolean isExists = PlaylistSongModel.isSongExisitPlaylist(mCurrentSong.getSongId(), playlist.getId());
                         if (isExists) {
@@ -70,10 +70,10 @@ public class FragmentDialogPlaylist extends DialogFragment {
                         long result = PlaylistSongModel.addSongToPlaylist(mCurrentSong.getSongId(), playlist.getId(), mCurrentSong.getPath());
 
                         if (result > 0) {
-                            Toast.makeText(mContext, "Thành công", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, "Thành công", Toast.LENGTH_LONG).show();
 
                         } else {
-                            Toast.makeText(mContext, "Thất bại", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, "Thất bại", Toast.LENGTH_LONG).show();
                         }
                         FragmentPlaylist.refreshPlaylist();
                         FragmentDialogPlaylist.this.dismiss();
@@ -82,7 +82,7 @@ public class FragmentDialogPlaylist extends DialogFragment {
                     @Override
                     public void onLongItemClick(View view, int position) {
                         // do whatever
-                        Toast.makeText(mContext, "LONG CLICK ITEM SONG" + position, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "LONG CLICK ITEM SONG" + position, Toast.LENGTH_LONG).show();
                     }
                 }));
             }

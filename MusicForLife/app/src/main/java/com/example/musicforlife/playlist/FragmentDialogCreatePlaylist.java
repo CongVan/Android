@@ -65,7 +65,7 @@ public class FragmentDialogCreatePlaylist extends DialogFragment implements View
                     long result = PlaylistModel.createPlaylist(title);
                     if (result > 0) {
                         FragmentPlaylist.refreshPlaylist();
-//                        Toast.makeText(getActivity().getApplicationContext(), String.valueOf(result), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), "Đã tạo mới playlist", Toast.LENGTH_LONG).show();
                     }
                     FragmentDialogCreatePlaylist.this.getDialog().cancel();
                 }
