@@ -106,4 +106,14 @@ public class PlaylistSongModel {
         return resultSongs;
 
     }
+
+    public static long deleteSongInPlaylist(int songId, int playlistId) {
+        SQLiteDatabase db = DatabaseManager.getInstance().getWritableDatabase();
+
+        long resultDeleteSong = db.delete(TABLE_NAME, COLUMN_SONG_ID + " = ?" + " AND " + COLUMN_PLAYLIST_ID + " =?", new String[]{
+                String.valueOf(songId), String.valueOf(playlistId)
+        });
+
+        return resultDeleteSong;
+    }
 }

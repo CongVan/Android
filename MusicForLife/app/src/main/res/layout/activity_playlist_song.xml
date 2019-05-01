@@ -42,9 +42,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@color/colorBlackGlassLight"
                 android:layout_marginHorizontal="@dimen/margin_size_xlarge"
                 android:layout_marginVertical="@dimen/text_size_normal"
+                android:background="@color/colorBlackGlassLight"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -54,15 +54,16 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="@dimen/margin_size_snormal"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:gravity="center"
                     android:textColor="@color/colorTitleWhiteSecondary"
-                    android:textSize="@dimen/text_size_xlarge"
+                    android:textSize="@dimen/text_size_large"
                     android:textStyle="bold"
                     app:layout_collapseMode="none" />
 
                 <TextView
                     android:id="@+id/txtNumberOfSongPlaylist"
-
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

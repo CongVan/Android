@@ -1,24 +1,37 @@
 package com.example.musicforlife.playlist;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.musicforlife.R;
 
-public class FragmentDialogCreatePlaylist extends DialogFragment implements View.OnClickListener {
+import static android.support.v4.content.ContextCompat.getSystemService;
 
-    EditText txtTitlePlaylist;
-    Button btnCancel;
-    Button btnSubmit;
+@SuppressLint("ValidFragment")
+public class FragmentDialogEditPlaylist extends DialogFragment implements View.OnClickListener {
+
+    private EditText txtTitlePlaylist;
+    private Button btnCancel;
+    private Button btnSubmit;
+    private PlaylistModel mCurrentPlaylist;
+
+    @SuppressLint("ValidFragment")
+    public FragmentDialogEditPlaylist(PlaylistModel playlistModel) {
+        mCurrentPlaylist = playlistModel;
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -26,16 +39,20 @@ public class FragmentDialogCreatePlaylist extends DialogFragment implements View
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
-        View view = inflater.inflate(R.layout.layout_create_playlist, null);
-        txtTitlePlaylist = view.findViewById(R.id.txtTilePlaylistCreate);
-        btnCancel = view.findViewById(R.id.btnCancelCreatePlaylist);
-        btnSubmit = view.findViewById(R.id.btnSubmitCreatePlaylist);
+        View view = inflater.inflate(R.layout.layout_edit_playlist, null);
+        txtTitlePlaylist = view.findViewById(R.id.txtTilePlaylistEdit);
+        btnCancel = view.findViewById(R.id.btnCancelEditPlaylist);
+        btnSubmit = view.findViewById(R.id.btnSubmitEditPlaylist);
 
         btnSubmit.setOnClickListener(this);
         btnCancel.setOnClickListener(this);
 
+        txtTitlePlaylist.setText(mCurrentPlaylist.getTitle());
         txtTitlePlaylist.requestFocus();
-//        txtTitlePlaylist.setSelection(txtTitlePlaylist.length());
+        txtTitlePlaylist.setSelection(txtTitlePlaylist.length());
+
+
+
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
         builder.setView(view);
@@ -58,21 +75,22 @@ public class FragmentDialogCreatePlaylist extends DialogFragment implements View
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
+    }
+
+
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btnCancelCreatePlaylist:
-                FragmentDialogCreatePlaylist.this.getDialog().cancel();
+            case R.id.btnCancelEditPlaylist:
+                FragmentDialogEditPlaylist.this.getDialog().cancel();
                 break;
-            case R.id.btnSubmitCreatePlaylist:
-                String title = txtTitlePlaylist.getText().toString().trim();
-                if (!title.isEmpty()) {
-                    long result = PlaylistModel.createPlaylist(title);
-                    if (result > 0) {
-                        FragmentPlaylist.refreshPlaylist();
-                        Toast.makeText(getActivity().getApplicationContext(), "Đã tạo mới playlist", Toast.LENGTH_LONG).show();
-                    }
-                    FragmentDialogCreatePlaylist.this.getDialog().cancel();
-                }
+            case R.id.btnSubmitEditPlaylist:
+
                 break;
             default:
                 break;

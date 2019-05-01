@@ -33,10 +33,13 @@ public class BottomSheetOptionSongPlaylist extends BottomSheetDialogFragment imp
     private ImageView mImgSong;
     private ImageHelper mImageHelper;
 
+    private PlaylistSongActivity mSongPlaylistActivity;
+
     @SuppressLint("ValidFragment")
-    public BottomSheetOptionSongPlaylist(SongModel songOption, PlaylistModel playlistOption) {
+    public BottomSheetOptionSongPlaylist(SongModel songOption, PlaylistModel playlistOption, PlaylistSongActivity playlistSongActivity) {
         mCurrentSong = songOption;
         mCurrentPlaylist = playlistOption;
+        mSongPlaylistActivity = playlistSongActivity;
     }
 
     @SuppressLint("RestrictedApi")
@@ -100,7 +103,14 @@ public class BottomSheetOptionSongPlaylist extends BottomSheetDialogFragment imp
             case R.id.btnDeleteSong:
                 break;
             case R.id.btnDeleteSongInPlaylist:
-
+                long result = PlaylistSongModel.deleteSongInPlaylist(mCurrentSong.getSongId(), mCurrentPlaylist.getId());
+                if (result > 0) {
+                    Toast.makeText(getActivity(), "Đã xóa khỏi playlist", Toast.LENGTH_LONG).show();
+                    mSongPlaylistActivity.refreshSongPlaylist();
+                } else {
+                    Toast.makeText(getActivity(), "Thất bại", Toast.LENGTH_LONG).show();
+                }
+                BottomSheetOptionSongPlaylist.this.dismiss();
                 break;
 
         }

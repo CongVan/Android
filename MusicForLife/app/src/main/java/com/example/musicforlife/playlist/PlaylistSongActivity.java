@@ -1,18 +1,24 @@
 package com.example.musicforlife.playlist;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,7 +35,7 @@ import com.example.musicforlife.utilitys.Utility;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class PlaylistSongActivity extends AppCompatActivity implements MultiClickAdapterListener {
+public class PlaylistSongActivity extends AppCompatActivity implements MultiClickAdapterListener, SongPlaylistInterface {
 
     RecyclerView mRecylerViewListSong;
     SongPlaylistAdapter mSongPlaylistAdapter;
@@ -89,10 +95,21 @@ public class PlaylistSongActivity extends AppCompatActivity implements MultiClic
             @Override
             public void onClick(View v) {
                 // do something here, such as start an Intent to the parent activity.
-                finish();
+//                finish();
+                onBackPressed();
             }
         });
         mPlayService = PlayService.newInstance();
+
+        mTxtTitlePlaylist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTxtTitlePlaylist.setCursorVisible(true);
+                mTxtTitlePlaylist.setFocusableInTouchMode(true);
+                mTxtTitlePlaylist.setInputType(InputType.TYPE_CLASS_TEXT);
+                mTxtTitlePlaylist.requestFocus(); //to trigger the soft input
+            }
+        });
 
     }
 
@@ -127,8 +144,29 @@ public class PlaylistSongActivity extends AppCompatActivity implements MultiClic
 
     }
 
+    @Override
+    public void refreshSongPlaylist() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<SongModel> songsPlaylist = PlaylistSongModel.getAllSongFromPlaylistId(mCurrentPlaylistId);
+                mListSong.clear();
+                mListSong.addAll(songsPlaylist);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mTxtNumberOfSongPlaylist.setText(String.valueOf(mCurrentPlaylist.getNumberOfSongs()) + " bài hát");
+                        mSongPlaylistAdapter.notifyDataSetChanged();
+                    }
+                });
+
+
+            }
+        });
+    }
+
     private void showBottomSheetOptionSong(SongModel song) {
-        BottomSheetOptionSongPlaylist bottomSheetDialogFragment = new BottomSheetOptionSongPlaylist(song, mCurrentPlaylist);
+        BottomSheetOptionSongPlaylist bottomSheetDialogFragment = new BottomSheetOptionSongPlaylist(song, mCurrentPlaylist, this);
         bottomSheetDialogFragment.show(getSupportFragmentManager(), "Bottom Sheet Dialog Fragment");
     }
 
@@ -167,5 +205,27 @@ public class PlaylistSongActivity extends AppCompatActivity implements MultiClic
     public void layoutItemLongClick(View v, int position) {
         final SongModel songChose = mListSong.get(position);
         showBottomSheetOptionSong(songChose);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_option_playlist_song, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_delete_playlist:
+                break;
+
+            case R.id.action_edit_title_playlist:
+                DialogFragment dialogEditPlaylist = new FragmentDialogEditPlaylist(mCurrentPlaylist);
+//                Dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
+                dialogEditPlaylist.show(getSupportFragmentManager(), "EditPlaylist");
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
