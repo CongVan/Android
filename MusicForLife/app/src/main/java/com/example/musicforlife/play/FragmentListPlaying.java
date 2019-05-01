@@ -19,13 +19,14 @@ import android.widget.Toast;
 
 import com.example.musicforlife.MainActivity;
 import com.example.musicforlife.R;
+import com.example.musicforlife.listsong.MultiClickAdapterListener;
 import com.example.musicforlife.listsong.RecyclerItemClickListener;
 import com.example.musicforlife.listsong.SongModel;
 
 import java.util.ArrayList;
 
 
-public class FragmentListPlaying extends Fragment implements FragmentPlayInterface {
+public class FragmentListPlaying extends Fragment implements FragmentPlayInterface, MultiClickAdapterListener {
     private MainActivity mMainActivity;
     private PlayActivity mPlayActivity;
     private Context mContext;
@@ -37,10 +38,10 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
     private LoadListPlaying loadListPlaying;
     private TextView txtSizePlayingList;
     private static SongModel mSongPlaying = null;
-    private boolean playFirst = true;
+
     public static final String SENDER = "FRAGMENT_PLAYING_LIST";
     private static final String TAG = "FragmentListPlaying";
-    private int oldSizeListPlaying;
+    private MultiClickAdapterListener myAdapterListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,7 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
 //        args.putString("Key1", "OK");
 //        fragmentListPlaying.setArguments(args);
         mSongPlaying = PlayService.getCurrentSongPlaying();
+
         return fragmentListPlaying;
     }
 
@@ -110,28 +112,28 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
 
 //        _layoutListSong = (NestedScrollView) _inflater.inflate(R.layout.fragment_list_song, null);
 
-        mListSongAdapter = new ListPlayingAdapter(mContext, mListSong);
+        mListSongAdapter = new ListPlayingAdapter(mContext, mListSong, FragmentListPlaying.this);
         mListViewSong.setLayoutManager(new LinearLayoutManager(mContext));
         mListViewSong.setAdapter(mListSongAdapter);
-        mListViewSong.addOnItemTouchListener(
-                new RecyclerItemClickListener(mContext, mListViewSong, new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        // do whatever
-                        Toast.makeText(mContext, "CLICK ITEM SONG" + position, Toast.LENGTH_SHORT).show();
-                        mSongPlaying = mListSong.get(position);
-                        mPlayActivity.controlSong(FragmentListPlaying.SENDER, mSongPlaying, PlayService.ACTION_PLAY);
-                        mPlayActivity.updateControlPlaying(SENDER, mSongPlaying);
-                        mListSongAdapter.notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onLongItemClick(View view, int position) {
-                        // do whatever
-                        Toast.makeText(mContext, "LONG CLICK ITEM SONG" + position, Toast.LENGTH_SHORT).show();
-                    }
-                })
-        );
+//        mListViewSong.addOnItemTouchListener(
+//                new RecyclerItemClickListener(mContext, mListViewSong, new RecyclerItemClickListener.OnItemClickListener() {
+//                    @Override
+//                    public void onItemClick(View view, int position) {
+//                        // do whatever
+//                        Toast.makeText(mContext, "CLICK ITEM SONG" + position, Toast.LENGTH_SHORT).show();
+//                        mSongPlaying = mListSong.get(position);
+//                        mPlayActivity.controlSong(FragmentListPlaying.SENDER, mSongPlaying, PlayService.ACTION_PLAY);
+//                        mPlayActivity.updateControlPlaying(SENDER, mSongPlaying);
+//                        mListSongAdapter.notifyDataSetChanged();
+//                    }
+//
+//                    @Override
+//                    public void onLongItemClick(View view, int position) {
+//                        // do whatever
+//                        Toast.makeText(mContext, "LONG CLICK ITEM SONG" + position, Toast.LENGTH_SHORT).show();
+//                    }
+//                })
+//        );
         updateListPlaying();
 //        if (mSongPlaying != null && PlayService.getCurrentSongPlaying() != null) {
 //            if (mSongPlaying.getSongId() == PlayService.getCurrentSongPlaying().getSongId()) {
@@ -188,15 +190,44 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
 
     }
 
+    @Override
+    public void optionMenuClick(View v, int position) {
+
+    }
+
+    @Override
+    public void checkboxClick(View v, int position) {
+        Toast.makeText(mContext, "checkboxClick " + position, Toast.LENGTH_SHORT).show();
+        boolean isChecked = mListSong.get(position).isChecked();
+        mListSong.get(position).setChecked(!isChecked);
+        mListSongAdapter.notifyItemChanged(position);
+
+    }
+
+    @Override
+    public void layoutItemClick(View v, int position) {
+        Toast.makeText(mContext, "CLICK ITEM SONG" + position, Toast.LENGTH_SHORT).show();
+        mSongPlaying = mListSong.get(position);
+        mPlayActivity.controlSong(FragmentListPlaying.SENDER, mSongPlaying, PlayService.ACTION_PLAY);
+        mPlayActivity.updateControlPlaying(SENDER, mSongPlaying);
+        mListSongAdapter.notifyDataSetChanged();
+
+    }
+
+    @Override
+    public void layoutItemLongClick(View v, int position) {
+
+    }
+
     private class LoadListPlaying extends AsyncTask<Void, Integer, ArrayList<SongModel>> {
 
         @SuppressLint("SetTextI18n")
         @Override
         protected void onPostExecute(ArrayList<SongModel> songModels) {
             super.onPostExecute(songModels);
-           if (songModels==null){
-               return;
-           }
+            if (songModels == null) {
+                return;
+            }
             mListSong.clear();
             mListSong.addAll(songModels);
 //            txtSizePlayingList.setText(" (" + mListSong.size() + ") ");

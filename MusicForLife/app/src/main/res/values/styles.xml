@@ -12,7 +12,7 @@
 
     <style name="PopupMenu" parent="Widget.AppCompat.PopupMenu">
         <item name="android:popupBackground">@color/colorBgPrimary</item>
-
+        <item name="android:colorBackground">@color/colorBgPrimary</item>
         <item name="android:textColor">@color/colorTitleWhitePrimary</item>
     </style>
 
@@ -58,5 +58,12 @@
 
     <style name="DialogPrimary" parent="Theme.AppCompat.DayNight.Dialog.Alert">
         <item name="android:background">@color/colorBgPrimaryTranslucent</item>
+    </style>
+
+    <style name="CheckboxStyle" parent="@style/AppTheme">
+        <item name="colorAccent">@color/colorTitleWhitePrimary</item>
+        // for checked
+        <item name="android:textColorSecondary">@color/colorTitleWhitePrimary</item>
+        // for unchecked
     </style>
 </resources>

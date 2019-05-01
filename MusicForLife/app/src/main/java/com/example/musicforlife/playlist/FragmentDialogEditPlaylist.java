@@ -92,7 +92,7 @@ public class FragmentDialogEditPlaylist extends DialogFragment implements View.O
                 break;
             case R.id.btnSubmitEditPlaylist:
                 String titleEdit = txtTitlePlaylist.getText().toString();
-                if (titleEdit.isEmpty()){
+                if (titleEdit.isEmpty()) {
                     break;
                 }
                 mCurrentPlaylist.setTitle(titleEdit);
@@ -100,6 +100,7 @@ public class FragmentDialogEditPlaylist extends DialogFragment implements View.O
                 if (result > 0) {
                     Toast.makeText(getActivity().getApplicationContext(), "Sửa tiêu đề thành công", Toast.LENGTH_LONG).show();
                     mPlaylistSongActivity.refreshTitlePlaylist(mCurrentPlaylist.getTitle());
+                    FragmentPlaylist.refreshPlaylist();
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(), "Thất bại", Toast.LENGTH_LONG).show();
                 }

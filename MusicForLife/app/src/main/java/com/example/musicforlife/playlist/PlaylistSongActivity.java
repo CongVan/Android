@@ -205,6 +205,11 @@ public class PlaylistSongActivity extends AppCompatActivity implements MultiClic
     }
 
     @Override
+    public void checkboxClick(View v, int position) {
+
+    }
+
+    @Override
     public void layoutItemClick(View v, int position) {
         final SongModel songChose = mListSong.get(position);
         playSong(songChose);

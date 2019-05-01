@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
@@ -12,93 +13,131 @@
     android:orientation="vertical">
 
     <!--<android.support.v7.widget.CardView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="center"-->
-        <!--app:cardBackgroundColor="@color/colorBlackGlassLight"-->
-        <!--android:layout_marginBottom="@dimen/margin_size_small"-->
-        <!--app:cardCornerRadius="0dp"-->
-        <!--app:cardElevation="0dp">-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center"-->
+    <!--app:cardBackgroundColor="@color/colorBlackGlassLight"-->
+    <!--android:layout_marginBottom="@dimen/margin_size_small"-->
+    <!--app:cardCornerRadius="0dp"-->
+    <!--app:cardElevation="0dp">-->
 
-        <!--<LinearLayout-->
-            <!--android:id="@+id/topContentPlay"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:clickable="true"-->
-            <!--android:foreground="?attr/selectableItemBackground"-->
-            <!--android:gravity="top"-->
-            <!--android:onClick="hidePlayActivity"-->
-            <!--android:orientation="horizontal"-->
+    <!--<LinearLayout-->
+    <!--android:id="@+id/topContentPlay"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:clickable="true"-->
+    <!--android:foreground="?attr/selectableItemBackground"-->
+    <!--android:gravity="top"-->
+    <!--android:onClick="hidePlayActivity"-->
+    <!--android:orientation="horizontal"-->
 
-            <!--&gt;-->
-
-
-            <!--<ImageButton-->
-                <!--android:layout_width="@dimen/image_icon_item"-->
-                <!--android:layout_height="@dimen/image_icon_item"-->
-                <!--android:layout_gravity="center_vertical"-->
-
-                <!--android:layout_marginTop="@dimen/margin_size_small"-->
-                <!--android:layout_marginRight="@dimen/margin_size_normal"-->
-                <!--android:layout_marginBottom="@dimen/margin_size_small"-->
-                <!--android:background="@android:color/transparent"-->
-                <!--android:clickable="true"-->
-                <!--android:foreground="?attr/selectableItemBackground"-->
-                <!--android:onClick="hidePlayActivity"-->
-                <!--android:scaleType="fitXY"-->
-                <!--android:src="@drawable/ic_chevron_left_black_52dp" />-->
-
-            <!--<LinearLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="center"-->
-                <!--android:orientation="horizontal">-->
-
-                <!--<TextView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginBottom="@dimen/margin_size_small"-->
-                    <!--android:text="Danh sách phát"-->
-                    <!--android:textColor="@color/colorWhite"-->
-
-                    <!--android:textSize="@dimen/text_size_large" />-->
-
-                <!--<TextView-->
-                    <!--android:id="@+id/txtSizePlayingList"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginLeft="@dimen/margin_size_small"-->
-                    <!--android:text=" "-->
-                    <!--android:textColor="@color/colorWhiteLight"-->
-                    <!--android:textSize="@dimen/text_size_large" />-->
-                <!--&lt;!&ndash;<TextView&ndash;&gt;-->
-                <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:layout_marginBottom="@dimen/margin_size_small"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:text="Tên bài hát tại đây"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:textColor="@color/colorWhite"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:textSize="@dimen/text_size_large" />&ndash;&gt;-->
-
-                <!--&lt;!&ndash;<TextView&ndash;&gt;-->
-                <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:text="Tên ca sĩ tại đây"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:textColor="@color/colorWhiteLight"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:textSize="@dimen/text_size_normal" />&ndash;&gt;-->
-
-            <!--</LinearLayout>-->
+    <!--&gt;-->
 
 
-        <!--</LinearLayout>-->
+    <!--<ImageButton-->
+    <!--android:layout_width="@dimen/image_icon_item"-->
+    <!--android:layout_height="@dimen/image_icon_item"-->
+    <!--android:layout_gravity="center_vertical"-->
+
+    <!--android:layout_marginTop="@dimen/margin_size_small"-->
+    <!--android:layout_marginRight="@dimen/margin_size_normal"-->
+    <!--android:layout_marginBottom="@dimen/margin_size_small"-->
+    <!--android:background="@android:color/transparent"-->
+    <!--android:clickable="true"-->
+    <!--android:foreground="?attr/selectableItemBackground"-->
+    <!--android:onClick="hidePlayActivity"-->
+    <!--android:scaleType="fitXY"-->
+    <!--android:src="@drawable/ic_chevron_left_black_52dp" />-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center"-->
+    <!--android:orientation="horizontal">-->
+
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginBottom="@dimen/margin_size_small"-->
+    <!--android:text="Danh sách phát"-->
+    <!--android:textColor="@color/colorWhite"-->
+
+    <!--android:textSize="@dimen/text_size_large" />-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/txtSizePlayingList"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginLeft="@dimen/margin_size_small"-->
+    <!--android:text=" "-->
+    <!--android:textColor="@color/colorWhiteLight"-->
+    <!--android:textSize="@dimen/text_size_large" />-->
+    <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_marginBottom="@dimen/margin_size_small"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:text="Tên bài hát tại đây"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:textColor="@color/colorWhite"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:textSize="@dimen/text_size_large" />&ndash;&gt;-->
+
+    <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:text="Tên ca sĩ tại đây"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:textColor="@color/colorWhiteLight"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:textSize="@dimen/text_size_normal" />&ndash;&gt;-->
+
+    <!--</LinearLayout>-->
+
+
+    <!--</LinearLayout>-->
     <!--</android.support.v7.widget.CardView>-->
+    <LinearLayout
+        android:id="@+id/layoutDeleteSong"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginLeft="@dimen/margin_size_snormal"
+        android:orientation="horizontal"
+        android:paddingVertical="@dimen/margin_size_small">
 
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/selectedAllSongPlaying"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginLeft="@dimen/margin_size_snormal"
+
+            android:checked="false"
+            android:gravity="center"
+            android:padding="@dimen/margin_size_small"
+            android:text="Chọn tất cả"
+            android:textAlignment="textStart"
+            android:textColor="@color/colorTitleWhitePrimary"
+            android:textSize="@dimen/text_size_normal"
+            tools:ignore="RtlCompat" />
+
+
+    </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
-
         android:id="@+id/lsvPlaying"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-        />
-</android.support.design.widget.CoordinatorLayout>
+    <Button
+        android:id="@+id/btnDeSelectedAllSongPlaying"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:background="@color/colorTranparent"
+        android:drawableLeft="@drawable/ic_delete_black_32dp"
+        android:gravity="center"
+        android:padding="@dimen/margin_size_small"
+        android:text="Xóa"
+        android:textSize="@dimen/text_size_normal"
+        android:textAllCaps="false"
+        android:textColor="@color/colorTitleWhitePrimary" />
+</LinearLayout>

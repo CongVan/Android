@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:dither="true"
+
     android:shape="oval">
     <size
-        android:width="240dp"
-        android:height="240dp"></size>
-    <solid android:color="@android:color/transparent" />
+        android:width="@dimen/checkbox_primary"
+        android:height="@dimen/checkbox_primary" />
+    <solid android:color="@color/colorTranparent" />
 
     <stroke
-        android:width="4dp"
-        android:color="#FFFFFF" />
+        android:width="2dp"
+        android:color="@color/colorTitleWhitePrimary" />
 
 </shape>

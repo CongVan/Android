@@ -55,7 +55,7 @@ public class SongModel implements Serializable {
     private int songId;
     private String folder;
     private int albumId;
-
+    private boolean isChecked;
     public String getPath() {
         return path;
     }
@@ -398,5 +398,13 @@ public class SongModel implements Serializable {
 
     public void setAlbumId(int albumId) {
         this.albumId = albumId;
+    }
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
     }
 }

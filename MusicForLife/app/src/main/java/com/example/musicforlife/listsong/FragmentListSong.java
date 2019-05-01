@@ -334,6 +334,11 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Mul
     }
 
     @Override
+    public void checkboxClick(View v, int position) {
+
+    }
+
+    @Override
     public void layoutItemClick(View v, int position) {
         final SongModel songChose = _listSong.get(position);
         playSong(songChose);

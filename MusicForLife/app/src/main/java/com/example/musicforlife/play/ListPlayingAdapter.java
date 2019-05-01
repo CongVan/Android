@@ -6,6 +6,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.AppCompatCheckBox;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.musicforlife.listsong.MultiClickAdapterListener;
 import com.example.musicforlife.utilitys.ImageHelper;
 import com.example.musicforlife.R;
 import com.example.musicforlife.listsong.SongModel;
@@ -31,9 +34,12 @@ public class ListPlayingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private static final int VIEW_TYPE_LOADING = 1;
     private static final String TAG = "ListPlayingAdapter";
 
-    public ListPlayingAdapter(Context context, ArrayList<SongModel> listSong) {
+    private MultiClickAdapterListener mMultiClickListener;
+
+    public ListPlayingAdapter(Context context, ArrayList<SongModel> listSong, MultiClickAdapterListener mMultiClickListener) {
         this.mContext = context;
         this.mListSong = listSong;
+        this.mMultiClickListener = mMultiClickListener;
     }
 
     @NonNull
@@ -90,13 +96,15 @@ public class ListPlayingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return position;
     }
 
-    private static class ViewHolderRecycler extends RecyclerView.ViewHolder {
+    private class ViewHolderRecycler extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         TextView titleSong;
         TextView album;
         TextView artist;
         TextView duration;
-//        ImageView imageView;
+        //        ImageView imageView;
         ImageView imgStatusPlaying;
+        AppCompatCheckBox chkSong;
+        CardView layoutItemSong;
 
         public ViewHolderRecycler(@NonNull View itemView) {
             super(itemView);
@@ -106,13 +114,17 @@ public class ListPlayingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 //            this.imageView = (ImageView) itemView.findViewById(R.id.imgSong);
             this.duration = (TextView) itemView.findViewById(R.id.txtDuration);
             this.imgStatusPlaying = (ImageView) itemView.findViewById(R.id.imgStatusPlaying);
+            chkSong = itemView.findViewById(R.id.checkBoxSong);
+            layoutItemSong = itemView.findViewById(R.id.layoutItemSongPlaying);
+            chkSong.setOnClickListener(this);
+            layoutItemSong.setOnClickListener(this);
         }
 
         public void bindContent(SongModel songModel) {
             this.titleSong.setText(songModel.getTitle());
             this.artist.setText(songModel.getArtist());
             this.duration.setText(SongModel.formateMilliSeccond(songModel.getDuration()));
-            Log.d(TAG, "bindContent: " + imgStatusPlaying);
+//            Log.d(TAG, "bindContent: " + imgStatusPlaying);
             if (songModel != null && PlayService.getCurrentSongPlaying() != null) {
                 if (songModel.getSongId() == PlayService.getCurrentSongPlaying().getSongId()) {
                     this.imgStatusPlaying.setVisibility(View.VISIBLE);
@@ -124,27 +136,29 @@ public class ListPlayingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     this.duration.setVisibility(View.VISIBLE);
                 }
             }
+            if (songModel.isChecked()) {
+                this.chkSong.setChecked(true);
+            } else {
+                this.chkSong.setChecked(false);
+            }
 
-//            if (imageView.getResources()==null){
-//            if (cancelPotentialWork(songModel.getPath(), imageView)) {
-//                final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
-//                final AsyncDrawable asyncDrawable = new AsyncDrawable(null, task);
-//                imageView.setImageDrawable(asyncDrawable);
-//                task.execute(songModel.getPath());
-//            }
-//            }
-
-//            new BitmapWorkerTask(imageView).execute(songModel.getPath());
-
-//            if (this.imageView.getDrawable() == null) {
-//            ParamImageThread paramImageThread = new ParamImageThread(this.imageView, songModel.getPath());
-//            new loadImageFromStorage().execute(paramImageThread);
-//            }
-
-
+//
         }
 
 
+        @Override
+        public void onClick(View v) {
+            if (v.getId() == R.id.checkBoxSong) {
+                mMultiClickListener.checkboxClick(v, getAdapterPosition());
+            } else {
+                mMultiClickListener.layoutItemClick(v, getAdapterPosition());
+            }
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            return false;
+        }
     }
 
     private class LoadingViewHolder extends RecyclerView.ViewHolder {
@@ -157,81 +171,4 @@ public class ListPlayingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
 
-    private static class AsyncDrawable extends BitmapDrawable {
-        private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskWeakReference;
-
-        public AsyncDrawable(Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
-//            super(resources, bitmap);
-            bitmapWorkerTaskWeakReference = new WeakReference<BitmapWorkerTask>(bitmapWorkerTask);
-
-        }
-
-        public BitmapWorkerTask getBitmapWorkerTask() {
-            return bitmapWorkerTaskWeakReference.get();
-        }
-
-    }
-
-    private static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
-        if (imageView != null) {
-            final Drawable drawable = imageView.getDrawable();
-            if (drawable instanceof AsyncDrawable) {
-                final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
-                return asyncDrawable.getBitmapWorkerTask();
-            }
-        }
-        return null;
-    }
-
-    private static boolean cancelPotentialWork(String pathImage, ImageView imageView) {
-        final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
-        if (bitmapWorkerTask != null) {
-            final String path = bitmapWorkerTask.pathImage;
-            if (path == null || pathImage == null) {
-                return false;
-            }
-            if (!path.equals(pathImage)) {
-                bitmapWorkerTask.cancel(true);
-            } else {
-                return false;
-            }
-        }
-        return true;
-
-    }
-
-    private static class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
-        private final WeakReference<ImageView> imageViewWeakReference;
-        String pathImage;
-        Bitmap mBitmap;
-
-        private BitmapWorkerTask(ImageView imageView) {
-            this.imageViewWeakReference = new WeakReference<ImageView>(imageView);
-        }
-
-
-        @Override
-        protected Bitmap doInBackground(String... strings) {
-            pathImage = strings[0];
-            Bitmap bitmap = ImageHelper.getBitmapFromPath(pathImage, R.mipmap.music_file_128);
-            mBitmap = bitmap;
-            return bitmap;
-
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if (isCancelled()) {
-                bitmap = null;
-            }
-
-            if (imageViewWeakReference != null && bitmap != null) {
-                final ImageView imageView = imageViewWeakReference.get();
-                final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
-                if (this == bitmapWorkerTask && imageView != null) {
-                    imageView.setImageBitmap(bitmap);
-                }
-            }
-        }
-    }
 }
