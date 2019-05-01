@@ -2,12 +2,14 @@ package com.example.musicforlife.playlist;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,6 +23,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.musicforlife.MainActivity;
 import com.example.musicforlife.R;
@@ -165,6 +168,12 @@ public class PlaylistSongActivity extends AppCompatActivity implements MultiClic
         });
     }
 
+    @Override
+    public void refreshTitlePlaylist(String titlePlaylist) {
+        mCurrentPlaylist.setTitle(titlePlaylist);
+        mTxtTitlePlaylist.setText(mCurrentPlaylist.getTitle());
+    }
+
     private void showBottomSheetOptionSong(SongModel song) {
         BottomSheetOptionSongPlaylist bottomSheetDialogFragment = new BottomSheetOptionSongPlaylist(song, mCurrentPlaylist, this);
         bottomSheetDialogFragment.show(getSupportFragmentManager(), "Bottom Sheet Dialog Fragment");
@@ -217,12 +226,31 @@ public class PlaylistSongActivity extends AppCompatActivity implements MultiClic
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_delete_playlist:
+                new AlertDialog.Builder(this, R.style.DialogPrimary)
+//                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle("Xác nhận?")
+                        .setMessage("Bạn có chắc muốn xóa playlist " + mCurrentPlaylist.getTitle() + " ?")
+                        .setPositiveButton("Xác nhận", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                long result = PlaylistModel.deletePlaylist(mCurrentPlaylistId);
+                                if (result > 0) {
+                                    Toast.makeText(PlaylistSongActivity.this, "Xóa thành công", Toast.LENGTH_LONG).show();
+                                    FragmentPlaylist.refreshPlaylist();
+                                } else {
+                                    Toast.makeText(PlaylistSongActivity.this, "Thất bại", Toast.LENGTH_LONG).show();
+                                }
+                                finish();
+                            }
+
+                        })
+                        .setNegativeButton("Đóng", null)
+                        .show();
                 break;
 
             case R.id.action_edit_title_playlist:
-                DialogFragment dialogEditPlaylist = new FragmentDialogEditPlaylist(mCurrentPlaylist);
+                DialogFragment dialogEditPlaylist = new FragmentDialogEditPlaylist(mCurrentPlaylist, this);
 //                Dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-
                 dialogEditPlaylist.show(getSupportFragmentManager(), "EditPlaylist");
                 break;
         }

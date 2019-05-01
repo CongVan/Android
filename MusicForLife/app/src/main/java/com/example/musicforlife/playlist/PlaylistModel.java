@@ -150,7 +150,6 @@ public class PlaylistModel {
     }
 
     public static PlaylistModel getInfoPlaylistById(int playlistId) {
-
         SQLiteDatabase db = DatabaseManager.getInstance().getReadableDatabase();
         String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_ID + "=" + playlistId;
         Cursor cursor = db.rawQuery(query, null);
@@ -165,5 +164,19 @@ public class PlaylistModel {
         }
 
         return null;
+    }
+
+    public static long updateTitlePlaylist(PlaylistModel playlistModel) {
+        SQLiteDatabase db = DatabaseManager.getInstance().getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(PlaylistModel.COLUMN_PLAYLIST_TITLE, playlistModel.getTitle());
+        long id = db.update(PlaylistModel.TABLE_NAME, contentValues, PlaylistModel.COLUMN_ID + " =? ", new String[]{String.valueOf(playlistModel.getId())});
+        return id;
+    }
+
+    public static long deletePlaylist(int playlistId) {
+        SQLiteDatabase db = DatabaseManager.getInstance().getWritableDatabase();
+        long result = db.delete(PlaylistModel.TABLE_NAME, COLUMN_ID + "=?", new String[]{String.valueOf(playlistId)});
+        return result;
     }
 }

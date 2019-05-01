@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.musicforlife.R;
 
@@ -27,10 +28,12 @@ public class FragmentDialogEditPlaylist extends DialogFragment implements View.O
     private Button btnCancel;
     private Button btnSubmit;
     private PlaylistModel mCurrentPlaylist;
+    private PlaylistSongActivity mPlaylistSongActivity;
 
     @SuppressLint("ValidFragment")
-    public FragmentDialogEditPlaylist(PlaylistModel playlistModel) {
+    public FragmentDialogEditPlaylist(PlaylistModel playlistModel, PlaylistSongActivity playlistSongActivity) {
         mCurrentPlaylist = playlistModel;
+        mPlaylistSongActivity = playlistSongActivity;
     }
 
     @Override
@@ -50,7 +53,6 @@ public class FragmentDialogEditPlaylist extends DialogFragment implements View.O
         txtTitlePlaylist.setText(mCurrentPlaylist.getTitle());
         txtTitlePlaylist.requestFocus();
         txtTitlePlaylist.setSelection(txtTitlePlaylist.length());
-
 
 
         // Inflate and set the layout for the dialog
@@ -82,7 +84,6 @@ public class FragmentDialogEditPlaylist extends DialogFragment implements View.O
     }
 
 
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -90,7 +91,19 @@ public class FragmentDialogEditPlaylist extends DialogFragment implements View.O
                 FragmentDialogEditPlaylist.this.getDialog().cancel();
                 break;
             case R.id.btnSubmitEditPlaylist:
-
+                String titleEdit = txtTitlePlaylist.getText().toString();
+                if (titleEdit.isEmpty()){
+                    break;
+                }
+                mCurrentPlaylist.setTitle(titleEdit);
+                long result = PlaylistModel.updateTitlePlaylist(mCurrentPlaylist);
+                if (result > 0) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Sửa tiêu đề thành công", Toast.LENGTH_LONG).show();
+                    mPlaylistSongActivity.refreshTitlePlaylist(mCurrentPlaylist.getTitle());
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "Thất bại", Toast.LENGTH_LONG).show();
+                }
+                FragmentDialogEditPlaylist.this.getDialog().cancel();
                 break;
             default:
                 break;

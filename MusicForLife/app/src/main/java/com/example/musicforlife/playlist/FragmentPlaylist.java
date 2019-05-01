@@ -167,7 +167,7 @@ public class FragmentPlaylist extends Fragment {
     }
 
     public synchronized static void refreshPlaylist() {
-        new Thread(new Runnable() {
+        new Handler().post(new Runnable() {
             @Override
             public void run() {
                 ArrayList<PlaylistModel> playlistModels = PlaylistModel.getAllPlaylist();
@@ -183,7 +183,7 @@ public class FragmentPlaylist extends Fragment {
                     }
                 });
             }
-        }).start();
+        });
 
 
     }

@@ -31,6 +31,16 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
+    <style name="ActionCircleButton" parent="Widget.AppCompat.ActionButton">
+        <item name="background">?attr/actionBarItemBackground</item>
+        <item name="paddingStart">12dp</item>
+        <item name="paddingEnd">12dp</item>
+        <item name="android:minWidth">@dimen/action_button_min_width_material</item>
+        <item name="android:minHeight">@dimen/action_button_min_height_material</item>
+        <item name="android:gravity">center</item>
+        <item name="android:scaleType">center</item>
+        <item name="android:maxLines">2</item>
+    </style>
 
     <style name="seekBarControlPlay" parent="Widget.AppCompat.SeekBar">
         <item name="android:progressBackgroundTint">@color/colorPrimaryLight</item>
@@ -46,4 +56,7 @@
         <item name="colorControlActivated">@color/colorPrimary</item>
     </style>
 
+    <style name="DialogPrimary" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:background">@color/colorBgPrimaryTranslucent</item>
+    </style>
 </resources>
