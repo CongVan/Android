@@ -232,4 +232,14 @@ public class PlayModel {
 //        cursor.close();
         return null;
     }
+
+    public static long deleteSongInListPlaying(int songId) {
+        SQLiteDatabase db = DatabaseManager.getInstance().getWritableDatabase();
+
+        long resultDeleteSong = db.delete(TABLE_NAME, COLUMN_SONG_ID + " = ?", new String[]{
+                String.valueOf(songId)
+        });
+
+        return resultDeleteSong;
+    }
 }

@@ -221,7 +221,7 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
         return 1;
     }
 
-    private static int updatePlayingList() {
+    public static int updatePlayingList() {
         mPlayingList = PlayModel.getListPlaying();
         mSongPlayingList = PlayModel.getSongPlayingList();
         setIndexSongInPlayingList();

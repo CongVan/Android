@@ -2,17 +2,22 @@ package com.example.musicforlife.play;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +27,9 @@ import com.example.musicforlife.R;
 import com.example.musicforlife.listsong.MultiClickAdapterListener;
 import com.example.musicforlife.listsong.RecyclerItemClickListener;
 import com.example.musicforlife.listsong.SongModel;
+import com.example.musicforlife.playlist.FragmentPlaylist;
+import com.example.musicforlife.playlist.PlaylistModel;
+import com.example.musicforlife.playlist.PlaylistSongActivity;
 
 import java.util.ArrayList;
 
@@ -37,11 +45,15 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
     private ListPlayingAdapter mListSongAdapter;
     private LoadListPlaying loadListPlaying;
     private TextView txtSizePlayingList;
+    private LinearLayout mLayoutDeleteSong;
+    private Button mBtnDeleteAllSongPlaying;
+    private AppCompatCheckBox mSelectedAllSongPlaying;
     private static SongModel mSongPlaying = null;
 
     public static final String SENDER = "FRAGMENT_PLAYING_LIST";
     private static final String TAG = "FragmentListPlaying";
     private MultiClickAdapterListener myAdapterListener;
+    private ArrayList<Integer> mListSelectedSong;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,7 +63,7 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
             mContext = getActivity();
             mPlayActivity = (PlayActivity) getActivity();
             loadListPlaying = new LoadListPlaying();
-
+            mListSelectedSong = new ArrayList<>();
 
         } catch (IllegalStateException e) {
 
@@ -108,6 +120,9 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
         super.onViewCreated(view, savedInstanceState);
 //        txtSizePlayingList = mPlayActivity.findViewById(R.id.txtSizePlayingList);
         mListViewSong = (RecyclerView) view.findViewById(R.id.lsvPlaying);
+        mLayoutDeleteSong = view.findViewById(R.id.layoutDeleteSong);
+        mBtnDeleteAllSongPlaying = view.findViewById(R.id.btnDeleteAllSongPlaying);
+        mSelectedAllSongPlaying = view.findViewById(R.id.selectedAllSongPlaying);
         mListSong = new ArrayList<>();// getAllAudioFromDevice(_context);
 
 //        _layoutListSong = (NestedScrollView) _inflater.inflate(R.layout.fragment_list_song, null);
@@ -115,34 +130,49 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
         mListSongAdapter = new ListPlayingAdapter(mContext, mListSong, FragmentListPlaying.this);
         mListViewSong.setLayoutManager(new LinearLayoutManager(mContext));
         mListViewSong.setAdapter(mListSongAdapter);
-//        mListViewSong.addOnItemTouchListener(
-//                new RecyclerItemClickListener(mContext, mListViewSong, new RecyclerItemClickListener.OnItemClickListener() {
-//                    @Override
-//                    public void onItemClick(View view, int position) {
-//                        // do whatever
-//                        Toast.makeText(mContext, "CLICK ITEM SONG" + position, Toast.LENGTH_SHORT).show();
-//                        mSongPlaying = mListSong.get(position);
-//                        mPlayActivity.controlSong(FragmentListPlaying.SENDER, mSongPlaying, PlayService.ACTION_PLAY);
-//                        mPlayActivity.updateControlPlaying(SENDER, mSongPlaying);
-//                        mListSongAdapter.notifyDataSetChanged();
-//                    }
-//
-//                    @Override
-//                    public void onLongItemClick(View view, int position) {
-//                        // do whatever
-//                        Toast.makeText(mContext, "LONG CLICK ITEM SONG" + position, Toast.LENGTH_SHORT).show();
-//                    }
-//                })
-//        );
+        mBtnDeleteAllSongPlaying.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(PlayActivity.getActivity(), R.style.DialogPrimary)
+//                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle("Xác nhận?")
+                        .setMessage("Bạn có chắc muốn xóa  " + mListSelectedSong.size() + " bài hát khỏi danh sách phát?")
+                        .setPositiveButton("Xác nhận", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                new Handler().post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        int resultAll = 0;
+                                        for (int songPositionSelected : mListSelectedSong) {
+                                            int songId = mListSong.get(songPositionSelected).getSongId();
+                                            long result = PlayModel.deleteSongInListPlaying(songId);
+                                            if (result > 0) {
+                                                resultAll++;
+
+                                            } else {
+                                                Toast.makeText(PlayActivity.getActivity(), "Thất bại", Toast.LENGTH_LONG).show();
+                                            }
+
+                                        }
+                                        Toast.makeText(PlayActivity.getActivity(), "Đã xóa " + resultAll + " bài hát", Toast.LENGTH_LONG).show();
+                                        mListSong = PlayModel.getSongPlayingList();
+                                        mListSongAdapter.notifyDataSetChanged();
+                                        hideViewDeleteAllSong();
+                                        //lười k tạo Interface
+                                        PlayService.updatePlayingList();
+                                    }
+                                });
+
+
+                            }
+
+                        })
+                        .setNegativeButton("Đóng", null)
+                        .show();
+            }
+        });
         updateListPlaying();
-//        if (mSongPlaying != null && PlayService.getCurrentSongPlaying() != null) {
-//            if (mSongPlaying.getSongId() == PlayService.getCurrentSongPlaying().getSongId()) {
-//                playFirst = false;
-//            }
-//        }
-
-//        new LoadListPlaying().execute();
-
     }
 
     @Override
@@ -195,13 +225,42 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
 
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void checkboxClick(View v, int position) {
         Toast.makeText(mContext, "checkboxClick " + position, Toast.LENGTH_SHORT).show();
         boolean isChecked = mListSong.get(position).isChecked();
         mListSong.get(position).setChecked(!isChecked);
         mListSongAdapter.notifyItemChanged(position);
+        if (!isChecked) {
+            mListSelectedSong.add(position);
+        } else {
+            mListSelectedSong.remove(mListSelectedSong.indexOf(position));
+        }
+        if (mListSelectedSong.size() > 0 && !isShowOfViewDeleteSong()) {
+            mLayoutDeleteSong.setVisibility(View.VISIBLE);
+            mBtnDeleteAllSongPlaying.setVisibility(View.VISIBLE);
+        } else if (isShowOfViewDeleteSong() && mListSelectedSong.size() == 0) {
+            mLayoutDeleteSong.setVisibility(View.GONE);
+            mBtnDeleteAllSongPlaying.setVisibility(View.GONE);
+        }
+        if (mListSelectedSong.size() == mListSong.size() && !mSelectedAllSongPlaying.isChecked()) {
+            mSelectedAllSongPlaying.setChecked(true);
+        } else if (mSelectedAllSongPlaying.isChecked()) {
+            mSelectedAllSongPlaying.setChecked(false);
+        }
+        mSelectedAllSongPlaying.setText("Chọn tất cả (" + mListSelectedSong.size() + ")");
+        Log.d(TAG, "checkboxClick: Position: " + position + ", Check: " + isChecked + ", Size selected: " + mListSelectedSong.size());
+    }
 
+    private boolean isShowOfViewDeleteSong() {
+        return mLayoutDeleteSong.getVisibility() == View.VISIBLE
+                && mBtnDeleteAllSongPlaying.getVisibility() == View.VISIBLE;
+    }
+
+    private void hideViewDeleteAllSong() {
+        mLayoutDeleteSong.setVisibility(View.VISIBLE);
+        mBtnDeleteAllSongPlaying.setVisibility(View.VISIBLE);
     }
 
     @Override
