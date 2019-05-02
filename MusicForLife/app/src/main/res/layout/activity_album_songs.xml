@@ -29,8 +29,8 @@
 
 
         <android.support.v7.widget.CardView
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
             android:layout_centerInParent="true"
@@ -63,7 +63,7 @@
                     android:id="@+id/albumSongName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginBottom="5dp"
                     android:text="Tên album"
                     android:textAlignment="center"
                     android:textColor="@color/colorTitleWhitePrimary"
@@ -74,7 +74,7 @@
                     android:id="@+id/albumSongArtistName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="5dp"
                     android:textAlignment="center"
                     android:text="Tên ca sĩ"
                     android:textColor="@color/colorWhite"
@@ -85,7 +85,7 @@
                     android:id="@+id/albumSongcount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="5dp"
                     android:textAlignment="center"
                     android:text="0 Bài hát"
                     android:textColor="@color/colorWhite"
