@@ -99,7 +99,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@drawable/corner_layout">
+        android:layout_margin="@dimen/margin_size_small"
+        android:background="@color/colorTranparent">
 
     </include>
 

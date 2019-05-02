@@ -1,4 +1,4 @@
-package com.example.musicforlife.play;
+package com.example.musicforlife.playlist;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -6,26 +6,27 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.musicforlife.listsong.MultiClickAdapterListener;
-import com.example.musicforlife.utilitys.ImageHelper;
 import com.example.musicforlife.R;
+import com.example.musicforlife.listsong.MultiClickAdapterListener;
 import com.example.musicforlife.listsong.SongModel;
+import com.example.musicforlife.play.PlayService;
+import com.example.musicforlife.utilitys.ImageHelper;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-public class ListPlayingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class SongPlaylistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static ArrayList<SongModel> mListSong;
     private static Context mContext;
@@ -33,22 +34,22 @@ public class ListPlayingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private static final int VIEW_TYPE_ITEM = 0;
     private static final int VIEW_TYPE_LOADING = 1;
     private static final String TAG = "ListPlayingAdapter";
+    public MultiClickAdapterListener mListener;
 
-    private MultiClickAdapterListener mMultiClickListener;
 
-    public ListPlayingAdapter(Context context, ArrayList<SongModel> listSong, MultiClickAdapterListener mMultiClickListener) {
+    public SongPlaylistAdapter(Context context, ArrayList<SongModel> listSong, MultiClickAdapterListener listener) {
         this.mContext = context;
         this.mListSong = listSong;
-        this.mMultiClickListener = mMultiClickListener;
+        mListener = listener;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         if (i == VIEW_TYPE_ITEM) {
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_item_song_playing, viewGroup, false);
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_item_song_playlist, viewGroup, false);
 //            ViewHolderRecycler viewHolder = new ViewHolderRecycler(view);
-            return new ViewHolderRecycler(view);
+            return new ViewHolderRecycler(view, mListener);
         } else {
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.progressbar_circle, viewGroup, false);
             return new LoadingViewHolder(view);
@@ -63,7 +64,6 @@ public class ListPlayingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         } else if (viewHolder instanceof LoadingViewHolder) {
             showLoading((LoadingViewHolder) viewHolder, i);
         }
-
     }
 
     private void showSongItem(ViewHolderRecycler viewHolder, int position) {
@@ -101,63 +101,49 @@ public class ListPlayingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         TextView album;
         TextView artist;
         TextView duration;
-        //        ImageView imageView;
-        ImageView imgStatusPlaying;
-        AppCompatCheckBox chkSong;
+        TextView txtRowCount;
+        ImageButton btnOptionSong;
+
         CardView layoutItemSong;
 
-        public ViewHolderRecycler(@NonNull View itemView) {
+        public ViewHolderRecycler(@NonNull View itemView, MultiClickAdapterListener listenerCustom) {
             super(itemView);
-            this.titleSong = (TextView) itemView.findViewById(R.id.txtTitle);
+            titleSong = (TextView) itemView.findViewById(R.id.txtTitle);
 //            this.album=album;
-            this.artist = (TextView) itemView.findViewById(R.id.txtArtist);
+            artist = (TextView) itemView.findViewById(R.id.txtArtist);
 //            this.imageView = (ImageView) itemView.findViewById(R.id.imgSong);
-            this.duration = (TextView) itemView.findViewById(R.id.txtDuration);
-            this.imgStatusPlaying = (ImageView) itemView.findViewById(R.id.imgStatusPlaying);
-            chkSong = itemView.findViewById(R.id.checkBoxSong);
-            layoutItemSong = itemView.findViewById(R.id.layoutItemSongPlaying);
-            chkSong.setOnClickListener(this);
+            duration = (TextView) itemView.findViewById(R.id.txtDuration);
+            txtRowCount = itemView.findViewById(R.id.txtRowCount);
+            btnOptionSong = itemView.findViewById(R.id.btnOptionSong);
+            layoutItemSong = itemView.findViewById(R.id.layoutItemSong);
+            btnOptionSong.setOnClickListener(this);
             layoutItemSong.setOnClickListener(this);
+            layoutItemSong.setOnLongClickListener(this);
         }
 
         public void bindContent(SongModel songModel) {
             this.titleSong.setText(songModel.getTitle());
             this.artist.setText(songModel.getArtist());
             this.duration.setText(SongModel.formateMilliSeccond(songModel.getDuration()));
-//            Log.d(TAG, "bindContent: " + imgStatusPlaying);
-            if (songModel != null && PlayService.getCurrentSongPlaying() != null) {
-                if (songModel.getSongId() == PlayService.getCurrentSongPlaying().getSongId()) {
-                    this.imgStatusPlaying.setVisibility(View.VISIBLE);
-                    this.duration.setVisibility(View.GONE);
-                    this.titleSong.setTextColor(mContext.getResources().getColor(R.color.colorAccent));
-                } else {
-                    this.titleSong.setTextColor(mContext.getResources().getColor(R.color.colorTitleWhitePrimary));
-                    this.imgStatusPlaying.setVisibility(View.GONE);
-                    this.duration.setVisibility(View.VISIBLE);
-                }
-            }
-            if (songModel.isChecked()) {
-                this.chkSong.setChecked(true);
-            } else {
-                this.chkSong.setChecked(false);
-            }
-
-//
+            this.txtRowCount.setText(String.valueOf(getAdapterPosition() + 1));
         }
 
 
         @Override
         public void onClick(View v) {
-            if (v.getId() == R.id.checkBoxSong) {
-                mMultiClickListener.checkboxClick(v, getAdapterPosition());
+            if (v.getId() == R.id.btnOptionSong) {
+                Log.d(TAG, "onClick: CLICK OPTION MENU");
+                mListener.optionMenuClick(v, getAdapterPosition());
             } else {
-                mMultiClickListener.layoutItemClick(v, getAdapterPosition());
+                Log.d(TAG, "onClick: ITEM SONG");
+                mListener.layoutItemClick(v, getAdapterPosition());
             }
         }
 
         @Override
         public boolean onLongClick(View v) {
-            return false;
+            mListener.layoutItemLongClick(v, getAdapterPosition());
+            return true;
         }
     }
 

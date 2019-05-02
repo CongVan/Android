@@ -18,6 +18,7 @@
 
     <dimen name="border_radius_small">08dp</dimen>
     <dimen name="border_radius_normal">16dp</dimen>
+    <dimen name="border_radius_xnormal">24dp</dimen>
     <dimen name="border_radius_large">32dp</dimen>
 
     <dimen name="elevation_xsmall">02dp</dimen>
@@ -26,7 +27,12 @@
     <dimen name="image_icon_item">48dp</dimen>
     <dimen name="image_card_item">48dp</dimen>
     <dimen name="image_optiton_sheet">64dp</dimen>
-    <dimen name="image_card_item_playlist">64dp</dimen>
+    <dimen name="image_card_item_playlist">60dp</dimen>
 
     <dimen name="max_height_dialog">360dp</dimen>
+
+    <dimen name="action_button_min_width_material">48dp</dimen>
+    <dimen name="action_button_min_height_material">48dp</dimen>
+
+    <dimen name="checkbox_primary">32dp</dimen>
 </resources>

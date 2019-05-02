@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,7 +16,7 @@ import com.example.musicforlife.R;
 
 public class FragmentDialogCreatePlaylist extends DialogFragment implements View.OnClickListener {
 
-    TextView txtTitlePlaylist;
+    EditText txtTitlePlaylist;
     Button btnCancel;
     Button btnSubmit;
 
@@ -32,6 +33,9 @@ public class FragmentDialogCreatePlaylist extends DialogFragment implements View
 
         btnSubmit.setOnClickListener(this);
         btnCancel.setOnClickListener(this);
+
+        txtTitlePlaylist.requestFocus();
+//        txtTitlePlaylist.setSelection(txtTitlePlaylist.length());
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
         builder.setView(view);
@@ -65,12 +69,13 @@ public class FragmentDialogCreatePlaylist extends DialogFragment implements View
                     long result = PlaylistModel.createPlaylist(title);
                     if (result > 0) {
                         FragmentPlaylist.refreshPlaylist();
-//                        Toast.makeText(getActivity().getApplicationContext(), String.valueOf(result), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), "Đã tạo mới playlist", Toast.LENGTH_LONG).show();
+                    }else{
+                        Toast.makeText(getActivity().getApplicationContext(), "Thất bại", Toast.LENGTH_LONG).show();
+
                     }
                     FragmentDialogCreatePlaylist.this.getDialog().cancel();
                 }
-
-
                 break;
             default:
                 break;

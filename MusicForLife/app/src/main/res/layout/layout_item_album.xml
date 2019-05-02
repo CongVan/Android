@@ -1,27 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:clickable="true"
-    android:foreground="?android:attr/selectableItemBackground"
     android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
     android:orientation="vertical">>
 
     <android.support.v7.widget.CardView
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="1dp"
+        android:layout_marginBottom="@dimen/margin_size_xsmall"
+        app:cardCornerRadius="@dimen/border_radius_small"
         app:cardElevation="0dp"
-        card_view:cardBackgroundColor="@color/colorBlackGlassLight"
-        card_view:cardCornerRadius="@dimen/margin_size_small"
-        card_view:cardPreventCornerOverlap="false"
-        card_view:contentPadding="1dp">
+        card_view:cardBackgroundColor="@color/colorTranparent"
+        card_view:cardPreventCornerOverlap="false">
 
         <TableLayout
             android:layout_width="match_parent"
@@ -33,14 +30,11 @@
                 <android.support.v7.widget.CardView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_size_small"
-                    android:layout_marginTop="@dimen/margin_size_small"
-                    android:layout_marginRight="@dimen/margin_size_normal"
-                    android:layout_marginBottom="@dimen/margin_size_small"
+                    android:layout_margin="@dimen/margin_size_snormal"
                     app:cardCornerRadius="@dimen/border_radius_small"
-                    app:cardUseCompatPadding="true"
+                    app:cardUseCompatPadding="false"
                     card_view:cardBackgroundColor="@color/colorTranparent"
-                    card_view:cardElevation="@dimen/elevation_xsmall"
+                    card_view:cardElevation="0dp"
                     card_view:contentPadding="0dp">
 
                     <ImageView
@@ -48,8 +42,7 @@
                         android:layout_width="@dimen/image_card_item_playlist"
                         android:layout_height="@dimen/image_card_item_playlist"
                         android:adjustViewBounds="true"
-
-                        android:scaleType="fitXY"
+                        android:scaleType="fitCenter"
                         tools:srcCompat="@mipmap/album_128" />
 
                 </android.support.v7.widget.CardView>
@@ -58,6 +51,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_size_small"
                     android:layout_gravity="center_vertical"
                     android:orientation="vertical">
 
@@ -69,33 +63,37 @@
                         android:textColor="@color/colorTitleWhitePrimary"
                         android:textSize="14sp"
                         android:textStyle="bold" />
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+
                         <TextView
                             android:id="@+id/txtAlbumArtist"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:text="Tên ca sĩ"
                             android:textColor="@color/colorTitleWhiteSecondary"
                             android:textSize="14sp"
-                            android:textStyle="bold"
-                            android:text="Tên ca sĩ"/>
+                            android:textStyle="bold" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
                             android:layout_marginRight="5dp"
+                            android:text="-"
                             android:textColor="@color/colorTitleWhiteSecondary"
                             android:textSize="14sp"
-                            android:textStyle="bold"
-                            android:text="-"/>
+                            android:textStyle="bold" />
+
                         <TextView
                             android:id="@+id/txtAlbumSongCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/colorTitleWhiteSecondary"
                             android:text="0 bài hát"
-                            android:textSize="12sp"/>
+                            android:textColor="@color/colorTitleWhiteSecondary"
+                            android:textSize="12sp" />
                     </LinearLayout>
                 </LinearLayout>
             </TableRow>

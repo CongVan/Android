@@ -12,11 +12,12 @@
 
     <style name="PopupMenu" parent="Widget.AppCompat.PopupMenu">
         <item name="android:popupBackground">@color/colorBgPrimary</item>
-
+        <item name="android:colorBackground">@color/colorBgPrimary</item>
         <item name="android:textColor">@color/colorTitleWhitePrimary</item>
     </style>
+
     <style name="AppTheme.Toolbar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="android:textColorPrimary" >@color/colorWhite</item>
+        <item name="android:textColorPrimary">@color/colorWhite</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowTranslucentStatus">true</item>
@@ -30,6 +31,16 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
+    <style name="ActionCircleButton" parent="Widget.AppCompat.ActionButton">
+        <item name="background">?attr/actionBarItemBackground</item>
+        <item name="paddingStart">12dp</item>
+        <item name="paddingEnd">12dp</item>
+        <item name="android:minWidth">@dimen/action_button_min_width_material</item>
+        <item name="android:minHeight">@dimen/action_button_min_height_material</item>
+        <item name="android:gravity">center</item>
+        <item name="android:scaleType">center</item>
+        <item name="android:maxLines">2</item>
+    </style>
 
     <style name="seekBarControlPlay" parent="Widget.AppCompat.SeekBar">
         <item name="android:progressBackgroundTint">@color/colorPrimaryLight</item>
@@ -45,4 +56,14 @@
         <item name="colorControlActivated">@color/colorPrimary</item>
     </style>
 
+    <style name="DialogPrimary" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:background">@color/colorBgPrimaryTranslucent</item>
+    </style>
+
+    <style name="CheckboxStyle" parent="@style/AppTheme">
+        <item name="colorAccent">@color/colorTitleWhitePrimary</item>
+        // for checked
+        <item name="android:textColorSecondary">@color/colorTitleWhitePrimary</item>
+        // for unchecked
+    </style>
 </resources>

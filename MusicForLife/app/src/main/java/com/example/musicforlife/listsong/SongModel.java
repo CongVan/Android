@@ -55,7 +55,7 @@ public class SongModel implements Serializable {
     private int songId;
     private String folder;
     private int albumId;
-
+    private boolean isChecked;
     public String getPath() {
         return path;
     }
@@ -143,9 +143,9 @@ public class SongModel implements Serializable {
                 MediaStore.Audio.AudioColumns.ALBUM_ID,
 
         };
-        String sortOrder = MediaStore.Audio.Media.TITLE + " ASC";
+//        String sortOrder = MediaStore.Audio.Media.TITLE + " ASC";
         String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0 ";
-        Cursor c = context.getContentResolver().query(uri, projection, selection, null, sortOrder);//select .. from audio
+        Cursor c = context.getContentResolver().query(uri, projection, selection, null, null);//select .. from audio
         int debugLoop = 40;
         if (c != null) {
             int count = 0;
@@ -161,9 +161,10 @@ public class SongModel implements Serializable {
                 Long duration = c.getLong(4);//c.getColumnIndex(MediaStore.Audio.AudioColumns.DURATION)
                 int songId = c.getInt(5);
                 int albumId = c.getInt(c.getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM_ID));
-                Log.d(TAG, "getAllAudioFromDevice: ALBUM ID" + albumId);
+//                Log.d(TAG, "getAllAudioFromDevice: ALBUM ID" + albumId);
                 String parentPath = new File(path).getParent();
                 String folder = parentPath.substring(parentPath.lastIndexOf('/') + 1);
+//                Log.d(TAG, "getAllAudioFromDevice: TITLE FROM DEVICE " + name + "_" + c.getString(1));
 //                MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
 //                mediaMetadataRetriever.setDataSource(path);
 //                InputStream inputStream;
@@ -368,7 +369,7 @@ public class SongModel implements Serializable {
 //                SongModel.COLUMN_PATH
 //        };
 //        Cursor cursor = db.query(TABLE_NAME, projection, null, null, null, null, null);
-        String query = "SELECT * FROM " + SongModel.TABLE_NAME + " ORDER BY "+SongModel.COLUMN_TITLE+" ASC  LIMIT " + skip + "," + count;
+        String query = "SELECT * FROM " + SongModel.TABLE_NAME + " ORDER BY " + SongModel.COLUMN_TITLE + " ASC  LIMIT " + skip + "," + count;
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
             do {
@@ -397,5 +398,13 @@ public class SongModel implements Serializable {
 
     public void setAlbumId(int albumId) {
         this.albumId = albumId;
+    }
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
     }
 }

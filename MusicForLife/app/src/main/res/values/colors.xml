@@ -17,7 +17,10 @@
     <!--<color name="colorAccent">#FFBF5D</color>-->
 
     <color name="colorBgPrimary">#263238</color>
-    <color name="colorBgPrimaryTranslucent">#FF263238</color>
+    <!--70%-->
+    <color name="colorBgPrimaryOverlay">#B3263238</color>
+    <!--95%-->
+    <color name="colorBgPrimaryTranslucent">#F2263238</color>
     <color name="colorBgSecondary">#37474f</color>
 
 
@@ -28,7 +31,8 @@
 
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorWhiteLight">#F5F5F5</color>
-    <color name="colorBlackGlassLight">#10000000</color>
+    <color name="colorBlackGlassLight">#26000000</color>
+    <color name="colorBlackGlassDark">#4D000000</color>
 
     <color name="colorTranparent">@android:color/transparent</color>
     <color name="colorTitlePrimary">#212121</color>

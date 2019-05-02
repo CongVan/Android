@@ -114,20 +114,25 @@ public class ImageCacheHelper {
         }
 
         @Override
-        protected void onPostExecute(Bitmap bitmap) {
+        protected void onPostExecute(final Bitmap bitmap) {
             if (isCancelled() || bitmap == null) {
                 return;
             }
             // Check to make sure that the imageview has not been garbage collected as well as the
             // LoadArtworkTask is the same as this one.
             if (mIcon != null && mIcon.get() != null) {
-                ImageView icon = mIcon.get();
+                final ImageView icon = mIcon.get();
                 Drawable drawable = icon.getDrawable();
                 if (drawable instanceof AsyncDrawable) {
                     LoadAlbumArt task = ((AsyncDrawable) drawable).getLoadArtworkTask();
                     // Make sure that this is the same task as the one current stored inside of the ImageView's drawable.
                     if (task != null && task == this) {
-                        icon.setImageBitmap(bitmap);
+                        icon.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                icon.setImageBitmap(bitmap);
+                            }
+                        });
                     }
                 }
             }

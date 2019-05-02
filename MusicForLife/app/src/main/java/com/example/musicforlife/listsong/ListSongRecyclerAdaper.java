@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.LruCache;
@@ -17,10 +18,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.musicforlife.MainActivity;
 import com.example.musicforlife.play.FragmentListPlaying;
 import com.example.musicforlife.utilitys.ImageHelper;
 import com.example.musicforlife.R;
@@ -41,11 +44,15 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
     private LruCache<Long, Bitmap> mBitmapCache;
     private BitmapDrawable mPlaceholder;
     private ImageCacheHelper mImageCacheHelper;
+    public MultiClickAdapterListener mListener;
 
-    public ListSongRecyclerAdaper(Context context, ArrayList<SongModel> listSong) {
+
+
+    public ListSongRecyclerAdaper(Context context, ArrayList<SongModel> listSong, MultiClickAdapterListener listener) {
         mContext = context;
         mListSong = listSong;
         mImageCacheHelper = new ImageCacheHelper(R.mipmap.music_128);
+        mListener = listener;
 //        int maxSize = (int) (Runtime.getRuntime().maxMemory() / 1024);
 //        // Divide the maximum size by eight to get a adequate size the LRU cache should reach before it starts to evict bitmaps.
 //        int cacheSize = maxSize / 8;
@@ -65,7 +72,7 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
         if (i == VIEW_TYPE_ITEM) {
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_item_song, viewGroup, false);
 //            ViewHolderRecycler viewHolder = new ViewHolderRecycler(view);
-            return new ViewHolderRecycler(view);
+            return new ViewHolderRecycler(view, mListener);
         } else {
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.progressbar_circle, viewGroup, false);
             return new LoadingViewHolder(view);
@@ -86,6 +93,13 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
     private void showSongItem(ViewHolderRecycler viewHolder, int position) {
         SongModel songModel = mListSong.get(position);
         viewHolder.bindContent(songModel);
+//        viewHolder.btnOptionSong.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.d(TAG, "onClick: OPTION MENU CLICK " + v.getId());
+////                Toast.makeText(MainActivity.getMainActivity(),"CLICK OPTION MENU",Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 
     private void showLoading(LoadingViewHolder viewHolder, int position) {
@@ -120,35 +134,44 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
         return position;
     }
 
-    private class ViewHolderRecycler extends RecyclerView.ViewHolder {
+    private class ViewHolderRecycler extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         TextView titleSong;
-        TextView album;
         TextView artist;
         TextView duration;
         ImageView imageView;
         ImageButton btnOptionSong;
 
-        ViewHolderRecycler(@NonNull View itemView) {
+        CardView layoutItemSong;
+
+        ViewHolderRecycler(@NonNull View itemView, MultiClickAdapterListener listenerCustom) {
             super(itemView);
+
             this.titleSong = itemView.findViewById(R.id.txtTitle);
 //            this.album=album;
             this.artist = itemView.findViewById(R.id.txtArtist);
             this.imageView = itemView.findViewById(R.id.imgSong);
             this.duration = itemView.findViewById(R.id.txtDuration);
             this.btnOptionSong = itemView.findViewById(R.id.btnOptionSong);
+            layoutItemSong = itemView.findViewById(R.id.layoutItemSong);
+            btnOptionSong.setTag("btnOptionSong");
+            titleSong.setTag("txtTitleSOng");
 //            this.duration.setVisibility(View.GONE);
 //            this.imageView.setVisibility(View.VISIBLE);
 
+            btnOptionSong.setOnClickListener(this);
+            layoutItemSong.setOnClickListener(this);
+            layoutItemSong.setOnLongClickListener(this);
 
         }
 
         @SuppressLint("SetTextI18n")
         void bindContent(SongModel songModel) {
             Log.d(TAG, "bindContent: BIND CONTENT");
+//            this.btnOptionSong.setTag("btnOptionSong");
             this.titleSong.setText(songModel.getTitle());
             this.artist.setText(songModel.getArtist() + "_" + songModel.getAlbumId());
-//            this.duration.setText(SongModel.formateMilliSeccond(songModel.getDuration()));
+            this.duration.setText(SongModel.formateMilliSeccond(songModel.getDuration()));
 //CACHE
             final Bitmap bitmap = mImageCacheHelper.getBitmapCache(songModel.getAlbumId());//  mBitmapCache.get((long) songModel.getAlbumId());
             if (bitmap != null) {
@@ -230,6 +253,25 @@ public class ListSongRecyclerAdaper extends RecyclerView.Adapter<RecyclerView.Vi
         }
 
 
+        @Override
+        public void onClick(View v) {
+            if (v.getId() == R.id.btnOptionSong) {
+                Log.d(TAG, "onClick: CLICK OPTION MENU");
+                mListener.optionMenuClick(v, getAdapterPosition());
+            } else {
+                Log.d(TAG, "onClick: ITEM SONG");
+                mListener.layoutItemClick(v, getAdapterPosition());
+            }
+//            listenerRef.get().onPositionClicked(getAdapterPosition());
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            Log.d(TAG, "onLongClick: " + v.getId());
+            mListener.layoutItemLongClick(v, getAdapterPosition());
+//            listenerRef.get().onLongClicked(getAdapterPosition());
+            return true;
+        }
     }
 
 

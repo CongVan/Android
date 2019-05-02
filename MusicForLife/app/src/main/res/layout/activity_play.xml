@@ -6,9 +6,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBgPrimary"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".play.PlayActivity">
 
+    <android.support.design.widget.AppBarLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorTranparent"
+        android:gravity="top"
+        android:outlineProvider="bounds"
+        android:theme="@style/AppTheme.Toolbar"
+        app:elevation="0dp">
+        <!--app:contentScrim="@android:color/transparent"-->
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbarListPlaying"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorTranparent"
+            android:outlineProvider="bounds"
+            android:theme="@style/AppTheme.Toolbar"
+            app:titleEnabled="false">
+
+
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"

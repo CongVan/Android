@@ -27,6 +27,7 @@
         android:layout_alignParentBottom="true"
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/margin_size_normal"
+        app:borderWidth="0dp"
         android:backgroundTint="@color/colorPrimary"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_add_white_64dp"

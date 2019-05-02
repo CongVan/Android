@@ -8,7 +8,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaMetadataRetriever;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -22,7 +25,7 @@ import com.example.musicforlife.utilitys.Utility;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-public class AlbumSongsActivity extends Activity {
+public class AlbumSongsActivity extends AppCompatActivity {
     ImageButton ImgBtnBack;
     ImageView ImgProfile;
     TextView TVNameArtist;
@@ -30,12 +33,14 @@ public class AlbumSongsActivity extends Activity {
     TextView TVSongcount;
     AlbumModel albumModel;
     LinearLayout layoutContentAlbumtSong;
+    Toolbar mToolbarAlbumSong;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album_songs);
         Intent intent = getIntent();
-        albumModel = (AlbumModel)intent.getSerializableExtra("infoAlbum");
+        albumModel = (AlbumModel) intent.getSerializableExtra("infoAlbum");
         InitControl();
         BindData();
 
@@ -49,36 +54,49 @@ public class AlbumSongsActivity extends Activity {
         fragmentTransaction.commit();
         //Init Fragment
 
-        ImgBtnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+//        ImgBtnBack.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                finish();
+//            }
+//        });
         setupLayoutTransparent();
     }
 
-    private void InitControl(){
-        ImgBtnBack = (ImageButton)findViewById(R.id.albumSongBtnBack);
-        ImgProfile = (ImageView)findViewById(R.id.albumSongImgProfile);
-        TVNameArtist = (TextView)findViewById(R.id.albumSongArtistName);
-        TVNameAlbum = (TextView)findViewById(R.id.albumSongName);
-        TVSongcount = (TextView)findViewById(R.id.albumSongcount);
-        layoutContentAlbumtSong = (LinearLayout)findViewById(R.id.layoutContentAlbumSong);
+    private void InitControl() {
+//        ImgBtnBack = (ImageButton) findViewById(R.id.albumSongBtnBack);
+        ImgProfile = (ImageView) findViewById(R.id.albumSongImgProfile);
+        TVNameArtist = (TextView) findViewById(R.id.albumSongArtistName);
+        TVNameAlbum = (TextView) findViewById(R.id.albumSongName);
+        TVSongcount = (TextView) findViewById(R.id.albumSongcount);
+        layoutContentAlbumtSong = (LinearLayout) findViewById(R.id.layoutContentAlbumSong);
+        mToolbarAlbumSong = findViewById(R.id.toolbarAlbumSong);
     }
 
     private void setupLayoutTransparent() {
         Utility.setTransparentStatusBar(AlbumSongsActivity.this);
         Bitmap bitmapBg = ImageHelper.getBitmapFromPath(albumModel.getPath(), R.drawable.highcompress_background_test);
-        Bitmap bitmapBgBlur = ImageHelper.blurBitmap(bitmapBg, 1.0f, 140);
-        Bitmap bitmapOverlay = ImageHelper.createImage(bitmapBgBlur.getWidth(), bitmapBgBlur.getHeight(), Color.argb(80, 255, 255, 255));
+        Bitmap bitmapBgBlur = ImageHelper.blurBitmap(bitmapBg, 1.0f, 30);
+        Bitmap bitmapOverlay = ImageHelper.createImage(bitmapBgBlur.getWidth(), bitmapBgBlur.getHeight(), getResources().getColor(R.color.colorBgPrimaryOverlay));
         Bitmap bitmapBgOverlay = ImageHelper.overlayBitmapToCenter(bitmapBgBlur, bitmapOverlay);
         layoutContentAlbumtSong.setPadding(0, Utility.getStatusbarHeight(this), 0, 0);
         layoutContentAlbumtSong.setBackground(ImageHelper.getMainBackgroundDrawableFromBitmap(bitmapBgOverlay));
+
+        setSupportActionBar(mToolbarAlbumSong);
+        getSupportActionBar().setTitle(" ");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        mToolbarAlbumSong.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
-    private void BindData(){
-        if(albumModel != null){
+    private void BindData() {
+        if (albumModel != null) {
             TVNameAlbum.setText(albumModel.getTitle());
             TVNameArtist.setText(albumModel.getArtist());
             TVSongcount.setText(albumModel.getNumberOfSongs() + " Bài hát");
