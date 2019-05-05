@@ -54,7 +54,7 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
             mPlayService = new PlayService();
             mMediaPlayer = new MediaPlayer();
             //using weak lock
-            mMediaPlayer.setWakeMode(MainActivity.getMainActivity(), PowerManager.PARTIAL_WAKE_LOCK);
+//            mMediaPlayer.setWakeMode(MainActivity.getMainActivity(), PowerManager.PARTIAL_WAKE_LOCK);
             mDatabaseManager = DatabaseManager.getInstance();
         }
         return mPlayService;
