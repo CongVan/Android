@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -140,15 +141,21 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
                         .setPositiveButton("Xác nhận", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                new Handler().post(new Runnable() {
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
                                     @Override
                                     public void run() {
                                         int resultAll = 0;
+                                        Log.d(TAG, "run: LIST SONG PLAYING BEFORE DELETE : " + mListSong.size());
                                         for (int songPositionSelected : mListSelectedSong) {
+                                            if (songPositionSelected > mListSong.size()) {
+                                                break;
+                                            }
+
                                             int songId = mListSong.get(songPositionSelected).getSongId();
                                             long result = PlayModel.deleteSongInListPlaying(songId);
                                             if (result > 0) {
                                                 resultAll++;
+
 
                                             } else {
                                                 Toast.makeText(PlayActivity.getActivity(), "Thất bại", Toast.LENGTH_LONG).show();
@@ -156,10 +163,18 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
 
                                         }
                                         Toast.makeText(PlayActivity.getActivity(), "Đã xóa " + resultAll + " bài hát", Toast.LENGTH_LONG).show();
-                                        mListSong = PlayModel.getSongPlayingList();
-                                        mListSongAdapter.notifyDataSetChanged();
+                                        mListSelectedSong.clear();
+                                        mListSong.clear();
+                                        mListSong.addAll(PlayModel.getSongPlayingList());
+                                        Log.d(TAG, "run: LIST SONG PLAYING AFTER DELETE : " + mListSong.size());
+                                        mListViewSong.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                mListSongAdapter.notifyDataSetChanged();
+                                            }
+                                        });
+
                                         hideViewDeleteAllSong();
-                                        //lười k tạo Interface
                                         PlayService.updatePlayingList();
                                     }
                                 });
@@ -171,6 +186,28 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
                         .setNegativeButton("Đóng", null)
                         .show();
             }
+        });
+        mSelectedAllSongPlaying.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean isChecked = mSelectedAllSongPlaying.isChecked();
+                mListSelectedSong.clear();
+                if (!isChecked) {
+                    for (SongModel song : mListSong) {
+                        song.setChecked(false);
+                    }
+                } else {
+                    for (SongModel song : mListSong) {
+                        song.setChecked(true);
+                        mListSelectedSong.add(song.getId());
+                    }
+                }
+
+                mListSongAdapter.notifyDataSetChanged();
+                updateViewSelectAll();
+
+            }
+
         });
         updateListPlaying();
     }
@@ -235,22 +272,37 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
         if (!isChecked) {
             mListSelectedSong.add(position);
         } else {
-            mListSelectedSong.remove(mListSelectedSong.indexOf(position));
+            if (mListSelectedSong.indexOf(position) > -1) {
+                mListSelectedSong.remove(mListSelectedSong.indexOf(position));
+            }
+
         }
-        if (mListSelectedSong.size() > 0 && !isShowOfViewDeleteSong()) {
-            mLayoutDeleteSong.setVisibility(View.VISIBLE);
+        updateViewSelectAll();
+//        if (mListSelectedSong.size() > 0 && !isShowOfViewDeleteSong()) {
+//            mLayoutDeleteSong.setVisibility(View.VISIBLE);
+//            mBtnDeleteAllSongPlaying.setVisibility(View.VISIBLE);
+//        } else if (isShowOfViewDeleteSong() && mListSelectedSong.size() == 0) {
+//            mLayoutDeleteSong.setVisibility(View.GONE);
+//            mBtnDeleteAllSongPlaying.setVisibility(View.GONE);
+//        }
+//        if (mListSelectedSong.size() == mListSong.size() && !mSelectedAllSongPlaying.isChecked()) {
+//            mSelectedAllSongPlaying.setChecked(true);
+//        } else if (mSelectedAllSongPlaying.isChecked()) {
+//            mSelectedAllSongPlaying.setChecked(false);
+//        }
+//        mSelectedAllSongPlaying.setText("Chọn tất cả (" + mListSelectedSong.size() + ")");
+        Log.d(TAG, "checkboxClick: Position: " + position + ", Check: " + isChecked + ", Size selected: " + mListSelectedSong.size());
+    }
+
+    private void updateViewSelectAll() {
+        if (mListSelectedSong.size() > 0) {
+//            mLayoutDeleteSong.setVisibility(View.VISIBLE);
             mBtnDeleteAllSongPlaying.setVisibility(View.VISIBLE);
-        } else if (isShowOfViewDeleteSong() && mListSelectedSong.size() == 0) {
-            mLayoutDeleteSong.setVisibility(View.GONE);
+        } else {
+//            mLayoutDeleteSong.setVisibility(View.GONE);
             mBtnDeleteAllSongPlaying.setVisibility(View.GONE);
         }
-        if (mListSelectedSong.size() == mListSong.size() && !mSelectedAllSongPlaying.isChecked()) {
-            mSelectedAllSongPlaying.setChecked(true);
-        } else if (mSelectedAllSongPlaying.isChecked()) {
-            mSelectedAllSongPlaying.setChecked(false);
-        }
         mSelectedAllSongPlaying.setText("Chọn tất cả (" + mListSelectedSong.size() + ")");
-        Log.d(TAG, "checkboxClick: Position: " + position + ", Check: " + isChecked + ", Size selected: " + mListSelectedSong.size());
     }
 
     private boolean isShowOfViewDeleteSong() {
@@ -259,7 +311,7 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
     }
 
     private void hideViewDeleteAllSong() {
-        mLayoutDeleteSong.setVisibility(View.VISIBLE);
+//        mLayoutDeleteSong.setVisibility(View.VISIBLE);
         mBtnDeleteAllSongPlaying.setVisibility(View.VISIBLE);
     }
 

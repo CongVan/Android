@@ -114,8 +114,7 @@
 
                 <LinearLayout
                     android:layout_gravity="center"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="@dimen/margin_size_small">
+                    android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/txtDuration"
@@ -130,15 +129,16 @@
 
                     <ImageButton
                         android:id="@+id/btnOptionSong"
-                        style="@style/ActionCircleButton"
+
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:background="@color/colorTranparent"
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground"
-
-
+                        android:paddingHorizontal="@dimen/text_size_normal"
+                        android:paddingVertical="@dimen/margin_size_snormal"
                         android:src="@drawable/ic_more_vert_black_24dp" />
 
                 </LinearLayout>

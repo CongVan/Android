@@ -4,6 +4,7 @@ import android.media.MediaPlayer;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.PowerManager;
 import android.util.Log;
 
 import com.example.musicforlife.MainActivity;
@@ -52,6 +53,8 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
         if (mPlayService == null) {
             mPlayService = new PlayService();
             mMediaPlayer = new MediaPlayer();
+            //using weak lock
+            mMediaPlayer.setWakeMode(MainActivity.getMainActivity(), PowerManager.PARTIAL_WAKE_LOCK);
             mDatabaseManager = DatabaseManager.getInstance();
         }
         return mPlayService;
@@ -304,6 +307,7 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
     }
 
     private static void setIndexSongInPlayingList() {
+        mCurrentIndexSong = -1;
         if (mSongPlayingList != null) {
             for (int i = 0; i < mSongPlayingList.size(); i++) {
                 if (mSongPlayingList.get(i).getSongId() == mCurrentSongPlaying.getSongId()) {

@@ -2,6 +2,12 @@ package com.example.musicforlife;
 
 
 import android.annotation.TargetApi;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Looper;
@@ -18,6 +24,8 @@ import android.os.Handler;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.BottomSheetBehavior;
 
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -36,6 +44,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.support.v7.widget.SearchView;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -78,9 +87,13 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     private PlayService mPlayService;
     public static DatabaseManager mDatabaseManager;
 
+    public static final Integer PLAY_CHANEL_ID = 101;
+    public static final Integer PLAY_NOTIFICATION_ID = 101;
+
     public static MainActivity getMainActivity() {
         return mMainActivity;
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -114,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         setupLayoutTransparent();
         initDataBaseFromDevice();
 //        initMinimizePlaying();
+        initNotificationPlay();
     }
 
     @Override
@@ -123,6 +137,8 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
 
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search_main).getActionView();
         searchView.setMaxWidth(Integer.MAX_VALUE);
+
+        
         return true;
     }
 
@@ -196,6 +212,51 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
                 }
         );
     }
+
+    private void initNotificationPlay() {
+        createNotificationChanel();
+        //create layout notification
+        RemoteViews notifcationlayout = new RemoteViews(getPackageName(), R.layout.layout_notificatoin_play);
+        RemoteViews notifcationlayoutExpand = new RemoteViews(getPackageName(), R.layout.layout_notificatoin_play);
+        //playback activity
+        Intent intentPlay = new Intent(this, PlayActivity.class);
+        intentPlay.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addNextIntentWithParentStack(intentPlay);
+//        intentPlay.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        PendingIntent pendingIntentPlay = PendingIntent.getActivity(this, PLAY_NOTIFICATION_ID, intentPlay, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, PLAY_CHANEL_ID.toString())
+                .setSmallIcon(R.drawable.ic_album_black_24dp)
+                .setDefaults(0)
+//                .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
+                .setContentIntent(pendingIntentPlay)
+                .setCustomContentView(notifcationlayout)
+                .setCustomBigContentView(notifcationlayoutExpand);
+
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
+        notificationManagerCompat.notify(PLAY_NOTIFICATION_ID, builder.build());
+
+    }
+
+    private void createNotificationChanel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence chanelName = PLAY_CHANEL_ID.toString();
+            String description = "TEST NOTIFICATION";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel chanel = new NotificationChannel(PLAY_CHANEL_ID.toString(), chanelName, importance);
+            chanel.setDescription(description);
+            chanel.setSound(null, null);
+            chanel.setVibrationPattern(new long[]{0});
+            chanel.enableVibration(true);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(chanel);
+
+//            notificationManager.notify(PLAY_NOTIFICATION_ID);
+        }
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
