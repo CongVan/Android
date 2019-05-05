@@ -219,7 +219,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         RemoteViews notifcationlayout = new RemoteViews(getPackageName(), R.layout.layout_notificatoin_play);
         RemoteViews notifcationlayoutExpand = new RemoteViews(getPackageName(), R.layout.layout_notificatoin_play);
         //playback activity
-        Intent intentPlay = new Intent(this, PlayActivity.class);
+        Intent intentPlay = new Intent(this, MainActivity.class);//mới change
         intentPlay.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addNextIntentWithParentStack(intentPlay);
@@ -231,9 +231,9 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
                 .setSmallIcon(R.drawable.ic_album_black_24dp)
                 .setDefaults(0)
 //                .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
-                .setContentIntent(pendingIntentPlay)
-                .setCustomContentView(notifcationlayout)
-                .setCustomBigContentView(notifcationlayoutExpand);
+                .setContentIntent(pendingIntentPlay);//mới change
+//                .setCustomContentView(notifcationlayout)//mới change
+//                .setCustomBigContentView(notifcationlayoutExpand);//mới change
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
         notificationManagerCompat.notify(PLAY_NOTIFICATION_ID, builder.build());
