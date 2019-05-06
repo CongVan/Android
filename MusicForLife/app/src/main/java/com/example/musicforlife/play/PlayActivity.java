@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -185,10 +186,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        SharedPreferences sharedPref = PlayActivity.this.getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putInt("TEST", 1);
-        editor.commit();
+//        NavUtils.navigateUpFromSameTask(this);
 
 
 //        super.onPause();
@@ -200,14 +198,6 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
 //            // Otherwise, select the previous step.
 //            mPager.setCurrentItem(mPager.getCurrentItem() - 1);
 //        }
-    }
-
-    public void hidePlayActivity(View view) {
-//        Intent i=new Intent(this, MainActivity.class);
-//        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//        startActivity(i);
-        onBackPressed();
-//        finish();
     }
 
 

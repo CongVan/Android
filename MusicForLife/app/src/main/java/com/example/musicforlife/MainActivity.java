@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search_main).getActionView();
         searchView.setMaxWidth(Integer.MAX_VALUE);
 
-        
+
         return true;
     }
 
@@ -217,22 +217,29 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         createNotificationChanel();
         //create layout notification
         RemoteViews notifcationlayout = new RemoteViews(getPackageName(), R.layout.layout_notificatoin_play);
-        RemoteViews notifcationlayoutExpand = new RemoteViews(getPackageName(), R.layout.layout_notificatoin_play);
+
+//        RemoteViews notifcationlayoutExpand = new RemoteViews(getPackageName(), R.layout.layout_notificatoin_play);
+
         //playback activity
-        Intent intentPlay = new Intent(this, MainActivity.class);//mới change
-        intentPlay.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addNextIntentWithParentStack(intentPlay);
+        Intent intentPlay = new Intent(MainActivity.this, PlayActivity.class);//mới change
 //        intentPlay.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-        PendingIntent pendingIntentPlay = PendingIntent.getActivity(this, PLAY_NOTIFICATION_ID, intentPlay, PendingIntent.FLAG_UPDATE_CURRENT);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        // Adds the back stack
+        stackBuilder.addParentStack(PlayActivity.class);
+// Adds the Intent to the top of the stack
+        stackBuilder.addNextIntent(intentPlay);
+//        intentPlay.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
+        PendingIntent pendingIntentPlay = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        notifcationlayout.setOnClickPendingIntent(R.id.notificationLayout, pendingIntentPlay);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, PLAY_CHANEL_ID.toString())
                 .setSmallIcon(R.drawable.ic_album_black_24dp)
                 .setDefaults(0)
-//                .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
-                .setContentIntent(pendingIntentPlay);//mới change
-//                .setCustomContentView(notifcationlayout)//mới change
+                .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
+                .setContentIntent(pendingIntentPlay)//mới change
+                .setCustomContentView(notifcationlayout);//mới change
+//                .setOngoing(true);
 //                .setCustomBigContentView(notifcationlayoutExpand);//mới change
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
