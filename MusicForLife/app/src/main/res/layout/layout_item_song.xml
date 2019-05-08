@@ -37,7 +37,7 @@
                     android:layout_width="@dimen/image_card_item"
                     android:layout_height="@dimen/image_card_item"
                     android:layout_marginTop="@dimen/margin_size_small"
-                    android:layout_marginRight="@dimen/margin_size_snormal"
+                    android:layout_marginHorizontal="@dimen/margin_size_snormal"
                     android:layout_marginBottom="@dimen/margin_size_small"
                     app:cardCornerRadius="@dimen/border_radius_small"
                     app:cardUseCompatPadding="false"

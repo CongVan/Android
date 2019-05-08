@@ -8,7 +8,10 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -26,6 +29,7 @@ import android.support.design.widget.BottomSheetBehavior;
 
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -86,7 +90,8 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     private Intent mIntentPlayActivity;
     private PlayService mPlayService;
     public static DatabaseManager mDatabaseManager;
-
+    private IntentFilter mIntentFilterNoisy = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+    private BecomingNoisyReceiver mBecomingNoisyReceiver = new BecomingNoisyReceiver();
     public static final Integer PLAY_CHANEL_ID = 101;
     public static final Integer PLAY_NOTIFICATION_ID = 101;
 
@@ -126,8 +131,9 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         setSupportActionBar(mToolBar);
         setupLayoutTransparent();
         initDataBaseFromDevice();
-//        initMinimizePlaying();
-        initNotificationPlay();
+        initMinimizePlaying();
+        initReceiver();
+//        initNotificationPlay();
     }
 
     @Override
@@ -198,47 +204,83 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
                         if (songPlay == null) {
                             songPlay = PlayService.getSongIsPlaying();
                         }
+
                         if (songPlay != null) {
                             Log.d(TAG, "initMinimizePlaying: " + songPlay.getTitle());
                             showMinimizePlaying(songPlay);
-                            if (PlayService.getListPlaying() == null) {
-                                PlayService.revertListSongPlaying();
-                            }
+                            PlayService.revertListSongPlaying();
+                            initNotificationPlay();
+
                         } else {
                             hideMinimizePlaying();
                         }
-                        Log.d(TAG, "initMinimizePlaying: null");
+                        Log.d(TAG, "initMinimizePlaying: " + songPlay);
                     }
                 }
         );
     }
 
+    private void initReceiver() {
+
+
+        MediaSessionCompat.Callback callback = new
+                MediaSessionCompat.Callback() {
+                    @Override
+                    public void onPlay() {
+                        registerReceiver(mBecomingNoisyReceiver, mIntentFilterNoisy);
+                    }
+
+                    @Override
+                    public void onStop() {
+                        unregisterReceiver(mBecomingNoisyReceiver);
+                    }
+                };
+
+    }
+
     private void initNotificationPlay() {
+        SongModel songPlaying = PlayService.getCurrentSongPlaying();
+        Log.d(TAG, "initNotificationPlay: " + songPlaying);
+        if (songPlaying == null) {
+            return;
+        }
         createNotificationChanel();
         //create layout notification
-        RemoteViews notifcationlayout = new RemoteViews(getPackageName(), R.layout.layout_notificatoin_play);
+        RemoteViews notificationlayout = new RemoteViews(getPackageName(), R.layout.layout_notificatoin_play);
+        Bitmap bitmapBg = ImageHelper.getBitmapFromPath(songPlaying.getPath(), R.mipmap.music_file_128);
+        Bitmap bitmapBgBlur = ImageHelper.blurBitmap(bitmapBg, 2.0f, 4);
+        Bitmap bitmapOverlay = ImageHelper.createImage(bitmapBgBlur.getWidth(), bitmapBgBlur.getHeight(), getResources().getColor(R.color.colorBgPrimaryOverlay));
+        Bitmap bitmapBgOverlay = ImageHelper.overlayBitmapToCenter(bitmapBgBlur, bitmapOverlay);
+        notificationlayout.setImageViewBitmap(R.id.imgSongMinimize, bitmapBgOverlay);
+        notificationlayout.setTextViewText(R.id.txtTitleMinimize, songPlaying.getTitle());
+        notificationlayout.setTextViewText(R.id.txtArtistMinimize, songPlaying.getArtist());
 
-//        RemoteViews notifcationlayoutExpand = new RemoteViews(getPackageName(), R.layout.layout_notificatoin_play);
 
         //playback activity
-        Intent intentPlay = new Intent(MainActivity.this, PlayActivity.class);//mới change
-//        intentPlay.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
+        Intent mainIntent = new Intent(this, PlayActivity.class);//mới change
+        mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         // Adds the back stack
         stackBuilder.addParentStack(PlayActivity.class);
-// Adds the Intent to the top of the stack
-        stackBuilder.addNextIntent(intentPlay);
-//        intentPlay.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
+        // Adds the Intent to the top of the stack
+        stackBuilder.addNextIntent(mainIntent);
+//        mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        //tap notification open play activity
         PendingIntent pendingIntentPlay = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-        notifcationlayout.setOnClickPendingIntent(R.id.notificationLayout, pendingIntentPlay);
+        notificationlayout.setOnClickPendingIntent(R.id.notificationLayout, pendingIntentPlay);
+
+        // adding action to left button
+        Intent playIntent = new Intent(this, NotificationIntentService.class);
+        playIntent.setAction(String.valueOf(PlayService.ACTION_PLAY));
+        notificationlayout.setOnClickPendingIntent(R.id.btnPlaySong, PendingIntent.getService(this, 0, playIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, PLAY_CHANEL_ID.toString())
                 .setSmallIcon(R.drawable.ic_album_black_24dp)
                 .setDefaults(0)
-                .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
+//                .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
                 .setContentIntent(pendingIntentPlay)//mới change
-                .setCustomContentView(notifcationlayout);//mới change
+                .setDeleteIntent(PendingIntent.getBroadcast(this.getApplicationContext(), 0, new Intent(this, DismissBroadcastReceiver.class), 0))
+                .setCustomContentView(notificationlayout);//mới change
 //                .setOngoing(true);
 //                .setCustomBigContentView(notifcationlayoutExpand);//mới change
 
@@ -284,8 +326,8 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     @Override
     protected void onResume() {
         super.onResume();
-//        togglePlayingMinimize("MAIN");
-        initMinimizePlaying();
+        togglePlayingMinimize("MAIN");
+//        initMinimizePlaying();
     }
 
     /**
@@ -347,7 +389,6 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
 
         //update controls play
         if (PlayService.isPlaying()) {
-
             mButtonPlayMinimize.setImageDrawable(MainActivity.this.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
         } else {
             mButtonPlayMinimize.setImageDrawable(MainActivity.this.getDrawable(R.drawable.ic_play_circle_outline_black_32dp));
@@ -494,10 +535,13 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
             Log.d(TAG, "doInBackground: SIZE AUDIOS " + SongModel.getRowsSong(mDatabaseManager));
             ArrayList<SongModel> tempAudioList = SongModel.getAllAudioFromDevice(getApplicationContext());
             Log.d(TAG, "doInBackground: AUDIO " + tempAudioList.size());
-            for (SongModel song : tempAudioList) {
-                long id = SongModel.insertSong(mDatabaseManager, song);
-                Log.d(TAG, "onPostExecute: INSERT SONG FROM MAIN : " + id);
+            if (SongModel.getRowsSong(mDatabaseManager) != tempAudioList.size()) {
+                for (SongModel song : tempAudioList) {
+                    long id = SongModel.insertSong(mDatabaseManager, song);
+                    Log.d(TAG, "onPostExecute: INSERT SONG FROM MAIN : " + id);
+                }
             }
+
             return tempAudioList;
         }
 

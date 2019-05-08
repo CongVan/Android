@@ -1,10 +1,16 @@
 package com.example.musicforlife.play;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.PowerManager;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 
 import com.example.musicforlife.MainActivity;
@@ -409,4 +415,6 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
         return PlayModel.getSongIsPlaying();
     }
 
+
 }
+

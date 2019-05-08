@@ -36,7 +36,7 @@ import java.util.ArrayList;
 
 
 public class FragmentListPlaying extends Fragment implements FragmentPlayInterface, MultiClickAdapterListener {
-    private MainActivity mMainActivity;
+
     private PlayActivity mPlayActivity;
     private Context mContext;
     private LayoutInflater mInflater;

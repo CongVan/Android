@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
 
 import com.example.musicforlife.MainActivity;
 import com.example.musicforlife.R;
@@ -86,6 +87,8 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
         mPlayService = PlayService.newInstance();
 
         mSongPlaying = PlayService.getCurrentSongPlaying();
+
+
         mPagerAdapter = new FragmentPlayAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.setCurrentItem(1);
@@ -232,6 +235,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
             default:
                 break;
         }
+        MainActivity.getMainActivity().togglePlayingMinimize("PlayActivity");
     }
 
     private void refreshListPlaying() {
