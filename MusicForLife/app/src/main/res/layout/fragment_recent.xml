@@ -1,14 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="center"
-
-    >
-<TextView
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:text="FRAGMENT RECENT"
-    />
-</android.support.constraint.ConstraintLayout>
+    android:layout_gravity="center"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/margin_size_small"
+        android:layout_marginLeft="@dimen/margin_size_snormal"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/margin_size_small"
+            android:text="Bài hát gần đây"
+            android:textColor="@color/colorTitleWhitePrimary"
+            android:textSize="@dimen/text_size_normal" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="300dp">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rcvSongRecent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </ScrollView>
+
+    </LinearLayout>
+
+
+</LinearLayout>

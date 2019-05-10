@@ -8,6 +8,7 @@ import com.example.musicforlife.listsong.SongModel;
 import com.example.musicforlife.play.PlayModel;
 import com.example.musicforlife.playlist.PlaylistModel;
 import com.example.musicforlife.playlist.PlaylistSongModel;
+import com.example.musicforlife.recent.RecentModel;
 
 public class DatabaseManager extends SQLiteOpenHelper {
 
@@ -22,7 +23,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     // Database Version
-    private static final int DATABASE_VERSION = 10;
+    private static final int DATABASE_VERSION = 11;
 
     // Database Name
     public static final String DATABASE_NAME = "music_of_life_db.db";
@@ -68,6 +69,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         db.execSQL(PlayModel.SCRIPT_CREATE_TABLE);
         db.execSQL(PlaylistModel.SCRIPT_CREATE_TABLE);
         db.execSQL(PlaylistSongModel.SCRIPT_CREATE_TABLE);
+        db.execSQL(RecentModel.SCRIPT_CREATE_TABLE);
     }
 
     @Override
@@ -76,6 +78,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + PlayModel.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + PlaylistModel.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + PlaylistSongModel.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS "+RecentModel.TABLE_NAME);
         onCreate(db);
     }
 }

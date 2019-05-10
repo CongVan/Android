@@ -42,6 +42,7 @@ import com.example.musicforlife.playlist.BottomSheetOptionSong;
 import com.example.musicforlife.playlist.FragmentPlaylist;
 import com.example.musicforlife.MainActivity;
 import com.example.musicforlife.R;
+import com.example.musicforlife.recent.RecentModel;
 
 import java.util.ArrayList;
 
@@ -94,13 +95,12 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Mul
 
 //        AlbumModel.getAllAlbumFromDevice(_context);
         new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void run() {
                 _txtSizeOfListSong.setText("Tìm thấy " + String.valueOf(SongModel.getRowsSong(MainActivity.mDatabaseManager)) + " bài hát");
             }
         });
-
-
     }
 
     @Override
@@ -342,6 +342,12 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Mul
     public void layoutItemClick(View v, int position) {
         final SongModel songChose = _listSong.get(position);
         playSong(songChose);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RecentModel.addToRecent(songChose.getSongId(), RecentModel.TYPE_SONG);
+            }
+        }).start();
     }
 
     @Override

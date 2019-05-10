@@ -7,6 +7,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
@@ -69,7 +70,7 @@ import com.example.musicforlife.utilitys.Utility;
 import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity implements MainCallbacks, View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements MainCallbacks, View.OnClickListener {//AudioManager.OnAudioFocusChangeListener
 
 
     private LinearLayout mLayoutPlayingMinimizie;
@@ -90,8 +91,8 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     private Intent mIntentPlayActivity;
     private PlayService mPlayService;
     public static DatabaseManager mDatabaseManager;
-    private IntentFilter mIntentFilterNoisy = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
-    private BecomingNoisyReceiver mBecomingNoisyReceiver = new BecomingNoisyReceiver();
+    private AudioManager mAudioManager;
+
     public static final Integer PLAY_CHANEL_ID = 101;
     public static final Integer PLAY_NOTIFICATION_ID = 101;
 
@@ -127,7 +128,8 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         mViewPager.setOffscreenPageLimit(mPagerAdapter.getCount());
         mTabLayout.setupWithViewPager(mViewPager);
         mPlayService = PlayService.newInstance();
-
+//        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+//        mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
         setSupportActionBar(mToolBar);
         setupLayoutTransparent();
         initDataBaseFromDevice();
@@ -221,20 +223,32 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     }
 
     private void initReceiver() {
+//        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+//        int result = audioManager.requestAudioFocus(, AudioManager.STREAM_MUSIC,
+//                AudioManager.AUDIOFOCUS_GAIN);
+//
+//        if (result != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+//            // could not get audio focus.
+//        }
 
-
-        MediaSessionCompat.Callback callback = new
-                MediaSessionCompat.Callback() {
-                    @Override
-                    public void onPlay() {
-                        registerReceiver(mBecomingNoisyReceiver, mIntentFilterNoisy);
-                    }
-
-                    @Override
-                    public void onStop() {
-                        unregisterReceiver(mBecomingNoisyReceiver);
-                    }
-                };
+//        IntentFilter mainFilter = new IntentFilter("android.media.AUDIO_BECOMING_NOISY");
+//        BroadcastReceiver receiver = new BecomingNoisyReceiver();
+//        registerReceiver(receiver, mainFilter);
+//
+//        sendBroadcast(new Intent("OKOK"));
+//
+//        MediaSessionCompat.Callback callback = new
+//                MediaSessionCompat.Callback() {
+//                    @Override
+//                    public void onPlay() {
+//                        registerReceiver(mBecomingNoisyReceiver, mIntentFilterNoisy);
+//                    }
+//
+//                    @Override
+//                    public void onStop() {
+//                        unregisterReceiver(mBecomingNoisyReceiver);
+//                    }
+//                };
 
     }
 
@@ -491,6 +505,27 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
                 break;
         }
     }
+
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        mAudioManager.abandonAudioFocus(this);
+//    }
+//
+//    @Override
+//    public void onAudioFocusChange(int focusChange) {
+//        if(focusChange<=0) {
+//            if (PlayService.isPlaying()){
+//                mPlayService.pause();
+//            }
+//            //LOSS -> PAUSE
+//        } else {
+//            if (!PlayService.isPlaying()){
+//                mPlayService.resurme();
+//            }
+//            //GAIN -> PLAY
+//        }
+//    }
 
     //    private class FragmentThread extends Thread {
 //        @Override

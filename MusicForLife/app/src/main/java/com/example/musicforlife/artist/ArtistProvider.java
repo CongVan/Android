@@ -16,7 +16,7 @@ public class ArtistProvider {
         DatabaseManager databaseManager = DatabaseManager.newInstance(context);
         SQLiteDatabase db = databaseManager.getReadableDatabase();
         String query = MessageFormat.format("select {0},{1},{2},COUNT({3}) from {4} group by {0}"
-                , new Object[]{SongModel.COLUMN_ARTIST, SongModel.COLUMN_PATH,SongModel.COLUMN_ALBUM_ID, SongModel.COLUMN_ID, SongModel.TABLE_NAME});
+                , SongModel.COLUMN_ARTIST, SongModel.COLUMN_PATH,SongModel.COLUMN_ALBUM_ID, SongModel.COLUMN_ID, SongModel.TABLE_NAME);
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
             do {
@@ -36,14 +36,13 @@ public class ArtistProvider {
         DatabaseManager databaseManager = DatabaseManager.newInstance(context);
         SQLiteDatabase db = databaseManager.getReadableDatabase();
         String query = MessageFormat.format("select {0},{1},{2},COUNT({3}) from {4} group by {0} LIMIT {5},{6}"
-                , new Object[]{SongModel.COLUMN_ARTIST,
-                        SongModel.COLUMN_PATH,
-                        SongModel.COLUMN_ALBUM_ID,
-                        SongModel.COLUMN_ID,
-                        SongModel.TABLE_NAME,
-                        skip + "",
-                        take+ ""
-        });
+                , SongModel.COLUMN_ARTIST,
+                SongModel.COLUMN_PATH,
+                SongModel.COLUMN_ALBUM_ID,
+                SongModel.COLUMN_ID,
+                SongModel.TABLE_NAME,
+                skip + "",
+                take+ "");
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
             do {
@@ -62,18 +61,17 @@ public class ArtistProvider {
         ArrayList<SongModel> arr = new ArrayList<SongModel>();
         SQLiteDatabase db = DatabaseManager.getInstance().getReadableDatabase();
         String query = MessageFormat.format("select {0},{1},{2},{3},{4},{5},{6},{7},{8} from {9} where {10} = ?"
-                , new Object[]{
-                        SongModel.COLUMN_ID,
-                        SongModel.COLUMN_SONG_ID,
-                        SongModel.COLUMN_TITLE,
-                        SongModel.COLUMN_ALBUM,
-                        SongModel.COLUMN_DURATION,
-                        SongModel.COLUMN_FOLDER,
-                        SongModel.COLUMN_ARTIST,
-                        SongModel.COLUMN_PATH,
-                        SongModel.COLUMN_ALBUM_ID,
-                        SongModel.TABLE_NAME,
-                        SongModel.COLUMN_ARTIST});
+                , SongModel.COLUMN_ID,
+                SongModel.COLUMN_SONG_ID,
+                SongModel.COLUMN_TITLE,
+                SongModel.COLUMN_ALBUM,
+                SongModel.COLUMN_DURATION,
+                SongModel.COLUMN_FOLDER,
+                SongModel.COLUMN_ARTIST,
+                SongModel.COLUMN_PATH,
+                SongModel.COLUMN_ALBUM_ID,
+                SongModel.TABLE_NAME,
+                SongModel.COLUMN_ARTIST);
         String[] whereArgs = new String[]{
                 artist,
         };
