@@ -1,6 +1,8 @@
 package com.example.musicforlife.album;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +14,7 @@ import com.example.musicforlife.listsong.SongModel;
 
 import java.util.List;
 
-public class AlbumSongAdapter extends BaseAdapter {
+public class AlbumSongAdapter extends RecyclerView.Adapter<AlbumSongAdapter.AlbumSongViewHolder> {
 
     private List<SongModel> mylist;
     private Context myContext;
@@ -21,38 +23,43 @@ public class AlbumSongAdapter extends BaseAdapter {
         myContext = context;
         mylist = list;
     }
+
+    @NonNull
     @Override
-    public int getCount() {
+    public AlbumSongViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_item_artist_song, viewGroup, false);
+        AlbumSongViewHolder albumSongViewHolder = new AlbumSongViewHolder(view);
+        return albumSongViewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull AlbumSongViewHolder albumSongViewHolder, int i) {
+        albumSongViewHolder.BindData(i);
+    }
+
+    @Override
+    public int getItemCount() {
         return mylist.size();
     }
 
-    @Override
-    public Object getItem(int position) {
-        return null;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return 0;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = (LayoutInflater) myContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        convertView = inflater.inflate(R.layout.layout_item_artist_song,null);
-
-        TextView TVNumber = (TextView) convertView.findViewById(R.id.artistSongNumber);
-        TextView TVNameSong = (TextView) convertView.findViewById(R.id.artistSongNameSong);
-        TextView TVNameArtist = (TextView) convertView.findViewById(R.id.artistSongNameArtist);
-        TextView TVDuration = (TextView) convertView.findViewById(R.id.artistSongDuration);
-
-        SongModel artistSongsModel = mylist.get(position);
-
-        TVNumber.setText(position + 1 + "");
-        TVNameSong.setText(artistSongsModel.getTitle());
-        TVNameArtist.setText(artistSongsModel.getArtist());
-        TVDuration.setText(SongModel.formateMilliSeccond(artistSongsModel.getDuration()));
-
-        return convertView;
+    public class AlbumSongViewHolder extends RecyclerView.ViewHolder{
+        TextView TVNumber;
+        TextView TVNameSong;
+        TextView TVNameArtist;
+        TextView TVDuration;
+        public AlbumSongViewHolder(@NonNull View itemView) {
+            super(itemView);
+            TVNumber = (TextView) itemView.findViewById(R.id.artistSongNumber);
+            TVNameSong = (TextView) itemView.findViewById(R.id.artistSongNameSong);
+            TVNameArtist = (TextView) itemView.findViewById(R.id.artistSongNameArtist);
+            TVDuration = (TextView) itemView.findViewById(R.id.artistSongDuration);
+        }
+        public void BindData(int position) {
+            SongModel artistSongsModel = mylist.get(position);
+            TVNumber.setText(position + 1 + "");
+            TVNameSong.setText(artistSongsModel.getTitle());
+            TVNameArtist.setText(artistSongsModel.getArtist());
+            TVDuration.setText(SongModel.formateMilliSeccond(artistSongsModel.getDuration()));
+        }
     }
 }

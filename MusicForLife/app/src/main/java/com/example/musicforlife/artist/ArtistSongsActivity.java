@@ -10,7 +10,12 @@ import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaMetadataRetriever;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -18,23 +23,30 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
 
+import com.example.musicforlife.MainActivity;
+import com.example.musicforlife.listsong.RecyclerItemClickListener;
+import com.example.musicforlife.listsong.SongModel;
 import com.example.musicforlife.play.PlayActivity;
+import com.example.musicforlife.play.PlayService;
+import com.example.musicforlife.playlist.FragmentPlaylist;
 import com.example.musicforlife.utilitys.ImageHelper;
 import com.example.musicforlife.R;
 import com.example.musicforlife.utilitys.Utility;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 public class ArtistSongsActivity extends AppCompatActivity {
-
-    ImageButton ImgBtnBack;
+    RecyclerView RVListArtist;
     ImageView ImgProfile;
     TextView TVNameArtist;
     TextView TVSongcount;
     ArtistModel artistModel;
     Toolbar mToolbarArtistSong;
-    LinearLayout layoutContentArtistSong;
+    CoordinatorLayout layoutContentArtistSong;
+    PlayService mPlayService;
+    AppBarLayout mAppbarLayoutArtist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,38 +57,19 @@ public class ArtistSongsActivity extends AppCompatActivity {
         artistModel = (ArtistModel) intent.getSerializableExtra("infoArtist");
         InitControl();
         BindData();
-
-        //Init Fragment
-        final FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        FragmentArtistSong fragmentArtistSong = new FragmentArtistSong();
-        Bundle bundle = new Bundle();
-        bundle.putString("artistQuery", artistModel.getName());
-        fragmentArtistSong.setArguments(bundle);
-        fragmentTransaction.add(R.id.artistSongFragmentLayout, fragmentArtistSong);
-        fragmentTransaction.commit();
-        //Init Fragment
-
-        //set button Back
-//        ImgBtnBack.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                finish();
-//            }
-//        });
         setupLayoutTransparent();
 
     }
 
     private void InitControl() {
-//        ImgBtnBack = (ImageButton) findViewById(R.id.artistSongBtnBack);
+        RVListArtist = (RecyclerView)findViewById(R.id.rcvartistSong);
         ImgProfile = (ImageView) findViewById(R.id.artistSongImgProfile);
         TVNameArtist = (TextView) findViewById(R.id.artistSongNameArtist);
         TVSongcount = (TextView) findViewById(R.id.artistSongcount);
-        layoutContentArtistSong = findViewById(R.id.layoutContentArtistSong);
-        mToolbarArtistSong=findViewById(R.id.toolbarArtistSong);
-
-
-
+        layoutContentArtistSong = (CoordinatorLayout)findViewById(R.id.layoutContentArtistSong);
+        mToolbarArtistSong = (Toolbar)findViewById(R.id.artisthtab_toolbar);
+        mAppbarLayoutArtist = (AppBarLayout)findViewById(R.id.artisthtab_appbar);
+        mPlayService = PlayService.newInstance();
     }
 
     private void setupLayoutTransparent() {
@@ -96,12 +89,10 @@ public class ArtistSongsActivity extends AppCompatActivity {
         mToolbarArtistSong.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                onBackPressed();
             }
         });
 
-//        getSupportActionBar().setElevation(0);
-//        mLayoutPlay.setPadding(0, Utility.getStatusbarHeight(this), 0, 0);
     }
 
     private void BindData() {
@@ -109,15 +100,43 @@ public class ArtistSongsActivity extends AppCompatActivity {
             TVNameArtist.setText(artistModel.getName());
             TVSongcount.setText(artistModel.getSongCount() + " Bài hát");
             ImgProfile.setImageBitmap(ImageHelper.getBitmapFromPath(artistModel.getPath(), R.mipmap.microphone_128));
-//            MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-//            mediaMetadataRetriever.setDataSource(artistModel.getPath());
-//            if (mediaMetadataRetriever.getEmbeddedPicture() != null) {
-//                InputStream inputStream = new ByteArrayInputStream(mediaMetadataRetriever.getEmbeddedPicture());
-//                mediaMetadataRetriever.release();
-//                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-//                ImgProfile.setBackground(new BitmapDrawable(getResources(), bitmap));
-//                BitmapDrawable d = new BitmapDrawable(getResources(), bitmap);
-//            }
+            final ArrayList<SongModel> artistSongsList = ArtistProvider.getArtistSongs(this, artistModel.getName());
+            ArtistSongsAdapter artistSongsAdapter = new ArtistSongsAdapter(this, artistSongsList);
+            RVListArtist.setLayoutManager(new LinearLayoutManager(this));
+            RVListArtist.setHasFixedSize(true);
+            RVListArtist.setAdapter(artistSongsAdapter);
+            RVListArtist.addOnItemTouchListener(new RecyclerItemClickListener(this, RVListArtist, new RecyclerItemClickListener.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    SongModel songModel = artistSongsList.get(position);
+                    MainActivity _mainActivity = MainActivity.getMainActivity();
+                    mPlayService.play(songModel);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mPlayService.initListPlaying(artistSongsList);
+                        }
+                    }).start();
+                    _mainActivity.playSongsFromFragmentListToMain(FragmentPlaylist.SENDER);
+                    }
+
+                    @Override
+                    public void onLongItemClick(View view, int position) {
+
+                    }
+            }));
+            mAppbarLayoutArtist.addOnOffsetChangedListener(new AppBarLayout.BaseOnOffsetChangedListener() {
+                @Override
+                public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
+                    if (Math.abs(i) - appBarLayout.getTotalScrollRange() == 0) {
+                        getSupportActionBar().setTitle(artistModel.getName());
+
+                    } else {
+                        getSupportActionBar().setTitle(" ");
+
+                    }
+                }
+            });
         }
     }
 }
