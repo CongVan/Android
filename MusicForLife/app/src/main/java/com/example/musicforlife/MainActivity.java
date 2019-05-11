@@ -192,6 +192,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
      */
     private void initDataBaseFromDevice() {
         mDatabaseManager = DatabaseManager.newInstance(getApplicationContext());
+//        mDatabaseManager.resetDB();
         new intitSongFromDevice().execute();
     }
 

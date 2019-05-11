@@ -28,7 +28,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     // Database Name
     public static final String DATABASE_NAME = "music_of_life_db.db";
 
-    public static  DatabaseManager newInstance(Context context) {
+    public static DatabaseManager newInstance(Context context) {
         if (mDatabaseInstance == null) {
             mDatabaseInstance = new DatabaseManager(context.getApplicationContext());
         }
@@ -40,7 +40,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
         mContext = context;
 
     }
-//    public  SQLiteDatabase openReadDatabase() {
+
+    //    public  SQLiteDatabase openReadDatabase() {
 //        mOpenCounter++;
 //        if(mOpenCounter == 1) {
 //            // Opening new database
@@ -78,7 +79,17 @@ public class DatabaseManager extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + PlayModel.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + PlaylistModel.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + PlaylistSongModel.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS "+RecentModel.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + RecentModel.TABLE_NAME);
+        onCreate(db);
+    }
+
+    public void resetDB() {
+        SQLiteDatabase db = getReadableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS " + SongModel.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + PlayModel.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + PlaylistModel.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + PlaylistSongModel.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + RecentModel.TABLE_NAME);
         onCreate(db);
     }
 }

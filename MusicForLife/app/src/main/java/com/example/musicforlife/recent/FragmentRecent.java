@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.example.musicforlife.MainActivity;
 import com.example.musicforlife.R;
@@ -24,14 +25,15 @@ import java.util.ArrayList;
 
 public class FragmentRecent extends Fragment implements MultiClickAdapterListener {
     private static final String TAG = "FRAGMENT_RECENT";
-    public static final String SENDER="FRAGMENT_RECENT";
+    public static final String SENDER = "FRAGMENT_RECENT";
 
     private RecyclerView mRcvSongRecent;
-    private ListSongRecyclerAdaper _listSongAdapter;
+    private ListSongRecentAdaper _listSongAdapter;
     private ArrayList<SongModel> mListSongRecent;
     private Context mContext;
     private MainActivity mMainActivity;
-    public FragmentRecent(){
+
+    public FragmentRecent() {
 
     }
 
@@ -49,14 +51,14 @@ public class FragmentRecent extends Fragment implements MultiClickAdapterListene
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ViewGroup viewGroup= (ViewGroup)inflater.inflate(R.layout.fragment_recent, container, false);
-        mRcvSongRecent=viewGroup.findViewById(R.id.rcvSongRecent);
+        ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_recent, container, false);
+        mRcvSongRecent = viewGroup.findViewById(R.id.rcvSongRecent);
         new Handler().post(new Runnable() {
             @Override
             public void run() {
                 mListSongRecent = RecentModel.getRecentSong();
-                _listSongAdapter = new ListSongRecyclerAdaper(mContext, mListSongRecent, FragmentRecent.this);
-                mRcvSongRecent.setLayoutManager(new LinearLayoutManager(mContext));
+                _listSongAdapter = new ListSongRecentAdaper(mContext, mListSongRecent, FragmentRecent.this);
+                mRcvSongRecent.setLayoutManager(new LinearLayoutManager(mContext, LinearLayout.HORIZONTAL, false));
                 mRcvSongRecent.setAdapter(_listSongAdapter);
 
             }

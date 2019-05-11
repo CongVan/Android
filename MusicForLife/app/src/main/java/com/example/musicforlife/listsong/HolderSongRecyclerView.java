@@ -43,10 +43,10 @@ public class HolderSongRecyclerView extends RecyclerView.ViewHolder implements V
     }
 
     @SuppressLint("SetTextI18n")
-    void bindContent(SongModel songModel) {
+    public void bindContent(SongModel songModel) {
 
         this.titleSong.setText(songModel.getTitle());
-        this.artist.setText(songModel.getArtist() + "_" + songModel.getAlbumId());
+        this.artist.setText(songModel.getArtist() );//+ "_" + songModel.getAlbumId()
         this.duration.setText(SongModel.formateMilliSeccond(songModel.getDuration()));
         final Bitmap bitmap = mImageCacheHelper.getBitmapCache(songModel.getAlbumId());//  mBitmapCache.get((long) songModel.getAlbumId());
         if (bitmap != null) {

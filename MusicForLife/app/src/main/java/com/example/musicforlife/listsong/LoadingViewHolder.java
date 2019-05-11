@@ -10,7 +10,7 @@ import com.example.musicforlife.R;
 public class LoadingViewHolder extends RecyclerView.ViewHolder {
     ProgressBar progressBar;
 
-    LoadingViewHolder(@NonNull View itemView) {
+    public LoadingViewHolder(@NonNull View itemView) {
         super(itemView);
         progressBar = itemView.findViewById(R.id.progressBarCircle);
     }

@@ -3,6 +3,7 @@ package com.example.musicforlife.recent;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.example.musicforlife.artist.ArtistModel;
 import com.example.musicforlife.db.DatabaseManager;
@@ -35,7 +36,7 @@ public class RecentModel {
     public static final int TYPE_ALBUM = 2;
     public static final int TYPE_ARTIST = 3;
     public static final int TYPE_PLAYLIST = 4;
-
+    public static final int LIMIT_RECENT = 5;
     private int id;
     private int linkId;
     private int type;
@@ -75,7 +76,7 @@ public class RecentModel {
     }
 
     private static DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
-
+    private static final String TAG = "RecentModel";
 
     public static long addToRecent(int linkId, int type) {
         try {
@@ -121,8 +122,10 @@ public class RecentModel {
 
         String query = "SELECT L.* FROM " + TABLE_NAME + " R JOIN " + SongModel.TABLE_NAME + " L ON R." + COLUMN_LINK_KEY + "=L." + SongModel.COLUMN_SONG_ID +
                 " WHERE R." + COLUMN_TYPE + "=" + TYPE_SONG +
-                " ORDER BY R." + COLUMN_DATE + " desc ";
+                " ORDER BY R." + COLUMN_DATE + " desc " +
+                " LIMIT 1,3";
         Cursor cursor = db.rawQuery(query, null);
+
         ArrayList<SongModel> result = new ArrayList<>();
         if (cursor.moveToFirst()) {
             do {
@@ -139,6 +142,7 @@ public class RecentModel {
             } while (cursor.moveToNext());
 
         }
+        Log.d(TAG, "getRecentSong: "+result.size());
         return result;
     }
 
