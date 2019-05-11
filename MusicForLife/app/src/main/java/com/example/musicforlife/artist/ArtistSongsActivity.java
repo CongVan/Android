@@ -29,6 +29,7 @@ import com.example.musicforlife.listsong.SongModel;
 import com.example.musicforlife.play.PlayActivity;
 import com.example.musicforlife.play.PlayService;
 import com.example.musicforlife.playlist.FragmentPlaylist;
+import com.example.musicforlife.recent.RecentModel;
 import com.example.musicforlife.utilitys.ImageHelper;
 import com.example.musicforlife.R;
 import com.example.musicforlife.utilitys.Utility;
@@ -62,13 +63,13 @@ public class ArtistSongsActivity extends AppCompatActivity {
     }
 
     private void InitControl() {
-        RVListArtist = (RecyclerView)findViewById(R.id.rcvartistSong);
+        RVListArtist = (RecyclerView) findViewById(R.id.rcvartistSong);
         ImgProfile = (ImageView) findViewById(R.id.artistSongImgProfile);
         TVNameArtist = (TextView) findViewById(R.id.artistSongNameArtist);
         TVSongcount = (TextView) findViewById(R.id.artistSongcount);
-        layoutContentArtistSong = (CoordinatorLayout)findViewById(R.id.layoutContentArtistSong);
-        mToolbarArtistSong = (Toolbar)findViewById(R.id.artisthtab_toolbar);
-        mAppbarLayoutArtist = (AppBarLayout)findViewById(R.id.artisthtab_appbar);
+        layoutContentArtistSong = (CoordinatorLayout) findViewById(R.id.layoutContentArtistSong);
+        mToolbarArtistSong = (Toolbar) findViewById(R.id.artisthtab_toolbar);
+        mAppbarLayoutArtist = (AppBarLayout) findViewById(R.id.artisthtab_appbar);
         mPlayService = PlayService.newInstance();
     }
 
@@ -118,12 +119,18 @@ public class ArtistSongsActivity extends AppCompatActivity {
                         }
                     }).start();
                     _mainActivity.playSongsFromFragmentListToMain(FragmentPlaylist.SENDER);
-                    }
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            RecentModel.addToRecent(artistModel.getName(), RecentModel.TYPE_ARTIST);
+                        }
+                    }).start();
+                }
 
-                    @Override
-                    public void onLongItemClick(View view, int position) {
+                @Override
+                public void onLongItemClick(View view, int position) {
 
-                    }
+                }
             }));
             mAppbarLayoutArtist.addOnOffsetChangedListener(new AppBarLayout.BaseOnOffsetChangedListener() {
                 @Override

@@ -414,7 +414,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
             public void run() {
                 mLayoutPlayingMinimizie.measure(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
                 Log.d(TAG, "run: SET PADDING MINIMIZE " + mLayoutPlayingMinimizie.getMeasuredHeight());
-                mViewPager.setPadding(0, 0, 0, mLayoutPlayingMinimizie.getMeasuredHeight());
+                mViewPager.setPadding(0, 0, 0, mLayoutPlayingMinimizie.getMeasuredHeight() + 16);
                 mLayoutPlayingMinimizie.setVisibility(View.VISIBLE);
             }
         });

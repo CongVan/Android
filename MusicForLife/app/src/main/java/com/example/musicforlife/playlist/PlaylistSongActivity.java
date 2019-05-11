@@ -32,6 +32,7 @@ import com.example.musicforlife.listsong.MultiClickAdapterListener;
 import com.example.musicforlife.listsong.SongModel;
 import com.example.musicforlife.play.PlayActivity;
 import com.example.musicforlife.play.PlayService;
+import com.example.musicforlife.recent.RecentModel;
 import com.example.musicforlife.utilitys.ImageHelper;
 import com.example.musicforlife.utilitys.Utility;
 
@@ -213,6 +214,12 @@ public class PlaylistSongActivity extends AppCompatActivity implements MultiClic
     public void layoutItemClick(View v, int position) {
         final SongModel songChose = mListSong.get(position);
         playSong(songChose);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RecentModel.addToRecent(String.valueOf(mCurrentPlaylistId), RecentModel.TYPE_PLAYLIST);
+            }
+        }).start();
     }
 
     @Override

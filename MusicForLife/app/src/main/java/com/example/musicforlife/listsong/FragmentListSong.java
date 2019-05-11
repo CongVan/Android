@@ -342,12 +342,7 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Mul
     public void layoutItemClick(View v, int position) {
         final SongModel songChose = _listSong.get(position);
         playSong(songChose);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                RecentModel.addToRecent(songChose.getSongId(), RecentModel.TYPE_SONG);
-            }
-        }).start();
+
     }
 
     @Override

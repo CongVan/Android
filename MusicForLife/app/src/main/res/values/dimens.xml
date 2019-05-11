@@ -22,12 +22,16 @@
     <dimen name="border_radius_large">32dp</dimen>
 
     <dimen name="elevation_xsmall">02dp</dimen>
+    <dimen name="elevation_normal">08dp</dimen>
     <dimen name="elevation_large">12dp</dimen>
 
     <dimen name="image_icon_item">48dp</dimen>
     <dimen name="image_card_item">48dp</dimen>
     <dimen name="image_optiton_sheet">64dp</dimen>
     <dimen name="image_card_item_playlist">60dp</dimen>
+    <dimen name="image_card_item_playlist_recent">128dp</dimen>
+
+    <dimen name="width_artist_recent_hoz">148dp</dimen>
 
     <dimen name="max_height_dialog">360dp</dimen>
 

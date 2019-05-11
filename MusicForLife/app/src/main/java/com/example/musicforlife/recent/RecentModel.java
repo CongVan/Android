@@ -6,9 +6,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.example.musicforlife.artist.ArtistModel;
+import com.example.musicforlife.artist.ArtistViewModel;
 import com.example.musicforlife.db.DatabaseManager;
 import com.example.musicforlife.listsong.SongModel;
 import com.example.musicforlife.playlist.PlaylistModel;
+import com.example.musicforlife.playlist.PlaylistSongModel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,9 +38,9 @@ public class RecentModel {
     public static final int TYPE_ALBUM = 2;
     public static final int TYPE_ARTIST = 3;
     public static final int TYPE_PLAYLIST = 4;
-    public static final int LIMIT_RECENT = 5;
+    public static final int LIMIT_RECENT = 10;
     private int id;
-    private int linkId;
+    private String linkKey;
     private int type;
     private Date date;
 
@@ -51,12 +53,12 @@ public class RecentModel {
         this.id = id;
     }
 
-    public int getLinkId() {
-        return linkId;
+    public String getLinkKey() {
+        return linkKey;
     }
 
-    public void setLinkId(int linkId) {
-        this.linkId = linkId;
+    public void setLinkKey(String linkKey) {
+        this.linkKey = linkKey;
     }
 
     public int getType() {
@@ -78,17 +80,19 @@ public class RecentModel {
     private static DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
     private static final String TAG = "RecentModel";
 
-    public static long addToRecent(int linkId, int type) {
+    public static long addToRecent(String linkKey, int type) {
         try {
-            if (isExistsRecent(linkId) == -1) {
+            int idRecent = getRecentId(linkKey);
+            Log.d(TAG, "addToRecent: RECENT ID ADD " + idRecent);
+            if (idRecent == -1) {
                 SQLiteDatabase database = mDatabaseManager.getWritableDatabase();
                 ContentValues contentValues = new ContentValues();
-                contentValues.put(COLUMN_LINK_KEY, linkId);
+                contentValues.put(COLUMN_LINK_KEY, linkKey);
                 contentValues.put(COLUMN_TYPE, type);
                 contentValues.put(COLUMN_DATE, getDateTimeNow());
                 return database.insert(TABLE_NAME, null, contentValues);
             } else {
-                return updateRecentToNow(linkId);
+                return updateRecentToNow(idRecent);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -96,11 +100,12 @@ public class RecentModel {
         }
     }
 
-    public static int isExistsRecent(int linkId) {
+    public static int getRecentId(String linkKey) {
         SQLiteDatabase db = mDatabaseManager.getReadableDatabase();
-        String query = "SELECT " + COLUMN_ID + " from " + TABLE_NAME;
-        Cursor cursor = db.rawQuery(query, null);
+        String query = "SELECT " + COLUMN_ID + " from " + TABLE_NAME + " WHERE " + COLUMN_LINK_KEY + "=?";
+        Cursor cursor = db.rawQuery(query, new String[]{linkKey});
         if (cursor.moveToNext()) {
+            Log.d(TAG, "getRecentId: COUNT " + cursor.getCount());
             return cursor.getInt(cursor.getColumnIndex(COLUMN_ID));
         } else {
             return -1;
@@ -123,7 +128,7 @@ public class RecentModel {
         String query = "SELECT L.* FROM " + TABLE_NAME + " R JOIN " + SongModel.TABLE_NAME + " L ON R." + COLUMN_LINK_KEY + "=L." + SongModel.COLUMN_SONG_ID +
                 " WHERE R." + COLUMN_TYPE + "=" + TYPE_SONG +
                 " ORDER BY R." + COLUMN_DATE + " desc " +
-                " LIMIT 1,3";
+                " LIMIT 0," + LIMIT_RECENT;
         Cursor cursor = db.rawQuery(query, null);
 
         ArrayList<SongModel> result = new ArrayList<>();
@@ -142,20 +147,44 @@ public class RecentModel {
             } while (cursor.moveToNext());
 
         }
-        Log.d(TAG, "getRecentSong: "+result.size());
+        Log.d(TAG, "getRecentSong: " + result.size());
         return result;
     }
 
-    public static ArrayList<ArtistModel> getRecentArtist() {
+    public static ArrayList<PlaylistModel> getRecentPlaylist() {
+        ArrayList<PlaylistModel> playlistModels = new ArrayList<PlaylistModel>();
+        SQLiteDatabase db = DatabaseManager.getInstance().getReadableDatabase();
+        String query = "SELECT P." + PlaylistModel.COLUMN_ID + ",P." + PlaylistModel.COLUMN_PLAYLIST_TITLE + ",P." + PlaylistModel.COLUMN_PATH_IMAGE + ",COUNT(PS." + PlaylistSongModel.COLUMN_ID + ") " + PlaylistModel.COLUMN_NUMBER_OF_SONG +
+                " FROM (SELEcT * FROM " + PlaylistModel.TABLE_NAME + " ) P" +
+                " INNER JOIN ( SELECT * from " + RecentModel.TABLE_NAME + " P WHERE " + RecentModel.COLUMN_TYPE + "=" + TYPE_PLAYLIST + " LIMIT 0," + LIMIT_RECENT + ") PR ON P." + PlaylistModel.COLUMN_ID + "=PR." + COLUMN_LINK_KEY +
+                " LEFT JOIN " + PlaylistSongModel.TABLE_NAME + " PS  ON PR." + RecentModel.COLUMN_LINK_KEY + "=PS." + PlaylistSongModel.COLUMN_PLAYLIST_ID + "" +
+                " GROUP BY P." + PlaylistModel.COLUMN_ID + ",P." + PlaylistModel.COLUMN_PLAYLIST_TITLE + ",P." + PlaylistModel.COLUMN_PATH_IMAGE +
+                " ORDER BY PR." + RecentModel.COLUMN_DATE;
+        Cursor cursor = db.rawQuery(query, null);
+        Log.d(TAG, "getRecentPlaylist: " + cursor.getCount());
+        if (cursor.moveToFirst()) {
+            do {
+                PlaylistModel playlist = new PlaylistModel();
+                playlist.setId(cursor.getInt(cursor.getColumnIndex(COLUMN_ID)));
+                playlist.setTitle(cursor.getString(cursor.getColumnIndex(PlaylistModel.COLUMN_PLAYLIST_TITLE)));
+                playlist.setNumberOfSongs(cursor.getInt(cursor.getColumnIndex(PlaylistModel.COLUMN_NUMBER_OF_SONG)));
+                playlist.setPathImage(cursor.getString(cursor.getColumnIndex(PlaylistModel.COLUMN_PATH_IMAGE)));
+                playlistModels.add(playlist);
+            } while (cursor.moveToNext());
+        }
+
+        return playlistModels;
+    }
+
+    public static ArrayList<ArtistViewModel> getRecentArtist() {
         SQLiteDatabase db = mDatabaseManager.getReadableDatabase();
-
-
         String query = "SELECT " + SongModel.COLUMN_ARTIST + "," + SongModel.COLUMN_PATH + "," + SongModel.COLUMN_ALBUM_ID + ",COUNT(" + SongModel.COLUMN_SONG_ID + ") SongCount FROM " + TABLE_NAME + " R JOIN " + SongModel.TABLE_NAME + " L ON R." + COLUMN_LINK_KEY + "=L." + SongModel.COLUMN_ARTIST +
                 " WHERE R." + COLUMN_TYPE + "=" + TYPE_ARTIST +
                 " GROUP BY L." + SongModel.COLUMN_ARTIST +
-                " ORDER BY R." + COLUMN_DATE + " desc ";
+                " ORDER BY R." + COLUMN_DATE + " desc " +
+                " LIMIT 0," + LIMIT_RECENT;
         Cursor cursor = db.rawQuery(query, null);
-        ArrayList<ArtistModel> result = new ArrayList<>();
+        ArrayList<ArtistViewModel> result = new ArrayList<>();
         if (cursor.moveToFirst()) {
             do {
                 String name = cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_ARTIST));
@@ -163,7 +192,7 @@ public class RecentModel {
                 int albumId = cursor.getInt(cursor.getColumnIndex(SongModel.COLUMN_ALBUM_ID));
                 int songCount = cursor.getInt(cursor.getColumnIndex("SongCount"));
 
-                result.add(new ArtistModel(name, path, albumId, songCount));
+                result.add(new ArtistViewModel(name, path, albumId, songCount));
             } while (cursor.moveToNext());
 
         }

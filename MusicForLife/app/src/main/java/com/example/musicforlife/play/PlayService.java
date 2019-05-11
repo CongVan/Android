@@ -17,6 +17,7 @@ import com.example.musicforlife.MainActivity;
 import com.example.musicforlife.callbacks.MainCallbacks;
 import com.example.musicforlife.db.DatabaseManager;
 import com.example.musicforlife.listsong.SongModel;
+import com.example.musicforlife.recent.RecentModel;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -346,7 +347,14 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
 
         }
         mp.start();
-
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                long retSong = RecentModel.addToRecent(String.valueOf(mCurrentSongPlaying.getSongId()), RecentModel.TYPE_SONG);
+                long retArtist = RecentModel.addToRecent(String.valueOf(mCurrentSongPlaying.getArtist()), RecentModel.TYPE_ARTIST);
+                Log.d(TAG, "run: INSERT RECENT SONG " + retSong + "_ARTIST " + retArtist);
+            }
+        }).start();
         if (PlayActivity.getActivity() != null) {
             PlayActivity.getActivity().updateButtonPlay(SENDER);
         }
