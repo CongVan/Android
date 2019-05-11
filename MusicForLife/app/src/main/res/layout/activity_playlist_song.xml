@@ -44,7 +44,7 @@
                 android:layout_gravity="center"
                 android:layout_marginHorizontal="@dimen/margin_size_xlarge"
                 android:layout_marginVertical="@dimen/text_size_normal"
-                android:background="@color/colorBlackGlassLight"
+                android:background="@color/colorBlackGlassDark"
                 android:gravity="center"
                 android:orientation="vertical">
 

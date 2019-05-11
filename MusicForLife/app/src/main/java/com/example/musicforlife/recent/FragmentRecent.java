@@ -78,7 +78,7 @@ public class FragmentRecent extends Fragment implements MultiClickAdapterListene
         mRcvSongRecent = viewGroup.findViewById(R.id.rcvSongRecent);
         mRcvPlaylistRecent = viewGroup.findViewById(R.id.rcvPlaylistRecent);
         mRcvArtistRecent = viewGroup.findViewById(R.id.rcvArtistRecent);
-        new Handler().post(new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 mListSongRecent = RecentModel.getRecentSong();
@@ -87,8 +87,8 @@ public class FragmentRecent extends Fragment implements MultiClickAdapterListene
                 mRcvSongRecent.setAdapter(mListSongRecentAdapter);
                 isLoadedSong = true;
             }
-        });
-        new Handler().post(new Runnable() {
+        }).start();
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 mListPlaylistRecent = RecentModel.getRecentPlaylist();
@@ -97,9 +97,9 @@ public class FragmentRecent extends Fragment implements MultiClickAdapterListene
                 mRcvPlaylistRecent.setAdapter(mPlaylistRecentAdapter);
                 isLoadedPlaylist = true;
             }
-        });
+        }).start();
 
-        new Handler().post(new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 mListArtistRecent = RecentModel.getRecentArtist();
@@ -108,7 +108,7 @@ public class FragmentRecent extends Fragment implements MultiClickAdapterListene
                 mRcvArtistRecent.setAdapter(mArtistRecentAdapter);
                 isLoadedArtist = true;
             }
-        });
+        }).start();
 
         mRcvPlaylistRecent.addOnItemTouchListener(new RecyclerItemClickListener(mContext, mRcvPlaylistRecent, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
@@ -153,43 +153,61 @@ public class FragmentRecent extends Fragment implements MultiClickAdapterListene
 
     @Override
     public void onResume() {
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 if (isLoadedSong) {
                     ArrayList<SongModel> tempSongs = RecentModel.getRecentSong();
                     mListSongRecent.clear();
                     mListSongRecent.addAll(tempSongs);
-                    mListSongRecentAdapter.notifyDataSetChanged();
-                    mListSongRecentAdapter.notifyItemChanged(0);
+                    mRcvSongRecent.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mListSongRecentAdapter.notifyDataSetChanged();
+                        }
+                    });
+
+
                 }
 
             }
-        });
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
+        }).start();
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 if (isLoadedPlaylist) {
                     ArrayList<PlaylistModel> tempPlaylists = RecentModel.getRecentPlaylist();
                     mListPlaylistRecent.clear();
                     mListPlaylistRecent.addAll(tempPlaylists);
-                    mPlaylistRecentAdapter.notifyDataSetChanged();
+                    mRcvPlaylistRecent.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mPlaylistRecentAdapter.notifyDataSetChanged();
+                        }
+                    });
+
                 }
 
             }
-        });
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
+        }).start();
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 if (isLoadedArtist) {
                     ArrayList<ArtistViewModel> tempArtists = RecentModel.getRecentArtist();
                     mListArtistRecent.clear();
                     mListArtistRecent.addAll(tempArtists);
-                    mArtistRecentAdapter.notifyDataSetChanged();
+                    mRcvArtistRecent.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mArtistRecentAdapter.notifyDataSetChanged();
+                        }
+                    });
+
                 }
 
             }
-        });
+        }).start();
         super.onResume();
     }
 
