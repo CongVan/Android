@@ -28,10 +28,10 @@
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/margin_size_normal"
         app:borderWidth="0dp"
-        android:backgroundTint="@color/colorPrimary"
+        android:backgroundTint="@color/colorAccent"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_add_white_64dp"
         app:layout_anchor="@id/scrollView"
         app:layout_anchorGravity="bottom|end|right"
-        app:rippleColor="@color/colorPrimary" />
+        app:rippleColor="@color/colorAccent" />
 </android.support.design.widget.CoordinatorLayout>

@@ -5,7 +5,7 @@
     android:id="@+id/mainContent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBgPrimary"
+    android:background="@drawable/gradient_bg"
 
     android:fitsSystemWindows="true"
     android:gravity="center"
@@ -31,7 +31,7 @@
             android:background="@color/colorTranparent"
             android:outlineProvider="bounds"
             android:theme="@style/AppTheme.Toolbar"
-
+            app:layout_scrollFlags="scroll|enterAlways"
             app:title="Music For Life">
             <!--app:layout_scrollFlags="scroll|enterAlways"-->
             <!--<LinearLayout-->
@@ -69,16 +69,16 @@
             android:layout_height="wrap_content"
             android:layout_gravity="top"
             android:background="@color/colorTranparent"
-            app:tabGravity="fill"
-            app:tabIndicatorColor="@color/colorWhite"
+            app:tabGravity="center"
+            app:tabIndicatorColor="@color/colorAccent"
             app:tabIndicatorFullWidth="false"
-            app:tabIndicatorHeight="0dp"
+            app:tabIndicatorGravity="bottom"
+            app:tabIndicatorHeight="2dp"
             app:tabMode="scrollable"
-            app:tabPaddingEnd="@dimen/margin_size_xlarge"
-            app:tabPaddingStart="@dimen/margin_size_normal"
-            app:tabSelectedTextColor="@color/colorWhite"
+
+            app:tabSelectedTextColor="@color/colorAccent"
             app:tabTextAppearance="@style/TabLayoutAppearance"
-            app:tabTextColor="@color/colorPrimaryLight">
+            app:tabTextColor="@color/colorTitleSecondary">
             <!--app:tabSelectedTextColor="@android:color/white"-->
             <!--app:tabTextAppearance="@style/TabLayoutAppearance"-->
             <!--app:tabTextColor="@android:color/darker_gray"-->
@@ -94,13 +94,13 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
     <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
     <include
-        android:visibility="gone"
         layout="@layout/layout_playing_minimize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_margin="@dimen/margin_size_small"
-        android:background="@color/colorTranparent">
+        android:background="@color/colorTranparent"
+        android:visibility="gone">
 
     </include>
 

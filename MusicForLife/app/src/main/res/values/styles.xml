@@ -8,6 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="actionModeBackground">@color/colorWhiteLight</item>
         <item name="android:popupMenuStyle">@style/PopupMenu</item>
+
+
     </style>
 
     <style name="PopupMenu" parent="Widget.AppCompat.PopupMenu">
@@ -51,9 +53,9 @@
     <style name="EditText.Primary" parent="Widget.AppCompat.EditText">
         <item name="android:textColor">@color/colorTitleWhitePrimary</item>
         <item name="android:textColorHint">@color/colorTitleWhitePrimary</item>
-        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorAccent</item>
         <item name="colorControlNormal">@color/colorPrimary</item>
-        <item name="colorControlActivated">@color/colorPrimary</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
     </style>
 
     <style name="DialogPrimary" parent="Theme.AppCompat.DayNight.Dialog.Alert">

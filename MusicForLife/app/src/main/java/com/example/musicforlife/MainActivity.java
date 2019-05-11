@@ -398,7 +398,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
 
         mTextViewTitleSongMinimize.setText(songPlaying.getTitle());
         mTextViewArtistMinimize.setText(songPlaying.getArtist());
-        Bitmap bitmap = ImageHelper.getBitmapFromPath(songPlaying.getPath(), R.mipmap.music_file_128);
+        Bitmap bitmap = ImageHelper.getBitmapFromPath(songPlaying.getPath(), R.mipmap.music_128);
         mImageViewSongMinimize.setImageBitmap(bitmap);
 
         //update controls play

@@ -16,18 +16,22 @@
     <!--<color name="colorPrimaryLight">#689AD2</color>-->
     <!--<color name="colorAccent">#FFBF5D</color>-->
 
-    <color name="colorBgPrimary">#263238</color>
+    <color name="colorBgPrimary">#1E1F26</color>
     <!--70%-->
-    <color name="colorBgPrimaryOverlay">#B3263238</color>
+    <color name="colorBgPrimaryOverlay">#1E1F26</color>
     <!--95%-->
-    <color name="colorBgPrimaryTranslucent">#F2263238</color>
-    <color name="colorBgSecondary">#37474f</color>
+    <color name="colorBgPrimaryTranslucent">#F21D1E22</color>
+    <color name="colorBgSecondary">#1E3C72</color>
 
+    <color name="colorPrimary">#1E1F26</color>
+    <color name="colorPrimaryDark">#283655</color>
+    <color name="colorPrimaryLight">#4D648D</color>
+    <color name="colorAccent">#FFE324</color>
 
-    <color name="colorPrimary">#08708A</color>
-    <color name="colorPrimaryDark">#032B2F</color>
-    <color name="colorPrimaryLight">#56B1BF</color>
-    <color name="colorAccent">#FFBF5D</color>
+    <!--<color name="colorPrimary">#08708A</color>-->
+    <!--<color name="colorPrimaryDark">#032B2F</color>-->
+    <!--<color name="colorPrimaryLight">#56B1BF</color>-->
+    <!--<color name="colorAccent">#FFBF5D</color>-->
 
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorWhiteLight">#F5F5F5</color>

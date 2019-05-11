@@ -14,19 +14,21 @@ public class BecomingNoisyReceiver extends BroadcastReceiver {
     private static final String TAG = "BecomingNoisyReceiver";
     TelephonyManager telManager;
     Context context;
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        this.context=context;
-
-        telManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+        this.context = context;
+        Log.d(TAG, "onReceive: " + intent.getAction());
+        telManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         telManager.listen(phoneListener, PhoneStateListener.LISTEN_CALL_STATE);
-        Log.d(TAG, "onReceive: "+intent.getAction());
+        Log.d(TAG, "onReceive: " + intent.getAction());
         if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intent.getAction())) {
             // Pause the playback
             PlayService.newInstance().pause();
             Log.d(TAG, "onReceive: ");
         }
     }
+
     private final PhoneStateListener phoneListener = new PhoneStateListener() {
         @Override
         public void onCallStateChanged(int state, String incomingNumber) {
@@ -45,7 +47,8 @@ public class BecomingNoisyReceiver extends BroadcastReceiver {
                         //PLAY
                         break;
                     }
-                    default: { }
+                    default: {
+                    }
                 }
             } catch (Exception ex) {
 
