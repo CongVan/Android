@@ -14,6 +14,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,7 @@ import com.example.musicforlife.playlist.FragmentPlaylist;
 import com.example.musicforlife.playlist.PlaylistModel;
 import com.example.musicforlife.playlist.PlaylistSongActivity;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 
@@ -55,6 +57,7 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
     private static final String TAG = "FragmentListPlaying";
     private MultiClickAdapterListener myAdapterListener;
     private ArrayList<Integer> mListSelectedSong;
+    private ArrayList<Integer> mListIdSelectedSong;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +68,7 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
             mPlayActivity = (PlayActivity) getActivity();
             loadListPlaying = new LoadListPlaying();
             mListSelectedSong = new ArrayList<>();
+            mListIdSelectedSong = new ArrayList<>();
 
         } catch (IllegalStateException e) {
 
@@ -74,11 +78,7 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
 
     public static FragmentListPlaying newInstance() {
         FragmentListPlaying fragmentListPlaying = new FragmentListPlaying();
-//        Bundle args = new Bundle();
-//        args.putString("Key1", "OK");
-//        fragmentListPlaying.setArguments(args);
         mSongPlaying = PlayService.getCurrentSongPlaying();
-
         return fragmentListPlaying;
     }
 
@@ -86,48 +86,25 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
     public void onResume() {
         super.onResume();
         Log.i(TAG, "onResume: STARTED");
-//        new LoadListPlaying().execute();
         updateListPlaying();
-
     }
 
     @Nullable
     @Override()
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-//        ViewGroup viewGroup= (ViewGroup)inflater.inflate(R.layout.fragment_playlist, container, false);
         View view = inflater.inflate(R.layout.fragment_list_playing, container, false);
         mPlayActivity.updateToolbarTitle();
         return view;
-//        Log.i(TAG, "onCreateView PLAYLIST: OKOKOKO");
-//        mListSong = new ArrayList<>();// getAllAudioFromDevice(_context);
-//        mInflater = inflater;
-//        mLayoutListSong = (LinearLayout) mInflater.inflate(R.layout.fragment_list_playing, container, false);
-//        mListViewSong = mLayoutListSong.findViewById(R.id.lsvSongs);
-//        mListSongAdapter = new ListSongAdapter(mContext, mListSong);
-//        mListViewSong.setAdapter(mListSongAdapter);
-//        mListViewSong.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//            }
-//        });
-//        LoadListPlaying.execute();
-//        return mLayoutListSong;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        txtSizePlayingList = mPlayActivity.findViewById(R.id.txtSizePlayingList);
         mListViewSong = (RecyclerView) view.findViewById(R.id.lsvPlaying);
         mLayoutDeleteSong = view.findViewById(R.id.layoutDeleteSong);
         mBtnDeleteAllSongPlaying = view.findViewById(R.id.btnDeleteAllSongPlaying);
         mSelectedAllSongPlaying = view.findViewById(R.id.selectedAllSongPlaying);
-        mListSong = new ArrayList<>();// getAllAudioFromDevice(_context);
-
-//        _layoutListSong = (NestedScrollView) _inflater.inflate(R.layout.fragment_list_song, null);
-
+        mListSong = new ArrayList<>();
         mListSongAdapter = new ListPlayingAdapter(mContext, mListSong, FragmentListPlaying.this);
         mListViewSong.setLayoutManager(new LinearLayoutManager(mContext));
         mListViewSong.setAdapter(mListSongAdapter);
@@ -146,26 +123,15 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
                                     public void run() {
                                         int resultAll = 0;
                                         Log.d(TAG, "run: LIST SONG PLAYING BEFORE DELETE : " + mListSong.size());
-                                        for (int songPositionSelected : mListSelectedSong) {
-                                            if (songPositionSelected > mListSong.size()) {
-                                                break;
-                                            }
 
-                                            int songId = mListSong.get(songPositionSelected).getSongId();
-                                            long result = PlayModel.deleteSongInListPlaying(songId);
-                                            if (result > 0) {
-                                                resultAll++;
-
-
-                                            } else {
-                                                Toast.makeText(PlayActivity.getActivity(), "Thất bại", Toast.LENGTH_LONG).show();
-                                            }
-
-                                        }
-                                        Toast.makeText(PlayActivity.getActivity(), "Đã xóa " + resultAll + " bài hát", Toast.LENGTH_LONG).show();
+                                        String Ids = TextUtils.join(", ",mListIdSelectedSong);
+                                        PlayModel.deleteListSongInListPlaying(Ids);
+                                        Toast.makeText(PlayActivity.getActivity(), "Đã xóa " + mListIdSelectedSong.size() + " bài hát", Toast.LENGTH_LONG).show();
                                         mListSelectedSong.clear();
+                                        mListIdSelectedSong.clear();
                                         mListSong.clear();
                                         mListSong.addAll(PlayModel.getSongPlayingList());
+
                                         Log.d(TAG, "run: LIST SONG PLAYING AFTER DELETE : " + mListSong.size());
                                         mListViewSong.post(new Runnable() {
                                             @Override
@@ -173,15 +139,13 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
                                                 mListSongAdapter.notifyDataSetChanged();
                                             }
                                         });
-
+                                        mSelectedAllSongPlaying.setChecked(false);
                                         hideViewDeleteAllSong();
                                         PlayService.updatePlayingList();
+                                        updateViewSelectAll();
                                     }
                                 });
-
-
                             }
-
                         })
                         .setNegativeButton("Đóng", null)
                         .show();
@@ -191,18 +155,15 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
             @Override
             public void onClick(View v) {
                 boolean isChecked = mSelectedAllSongPlaying.isChecked();
-                mListSelectedSong.clear();
-                if (!isChecked) {
-                    for (SongModel song : mListSong) {
-                        song.setChecked(false);
-                    }
-                } else {
-                    for (SongModel song : mListSong) {
-                        song.setChecked(true);
-                        mListSelectedSong.add(song.getId());
-                    }
+                for(int i = 0 ; i < mListSong.size() ; i++){
+                    mListSelectedSong.add(i);
+                    mListIdSelectedSong.add(mListSong.get(i).getSongId());
+                    mListSong.get(i).setChecked(isChecked);
                 }
-
+                if(!isChecked){
+                    mListSelectedSong.clear();
+                    mListIdSelectedSong.clear();
+                }
                 mListSongAdapter.notifyDataSetChanged();
                 updateViewSelectAll();
 
@@ -271,35 +232,22 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
         mListSongAdapter.notifyItemChanged(position);
         if (!isChecked) {
             mListSelectedSong.add(position);
+            mListIdSelectedSong.add(mListSong.get(position).getSongId());
         } else {
             if (mListSelectedSong.indexOf(position) > -1) {
                 mListSelectedSong.remove(mListSelectedSong.indexOf(position));
+                mListIdSelectedSong.remove(mListIdSelectedSong.indexOf(position));
             }
 
         }
         updateViewSelectAll();
-//        if (mListSelectedSong.size() > 0 && !isShowOfViewDeleteSong()) {
-//            mLayoutDeleteSong.setVisibility(View.VISIBLE);
-//            mBtnDeleteAllSongPlaying.setVisibility(View.VISIBLE);
-//        } else if (isShowOfViewDeleteSong() && mListSelectedSong.size() == 0) {
-//            mLayoutDeleteSong.setVisibility(View.GONE);
-//            mBtnDeleteAllSongPlaying.setVisibility(View.GONE);
-//        }
-//        if (mListSelectedSong.size() == mListSong.size() && !mSelectedAllSongPlaying.isChecked()) {
-//            mSelectedAllSongPlaying.setChecked(true);
-//        } else if (mSelectedAllSongPlaying.isChecked()) {
-//            mSelectedAllSongPlaying.setChecked(false);
-//        }
-//        mSelectedAllSongPlaying.setText("Chọn tất cả (" + mListSelectedSong.size() + ")");
         Log.d(TAG, "checkboxClick: Position: " + position + ", Check: " + isChecked + ", Size selected: " + mListSelectedSong.size());
     }
 
     private void updateViewSelectAll() {
         if (mListSelectedSong.size() > 0) {
-//            mLayoutDeleteSong.setVisibility(View.VISIBLE);
             mBtnDeleteAllSongPlaying.setVisibility(View.VISIBLE);
         } else {
-//            mLayoutDeleteSong.setVisibility(View.GONE);
             mBtnDeleteAllSongPlaying.setVisibility(View.GONE);
         }
         mSelectedAllSongPlaying.setText("Chọn tất cả (" + mListSelectedSong.size() + ")");
@@ -311,7 +259,6 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
     }
 
     private void hideViewDeleteAllSong() {
-//        mLayoutDeleteSong.setVisibility(View.VISIBLE);
         mBtnDeleteAllSongPlaying.setVisibility(View.VISIBLE);
     }
 
@@ -341,7 +288,17 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
             }
             mListSong.clear();
             mListSong.addAll(songModels);
-//            txtSizePlayingList.setText(" (" + mListSong.size() + ") ");
+
+            mListIdSelectedSong.clear();
+            mListSelectedSong.clear();
+            for (int i = 0 ; i < songModels.size() ; i++){
+                if(songModels.get(i).isChecked()){
+                    mListIdSelectedSong.add(songModels.get(i).getSongId());
+                    mListSelectedSong.add(i);
+                }
+            }
+            updateViewSelectAll();
+
             Log.i(TAG, "onPostExecute: SONGS--> " + mListSong.size());
             mListViewSong.post(new Runnable() {
                 @Override
@@ -350,29 +307,6 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
                 }
             });
             Log.i(TAG, "onPostExecute: FINISHED");
-            //play song if songPlaying !=null
-//            if (playFirst) {
-//                mPlayActivity.controlSong(FragmentListPlaying.SENDER, mSongPlaying, PlayService.ACTION_PLAY);
-//                mPlayActivity.updateControlPlaying(SENDER, mSongPlaying);
-//            }
-//
-//            playFirst = false;
-//            if (mSongPlaying != null && !PlayService.isPlaying()) {
-//                Log.d(TAG, "onPostExecute: DURATION " + PlayService.getCurrentDuration());
-//                if (PlayService.getCurrentSongPlaying() != null && PlayService.getCurrentDuration() > 0) {
-//                    Log.d(TAG, "onPostExecute: DURATION " + PlayService.getCurrentDuration());
-//                    Log.i(TAG, "onPostExecute: RESUME PLAY IN LIST "
-//                            + mSongPlaying.getSongId() + "__"
-//                            + PlayService.getCurrentSongPlaying().getSongId()
-//                            + mSongPlaying + "__"
-//                            + PlayService.isPlaying()
-//                    );
-//                } else {
-//                    mPlayActivity.controlSong(FragmentListPlaying.SENDER, mSongPlaying, PlayService.ACTION_PLAY);
-//                    mPlayActivity.updateControlPlaying(SENDER, mSongPlaying);
-//                }
-////                Log.i(TAG, "onPostExecute: RESUME PLAY IN LIST " + mSongPlaying.getSongId() + "__" + PlayService.getCurrentSongPlaying().getSongId());
-//            }
         }
 
         @Override

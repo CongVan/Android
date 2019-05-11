@@ -60,6 +60,7 @@
 
     <style name="DialogPrimary" parent="Theme.AppCompat.DayNight.Dialog.Alert">
         <item name="android:background">@color/colorBgPrimaryTranslucent</item>
+        <item name="android:textColorPrimary">#FFF</item>
     </style>
 
     <style name="CheckboxStyle" parent="@style/AppTheme">

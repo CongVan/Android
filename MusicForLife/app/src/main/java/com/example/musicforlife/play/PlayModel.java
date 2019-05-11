@@ -242,4 +242,9 @@ public class PlayModel {
 
         return resultDeleteSong;
     }
+
+    public static void deleteListSongInListPlaying(String Ids) {
+        SQLiteDatabase db = DatabaseManager.getInstance().getWritableDatabase();
+        db.execSQL(String.format("DELETE FROM %s WHERE %s IN (%s);",TABLE_NAME,COLUMN_SONG_ID, Ids));
+    }
 }
