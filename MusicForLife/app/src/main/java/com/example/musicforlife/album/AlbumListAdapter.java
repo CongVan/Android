@@ -66,7 +66,11 @@ public class AlbumListAdapter extends RecyclerView.Adapter<AlbumListAdapter.Albu
         public void BindData(List<AlbumViewModel> albumList,int position){
             AlbumViewModel albumViewModel = albumList.get(position);
 
-            TVAlbumName.setText(albumViewModel.getTitle());
+            String title = albumViewModel.getTitle().length() > 35
+                    ? albumViewModel.getTitle().substring(0,35) + "..."
+                    : albumViewModel.getTitle();
+
+            TVAlbumName.setText(title);
             TVAlbumCount.setText(albumViewModel.getNumberOfSongs() + " Bài hát");
             TVAlbumArtist.setText(albumViewModel.getArtist());
 

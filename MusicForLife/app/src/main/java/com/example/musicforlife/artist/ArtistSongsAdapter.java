@@ -60,7 +60,11 @@ public class ArtistSongsAdapter extends RecyclerView.Adapter<ArtistSongsAdapter.
         public void BindData(int position){
             SongModel artistSongsModel = mylist.get(position);
             TVNumber.setText(position + 1 + "");
-            TVNameSong.setText(artistSongsModel.getTitle());
+            String title = artistSongsModel.getTitle().length() > 35
+                    ? artistSongsModel.getTitle().substring(0,35) + "..."
+                    : artistSongsModel.getTitle();
+
+            TVNameSong.setText(title);
             TVNameArtist.setText(artistSongsModel.getArtist());
             TVDuration.setText(SongModel.formateMilliSeccond(artistSongsModel.getDuration()));
         }

@@ -61,9 +61,12 @@ public class ListArtistAdapter extends RecyclerView.Adapter<ListArtistAdapter.Ar
         public void BindData(List<ArtistViewModel> artistList,int position){
             ArtistViewModel artistModel = artistList.get(position);
 
+            String title = artistModel.getName().length() > 35
+                    ? artistModel.getName().substring(0,35) + "..."
+                    : artistModel.getName();
+
             TVArtistName.setText(artistModel.getName());
             TVArtistCount.setText(artistModel.getSongCount() + " Bài hát");
-
             SongModel songModel = new SongModel();
             songModel.setAlbumId(artistModel.getAlbumId());
             songModel.setPath(artistModel.getPath());

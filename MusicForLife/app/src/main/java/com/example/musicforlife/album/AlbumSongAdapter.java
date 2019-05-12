@@ -55,11 +55,14 @@ public class AlbumSongAdapter extends RecyclerView.Adapter<AlbumSongAdapter.Albu
             TVDuration = (TextView) itemView.findViewById(R.id.artistSongDuration);
         }
         public void BindData(int position) {
-            SongModel artistSongsModel = mylist.get(position);
+            SongModel albumSongsModel = mylist.get(position);
             TVNumber.setText(position + 1 + "");
-            TVNameSong.setText(artistSongsModel.getTitle());
-            TVNameArtist.setText(artistSongsModel.getArtist());
-            TVDuration.setText(SongModel.formateMilliSeccond(artistSongsModel.getDuration()));
+            String title = albumSongsModel.getTitle().length() > 35
+                    ? albumSongsModel.getTitle().substring(0,35) + "..."
+                    : albumSongsModel.getTitle();
+            TVNameSong.setText(title);
+            TVNameArtist.setText(albumSongsModel.getArtist());
+            TVDuration.setText(SongModel.formateMilliSeccond(albumSongsModel.getDuration()));
         }
     }
 }
