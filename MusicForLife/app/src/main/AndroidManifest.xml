@@ -15,29 +15,30 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".folder.FolderActivity"></activity>
         <activity
             android:name=".playlist.PlaylistSongActivity"
-            android:parentActivityName=".MainActivity"/>
+            android:parentActivityName=".MainActivity" />
         <activity android:name=".album.AlbumSongsActivity" />
         <activity android:name=".artist.ArtistSongsActivity" />
         <activity
             android:name=".play.PlayActivity"
-            android:parentActivityName=".MainActivity"
-
-            />
-        <activity android:name=".MainActivity"
-            android:launchMode="singleTop"
-            >
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <receiver android:name=".BecomingNoisyReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.SCREEN_ON"/>
+                <action android:name="android.intent.action.SCREEN_ON" />
                 <action android:name="android.media.AUDIO_BECOMING_NOISY" />
-                <action android:name="android.intent.action.PHONE_STATE"/>
+                <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
         </receiver>
     </application>

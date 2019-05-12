@@ -41,17 +41,17 @@ import java.util.Objects;
 
 public class PlaylistSongActivity extends AppCompatActivity implements MultiClickAdapterListener, SongPlaylistInterface {
 
-    RecyclerView mRecylerViewListSong;
-    SongPlaylistAdapter mSongPlaylistAdapter;
-    ArrayList<SongModel> mListSong;
-    CoordinatorLayout mLayoutSongPlaylist;
-    Toolbar mToolbar;
-    int mCurrentPlaylistId;
-    PlaylistModel mCurrentPlaylist;
-    TextView mTxtTitlePlaylist;
-    TextView mTxtNumberOfSongPlaylist;
-    AppBarLayout mAppbarLayoutPlaylist;
-    ImageView mImageCoverPlaylist;
+    private RecyclerView mRecylerViewListSong;
+    private SongPlaylistAdapter mSongPlaylistAdapter;
+    private ArrayList<SongModel> mListSong;
+    private CoordinatorLayout mLayoutSongPlaylist;
+    private Toolbar mToolbar;
+    private int mCurrentPlaylistId;
+    private PlaylistModel mCurrentPlaylist;
+    private TextView mTxtTitlePlaylist;
+    private TextView mTxtNumberOfSongPlaylist;
+    private AppBarLayout mAppbarLayoutPlaylist;
+    private ImageView mImageCoverPlaylist;
     private static PlayService mPlayService;
     private static final String TAG = "PlaylistSongActivity";
 

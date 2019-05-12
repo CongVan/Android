@@ -153,7 +153,7 @@ public class FragmentRecent extends Fragment implements MultiClickAdapterListene
 
     @Override
     public void onResume() {
-        new Thread(new Runnable() {
+        new Handler().post(new Runnable() {
             @Override
             public void run() {
                 if (isLoadedSong) {
@@ -166,13 +166,11 @@ public class FragmentRecent extends Fragment implements MultiClickAdapterListene
                             mListSongRecentAdapter.notifyDataSetChanged();
                         }
                     });
-
-
                 }
 
             }
-        }).start();
-        new Thread(new Runnable() {
+        });
+        new Handler().post(new Runnable() {
             @Override
             public void run() {
                 if (isLoadedPlaylist) {
@@ -185,12 +183,11 @@ public class FragmentRecent extends Fragment implements MultiClickAdapterListene
                             mPlaylistRecentAdapter.notifyDataSetChanged();
                         }
                     });
-
                 }
 
             }
-        }).start();
-        new Thread(new Runnable() {
+        });
+        new Handler().post(new Runnable() {
             @Override
             public void run() {
                 if (isLoadedArtist) {
@@ -203,11 +200,10 @@ public class FragmentRecent extends Fragment implements MultiClickAdapterListene
                             mArtistRecentAdapter.notifyDataSetChanged();
                         }
                     });
-
                 }
 
             }
-        }).start();
+        });
         super.onResume();
     }
 

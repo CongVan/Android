@@ -175,7 +175,7 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Mul
                     Log.d(TAG, "onScrolled: " + dx + "_" + dy + "___" + linearLayoutManager.getItemCount() + "_" + linearLayoutManager.findLastVisibleItemPosition());
                 }
 
-                if (!mIsLoading && linearLayoutManager != null && linearLayoutManager.getItemCount() - 1 <= linearLayoutManager.findLastVisibleItemPosition()) {
+                if (!mIsLoading && linearLayoutManager != null && linearLayoutManager.getItemCount() - 1 == linearLayoutManager.findLastVisibleItemPosition()) {
                     loadMore();
                     mIsLoading = true;
                 }
@@ -223,21 +223,21 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Mul
     private void loadMore() {
 //        _skeletonScreen = Skeleton.bind(_listViewSong).adapter(_listSongAdapter).load(R.layout.layout_item_song).show();
         _listSong.add(null);
-        _listSongAdapter.notifyItemInserted(_listSong.size() - 1);
+        _listSongAdapter.notifyItemInserted(_listSong.size());
 //        Handler handler = new Handler();
-        new Handler().post(new Runnable() {
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                _listSong.remove(_listSong.size() - 1);
-                int scollPosition = _listSong.size();
-                _listSongAdapter.notifyItemRemoved(scollPosition);
+
                 ArrayList<SongModel> tempAudioList = SongModel.getSongsWithThreshold(MainActivity.mDatabaseManager, _listSong.size(), mThreshHold);
+                _listSong.remove(_listSong.size()-1);
+                _listSongAdapter.notifyItemRemoved(_listSong.size());
                 _listSong.addAll(tempAudioList);
 
 //                _listSongAdapter.notifyDataSetChanged();
                 mIsLoading = false;
             }
-        });
+        }, 0);
 //        _listViewSong.post(new Runnable() {
 //            @Override
 //            public void run() {
