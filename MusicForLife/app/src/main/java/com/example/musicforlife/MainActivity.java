@@ -53,8 +53,10 @@ import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.musicforlife.album.FragmentAlbum;
 import com.example.musicforlife.artist.ArtistModel;
 import com.example.musicforlife.artist.ArtistProvider;
+import com.example.musicforlife.artist.FragmentArtist;
 import com.example.musicforlife.callbacks.MainCallbacks;
 import com.example.musicforlife.db.DatabaseManager;
 import com.example.musicforlife.listsong.FragmentListSong;
@@ -92,7 +94,8 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     private PlayService mPlayService;
     public static DatabaseManager mDatabaseManager;
     private AudioManager mAudioManager;
-
+    private String mSearchValue = "";
+    private int mCurrentFragmentActive;
     public static final Integer PLAY_CHANEL_ID = 101;
     public static final Integer PLAY_NOTIFICATION_ID = 101;
 
@@ -128,6 +131,24 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         mViewPager.setOffscreenPageLimit(mPagerAdapter.getCount());
         mTabLayout.setupWithViewPager(mViewPager);
         mPlayService = PlayService.newInstance();
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                mCurrentFragmentActive = i;
+                SearchByFragment(i);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
+
 //        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 //        mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
         setSupportActionBar(mToolBar);
@@ -146,6 +167,23 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search_main).getActionView();
         searchView.setMaxWidth(Integer.MAX_VALUE);
 
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                mSearchValue = s;
+                SearchByFragment(mCurrentFragmentActive);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                mSearchValue = s;
+                SearchByFragment(mCurrentFragmentActive);
+                return false;
+            }
+        });{
+
+        }
 
         return true;
     }
@@ -321,6 +359,28 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         }
     }
 
+    /*
+    * Khởi tạo function search
+    * */
+
+    public void SearchByFragment(int fragmentIndex){
+        switch (fragmentIndex){
+            case 3:
+                FragmentArtist fragmentArtist = (FragmentArtist)((PagerMainAdapter) mPagerAdapter).getFragmentAtIndex(fragmentIndex);
+                if(fragmentArtist != null){
+                    fragmentArtist.UpdateSearch(mSearchValue);
+                }
+                break;
+            case 4:
+                FragmentAlbum fragmentAlbum = (FragmentAlbum)((PagerMainAdapter) mPagerAdapter).getFragmentAtIndex(fragmentIndex);
+                if(fragmentAlbum != null){
+                    fragmentAlbum.UpdateSearch(mSearchValue);
+                }
+                break;
+            default:
+                break;
+        }
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

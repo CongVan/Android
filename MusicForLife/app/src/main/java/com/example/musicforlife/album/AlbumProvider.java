@@ -39,20 +39,22 @@ public class AlbumProvider {
         return arr;
     }
 
-    public static ArrayList<AlbumViewModel> getAlbumModelPaging(Context context,int skip,int take) {
+    public static ArrayList<AlbumViewModel> getAlbumModelPaging(Context context,String value,int skip,int take) {
         ArrayList<AlbumViewModel> result = new ArrayList<AlbumViewModel>();
         DatabaseManager databaseManager = DatabaseManager.newInstance(context);
         SQLiteDatabase db = databaseManager.getReadableDatabase();
-        String query = MessageFormat.format("select {0},{1},{2},{3},COUNT({4}) from {5} group by {0} LIMIT {6},{7}"
-                , SongModel.COLUMN_ALBUM,
+        String[] tableColumns = new String[] {
+                SongModel.COLUMN_ALBUM,
                 SongModel.COLUMN_ARTIST,
                 SongModel.COLUMN_PATH,
                 SongModel.COLUMN_ALBUM_ID,
-                SongModel.COLUMN_ID,
-                SongModel.TABLE_NAME,
-                skip + "",
-                take+ "");
-        Cursor cursor = db.rawQuery(query, null);
+                "COUNT(" + SongModel.COLUMN_ID + ") AS c"
+        };
+        String whereClause =  "? = '' OR " + SongModel.COLUMN_ALBUM +" LIKE ?";
+        String[] whereArgs = new String[]{value ,"%" + value + "%"};
+        String groupBy = String.format("%s LIMIT %d,%d",SongModel.COLUMN_ALBUM,skip,take);
+        Cursor cursor = db.query(SongModel.TABLE_NAME,tableColumns,whereClause,whereArgs,groupBy,null,null);
+
         if (cursor.moveToFirst()) {
             do {
                 result.add(new AlbumViewModel(

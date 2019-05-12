@@ -33,6 +33,7 @@ public class FragmentArtist extends Fragment {
     Context context;
     static boolean mIsLoading;
     static int take = 10;
+    String searchValue = "";
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -46,7 +47,7 @@ public class FragmentArtist extends Fragment {
         LVArtist = (RecyclerView) view.findViewById(R.id.lvArtistList);
 
         //get list artist from db
-        arrArtist = ArtistProvider.getArtistModelPaging(context,0,20);
+        arrArtist = ArtistProvider.getArtistModelPaging(context,searchValue,0,20);
 
         //map layout with adapter
         listArtistAdapter = new ListArtistAdapter(context,arrArtist);
@@ -89,15 +90,27 @@ public class FragmentArtist extends Fragment {
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-                ArrayList<ArtistViewModel> tempAudioList = ArtistProvider.getArtistModelPaging(context, arrArtist.size(), take);
+                ArrayList<ArtistViewModel> tempAudioList = ArtistProvider.getArtistModelPaging(context,searchValue, arrArtist.size(), take);
                 arrArtist.addAll(tempAudioList);
                 listArtistAdapter.notifyItemInserted(arrArtist.size());
                 mIsLoading = false;
             }
         });
     }
+
     public static FragmentArtist newInstance() {
         FragmentArtist fragmentArtist = new FragmentArtist();
         return fragmentArtist;
+    }
+
+    public void UpdateSearch(String s){
+        if(s == searchValue) return;
+        searchValue = s;
+        mIsLoading = true;
+        ArrayList<ArtistViewModel> tempAudioList = ArtistProvider.getArtistModelPaging(context,searchValue, 0,20);
+        arrArtist.clear();
+        arrArtist.addAll(tempAudioList);
+        listArtistAdapter.notifyDataSetChanged();
+        mIsLoading = false;
     }
 }

@@ -30,6 +30,7 @@ public class FragmentAlbum extends Fragment {
     AlbumListAdapter albumListAdapter;
     static boolean mIsLoading;
     static int take = 10;
+    String searchValue = "";
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -40,7 +41,7 @@ public class FragmentAlbum extends Fragment {
         view = inflater.inflate(R.layout.fragment_album,container,false);
 
         //get list artist from db
-        arrAlbum = AlbumProvider.getAlbumModelPaging(context,0,20);
+        arrAlbum = AlbumProvider.getAlbumModelPaging(context,searchValue,0,20);
 
         //get RecyclerView Album by id
         RCalbum = (RecyclerView)view.findViewById(R.id.rvAlbumList);
@@ -85,7 +86,7 @@ public class FragmentAlbum extends Fragment {
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-                ArrayList<AlbumViewModel> tempAudioList = AlbumProvider.getAlbumModelPaging(context, arrAlbum.size(), take);
+                ArrayList<AlbumViewModel> tempAudioList = AlbumProvider.getAlbumModelPaging(context,searchValue, arrAlbum.size(), take);
                 arrAlbum.addAll(tempAudioList);
                 albumListAdapter.notifyItemInserted(arrAlbum.size());
                 mIsLoading = false;
@@ -96,6 +97,17 @@ public class FragmentAlbum extends Fragment {
     public static FragmentAlbum newInstance() {
         FragmentAlbum fragmentAlbum = new FragmentAlbum();
         return fragmentAlbum;
+    }
+
+    public void UpdateSearch(String s){
+        if(s == searchValue) return;
+        searchValue = s;
+        mIsLoading = true;
+        ArrayList<AlbumViewModel> tempAudioList = AlbumProvider.getAlbumModelPaging(context,searchValue, 0, 20);
+        arrAlbum.clear();
+        arrAlbum.addAll(tempAudioList);
+        albumListAdapter.notifyDataSetChanged();
+        mIsLoading = false;
     }
 
 }
