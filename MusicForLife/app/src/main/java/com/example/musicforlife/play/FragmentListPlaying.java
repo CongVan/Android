@@ -3,6 +3,7 @@ package com.example.musicforlife.play;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -121,17 +122,15 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
                                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        int resultAll = 0;
                                         Log.d(TAG, "run: LIST SONG PLAYING BEFORE DELETE : " + mListSong.size());
-
                                         String Ids = TextUtils.join(", ",mListIdSelectedSong);
                                         PlayModel.deleteListSongInListPlaying(Ids);
                                         Toast.makeText(PlayActivity.getActivity(), "Đã xóa " + mListIdSelectedSong.size() + " bài hát", Toast.LENGTH_LONG).show();
+                                        mSelectedAllSongPlaying.setChecked(false);
                                         mListSelectedSong.clear();
                                         mListIdSelectedSong.clear();
                                         mListSong.clear();
                                         mListSong.addAll(PlayModel.getSongPlayingList());
-
                                         Log.d(TAG, "run: LIST SONG PLAYING AFTER DELETE : " + mListSong.size());
                                         mListViewSong.post(new Runnable() {
                                             @Override
@@ -139,10 +138,7 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
                                                 mListSongAdapter.notifyDataSetChanged();
                                             }
                                         });
-                                        mSelectedAllSongPlaying.setChecked(false);
-                                        hideViewDeleteAllSong();
-                                        PlayService.updatePlayingList();
-                                        updateViewSelectAll();
+                                        updateSongAfterDelete(Ids);
                                     }
                                 });
                             }
@@ -260,6 +256,23 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
 
     private void hideViewDeleteAllSong() {
         mBtnDeleteAllSongPlaying.setVisibility(View.VISIBLE);
+    }
+
+    private void updateSongAfterDelete(String Ids){
+        hideViewDeleteAllSong();
+        PlayService.updatePlayingList();
+        if(mListSong.size() == 0)
+        {
+            PlayService.newInstance().pause();
+            mPlayActivity.finish();
+            return;
+        }
+        if(mSongPlaying != null && Ids.contains(String.valueOf(mSongPlaying.getSongId())))
+        {
+            mSongPlaying = mListSong.get(0);
+            PlayService.newInstance().play(mSongPlaying);
+        }
+        updateViewSelectAll();
     }
 
     @Override
