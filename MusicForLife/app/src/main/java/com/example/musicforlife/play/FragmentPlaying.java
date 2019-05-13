@@ -1,15 +1,21 @@
 package com.example.musicforlife.play;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -41,7 +47,9 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
     private ImageButton mImageButtonNextSong;
     private ImageButton mImageButtonLoopType;
     private ImageView mImagePlaying;
+    private ImageView mImageDvd;
     private ImageView mImageBgPlaying;
+    private CardView mCvImagePlaying;
     private PlayService mPlayService;
 
     private SongModel mSongPlaying;
@@ -94,6 +102,8 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
         mImageButtonNextSong = mViewGroupMain.findViewById(R.id.btnNextSong);
         mImageButtonLoopType = mViewGroupMain.findViewById(R.id.btnLoopType);
         mImagePlaying = mViewGroupMain.findViewById(R.id.imgPlaying);
+        mImageDvd=mViewGroupMain.findViewById(R.id.imgDvd);
+        mCvImagePlaying=mViewGroupMain.findViewById(R.id.cvImagePlaying);
         mImageBgPlaying = mViewGroupMain.findViewById(R.id.imgBgPlaying);
 
         mTxtTitleSongPlaying = mViewGroupMain.findViewById(R.id.txtTitleSongPlaying);
@@ -151,7 +161,13 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
             } else {
                 mImagePlaying.setScaleType(ImageView.ScaleType.CENTER_CROP);
             }
+
             mImagePlaying.setImageBitmap(bitmapPlaying);
+            Animation animation = AnimationUtils.loadAnimation(mContext,
+                    R.anim.playing_image);
+            animation.setRepeatCount(Animation.INFINITE);
+//            mCvImagePlaying.startAnimation(animation);
+            mImageDvd.startAnimation(animation);
         }
 
 

@@ -21,8 +21,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorTranparent"
         android:gravity="top"
-        android:outlineProvider="bounds"
-        app:elevation="4dp">
+        app:elevation="0dp">
         <!--app:contentScrim="@android:color/transparent"-->
         <android.support.v7.widget.Toolbar
             android:id="@+id/tool_bar_main"
@@ -78,7 +77,9 @@
             app:tabMode="fixed"
             app:tabSelectedTextColor="@color/colorAccent"
             app:tabTextAppearance="@style/TabLayoutAppearance"
-            app:tabTextColor="@color/colorTitleSecondary">
+            app:tabTextColor="@color/colorTitleSecondary"
+
+            >
             <!--app:tabSelectedTextColor="@android:color/white"-->
             <!--app:tabTextAppearance="@style/TabLayoutAppearance"-->
             <!--app:tabTextColor="@android:color/darker_gray"-->

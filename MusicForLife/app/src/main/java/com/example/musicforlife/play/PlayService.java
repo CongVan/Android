@@ -234,6 +234,7 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
     public static int updatePlayingList() {
         mPlayingList = PlayModel.getListPlaying();
         mSongPlayingList = PlayModel.getSongPlayingList();
+
         setIndexSongInPlayingList();
         Log.d(TAG, "updatePlayingList: SIZE PLAYING LIST" + mPlayingList.size());
         return mPlayingList.size();

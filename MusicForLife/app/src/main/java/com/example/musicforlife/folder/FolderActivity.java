@@ -168,8 +168,13 @@ public class FolderActivity extends AppCompatActivity implements MultiClickAdapt
 
     private void playSong(SongModel songPlay) {
         mPlayService.play(songPlay);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mPlayService.initListPlaying(FolderModel.getAllSongsFromFolderName(mCurrentFolder.getName()));
+            }
+        }).start();
 
-        mPlayService.initListPlaying(FolderModel.getAllSongsFromFolderName(mCurrentFolder.getName()));
         MainActivity.getMainActivity().playSongsFromFragmentListToMain(FragmentPlaylist.SENDER);
     }
 

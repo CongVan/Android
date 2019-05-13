@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     public static final Integer PLAY_CHANEL_ID = 101;
     public static final Integer PLAY_NOTIFICATION_ID = 101;
 
-    private final int mIconsTabDefault[]={
+    private final int mIconsTabDefault[] = {
             R.mipmap.tab_recent_default,
             R.mipmap.tab_song_default,
             R.mipmap.tab_playlist_default,
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
             R.mipmap.tab_album_default,
             R.mipmap.tab_folder_default
     };
-    private final int mIconsTabActive[]={
+    private final int mIconsTabActive[] = {
             R.mipmap.tab_recent_active,
             R.mipmap.tab_song_active,
             R.mipmap.tab_playlist_active,
@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
             R.mipmap.tab_album_active,
             R.mipmap.tab_folder_active
     };
-    private final String mTabMainTitle[]={"Gần đây","Bài hát","Playlist","Ca sĩ","Album","Thư mục"};
+    private final String mTabMainTitle[] = {"Gần đây", "Bài hát", "Playlist", "Ca sĩ", "Album", "Thư mục"};
 
 
     public static MainActivity getMainActivity() {
@@ -145,8 +145,18 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         initMinimizePlaying();
         initReceiver();
         initTabLayoutIcon();
+        mViewPager.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                Log.d(TAG, "onScrollChange: "+scrollY);
+                if (scrollY>54){
+                    mToolBar.setElevation(3.0f);
+                }else{
+                    mToolBar.setElevation(0.0f);
+                }
 
-
+            }
+        });
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {

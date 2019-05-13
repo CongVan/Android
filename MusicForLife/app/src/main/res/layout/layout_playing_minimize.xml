@@ -23,15 +23,16 @@
         app:cardElevation="0dp"
         app:cardPreventCornerOverlap="false">
 
-        <TableLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#434343"
-            android:stretchColumns="1">
+            android:background="@color/colorPrimary"
+            >
 
-            <TableRow>
+
 
                 <android.support.v7.widget.CardView
+                    android:id="@+id/cvImgSongMinimize"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_size_small"
@@ -39,6 +40,8 @@
                     app:cardUseCompatPadding="true"
                     card_view:cardBackgroundColor="@color/colorWhiteLight"
                     card_view:cardElevation="0dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
                     card_view:contentPadding="0dp">
 
                     <ImageView
@@ -56,30 +59,26 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:layout_toRightOf="@+id/cvImgSongMinimize"
+                    android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/margin_size_small"
+
                     android:orientation="vertical">
 
-                    <LinearLayout
-                        android:layout_width="200dp"
+                    <TextView
+                        android:id="@+id/txtTitleMinimize"
+                        android:layout_width="match_parent"
+
                         android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|left"
+                        android:ellipsize="end"
+                        android:maxEms="14"
                         android:gravity="left"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/txtTitleMinimize"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom|left"
-                            android:ellipsize="end"
-                            android:gravity="left"
-                            android:maxLines="1"
-                            android:text="Tiêu đề bài hát"
-                            android:textColor="@color/colorTitleWhitePrimary"
-                            android:textSize="@dimen/text_size_normal"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-
+                        android:maxLines="1"
+                        android:text="Tiêu đề bài hát"
+                        android:textColor="@color/colorTitleWhitePrimary"
+                        android:textSize="@dimen/text_size_normal"
+                        android:textStyle="bold" />
                     <TextView
                         android:id="@+id/txtArtistMinimize"
                         android:layout_width="match_parent"
@@ -87,7 +86,6 @@
                         android:text="Ca sĩ"
                         android:textColor="@color/colorTitleSecondary"
                         android:textSize="@dimen/text_size_normal"
-
                         />
 
 
@@ -103,9 +101,12 @@
 
                 <LinearLayout
                     android:layout_width="140dp"
-                    android:layout_gravity="center|right"
-
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|end"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
                     android:orientation="horizontal"
+                    android:gravity="center"
                     android:paddingHorizontal="@dimen/margin_size_small">
 
                     <ImageButton
@@ -151,9 +152,9 @@
                 </LinearLayout>
 
 
-            </TableRow>
 
-        </TableLayout>
+
+        </RelativeLayout>
     </android.support.v7.widget.CardView>
 
 </LinearLayout>
