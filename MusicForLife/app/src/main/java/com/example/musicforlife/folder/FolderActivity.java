@@ -16,10 +16,14 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.musicforlife.MainActivity;
 import com.example.musicforlife.R;
+import com.example.musicforlife.db.DatabaseManager;
 import com.example.musicforlife.listsong.MultiClickAdapterListener;
 import com.example.musicforlife.listsong.SongModel;
 import com.example.musicforlife.play.PlayService;
+import com.example.musicforlife.playlist.BottomSheetOptionSong;
+import com.example.musicforlife.playlist.FragmentPlaylist;
 import com.example.musicforlife.utilitys.Utility;
 
 import java.util.ArrayList;
@@ -66,6 +70,7 @@ public class FolderActivity extends AppCompatActivity implements MultiClickAdapt
         mTxtSongName = findViewById(R.id.txtFolderName);
         mTxtNumberOfSong = findViewById(R.id.txtNumberOfSongFolder);
         mAppbarLayoutFolder = findViewById(R.id.htab_appbar);
+        mPlayService = PlayService.newInstance();
         setSupportActionBar(mToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         Utility.setTranslucentStatusBar(this);
@@ -146,7 +151,8 @@ public class FolderActivity extends AppCompatActivity implements MultiClickAdapt
 
     @Override
     public void optionMenuClick(View v, int position) {
-
+        final SongModel songChose = mSongFolderList.get(position);
+        showBottomSheetOptionSong(songChose);
     }
 
     @Override
@@ -156,11 +162,26 @@ public class FolderActivity extends AppCompatActivity implements MultiClickAdapt
 
     @Override
     public void layoutItemClick(View v, int position) {
+        final SongModel songChose = mSongFolderList.get(position);
+        playSong(songChose);
+    }
 
+    private void playSong(SongModel songPlay) {
+        mPlayService.play(songPlay);
+
+        mPlayService.initListPlaying(FolderModel.getAllSongsFromFolderName(mCurrentFolder.getName()));
+        MainActivity.getMainActivity().playSongsFromFragmentListToMain(FragmentPlaylist.SENDER);
     }
 
     @Override
     public void layoutItemLongClick(View v, int position) {
+        final SongModel songChose = mSongFolderList.get(position);
+        showBottomSheetOptionSong(songChose);
+    }
 
+    private void showBottomSheetOptionSong(SongModel song) {
+
+        BottomSheetOptionSong bottomSheetDialogFragment = new BottomSheetOptionSong(song);
+        bottomSheetDialogFragment.show(getSupportFragmentManager(), "Bottom Sheet Dialog Fragment");
     }
 }

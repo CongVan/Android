@@ -69,13 +69,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="top"
             android:background="@color/colorTranparent"
-            app:tabGravity="center"
+            app:tabGravity="fill"
             app:tabIndicatorColor="@color/colorAccent"
             app:tabIndicatorFullWidth="false"
             app:tabIndicatorGravity="bottom"
+            app:tabBackground="?attr/selectableItemBackground"
             app:tabIndicatorHeight="2dp"
-            app:tabMode="scrollable"
-
+            app:tabMode="fixed"
             app:tabSelectedTextColor="@color/colorAccent"
             app:tabTextAppearance="@style/TabLayoutAppearance"
             app:tabTextColor="@color/colorTitleSecondary">

@@ -74,4 +74,28 @@ public class FolderModel implements Serializable {
         Log.d(TAG, "getSongsFromFolderName: " + resultSongs.size());
         return resultSongs;
     }
+    public static ArrayList<SongModel> getAllSongsFromFolderName(String folderName) {
+        Log.d(TAG, "getSongsFromFolderName: NAME FOLDER " + folderName);
+        SQLiteDatabase db = mDatabaseManager.getReadableDatabase();
+        String query = "SELECT * FROM " + SongModel.TABLE_NAME + " WHERE " + SongModel.COLUMN_FOLDER + "='" + folderName + "'";
+        Cursor cursor = db.rawQuery(query, null);
+        ArrayList<SongModel> resultSongs = new ArrayList<>();
+        Log.d(TAG, "getSongsFromFolderName: " + cursor.getCount());
+        if (cursor.moveToNext()) {
+            do {
+                SongModel songModel = new SongModel();
+                songModel.setId(cursor.getInt(cursor.getColumnIndex(SongModel.COLUMN_ID)));
+                songModel.setSongId(cursor.getInt(cursor.getColumnIndex(SongModel.COLUMN_SONG_ID)));
+                songModel.setTitle(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_TITLE)));
+                songModel.setAlbum(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_ALBUM)));
+                songModel.setArtist(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_ARTIST)));
+                songModel.setFolder(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_FOLDER)));
+                songModel.setDuration(cursor.getLong(cursor.getColumnIndex(SongModel.COLUMN_DURATION)));
+                songModel.setPath(cursor.getString(cursor.getColumnIndex(SongModel.COLUMN_PATH)));
+                resultSongs.add(songModel);
+            } while (cursor.moveToNext());
+        }
+        Log.d(TAG, "getSongsFromFolderName: " + resultSongs.size());
+        return resultSongs;
+    }
 }

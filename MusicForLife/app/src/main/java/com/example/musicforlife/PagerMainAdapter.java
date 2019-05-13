@@ -1,9 +1,14 @@
 package com.example.musicforlife;
 
+import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.ContextCompat;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ImageSpan;
 
 import com.example.musicforlife.artist.FragmentArtist;
 import com.example.musicforlife.album.FragmentAlbum;
@@ -43,7 +48,7 @@ public class PagerMainAdapter extends FragmentStatePagerAdapter {
                 fragment = mFragmentArtist == null ? mFragmentArtist = FragmentArtist.newInstance() : mFragmentArtist;
                 break;
             case 4:
-                fragment = mFragmentAlbum == null ? mFragmentAlbum =  FragmentAlbum.newInstance() : mFragmentAlbum;
+                fragment = mFragmentAlbum == null ? mFragmentAlbum = FragmentAlbum.newInstance() : mFragmentAlbum;
 
                 break;
             case 5:
@@ -73,37 +78,43 @@ public class PagerMainAdapter extends FragmentStatePagerAdapter {
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        String title = "";
-        switch (position) {
-            case 0:
-                title = "Gần đây";
-                break;
-            case 1:
-                title = "Bài hát";
-                break;
-            case 2:
-                title = "Playlist";
-                break;
-            case 3:
-                title = "Ca sĩ";
-                break;
-
-            case 4:
-                title = "Album";
-                break;
-            case 5:
-                title = "Thư mục";
-                break;
-
-            default:
-                break;
-        }
-        return title;
+        return null;
+//        String title = "";
+//        Drawable image = ContextCompat.getDrawable(MainActivity.getMainActivity(), R.mipmap.tab_recent);
+//        image.setBounds(0, 0, 48, 48);
+//        SpannableString sb = new SpannableString(" ");
+//        ImageSpan imageSpan = new ImageSpan(image);
+//        sb.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        return sb;
+//        switch (position) {
+//            case 0:
+//                title = "Gần đây";
+//                break;
+//            case 1:
+//                title = "Bài hát";
+//                break;
+//            case 2:
+//                title = "Playlist";
+//                break;
+//            case 3:
+//                title = "Ca sĩ";
+//                break;
+//
+//            case 4:
+//                title = "Album";
+//                break;
+//            case 5:
+//                title = "Thư mục";
+//                break;
+//
+//            default:
+//                break;
+//        }
+//        return " ";
     }
 
 
-
-    public Fragment getFragmentAtIndex(int index){
+    public Fragment getFragmentAtIndex(int index) {
         Fragment fragment = null;
         switch (index) {
             case 0:
@@ -114,7 +125,7 @@ public class PagerMainAdapter extends FragmentStatePagerAdapter {
                 fragment = mFragmentListSong;
                 break;
             case 2:
-                fragment = mFragmentPlaylist ;
+                fragment = mFragmentPlaylist;
                 break;
             case 3:
 

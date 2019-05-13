@@ -2,16 +2,11 @@ package com.example.musicforlife;
 
 
 import android.annotation.TargetApi;
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Looper;
@@ -19,18 +14,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 
-import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.BottomSheetBehavior;
-
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -38,11 +28,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
-import android.view.ViewTreeObserver;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageButton;
@@ -64,8 +51,6 @@ import com.example.musicforlife.listsong.SongModel;
 import com.example.musicforlife.play.PlayActivity;
 import com.example.musicforlife.play.PlayService;
 import com.example.musicforlife.playlist.FragmentPlaylist;
-import com.example.musicforlife.playlist.PlaylistSongActivity;
-import com.example.musicforlife.playlist.PlaylistSongModel;
 import com.example.musicforlife.utilitys.ImageHelper;
 import com.example.musicforlife.utilitys.Utility;
 
@@ -99,6 +84,25 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     public static final Integer PLAY_CHANEL_ID = 101;
     public static final Integer PLAY_NOTIFICATION_ID = 101;
 
+    private final int mIconsTabDefault[]={
+            R.mipmap.tab_recent_default,
+            R.mipmap.tab_song_default,
+            R.mipmap.tab_playlist_default,
+            R.mipmap.tab_artist_default,
+            R.mipmap.tab_album_default,
+            R.mipmap.tab_folder_default
+    };
+    private final int mIconsTabActive[]={
+            R.mipmap.tab_recent_active,
+            R.mipmap.tab_song_active,
+            R.mipmap.tab_playlist_active,
+            R.mipmap.tab_artist_active,
+            R.mipmap.tab_album_active,
+            R.mipmap.tab_folder_active
+    };
+    private final String mTabMainTitle[]={"Gần đây","Bài hát","Playlist","Ca sĩ","Album","Thư mục"};
+
+
     public static MainActivity getMainActivity() {
         return mMainActivity;
     }
@@ -131,6 +135,18 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         mViewPager.setOffscreenPageLimit(mPagerAdapter.getCount());
         mTabLayout.setupWithViewPager(mViewPager);
         mPlayService = PlayService.newInstance();
+
+
+//        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+//        mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+        setSupportActionBar(mToolBar);
+        setupLayoutTransparent();
+        initDataBaseFromDevice();
+        initMinimizePlaying();
+        initReceiver();
+        initTabLayoutIcon();
+
+
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
@@ -149,15 +165,9 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
             }
         });
 
-//        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-//        mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
-        setSupportActionBar(mToolBar);
-        setupLayoutTransparent();
-        initDataBaseFromDevice();
-        initMinimizePlaying();
-        initReceiver();
 //        initNotificationPlay();
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -181,7 +191,8 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
                 SearchByFragment(mCurrentFragmentActive);
                 return false;
             }
-        });{
+        });
+        {
 
         }
 
@@ -197,6 +208,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
 
 //        mLayoutMainContent.setBackground(ImageHelper.getMainBackgroundDrawable());
     }
+
 
     /**
      * Khởi tạo View
@@ -359,21 +371,47 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         }
     }
 
-    /*
-    * Khởi tạo function search
-    * */
+    private void initTabLayoutIcon() {
 
-    public void SearchByFragment(int fragmentIndex){
-        switch (fragmentIndex){
+        for (int i = 0; i < mTabLayout.getTabCount(); i++) {
+            mTabLayout.getTabAt(i).setIcon(mIconsTabDefault[i]);
+        }
+        mTabLayout.getTabAt(0).setIcon(mIconsTabActive[0]);
+        getSupportActionBar().setTitle(mTabMainTitle[0]);
+        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                getSupportActionBar().setTitle(mTabMainTitle[tab.getPosition()]);
+                tab.setIcon(mIconsTabActive[tab.getPosition()]);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                tab.setIcon(mIconsTabDefault[tab.getPosition()]);
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+    }
+
+    /*
+     * Khởi tạo function search
+     * */
+
+    public void SearchByFragment(int fragmentIndex) {
+        switch (fragmentIndex) {
             case 3:
-                FragmentArtist fragmentArtist = (FragmentArtist)((PagerMainAdapter) mPagerAdapter).getFragmentAtIndex(fragmentIndex);
-                if(fragmentArtist != null){
+                FragmentArtist fragmentArtist = (FragmentArtist) ((PagerMainAdapter) mPagerAdapter).getFragmentAtIndex(fragmentIndex);
+                if (fragmentArtist != null) {
                     fragmentArtist.UpdateSearch(mSearchValue);
                 }
                 break;
             case 4:
-                FragmentAlbum fragmentAlbum = (FragmentAlbum)((PagerMainAdapter) mPagerAdapter).getFragmentAtIndex(fragmentIndex);
-                if(fragmentAlbum != null){
+                FragmentAlbum fragmentAlbum = (FragmentAlbum) ((PagerMainAdapter) mPagerAdapter).getFragmentAtIndex(fragmentIndex);
+                if (fragmentAlbum != null) {
                     fragmentAlbum.UpdateSearch(mSearchValue);
                 }
                 break;
