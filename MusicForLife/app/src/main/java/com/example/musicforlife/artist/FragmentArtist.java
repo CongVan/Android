@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -31,6 +32,7 @@ public class FragmentArtist extends Fragment {
     ListArtistAdapter listArtistAdapter;
     RecyclerView LVArtist;
     Context context;
+    SwipeRefreshLayout mSwpListArtist;
     static boolean mIsLoading;
     static int take = 10;
     String searchValue = "";
@@ -48,6 +50,8 @@ public class FragmentArtist extends Fragment {
 
         //get list artist from db
         arrArtist = ArtistProvider.getArtistModelPaging(context,searchValue,0,20);
+
+        mSwpListArtist=view.findViewById(R.id.swpListArtist);
 
         //map layout with adapter
         listArtistAdapter = new ListArtistAdapter(context,arrArtist);
@@ -83,7 +87,23 @@ public class FragmentArtist extends Fragment {
                 }
             }
         });
+
+        mSwpListArtist.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                prefreshListArtist();
+            }
+        });
         return view;
+    }
+    private void prefreshListArtist(){
+
+        arrArtist.clear();
+        listArtistAdapter.notifyDataSetChanged();
+        ArrayList<ArtistViewModel> temp= ArtistProvider.getArtistModelPaging(context,"",0,20);
+        arrArtist.addAll(temp);
+        listArtistAdapter.notifyDataSetChanged();
+        mSwpListArtist.setRefreshing(false);
     }
 
     private void loadMore() {

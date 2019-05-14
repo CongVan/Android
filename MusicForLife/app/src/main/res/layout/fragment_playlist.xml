@@ -7,18 +7,17 @@
     android:layout_gravity="center"
     android:orientation="vertical">
 
-    <android.support.v4.widget.NestedScrollView
-        android:id="@+id/scrollView"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swpPlaylist"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="match_parent">
 
-    </android.support.v4.widget.NestedScrollView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcvPlaylist"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rcvPlaylist"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/btnCreatePlaylist"
@@ -27,11 +26,10 @@
         android:layout_alignParentBottom="true"
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/margin_size_normal"
-        app:borderWidth="0dp"
         android:backgroundTint="@color/colorAccent"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_add_white_64dp"
-        app:layout_anchor="@id/scrollView"
-        app:layout_anchorGravity="bottom|end|right"
+        app:borderWidth="2dp"
+
         app:rippleColor="@color/colorAccent" />
 </android.support.design.widget.CoordinatorLayout>

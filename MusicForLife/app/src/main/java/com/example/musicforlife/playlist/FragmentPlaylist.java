@@ -12,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -38,6 +39,8 @@ public class FragmentPlaylist extends Fragment {
     private static RecyclerView mRecyclerViewPlaylist;
     private static PlaylistAdapter mPlaylistAdapter;
     private FloatingActionButton mButtonCreatePlaylist;
+    private SwipeRefreshLayout mSwpPlaylist;
+
     private final int mThreshold = 10;
     private static boolean mIsLoading;
     private static ArrayList<PlaylistModel> mPlaylist;
@@ -72,7 +75,7 @@ public class FragmentPlaylist extends Fragment {
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_playlist, container, false);
         mRecyclerViewPlaylist = viewGroup.findViewById(R.id.rcvPlaylist);
         mButtonCreatePlaylist = viewGroup.findViewById(R.id.btnCreatePlaylist);
-
+        mSwpPlaylist = viewGroup.findViewById(R.id.swpPlaylist);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -104,22 +107,22 @@ public class FragmentPlaylist extends Fragment {
                 dialogCreatePlaylist.show(mMainActivity.getSupportFragmentManager(), "CreatePlaylist");
             }
         });
-//        mRecyclerViewPlaylist.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-//                super.onScrollStateChanged(recyclerView, newState);
-//            }
-//
-//            @Override
-//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-//                if (!mIsLoading && linearLayoutManager != null && linearLayoutManager.getItemCount() - 1 == linearLayoutManager.findLastVisibleItemPosition()) {
-//                    loadMore();
-//                    mIsLoading = true;
-//                }
-//            }
-//        });
+
+        mSwpPlaylist.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mPlaylist.clear();
+                mPlaylistAdapter.notifyDataSetChanged();
+                ArrayList<PlaylistModel> temp = PlaylistModel.getAllPlaylist();
+                Log.d(TAG, "onRefresh: "+temp.size());
+                if (temp.size()>0){
+                    Log.d(TAG, "onRefresh: "+temp.get(temp.size()-1).getNumberOfSongs());
+                }
+                mPlaylist.addAll(temp);
+                mPlaylistAdapter.notifyDataSetChanged();
+                mSwpPlaylist.setRefreshing(false);
+            }
+        });
         return viewGroup;
     }
 
@@ -171,12 +174,12 @@ public class FragmentPlaylist extends Fragment {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
+                mPlaylist.clear();
+                mPlaylistAdapter.notifyDataSetChanged();
                 ArrayList<PlaylistModel> playlistModels = PlaylistModel.getAllPlaylist();
-                if (playlistModels.size()>0){
+                if (playlistModels.size() > 0) {
                     Log.d(TAG, "run: REFRESH PLAYLIST SIZE " + playlistModels.get(playlistModels.size() - 1).getNumberOfSongs());
                 }
-
-                mPlaylist.clear();
                 mPlaylist.addAll(playlistModels);
 //                Log.d(TAG, "run: SIZE PLAYLIST 1 - " + mPlaylist.get(mPlaylist.size() - 1).getNumberOfSongs());
 //                mPlaylistAdapter.notifyDataSetChanged();

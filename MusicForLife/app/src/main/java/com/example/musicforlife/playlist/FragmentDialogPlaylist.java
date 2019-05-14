@@ -28,7 +28,7 @@ import java.util.ArrayList;
 public class FragmentDialogPlaylist extends DialogFragment {
     private Context mContext;
     private static RecyclerView mRecyclerViewPlaylist;
-    private static PlaylistAdapter mPlaylistAdapter;
+    private static PlaylistDialogAdapter mPlaylistAdapter;
     private static ArrayList<PlaylistModel> mPlaylist;
     private SongModel mCurrentSong;
 
@@ -50,7 +50,7 @@ public class FragmentDialogPlaylist extends DialogFragment {
             public void run() {
                 ArrayList<PlaylistModel> playlistModels = PlaylistModel.getAllPlaylist();
                 mPlaylist = playlistModels;
-                mPlaylistAdapter = new PlaylistAdapter(mContext, mPlaylist);
+                mPlaylistAdapter = new PlaylistDialogAdapter(mContext, mPlaylist);
 
                 mRecyclerViewPlaylist.setLayoutManager(new LinearLayoutManager(mContext));
 

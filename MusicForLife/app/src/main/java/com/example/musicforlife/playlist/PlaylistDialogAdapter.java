@@ -4,9 +4,6 @@ package com.example.musicforlife.playlist;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,15 +14,14 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.musicforlife.R;
 import com.example.musicforlife.listsong.SongModel;
 import com.example.musicforlife.utilitys.ImageCacheHelper;
 import com.example.musicforlife.utilitys.ImageHelper;
-import com.example.musicforlife.R;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-public class PlaylistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class PlaylistDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static ArrayList<PlaylistModel> mPlaylist;
     private static Context mContext;
@@ -34,7 +30,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final int VIEW_TYPE_ITEM = 0;
     private static final int VIEW_TYPE_LOADING = 1;
 
-    public PlaylistAdapter(Context context, ArrayList<PlaylistModel> playlist) {
+    public PlaylistDialogAdapter(Context context, ArrayList<PlaylistModel> playlist) {
         this.mContext = context;
         this.mPlaylist = playlist;
         mImageCacheHelper = new ImageCacheHelper(R.mipmap.playlist_128);
@@ -65,7 +61,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private void showSongItem(ViewHolderRecycler viewHolder, int position) {
         PlaylistModel playlistModel = mPlaylist.get(position);
-        Log.d(TAG, "showSongItem: PLAYLIST SIZE " + mPlaylist.size() + ", PlaylistLAST ITEM " + playlistModel.getNumberOfSongs() + "__" + mPlaylist.get(mPlaylist.size() - 1).getNumberOfSongs());
+        Log.d(TAG, "showSongItem: PLAYLIST SIZE "+mPlaylist.size() +", PlaylistLAST ITEM "+playlistModel.getNumberOfSongs()+"__"+mPlaylist.get(mPlaylist.size()-1).getNumberOfSongs());
         Log.d(TAG, "showSongItem: " + playlistModel + " View " + viewHolder);
         if (playlistModel != null) {
             viewHolder.bindContent(playlistModel);
@@ -102,7 +98,6 @@ public class PlaylistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         TextView titlePlaylist;
         TextView numberOfSong;
         ImageView imagePlaylist;
-        String oldPathImage = "";
 
         public ViewHolderRecycler(@NonNull View itemView) {
             super(itemView);
@@ -114,16 +109,15 @@ public class PlaylistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         @SuppressLint("SetTextI18n")
         public void bindContent(PlaylistModel playlistModel) {
-            Log.d(TAG, "bindContent: PLAYLIST ITEM " + playlistModel.getNumberOfSongs() + "__" + playlistModel.getTitle());
+            Log.d(TAG, "bindContent: PLAYLIST ITEM "+ playlistModel.getNumberOfSongs()+"__"+playlistModel.getTitle());
             this.titlePlaylist.setText(playlistModel.getTitle());
             this.numberOfSong.setText(String.valueOf(playlistModel.getNumberOfSongs()) + " bài hát");
             this.imagePlaylist.setImageBitmap(ImageHelper.getBitmapFromPath(playlistModel.getPathImage(), -1));
-
             SongModel tempSong = new SongModel();
             tempSong.setAlbumId(playlistModel.getId());
             tempSong.setPath(playlistModel.getPathImage());
             final Bitmap bitmap = mImageCacheHelper.getBitmapCache(tempSong.getAlbumId());//  mBitmapCache.get((long) songModel.getAlbumId());
-            if (bitmap != null && oldPathImage==playlistModel.getPathImage()) {
+            if (bitmap != null) {
                 this.imagePlaylist.post(new Runnable() {
                     @Override
                     public void run() {
@@ -134,7 +128,6 @@ public class PlaylistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 mImageCacheHelper.loadAlbumArt(imagePlaylist, tempSong);
 //                loadAlbumArt(this.imageView, songModel);
             }
-            oldPathImage = playlistModel.getPathImage();
         }
 
 

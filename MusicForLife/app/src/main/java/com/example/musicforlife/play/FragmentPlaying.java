@@ -160,7 +160,7 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
             Bitmap bitmapPlaying = ImageHelper.getBitmapFromPath(mSongPlaying.getPath());
 //        Bitmap bitmapBgPlaying = ImageHelper.getBitmapFromPath(mSongPlaying.getPath(), R.drawable.background_1);
             if (bitmapPlaying == null) {
-                bitmapPlaying = ImageHelper.drawableToBitmap(R.mipmap.music_128);
+                bitmapPlaying = ImageHelper.drawableToBitmap(R.mipmap.dvd);
                 mImagePlaying.setScaleType(ImageView.ScaleType.CENTER);
             } else {
                 mImagePlaying.setScaleType(ImageView.ScaleType.CENTER_CROP);

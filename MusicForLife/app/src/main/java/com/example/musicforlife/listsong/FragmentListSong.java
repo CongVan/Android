@@ -12,6 +12,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.ContextThemeWrapper;
@@ -48,12 +49,15 @@ import java.util.ArrayList;
 
 
 public class FragmentListSong extends Fragment implements FragmentCallbacks, MultiClickAdapterListener {
-    MainActivity _mainActivity;
-    Context _context;
-    ArrayList<SongModel> _listSong;
-    RecyclerView _listViewSong;
-    TextView _txtSizeOfListSong;
-    ListSongRecyclerAdaper _listSongAdapter;
+    private MainActivity _mainActivity;
+    private Context _context;
+    private ArrayList<SongModel> _listSong;
+    private RecyclerView _listViewSong;
+    private TextView _txtSizeOfListSong;
+    private ListSongRecyclerAdaper _listSongAdapter;
+    private SwipeRefreshLayout mSwpListSong;
+
+
     //    SkeletonScreen _skeletonScreen;
     private static final String TAG = "FRAGMENT_LIST_SONG";
     public static final String SENDER = "FRAGMENT_LIST_SONG";
@@ -116,6 +120,7 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Mul
         View view = inflater.inflate(R.layout.fragment_list_song, container, false);
         _txtSizeOfListSong = view.findViewById(R.id.txtSizeOfListSong);
         _listViewSong = view.findViewById(R.id.lsvSongs);
+        mSwpListSong = view.findViewById(R.id.swpListSong);
         new Handler().post(new Runnable() {
             @Override
             public void run() {
@@ -126,40 +131,7 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Mul
                 _txtSizeOfListSong.setText("Tìm thấy " + String.valueOf(SongModel.getRowsSong(MainActivity.mDatabaseManager)) + " bài hát");
             }
         });
-//        _listViewSong.addOnItemTouchListener(new RecyclerItemClickListener(_context, _listViewSong, new RecyclerItemClickListener.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(View view, int position) {
-//                boolean isOptionMenuClick=false;
-//                ImageButton btnOption = view.findViewById(R.id.btnOptionSong);
-//                btnOption.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//
-////                        Toast.makeText(MainActivity.getMainActivity(), "CLICK OPTION MENU", Toast.LENGTH_SHORT).show();
-//                        Log.d(TAG, "onClick: OPTION MENU CLICK " + v.getId());
-//                    }
-//                });
-////
-//                Toast.makeText(_context, "CLICK SONG " + view.getId() + "_" + view.getTag() + "_" + R.id.btnOptionSong, Toast.LENGTH_SHORT).show();
-//////        Log.d(TAG, "onItemClick: CLICK SONG TAG: " + view.getTag());
-////                final SongModel songPlay = _listSong.get(position);
-////                mPlayService.play(songPlay);
-////                new Thread(new Runnable() {
-////                    @Override
-////                    public void run() {
-////                        mPlayService.initListPlaying(SongModel.getAllSongs(DatabaseManager.getInstance()));
-////                        Log.d(TAG, "run: ");
-////                    }
-////                }).start();
-////
-////                _mainActivity.playSongsFromFragmentListToMain(FragmentPlaylist.SENDER);
-//            }
-//
-//            @Override
-//            public void onLongItemClick(View view, int position) {
-//
-//            }
-//        }));
+
         _listViewSong.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -183,34 +155,18 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Mul
 
             }
         });
+        mSwpListSong.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                ArrayList<SongModel> tempSongs = SongModel.getSongsWithThreshold(MainActivity.mDatabaseManager, 0, mThreshHold);
+                _listSong.clear();
+                _listSongAdapter.notifyDataSetChanged();
+                _listSong.addAll(tempSongs);
+                _listSongAdapter.notifyDataSetChanged();
+                mSwpListSong.setRefreshing(false);
+            }
+        });
 
-        // getAllAudioFromDevice(_context);
-
-//        _layoutListSong = (NestedScrollView) _inflater.inflate(R.layout.fragment_list_song, null);
-
-//        _listViewSong.addItemDecoration(new DividerItemDecoration(_listViewSong.getContext(), DividerItemDecoration.VERTICAL));
-
-
-//        _listViewSong.setItemViewCacheSize(240);
-//        _listViewSong.setDrawingCacheEnabled(true);
-//        _listViewSong.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
-
-//        _listSongAdapter.notifyItemRangeChanged();
-//        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
-//        itemAnimator.setAddDuration(1000);
-//        itemAnimator.setRemoveDuration(1000);
-//        _listViewSong.setItemAnimator(itemAnimator);
-
-
-//        buildGlide();
-//        Glide.get(_context).clearMemory();
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//                Glide.get(_context).clearDiskCache();
-//            }
-//        }).start();
         return view;
 
     }
@@ -230,7 +186,7 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Mul
             public void run() {
 
                 ArrayList<SongModel> tempAudioList = SongModel.getSongsWithThreshold(MainActivity.mDatabaseManager, _listSong.size(), mThreshHold);
-                _listSong.remove(_listSong.size()-1);
+                _listSong.remove(_listSong.size() - 1);
                 _listSongAdapter.notifyItemRemoved(_listSong.size());
                 _listSong.addAll(tempAudioList);
 
@@ -238,50 +194,9 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Mul
                 mIsLoading = false;
             }
         }, 0);
-//        _listViewSong.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                _listSong.remove(_listSong.size() - 1);
-//                int scollPosition = _listSong.size();
-//                _listSongAdapter.notifyItemRemoved(scollPosition);
-//                ArrayList<SongModel> tempAudioList = SongModel.getSongsWithThreshold(MainActivity.mDatabaseManager, _listSong.size(), mThreshHold);
-//                _listSong.addAll(tempAudioList);
-////                _listSongAdapter.notifyDataSetChanged();
-//                mIsLoading = false;
-////                _skeletonScreen.hide();
-//            }
-//        });
 
-
-//        Log.i(TAG, "onPostExecute: SONGS--> " + _listSong.size());
-//        _listViewSong.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                _listSongAdapter.notifyDataSetChanged();
-//            }
-//        });
-//        Log.i(TAG, "onPostExecute: FINISHED");
-
-//        new loadImageFromStorage().execute();
     }
 
-    //    @Override
-//    public void onItemClick(View view, final int position) {
-//
-////        ImageButton btnOption = view.findViewById(R.id.btnOptionSong);
-////        btnOption.setOnClickListener(new View.OnClickListener() {
-////            @Override
-////            public void onClick(View v) {
-////
-////                Toast.makeText(MainActivity.getMainActivity(), "CLICK OPTION MENU", Toast.LENGTH_SHORT).show();
-////                Log.d(TAG, "onClick: OPTION MENU CLICK " + v.getId());
-////            }
-////        });
-//
-//        Toast.makeText(_context, "CLICK SONG " + view.getId() + "_" + view.getTag() + "_" + R.id.btnOptionSong, Toast.LENGTH_SHORT).show();
-////        Log.d(TAG, "onItemClick: CLICK SONG TAG: " + view.getTag());
-//
-//    }
 
     private void playSong(SongModel songPlay) {
         mPlayService.play(songPlay);
@@ -306,26 +221,6 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Mul
         bottomSheetDialogFragment.show(_mainActivity.getSupportFragmentManager(), "Bottom Sheet Dialog Fragment");
     }
 
-//    @Override
-//    public void onLongItemClick(View view, final int position) {
-//        final SongModel songChose = _listSong.get(position);
-//        showBottomSheetOptionSong(songChose);
-//
-////        Context wrapper = new ContextThemeWrapper(_mainActivity, R.style.PopupMenu);
-////
-////        PopupMenu popup = new PopupMenu(wrapper, view);
-////        popup.getMenuInflater().inflate(R.menu.menu_option_song, popup.getMenu());
-////
-////        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-////            public boolean onMenuItemClick(MenuItem item) {
-////                Toast.makeText(_mainActivity, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
-////                return true;
-////            }
-////        });
-////        popup.show();//showing popup menu
-//
-//
-//    }
 
     @Override
     public void optionMenuClick(View v, int position) {

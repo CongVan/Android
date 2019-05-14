@@ -15,12 +15,17 @@
         android:textColor="@color/colorTitleWhitePrimary"
         android:textSize="@dimen/text_size_normal" />
 
-    <android.support.v7.widget.RecyclerView
-
-        android:id="@+id/lsvSongs"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swpListSong"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+
+            android:id="@+id/lsvSongs"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 
-        ></android.support.v7.widget.RecyclerView>
 </LinearLayout>

@@ -25,6 +25,8 @@ public class HolderSongRecyclerView extends RecyclerView.ViewHolder implements V
     private ImageView imageView;
     private ImageButton btnOptionSong;
     private CardView layoutItemSong;
+    private int albumId = -1;
+
 
     public HolderSongRecyclerView(@NonNull View itemView, MultiClickAdapterListener listenerCustom) {
         super(itemView);
@@ -44,16 +46,17 @@ public class HolderSongRecyclerView extends RecyclerView.ViewHolder implements V
 
     @SuppressLint("SetTextI18n")
     public void bindContent(SongModel songModel) {
-        String oldTitle = titleSong.getText().toString();
+
         this.titleSong.setText(songModel.getTitle());
         this.artist.setText(songModel.getArtist());//+ "_" + songModel.getAlbumId()
         this.duration.setText(SongModel.formateMilliSeccond(songModel.getDuration()));
         final Bitmap bitmap = mImageCacheHelper.getBitmapCache(songModel.getAlbumId());//  mBitmapCache.get((long) songModel.getAlbumId());
-        if (bitmap != null && oldTitle.equals(songModel.getTitle())) {
+        if (bitmap != null && albumId == songModel.getAlbumId()) {
             this.imageView.setImageBitmap(bitmap);
         } else {
             mImageCacheHelper.loadAlbumArt(imageView, songModel);
         }
+        albumId = songModel.getAlbumId();
     }
 
     @Override
