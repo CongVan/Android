@@ -84,6 +84,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
 
         mDatabaseManager = DatabaseManager.newInstance(getApplicationContext());
         mPlayActivity = this;
+        mMainActivity = MainActivity.getMainActivity();
         mPlayService = PlayService.newInstance();
 
         mSongPlaying = PlayService.getCurrentSongPlaying();
@@ -215,21 +216,26 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
                 Log.d(TAG, "controlSong: PLAY " + sender + " " + songModel.getTitle());
                 mPager.setCurrentItem(1);
                 mPlayService.play(songModel);
+                mMainActivity.refreshNotificationPlaying(PlayService.ACTION_PLAY);
                 Log.d(TAG, "controlSong: ");
 
                 break;
             case PlayService.ACTION_PAUSE:
                 mPlayService.pause();
+                mMainActivity.refreshNotificationPlaying(PlayService.ACTION_PAUSE);
                 break;
             case PlayService.ACTION_RESUME:
                 mPlayService.resurme();
+                mMainActivity.refreshNotificationPlaying(PlayService.ACTION_RESUME);
                 break;
             case PlayService.ACTION_PREV:
                 mPlayService.prev(PlayService.ACTION_FROM_USER);
+                mMainActivity.refreshNotificationPlaying(PlayService.ACTION_PREV);
                 refreshListPlaying();
                 break;
             case PlayService.ACTION_NEXT:
                 mPlayService.next(PlayService.ACTION_FROM_USER);
+                mMainActivity.refreshNotificationPlaying(PlayService.ACTION_NEXT);
                 refreshListPlaying();
                 break;
             default:
@@ -238,12 +244,13 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
         MainActivity.getMainActivity().togglePlayingMinimize("PlayActivity");
     }
 
-    private void refreshListPlaying() {
+    public void refreshListPlaying() {
         FragmentListPlaying fragmentListPlaying = ((FragmentPlayAdapter) mPagerAdapter).getFragmentListPlaying();
         if (fragmentListPlaying != null) {
             fragmentListPlaying.refreshListPlaying();
         }
     }
+
 
     @Override
     public void updateControlPlaying(String sender, SongModel songModel) {

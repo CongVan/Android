@@ -23,6 +23,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.musicforlife.MainActivity;
 import com.example.musicforlife.utilitys.ImageHelper;
 import com.example.musicforlife.R;
 import com.example.musicforlife.listsong.SongModel;
@@ -278,17 +279,20 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
                     mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_PAUSE);
                     mCvImagePlaying.clearAnimation();
                     setButtonPlay();
+//                    MainActivity.getMainActivity().refreshNotificationPlaying(PlayService.ACTION_PAUSE);
 //                    mPlayService.pause();
                 } else if (PlayService.isPause()) { //resume
                     mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_RESUME);
                     mCvImagePlaying.startAnimation(mAnimationPlay);
                     setButtonPause();
+//                    MainActivity.getMainActivity().refreshNotificationPlaying(PlayService.ACTION_RESUME);
 //                    mPlayService.resurme();
 //                    mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_pause_circle_outline_black_64dp));
                 } else {
                     mPlayActivity.controlSong(SENDER, PlayService.getCurrentSongPlaying(), PlayService.ACTION_PLAY);
                     mCvImagePlaying.startAnimation(mAnimationPlay);
                     setButtonPause();
+//                    MainActivity.getMainActivity().refreshNotificationPlaying(PlayService.ACTION_PLAY);
 //                    mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_pause_circle_outline_black_64dp));
                 }
                 break;

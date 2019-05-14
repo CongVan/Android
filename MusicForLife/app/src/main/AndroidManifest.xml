@@ -41,6 +41,14 @@
                 <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
         </receiver>
+
+        <receiver android:name=".NotifyBroadcastReceiver">
+            <intent-filter>
+                <action android:name="Play_Button_Notification" />
+                <action android:name="Next_Button_Notification" />
+                <action android:name="Prev_Button_Notification" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
