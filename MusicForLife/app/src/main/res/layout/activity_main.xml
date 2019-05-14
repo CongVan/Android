@@ -30,7 +30,7 @@
             android:background="@color/colorTranparent"
             android:outlineProvider="bounds"
             android:theme="@style/AppTheme.Toolbar"
-            app:layout_scrollFlags="scroll|enterAlways"
+            
             app:title="Music For Life">
             <!--app:layout_scrollFlags="scroll|enterAlways"-->
             <!--<LinearLayout-->

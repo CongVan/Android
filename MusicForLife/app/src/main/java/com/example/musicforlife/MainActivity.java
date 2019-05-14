@@ -30,6 +30,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageButton;
@@ -526,8 +528,8 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
                 mLayoutPlayingMinimizie.setVisibility(View.VISIBLE);
             }
         });
-
-
+//        Animation animation= AnimationUtils.loadAnimation(this,R.anim.title_minimize_slide);
+//        mTextViewTitleSongMinimize.startAnimation(animation);
 //        mLayoutPlayingMinimizie.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 //
 //            @Override

@@ -50,6 +50,7 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
     private ImageView mImageDvd;
     private ImageView mImageBgPlaying;
     private CardView mCvImagePlaying;
+    private Animation mAnimationPlay;
     private PlayService mPlayService;
 
     private SongModel mSongPlaying;
@@ -82,7 +83,9 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
 //        mSongPlaying = (SongModel) bundle.getSerializable("PLAY_SONG");
         mSongPlaying = PlayService.getCurrentSongPlaying();
         mPlayService = PlayService.newInstance();
+
     }
+
 
     @Nullable
     @Override
@@ -102,7 +105,7 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
         mImageButtonNextSong = mViewGroupMain.findViewById(R.id.btnNextSong);
         mImageButtonLoopType = mViewGroupMain.findViewById(R.id.btnLoopType);
         mImagePlaying = mViewGroupMain.findViewById(R.id.imgPlaying);
-        mImageDvd=mViewGroupMain.findViewById(R.id.imgDvd);
+//        mImageDvd=mViewGroupMain.findViewById(R.id.imgDvd);
         mCvImagePlaying=mViewGroupMain.findViewById(R.id.cvImagePlaying);
         mImageBgPlaying = mViewGroupMain.findViewById(R.id.imgBgPlaying);
 
@@ -112,6 +115,7 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
         mSebDurationSongPlaying = mViewGroupMain.findViewById(R.id.sebDurationSongPlaying);
         mTxtCurrentDuration = mViewGroupMain.findViewById(R.id.txtCurrentDuration);
 
+        mAnimationPlay=AnimationUtils.loadAnimation(mContext,R.anim.playing_image);
         mImageButtonPlaySong.setOnClickListener(this);
         mImageButtonPrevSong.setOnClickListener(this);
         mImageButtonNextSong.setOnClickListener(this);
@@ -163,11 +167,13 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
             }
 
             mImagePlaying.setImageBitmap(bitmapPlaying);
-            Animation animation = AnimationUtils.loadAnimation(mContext,
-                    R.anim.playing_image);
-            animation.setRepeatCount(Animation.INFINITE);
-//            mCvImagePlaying.startAnimation(animation);
-            mImageDvd.startAnimation(animation);
+            if (PlayService.isPlaying()){
+                mCvImagePlaying.startAnimation(mAnimationPlay);
+            }else{
+                mCvImagePlaying.clearAnimation();
+            }
+
+//            mImageDvd.startAnimation(animation);
         }
 
 
@@ -270,15 +276,18 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
                 Log.d(TAG, "onClick: DURATION PLAY" + PlayService.getCurrentDuration());
                 if (PlayService.isPlaying()) {// song is playing then stop
                     mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_PAUSE);
+                    mCvImagePlaying.clearAnimation();
                     setButtonPlay();
 //                    mPlayService.pause();
                 } else if (PlayService.isPause()) { //resume
                     mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_RESUME);
+                    mCvImagePlaying.startAnimation(mAnimationPlay);
                     setButtonPause();
 //                    mPlayService.resurme();
 //                    mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_pause_circle_outline_black_64dp));
                 } else {
                     mPlayActivity.controlSong(SENDER, PlayService.getCurrentSongPlaying(), PlayService.ACTION_PLAY);
+                    mCvImagePlaying.startAnimation(mAnimationPlay);
                     setButtonPause();
 //                    mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_pause_circle_outline_black_64dp));
                 }

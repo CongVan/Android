@@ -73,27 +73,28 @@ public class FragmentPlaylist extends Fragment {
         mRecyclerViewPlaylist = viewGroup.findViewById(R.id.rcvPlaylist);
         mButtonCreatePlaylist = viewGroup.findViewById(R.id.btnCreatePlaylist);
 
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
-                mPlaylist = PlaylistModel.getAllPlaylist(0, mThreshold);
+                mPlaylist = PlaylistModel.getAllPlaylist();
                 mPlaylistAdapter = new PlaylistAdapter(mContext, mPlaylist);
                 mRecyclerViewPlaylist.setLayoutManager(new LinearLayoutManager(mContext));
                 mRecyclerViewPlaylist.setAdapter(mPlaylistAdapter);
             }
-        });
+        }).start();
         mRecyclerViewPlaylist.addOnItemTouchListener(new RecyclerItemClickListener(mContext, mRecyclerViewPlaylist, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 // do whatever
-                Toast.makeText(mContext, "Playlist", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "Playlist", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onItemClick: PLAYLIST " + position);
                 showPlaylistSongActivity(mPlaylist.get(position).getId());
             }
 
             @Override
             public void onLongItemClick(View view, int position) {
                 // do whatever
-                Toast.makeText(mContext, "LONG CLICK ITEM SONG" + position, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "LONG CLICK ITEM SONG" + position, Toast.LENGTH_SHORT).show();
             }
         }));
         mButtonCreatePlaylist.setOnClickListener(new View.OnClickListener() {
@@ -103,22 +104,22 @@ public class FragmentPlaylist extends Fragment {
                 dialogCreatePlaylist.show(mMainActivity.getSupportFragmentManager(), "CreatePlaylist");
             }
         });
-        mRecyclerViewPlaylist.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                if (!mIsLoading && linearLayoutManager != null && linearLayoutManager.getItemCount() - 1 <= linearLayoutManager.findLastVisibleItemPosition()) {
-                    loadMore();
-                    mIsLoading = true;
-                }
-            }
-        });
+//        mRecyclerViewPlaylist.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+//                super.onScrollStateChanged(recyclerView, newState);
+//            }
+//
+//            @Override
+//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+//                if (!mIsLoading && linearLayoutManager != null && linearLayoutManager.getItemCount() - 1 == linearLayoutManager.findLastVisibleItemPosition()) {
+//                    loadMore();
+//                    mIsLoading = true;
+//                }
+//            }
+//        });
         return viewGroup;
     }
 
@@ -166,22 +167,23 @@ public class FragmentPlaylist extends Fragment {
 
     }
 
-    public synchronized static void refreshPlaylist() {
-        new Handler().post(new Runnable() {
+    public static void refreshPlaylist() {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
                 ArrayList<PlaylistModel> playlistModels = PlaylistModel.getAllPlaylist();
-                Log.d(TAG, "run: REFRESH PLAYLIST SIZE " + playlistModels.get(playlistModels.size() - 1).getNumberOfSongs());
+                if (playlistModels.size()>0){
+                    Log.d(TAG, "run: REFRESH PLAYLIST SIZE " + playlistModels.get(playlistModels.size() - 1).getNumberOfSongs());
+                }
+
                 mPlaylist.clear();
                 mPlaylist.addAll(playlistModels);
-                Log.d(TAG, "run: SIZE PLAYLIST 1 - " + mPlaylist.get(mPlaylist.size() - 1).getNumberOfSongs());
+//                Log.d(TAG, "run: SIZE PLAYLIST 1 - " + mPlaylist.get(mPlaylist.size() - 1).getNumberOfSongs());
 //                mPlaylistAdapter.notifyDataSetChanged();
-                mRecyclerViewPlaylist.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mPlaylistAdapter.notifyDataSetChanged();
-                    }
-                });
+//                mPlaylistAdapter.notifyDataSetChanged();
+//                mPlaylistAdapter.notifyAll();
+                mPlaylistAdapter.notifyDataSetChanged();
+
             }
         });
 
