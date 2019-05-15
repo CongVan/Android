@@ -21,34 +21,50 @@ public class NotifyBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
+        MainActivity mainActivity = MainActivity.getMainActivity();
+        PlayActivity playActivity = PlayActivity.getActivity();
         switch (action) {
             case ACTION_PLAY_NOTIFY:
                 if (PlayService.isPlaying()) {
                     mPlayService.pause();
-                    MainActivity.getMainActivity().refreshNotificationPlaying(PlayService.ACTION_PAUSE);
+                    if (mainActivity != null) {
+                        mainActivity.refreshNotificationPlaying(PlayService.ACTION_PAUSE);
+                    }
+
                 } else if (PlayService.isPause()) {
                     mPlayService.resurme();
-                    MainActivity.getMainActivity().refreshNotificationPlaying(PlayService.ACTION_PLAY);
+                    if (mainActivity != null) {
+                        mainActivity.refreshNotificationPlaying(PlayService.ACTION_PLAY);
+                    }
+
                 } else {
                     mPlayService.play(PlayService.getCurrentSongPlaying());
-                    MainActivity.getMainActivity().refreshNotificationPlaying(PlayService.ACTION_PLAY);
+                    if (mainActivity != null) {
+                        mainActivity.refreshNotificationPlaying(PlayService.ACTION_PLAY);
+                    }
                 }
-
                 break;
 
             case ACTION_NEXT_NOTIFY:
                 mPlayService.next(PlayService.ACTION_FROM_SYSTEM);
-                MainActivity.getMainActivity().refreshNotificationPlaying(PlayService.ACTION_PLAY);
-                PlayActivity.getActivity().refreshListPlaying();
+                if (mainActivity != null) {
+                    mainActivity.refreshNotificationPlaying(PlayService.ACTION_PLAY);
+                }
+
                 break;
             case ACTION_PREV_NOTIFY:
                 mPlayService.prev(PlayService.ACTION_FROM_SYSTEM);
-                MainActivity.getMainActivity().refreshNotificationPlaying(PlayService.ACTION_PLAY);
-                PlayActivity.getActivity().refreshListPlaying();
+                if (mainActivity != null) {
+                    mainActivity.refreshNotificationPlaying(PlayService.ACTION_PLAY);
+                }
+
                 break;
             default:
                 break;
         }
-
+        if (playActivity != null) {
+            playActivity.refreshListPlaying();
+            playActivity.updateButtonPlay("Notify");
+        }
     }
 }

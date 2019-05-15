@@ -83,8 +83,8 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     private AudioManager mAudioManager;
     private String mSearchValue = "";
     private int mCurrentFragmentActive;
-    public static final Integer PLAY_CHANEL_ID = 102;
-    public static final Integer PLAY_NOTIFICATION_ID = 102;
+    public static final Integer PLAY_CHANEL_ID = 103;
+    public static final Integer PLAY_NOTIFICATION_ID = 103;
     private static RemoteViews mNotificationlayoutPlaying;
     private final int mIconsTabDefault[] = {
             R.mipmap.tab_recent_default,
@@ -326,11 +326,11 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         mNotificationlayoutPlaying = new RemoteViews(getPackageName(), R.layout.layout_notificatoin_play);
 
         //set content notification
-        Bitmap bitmapBg = ImageHelper.getBitmapFromPath(songPlaying.getPath(), R.mipmap.music_file_128);
-        Bitmap bitmapBgBlur = ImageHelper.blurBitmap(bitmapBg, 2.0f, 4);
-        Bitmap bitmapOverlay = ImageHelper.createImage(bitmapBgBlur.getWidth(), bitmapBgBlur.getHeight(), getResources().getColor(R.color.colorBgPrimaryOverlay));
-        Bitmap bitmapBgOverlay = ImageHelper.overlayBitmapToCenter(bitmapBgBlur, bitmapOverlay);
-        mNotificationlayoutPlaying.setImageViewBitmap(R.id.imgSongMinimize, bitmapBgOverlay);
+//        Bitmap bitmapBg = ImageHelper.getBitmapFromPath(songPlaying.getPath(), R.mipmap.music_file_128);
+//        Bitmap bitmapBgBlur = ImageHelper.blurBitmap(bitmapBg, 2.0f, 4);
+//        Bitmap bitmapOverlay = ImageHelper.createImage(bitmapBgBlur.getWidth(), bitmapBgBlur.getHeight(), getResources().getColor(R.color.colorBgPrimaryOverlay));
+//        Bitmap bitmapBgOverlay = ImageHelper.overlayBitmapToCenter(bitmapBgBlur, bitmapOverlay);
+        mNotificationlayoutPlaying.setImageViewBitmap(R.id.imgSongMinimize, ImageHelper.getBitmapFromPath(songPlaying.getPath(), R.mipmap.music_128));
         mNotificationlayoutPlaying.setTextViewText(R.id.txtTitleMinimize, songPlaying.getTitle());
         mNotificationlayoutPlaying.setTextViewText(R.id.txtArtistMinimize, songPlaying.getArtist());
         if (PlayService.isPlaying()) {
@@ -382,6 +382,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
                 .setContentIntent(playButtonPending)
                 .setContentIntent(nextButtonPending)
                 .setContentIntent(prevButtonPending)
+//                .setOngoing(true)
                 .setCustomContentView(mNotificationlayoutPlaying);//mới change
 //                .setOngoing(true);
 //                .setCustomBigContentView(notifcationlayoutExpand);//mới change
@@ -542,12 +543,12 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         //create layout notification
         mNotificationlayoutPlaying = new RemoteViews(getPackageName(), R.layout.layout_notificatoin_play);
 
-        //set content notification
-        Bitmap bitmapBg = ImageHelper.getBitmapFromPath(songPlaying.getPath(), R.mipmap.music_file_128);
-        Bitmap bitmapBgBlur = ImageHelper.blurBitmap(bitmapBg, 2.0f, 4);
-        Bitmap bitmapOverlay = ImageHelper.createImage(bitmapBgBlur.getWidth(), bitmapBgBlur.getHeight(), getResources().getColor(R.color.colorBgPrimaryOverlay));
-        Bitmap bitmapBgOverlay = ImageHelper.overlayBitmapToCenter(bitmapBgBlur, bitmapOverlay);
-        mNotificationlayoutPlaying.setImageViewBitmap(R.id.imgSongMinimize, bitmapBgOverlay);
+//        //set content notification
+//        Bitmap bitmapBg = ImageHelper.getBitmapFromPath(songPlaying.getPath(), R.mipmap.music_file_128);
+//        Bitmap bitmapBgBlur = ImageHelper.blurBitmap(bitmapBg, 1.0f, 20);
+//        Bitmap bitmapOverlay = ImageHelper.drawableToBitmap(R.drawable.gradient_minimize);
+//        Bitmap bitmapBgOverlay = ImageHelper.overlayBitmapToCenter(bitmapBgBlur, bitmapOverlay);
+        mNotificationlayoutPlaying.setImageViewBitmap(R.id.imgSongMinimize, ImageHelper.getBitmapFromPath(songPlaying.getPath(), R.mipmap.music_128));
         mNotificationlayoutPlaying.setTextViewText(R.id.txtTitleMinimize, songPlaying.getTitle());
         mNotificationlayoutPlaying.setTextViewText(R.id.txtArtistMinimize, songPlaying.getArtist());
         if (action != PlayService.ACTION_PAUSE) {
@@ -599,9 +600,16 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
                 .setContentIntent(playButtonPending)
                 .setContentIntent(nextButtonPending)
                 .setContentIntent(prevButtonPending)
+//                .setOngoing(true)
                 .setCustomContentView(mNotificationlayoutPlaying);//mới change
 //                .setOngoing(true);
 //                .setCustomBigContentView(notifcationlayoutExpand);//mới change
+
+        if (action != PlayService.ACTION_PAUSE) {
+            builder.setOngoing(true);
+        } else {
+            builder.setOngoing(false);
+        }
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
         notificationManagerCompat.notify(PLAY_NOTIFICATION_ID, builder.build());

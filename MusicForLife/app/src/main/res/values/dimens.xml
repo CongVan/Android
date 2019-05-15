@@ -26,6 +26,7 @@
     <dimen name="elevation_large">12dp</dimen>
 
     <dimen name="image_icon_item">48dp</dimen>
+    <dimen name="image_icon_notify">64dp</dimen>
     <dimen name="image_card_item">48dp</dimen>
     <dimen name="image_optiton_sheet">64dp</dimen>
     <dimen name="image_card_item_playlist">60dp</dimen>
