@@ -2,10 +2,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.musicforlife">
-    <!-- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> -->
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
+
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <!--<uses-permission-->
+        <!--android:name="android.permission.CHANGE_CONFIGURATION"-->
+        <!--tools:ignore="ProtectedPermissions" />-->
+
 
     <application
         android:allowBackup="true"
@@ -15,7 +26,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".folder.FolderActivity"></activity>
+        <activity android:name=".SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+        <activity android:name=".folder.FolderActivity" />
         <activity
             android:name=".playlist.PlaylistSongActivity"
             android:parentActivityName=".MainActivity" />
@@ -27,11 +45,7 @@
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <receiver android:name=".BecomingNoisyReceiver">
@@ -41,7 +55,6 @@
                 <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
         </receiver>
-
         <receiver android:name=".NotifyBroadcastReceiver">
             <intent-filter>
                 <action android:name="Play_Button_Notification" />
@@ -49,6 +62,17 @@
                 <action android:name="Prev_Button_Notification" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name=".play.StopedReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:label="RestartServiceWhenStopped">
+            <intent-filter>
+                <action android:name="KILL_APP" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".play.PlayService" />
     </application>
 
 </manifest>

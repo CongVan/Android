@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.app.TaskStackBuilder;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
@@ -52,6 +53,7 @@ import com.example.musicforlife.listsong.FragmentListSong;
 import com.example.musicforlife.listsong.SongModel;
 import com.example.musicforlife.play.PlayActivity;
 import com.example.musicforlife.play.PlayService;
+import com.example.musicforlife.play.StopedReceiver;
 import com.example.musicforlife.playlist.FragmentPlaylist;
 import com.example.musicforlife.utilitys.ImageHelper;
 import com.example.musicforlife.utilitys.Utility;
@@ -86,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     public static final Integer PLAY_CHANEL_ID = 103;
     public static final Integer PLAY_NOTIFICATION_ID = 103;
     private static RemoteViews mNotificationlayoutPlaying;
+    private Intent mIntentPlayService;
     private final int mIconsTabDefault[] = {
             R.mipmap.tab_recent_default,
             R.mipmap.tab_song_default,
@@ -137,7 +140,8 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         mViewPager.setOffscreenPageLimit(mPagerAdapter.getCount());
         mTabLayout.setupWithViewPager(mViewPager);
         mPlayService = PlayService.newInstance();
-
+        mIntentPlayService = new Intent(this, PlayService.class);
+        mDatabaseManager = DatabaseManager.newInstance(getApplicationContext());
 
 //        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 //        mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
@@ -176,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
 
             }
         });
-
+        startService(mIntentPlayService);
 //        initNotificationPlay();
     }
 
@@ -217,10 +221,21 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     private void setupLayoutTransparent() {
         Utility.setTransparentStatusBar(MainActivity.this);
         mLayoutMainContent.setPadding(0, Utility.getStatusbarHeight(this), 0, 0);
-
+        View decorView = getWindow().getDecorView();
+        int uiOption = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        decorView.setSystemUiVisibility(uiOption);
 //        mLayoutMainContent.setBackground(ImageHelper.getMainBackgroundDrawable());
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+        View decorView = getWindow().getDecorView();
+        int uiOption = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        decorView.setSystemUiVisibility(uiOption);
+
+    }
 
     /**
      * Khởi tạo View
@@ -253,9 +268,9 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
      * Khởi tạo data đọc từ bộ nhớ
      */
     private void initDataBaseFromDevice() {
-        mDatabaseManager = DatabaseManager.newInstance(getApplicationContext());
+
 //        mDatabaseManager.resetDB();
-        new intitSongFromDevice().execute();
+//        new intitSongFromDevice().execute();
     }
 
     private void initMinimizePlaying() {
@@ -737,15 +752,25 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
                 }
                 if (PlayService.isPlaying()) {
                     refreshNotificationPlaying(PlayService.ACTION_PAUSE);
+//                    mIntentPlayService.setAction(String.valueOf(PlayService.ACTION_PAUSE));
+//                    startService(mIntentPlayService);
                     mPlayService.pause();
                     mButtonPlayMinimize.setImageDrawable(MainActivity.this.getDrawable(R.drawable.ic_play_circle_outline_black_32dp));
                 } else if (PlayService.isPause()) {
                     refreshNotificationPlaying(PlayService.ACTION_RESUME);
                     mPlayService.resurme();
+//                    mIntentPlayService.setAction(String.valueOf(PlayService.ACTION_RESUME));
+//                    startService(mIntentPlayService);
                     mButtonPlayMinimize.setImageDrawable(MainActivity.this.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
                 } else {
                     refreshNotificationPlaying(PlayService.ACTION_PLAY);
                     mPlayService.play(songPlay);
+//                    mIntentPlayService.setAction(String.valueOf(PlayService.ACTION_PLAY));
+//                    Bundle bundle = new Bundle();
+//                    bundle.putSerializable(SongModel.class.toString(), songPlay);
+//                    mIntentPlayService.putExtras(bundle);
+//                    startService(mIntentPlayService);
+
                     mButtonPlayMinimize.setImageDrawable(MainActivity.this.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
                 }
                 break;
@@ -833,6 +858,19 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
 
             return tempAudioList;
         }
+
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Intent broadcastIntent = new Intent(this, StopedReceiver.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(SongModel.class.toString(), PlayService.getCurrentSongPlaying());
+        broadcastIntent.putExtras(bundle);
+        Log.d(TAG, "onDestroy: ");
+        sendBroadcast(broadcastIntent);
 
     }
 }

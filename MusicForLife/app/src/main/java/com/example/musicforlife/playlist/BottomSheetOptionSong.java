@@ -3,9 +3,14 @@ package com.example.musicforlife.playlist;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.ContentValues;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.support.design.widget.BottomSheetDialogFragment;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TableRow;
@@ -30,7 +35,7 @@ public class BottomSheetOptionSong extends BottomSheetDialogFragment implements 
     private TableRow mTbrDeleteSong;
     private ImageView mImgSong;
     private ImageHelper mImageHelper;
-
+    private static final String TAG = "BottomSheetOptionSong";
     @SuppressLint("ValidFragment")
     public BottomSheetOptionSong(SongModel songOption) {
         mCurrentSong = songOption;
@@ -79,9 +84,9 @@ public class BottomSheetOptionSong extends BottomSheetDialogFragment implements 
                 long resultAddSong = PlayService.addSongToPlayingList(mCurrentSong);
                 if (resultAddSong > 0) {
                     Toast.makeText(getActivity(), "Đã thêm vào danh sách phát", Toast.LENGTH_LONG).show();
-                } else if (resultAddSong==0){
+                } else if (resultAddSong == 0) {
                     Toast.makeText(getActivity(), "Bài hát đã tồn tại", Toast.LENGTH_LONG).show();
-                }else {
+                } else {
                     Toast.makeText(getActivity(), "Thất bại", Toast.LENGTH_LONG).show();
                 }
                 BottomSheetOptionSong.this.dismiss();
@@ -92,6 +97,28 @@ public class BottomSheetOptionSong extends BottomSheetDialogFragment implements 
                 BottomSheetOptionSong.this.dismiss();
                 break;
             case R.id.btnMakeRingTone:
+                try {
+                    Uri uri = MediaStore.Audio.Media.getContentUriForPath(mCurrentSong.getPath());
+                    getContext().getContentResolver().delete(uri, MediaStore.MediaColumns.DATA + "=\"" + mCurrentSong.getPath() + "\"", null);
+                    ContentValues values = new ContentValues();
+                    values.put(MediaStore.MediaColumns.DATA, mCurrentSong.getPath());
+                    values.put(MediaStore.MediaColumns.TITLE, mCurrentSong.getTitle());
+                    values.put(MediaStore.MediaColumns.MIME_TYPE, "audio/*");
+                    values.put(MediaStore.Audio.Media.ARTIST, mCurrentSong.getArtist());
+                    values.put(MediaStore.Audio.Media.IS_RINGTONE, true);
+                    values.put(MediaStore.Audio.Media.IS_NOTIFICATION, false);
+                    values.put(MediaStore.Audio.Media.IS_ALARM, false);
+                    values.put(MediaStore.Audio.Media.IS_MUSIC, false);
+                    Uri newUri = getContext().getContentResolver().insert(uri, values);
+                    RingtoneManager.setActualDefaultRingtoneUri(getContext(), RingtoneManager.TYPE_RINGTONE, newUri);
+                    Toast.makeText(getContext(),"Đặt làm nhạc chuông thành công!",Toast.LENGTH_LONG).show();
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                    Log.e(TAG, "onClick: "+ex.getMessage());
+                    Toast.makeText(getContext(),"Đặt làm nhạc chuông thất bại!",Toast.LENGTH_LONG).show();
+                }
+
+
                 break;
             case R.id.btnDeleteSong:
                 break;
