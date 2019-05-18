@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     private AudioManager mAudioManager;
     private String mSearchValue = "";
     private int mCurrentFragmentActive;
+    public static Boolean isHideMinimize = false;
     public static final Integer PLAY_CHANEL_ID = 103;
     public static final Integer PLAY_NOTIFICATION_ID = 103;
     private static RemoteViews mNotificationlayoutPlaying;
@@ -537,6 +538,11 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
      */
     @Override
     public void togglePlayingMinimize(String sender) {
+        if(isHideMinimize){
+            isHideMinimize = !isHideMinimize;
+            hideMinimizePlaying();
+            return;
+        }
         SongModel songPlay = PlayService.getCurrentSongPlaying();
         if (songPlay != null) {
             showMinimizePlaying(songPlay);

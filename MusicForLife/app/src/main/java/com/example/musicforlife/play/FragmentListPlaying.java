@@ -265,6 +265,7 @@ public class FragmentListPlaying extends Fragment implements FragmentPlayInterfa
         {
             PlayService.newInstance().pause();
             mPlayActivity.finish();
+            MainActivity.getMainActivity().isHideMinimize = true;
             return;
         }
         if(mSongPlaying != null && Ids.contains(String.valueOf(mSongPlaying.getSongId())))
