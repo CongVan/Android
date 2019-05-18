@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical"
+    android:padding="@dimen/margin_size_small"
+
+    >
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginHorizontal="@dimen/margin_size_small"
+            android:layout_marginVertical="@dimen/margin_size_snormal"
+            android:text="Hẹn giờ tắt nhạc"
+            android:textColor="@color/colorTitleWhitePrimary"
+            android:textSize="@dimen/text_size_xnormal" />
+
+        <Switch
+            android:id="@+id/swtTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginHorizontal="@dimen/margin_size_small"
+
+            />
+
+    </RelativeLayout>
+
+    <SeekBar
+        android:id="@+id/sbTimer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbarSize="@dimen/text_size_large"
+        android:progress="0"
+        android:paddingVertical="@dimen/margin_size_snormal"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_size_snormal"
+        android:layout_marginBottom="@dimen/text_size_normal"
+        >
+
+        <TextView
+            android:id="@+id/txtStartTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:text="0 phút"
+            android:textColor="@color/colorTitleWhitePrimary"
+            android:textSize="@dimen/text_size_normal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="120 phút"
+            android:textColor="@color/colorTitleWhitePrimary"
+            android:textSize="@dimen/text_size_normal" />
+    </RelativeLayout>
+
+</LinearLayout>

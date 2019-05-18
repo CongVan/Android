@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
 
             }
         });
-        startService(mIntentPlayService);
+//        startService(mIntentPlayService);
 //        initNotificationPlay();
     }
 
@@ -865,12 +865,15 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Intent broadcastIntent = new Intent(this, StopedReceiver.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(SongModel.class.toString(), PlayService.getCurrentSongPlaying());
-        broadcastIntent.putExtras(bundle);
-        Log.d(TAG, "onDestroy: ");
-        sendBroadcast(broadcastIntent);
+//        if (PlayService.isPlaying()) {
+//            Intent broadcastIntent = new Intent(this, StopedReceiver.class);
+//            Bundle bundle = new Bundle();
+//            bundle.putSerializable(SongModel.class.toString(), PlayService.getCurrentSongPlaying());
+//            broadcastIntent.putExtras(bundle);
+//            Log.d(TAG, "onDestroy: ");
+//            sendBroadcast(broadcastIntent);
+//        }
+
 
     }
 }

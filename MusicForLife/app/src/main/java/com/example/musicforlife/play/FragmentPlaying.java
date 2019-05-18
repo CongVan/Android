@@ -107,7 +107,7 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
         mImageButtonLoopType = mViewGroupMain.findViewById(R.id.btnLoopType);
         mImagePlaying = mViewGroupMain.findViewById(R.id.imgPlaying);
 //        mImageDvd=mViewGroupMain.findViewById(R.id.imgDvd);
-        mCvImagePlaying=mViewGroupMain.findViewById(R.id.cvImagePlaying);
+        mCvImagePlaying = mViewGroupMain.findViewById(R.id.cvImagePlaying);
         mImageBgPlaying = mViewGroupMain.findViewById(R.id.imgBgPlaying);
 
         mTxtTitleSongPlaying = mViewGroupMain.findViewById(R.id.txtTitleSongPlaying);
@@ -116,7 +116,7 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
         mSebDurationSongPlaying = mViewGroupMain.findViewById(R.id.sebDurationSongPlaying);
         mTxtCurrentDuration = mViewGroupMain.findViewById(R.id.txtCurrentDuration);
 
-        mAnimationPlay=AnimationUtils.loadAnimation(mContext,R.anim.playing_image);
+        mAnimationPlay = AnimationUtils.loadAnimation(mContext, R.anim.playing_image);
         mImageButtonPlaySong.setOnClickListener(this);
         mImageButtonPrevSong.setOnClickListener(this);
         mImageButtonNextSong.setOnClickListener(this);
@@ -168,9 +168,9 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
             }
 
             mImagePlaying.setImageBitmap(bitmapPlaying);
-            if (PlayService.isPlaying()){
+            if (PlayService.isPlaying()) {
                 mCvImagePlaying.startAnimation(mAnimationPlay);
-            }else{
+            } else {
                 mCvImagePlaying.clearAnimation();
             }
 
@@ -198,23 +198,24 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
     @Override
     public void onResume() {
         super.onResume();
+//
+//        if (PlayService.isPlaying() && mSongPlaying.getSongId() != PlayService.getCurrentSongPlaying().getSongId()) {
+//            Log.d(TAG, "onResume: SERVICE " + PlayService.getCurrentSongPlaying().getTitle() + " PLAY " + mSongPlaying.getTitle());
+////            mSongPlaying=PlayService.getCurrentSongPlaying();
+//            mPlayActivity.controlSong(SENDER, mSongPlaying, PlayService.ACTION_PLAY);
+//            updateControlPlaying(mSongPlaying);
+////            mPlayActivity.updateControlPlaying(SENDER, mSongPlaying);
+//        }
 
-        if (PlayService.isPlaying() && mSongPlaying.getSongId() != PlayService.getCurrentSongPlaying().getSongId()) {
-            Log.d(TAG, "onResume: SERVICE " + PlayService.getCurrentSongPlaying().getTitle() + " PLAY " + mSongPlaying.getTitle());
-//            mSongPlaying=PlayService.getCurrentSongPlaying();
-            mPlayActivity.controlSong(SENDER, mSongPlaying, PlayService.ACTION_PLAY);
-            updateControlPlaying(mSongPlaying);
-//            mPlayActivity.updateControlPlaying(SENDER, mSongPlaying);
-        }
 
-        updateSeekbar(PlayService.getCurrentDuration());
-        Log.d(TAG, "onResume: " + PlayService.getCurrentDuration());
+//        Log.d(TAG, "onResume: " + PlayService.getCurrentDuration());
 //        mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_RESUME);
 //        if (mSongPlaying != null && PlayService.getCurrentSongPlaying() != null) {
 //            if (mSongPlaying.getSongId() == PlayService.getCurrentSongPlaying().getSongId()) {
 //                updateControlPlaying(mSongPlaying);
 //            }
 //        }
+        updateSeekbar(PlayService.getCurrentDuration());
         updateControlPlaying(mSongPlaying);
         updateButtonPlay();
     }
@@ -252,9 +253,14 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
         Log.d(TAG, "updateButtonPlay: " + PlayService.isPlaying());
         if (PlayService.isPlaying()) {
             setButtonPause();
+            mCvImagePlaying.startAnimation(mAnimationPlay);
+
 //            mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_pause_black_70dp));
         } else {
             setButtonPlay();
+            mCvImagePlaying.clearAnimation();
+
+
 //            mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_play_arrow_black_70dp));
         }
     }
@@ -321,4 +327,5 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
                 break;
         }
     }
+
 }

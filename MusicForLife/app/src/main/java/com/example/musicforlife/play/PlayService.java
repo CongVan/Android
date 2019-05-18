@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 
-public class PlayService extends Service implements PlayInterface, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
+public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
     private static ArrayList<PlayModel> mPlayingList;
     private static ArrayList<SongModel> mSongPlayingList;
     private static SongModel mCurrentSongPlaying;
@@ -61,16 +61,18 @@ public class PlayService extends Service implements PlayInterface, MediaPlayer.O
     public static final String SENDER = "PLAY_CENTER";
 
     public static PlayService newInstance() {
-        if (mPlayService == null) {
+        if (mPlayService == null || mMediaPlayer == null || mDatabaseManager == null) {
             mPlayService = new PlayService();
             mMediaPlayer = new MediaPlayer();
             //using weak lock
 //            mMediaPlayer.setWakeMode(MainActivity.getMainActivity(), PowerManager.PARTIAL_WAKE_LOCK);
-            mDatabaseManager = DatabaseManager.getInstance();
+            mDatabaseManager = DatabaseManager.newInstance(MainActivity.getMainActivity().getApplicationContext());
         }
         return mPlayService;
     }
-
+    public static MediaPlayer getMediaPlayer(){
+        return mMediaPlayer;
+    }
 
     public static int getLoopType() {
         return loopType;
@@ -436,66 +438,66 @@ public class PlayService extends Service implements PlayInterface, MediaPlayer.O
     }
 
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        PlayService.newInstance();
-
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent.getAction() == null) {
-            return START_NOT_STICKY;
-        }
-        int action = Integer.parseInt(Objects.requireNonNull(intent.getAction()));
-        Bundle bundle = intent.getExtras();
-        switch (action) {
-            case ACTION_PLAY:
-                Log.d(TAG, "onStartCommand: BUNDLE " + bundle);
-                if (bundle != null) {
-                    SongModel songPlay = (SongModel) bundle.getSerializable(SongModel.class.toString());
-                    play(songPlay);
-                }
-                break;
-            case ACTION_RESUME:
-                resurme();
-                break;
-            case ACTION_PAUSE:
-                pause();
-                break;
-            case ACTION_NEXT:
-                if (bundle != null) {
-                    int actionFrom = bundle.getInt("actionFrom");
-                    next(actionFrom);
-                }
-                break;
-            case ACTION_PREV:
-                if (bundle != null) {
-                    int actionFrom = bundle.getInt("actionFrom");
-                    prev(actionFrom);
-                }
-                break;
-            default:
-                break;
-        }
-
-        return START_STICKY;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mMediaPlayer != null) {
-            mMediaPlayer.release();
-        }
-        stopSelf();
-
-    }
+//    @Override
+//    public IBinder onBind(Intent intent) {
+//        return null;
+//    }
+//
+//    @Override
+//    public void onCreate() {
+//        super.onCreate();
+//        PlayService.newInstance();
+//
+//    }
+//
+//    @Override
+//    public int onStartCommand(Intent intent, int flags, int startId) {
+//        if (intent.getAction() == null) {
+//            return START_STICKY;
+//        }
+//        int action = Integer.parseInt(Objects.requireNonNull(intent.getAction()));
+//        Bundle bundle = intent.getExtras();
+//        switch (action) {
+//            case ACTION_PLAY:
+//                Log.d(TAG, "onStartCommand: BUNDLE " + bundle);
+//                if (bundle != null) {
+//                    SongModel songPlay = (SongModel) bundle.getSerializable(SongModel.class.toString());
+//                    play(songPlay);
+//                }
+//                break;
+//            case ACTION_RESUME:
+//                resurme();
+//                break;
+//            case ACTION_PAUSE:
+//                pause();
+//                break;
+//            case ACTION_NEXT:
+//                if (bundle != null) {
+//                    int actionFrom = bundle.getInt("actionFrom");
+//                    next(actionFrom);
+//                }
+//                break;
+//            case ACTION_PREV:
+//                if (bundle != null) {
+//                    int actionFrom = bundle.getInt("actionFrom");
+//                    prev(actionFrom);
+//                }
+//                break;
+//            default:
+//                break;
+//        }
+//
+//        return START_STICKY;
+//    }
+//
+//    @Override
+//    public void onDestroy() {
+//        super.onDestroy();
+//        if (mMediaPlayer != null) {
+//            mMediaPlayer.release();
+//        }
+//        stopSelf();
+//
+//    }
 }
 

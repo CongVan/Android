@@ -7,15 +7,15 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
-        tools:ignore="ProtectedPermissions" />
+    tools:ignore="ProtectedPermissions" />
     <uses-permission
         android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <!--<uses-permission-->
-        <!--android:name="android.permission.CHANGE_CONFIGURATION"-->
-        <!--tools:ignore="ProtectedPermissions" />-->
+    <!--android:name="android.permission.CHANGE_CONFIGURATION"-->
+    <!--tools:ignore="ProtectedPermissions" />-->
 
 
     <application
@@ -71,8 +71,17 @@
                 <action android:name="KILL_APP" />
             </intent-filter>
         </receiver>
-
-        <service android:name=".play.PlayService" />
+         <receiver android:name=".play.PlayActivity$TimerReceiver"
+             android:enabled="true"
+             android:label="timerSong
+"
+             >
+             <intent-filter >
+                 <action android:name="START_TIMER_SONG"/>
+                 <action android:name="FINISH_TIMER_SONG"/>
+             </intent-filter>
+         </receiver>
+        <service android:name=".TimerSongService" />
     </application>
 
 </manifest>

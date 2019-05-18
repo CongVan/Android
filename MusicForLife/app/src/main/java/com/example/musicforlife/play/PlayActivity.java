@@ -1,15 +1,21 @@
 package com.example.musicforlife.play;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +23,7 @@ import android.widget.Toast;
 
 import com.example.musicforlife.MainActivity;
 import com.example.musicforlife.R;
+import com.example.musicforlife.TimerSongService;
 import com.example.musicforlife.db.DatabaseManager;
 import com.example.musicforlife.listsong.SongModel;
 import com.example.musicforlife.utilitys.Utility;
@@ -48,6 +55,8 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
     private SongModel mSongPlaying = null;
     private static PlayActivity mPlayActivity;
     private Toolbar mToolbar;
+    private Menu mMenuPlay;
+    private TimerReceiver mTimerReceiver;
 
     public static PlayActivity getActivity() {
         return mPlayActivity;
@@ -93,7 +102,9 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
         mPagerAdapter = new FragmentPlayAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.setCurrentItem(1);
-
+        mTimerReceiver = new TimerReceiver();
+        IntentFilter intentFilter = new IntentFilter(TimerSongService.ACTION_FINISH_TIMER);
+        registerReceiver(mTimerReceiver, intentFilter);
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
@@ -114,63 +125,6 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
             }
         });
 
-//        Intent intent = getIntent();
-//        Bundle bundle = intent.getExtras();
-//
-//
-//        int typeShow = -1;
-//        typeShow = bundle.getInt("TYPE_SHOW");
-//        Log.d(TAG, "onCreate: TYPE SHOW" + typeShow);
-//        if (typeShow == TYPE_SHOW_NEW) {
-//            if (bundle.getSerializable("PLAY_LIST") != null) {
-//                mPlayList = (ArrayList<SongModel>) bundle.getSerializable("PLAY_LIST");
-//            } else {
-//                mPlayList = (ArrayList<SongModel>) intent.getSerializableExtra(PlayActivity.EXTRA_PLAYING_LIST);
-//            }
-//            Log.d(TAG, "onCreate: " + "PLAY LIST " + mPlayList.size());
-//            if (bundle.getSerializable("PLAY_SONG") != null) {
-//                mSongPlaying = (SongModel) bundle.getSerializable("PLAY_SONG");
-//            } else {
-//                if (mPlayList.size() > 0) {
-//                    mSongPlaying = mPlayList.get(0);
-//                }
-//            }
-//            new InitPlaylist().execute(mPlayList);
-//        } else if (typeShow == TYPE_SHOW_RESUME) {
-//            Log.d(TAG, "onCreate: RESUME " + PlayService.getCurrentSongPlaying());
-//            mSongPlaying = PlayService.getCurrentSongPlaying();
-//            mPagerAdapter = new FragmentPlayAdapter(getSupportFragmentManager(), mSongPlaying);
-//            mPager.setAdapter(mPagerAdapter);
-//            ((FragmentPlayAdapter) mPagerAdapter).getFragmentPlaying().updateButtonPlay();
-//            mPager.setCurrentItem(1);
-//        }
-
-
-//        Log.d(TAG, "onCreate: " + "PLAY SONG " + mSongPlaying.getTitle());
-
-//        TextView textView=findViewById(R.id.txtTest);
-//        Log.d(TAG, "onCreate: " + songs.size());
-//        for (SongModel song : songs
-//        ) {
-//            Log.d(TAG, "onCreate: " + song.getSongId());
-//        }
-//        Toast.makeText(PlayActivity.this, songs.size()+"", Toast.LENGTH_SHORT).show();
-//        mPlayService = PlayService.newInstance(PlayActivity.this.getApplicationContext(), this);
-        // Instantiate a ViewPager and a PagerAdapter.
-
-
-//        if (PlayService.getCurrentSongPlaying() != null) {
-//            Log.d(TAG, "onCreate: SONG PLAYING " + PlayService.getCurrentSongPlaying().getTitle()
-//                    + " mSONGPLAYING " + mSongPlaying.getTitle());
-//        }
-
-        //set animation for slide page
-//        mPager.setPageTransformer(true, new ZoomOutPageTransformer());
-//        Log.d(TAG, "onCreate: SAVE INSTANCE STATE" + savedInstanceState);
-//        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-////        int defaultValue = getResources().getInteger("TEST");
-//        int highScore = sharedPref.getInt("TEST", 0);
-//        Log.d(TAG, "onCreate: TEST SHARE "+ highScore);
     }
 
 
@@ -190,18 +144,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-//        NavUtils.navigateUpFromSameTask(this);
 
-
-//        super.onPause();
-//        if (mPager.getCurrentItem() == 0) {
-//            // If the user is currently looking at the first step, allow the system to handle the
-//            // Back button. This calls finish() on this activity and pops the back stack.
-//            super.onBackPressed();
-//        } else {
-//            // Otherwise, select the previous step.
-//            mPager.setCurrentItem(mPager.getCurrentItem() - 1);
-//        }
     }
 
 
@@ -297,10 +240,66 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
         int index = mPager.getCurrentItem();
         if (index == 0) {
             getSupportActionBar().setTitle("Danh sách phát");
+            if (mMenuPlay != null) {
+                mMenuPlay.findItem(R.id.actionSetTimerSong).setVisible(false);
+            }
         } else if (index == 1) {
             getSupportActionBar().setTitle("Đang phát");
+            if (mMenuPlay != null) {
+                mMenuPlay.findItem(R.id.actionSetTimerSong).setVisible(true);
+            }
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_timer_song, menu);
+        mMenuPlay = menu;
+//        mMenuPlay.findItem(R.id.actionSetTimerSong).setVisible(false);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.actionSetTimerSong: {
+                DialogFragment dialogCreatePlaylist = new FragmentDialogTimerSong(PlayActivity.this);
+                dialogCreatePlaylist.show(getSupportFragmentManager(), "SetTimerSong");
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void startTimerService(Intent intentStart) {
+        startService(intentStart);
+
+    }
+
+    public void stopTimerService(Intent intentStart) {
+        stopService(intentStart);
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        //unregisterReceiver(mTimerReceiver);
+    }
+
+    public class TimerReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "onReceive: Timer Song " + intent.getAction());
+            if (intent.getAction() == TimerSongService.ACTION_FINISH_TIMER) {
+                if (PlayService.isPlaying()) {
+                    mPlayService.pause();
+                    mMainActivity.refreshNotificationPlaying(PlayService.ACTION_PAUSE);
+                    updateButtonPlay(SENDER);
+                }
+
+            }
+        }
+    }
 }
