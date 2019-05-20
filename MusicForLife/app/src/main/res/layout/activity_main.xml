@@ -21,7 +21,8 @@
         android:layout_height="wrap_content"
         android:background="@color/colorTranparent"
         android:gravity="top"
-        app:elevation="0dp">
+        app:elevation="0dp"
+        >
         <!--app:contentScrim="@android:color/transparent"-->
         <android.support.v7.widget.Toolbar
             android:id="@+id/tool_bar_main"
@@ -68,11 +69,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="top"
             android:background="@color/colorTranparent"
+            app:tabBackground="?attr/selectableItemBackground"
             app:tabGravity="fill"
             app:tabIndicatorColor="@color/colorAccent"
             app:tabIndicatorFullWidth="false"
             app:tabIndicatorGravity="bottom"
-            app:tabBackground="?attr/selectableItemBackground"
             app:tabIndicatorHeight="2dp"
             app:tabMode="fixed"
             app:tabSelectedTextColor="@color/colorAccent"
@@ -100,6 +101,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_margin="@dimen/margin_size_small"
+
         android:background="@color/colorTranparent"
         android:visibility="gone">
 

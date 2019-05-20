@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.content.Intent;
@@ -77,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     private ImageButton mButtonPlayMinimize;
     private ImageButton mButtonNextMinimize;
     private ImageButton mButtonPrevMinimize;
+    private AppBarLayout mlayoutAppbarMain;
 
     private static MainActivity mMainActivity;
     private Intent mIntentPlayActivity;
@@ -152,6 +154,9 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         initMinimizePlaying();
         initReceiver();
         initTabLayoutIcon();
+
+
+
         mViewPager.setOnScrollChangeListener(new View.OnScrollChangeListener() {
             @Override
             public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
@@ -251,6 +256,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         mCardViewPlayingMinimize = findViewById(R.id.cardViewPlayingMinimize);
         mLayoutMainContent = findViewById(R.id.mainContent);
         mTabLayout = findViewById(R.id.tablayout_main);
+        mlayoutAppbarMain=findViewById(R.id.layoutAppbarMain);
 
         mButtonPlayMinimize = findViewById(R.id.btnPlaySong);
         mButtonNextMinimize = findViewById(R.id.btnNextSong);

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 
 import com.example.musicforlife.listsong.SongModel;
 
@@ -25,6 +26,9 @@ public class FragmentPlayAdapter extends FragmentStatePagerAdapter {
         switch (i) {
             case 0:
                 mFragmentListPlaying = FragmentListPlaying.newInstance();
+
+
+
                 fragment = mFragmentListPlaying;
 //                Bundle bundle=new Bundle();
 //                bundle.putBoolean("PLAY_FISR",);
@@ -36,6 +40,8 @@ public class FragmentPlayAdapter extends FragmentStatePagerAdapter {
                 Bundle bundle=new Bundle();
                 bundle.putSerializable("PLAY_SONG",mSongPlaying);
                 fragment.setArguments(bundle);
+
+
                 break;
             default:
                 break;

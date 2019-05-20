@@ -91,6 +91,16 @@
                 android:layout_weight="3"
                 android:gravity="center">
 
+
+                <fragment
+                    android:id="@+id/youtubePlayer"
+                    android:name="com.google.android.youtube.player.YouTubePlayerSupportFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    />
+
+
                 <android.support.v7.widget.CardView
                     android:id="@+id/cvImagePlaying"
                     android:layout_width="320dp"
@@ -98,6 +108,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center"
+
                     app:cardBackgroundColor="@color/colorBlackGlassLight"
                     app:cardCornerRadius="160dp"
                     app:cardElevation="0dp"
@@ -113,7 +124,6 @@
                         android:src="@mipmap/dvd" />
 
                 </android.support.v7.widget.CardView>
-
 
 
             </RelativeLayout>
@@ -134,8 +144,7 @@
                     android:gravity="center"
                     android:text="Tên bài hát tại đây"
                     android:textColor="@color/colorTitleWhitePrimary"
-                    android:textSize="@dimen/text_size_xlarge"
-                    android:textStyle="bold" />
+                    android:textSize="@dimen/text_size_large" />
 
                 <TextView
                     android:id="@+id/txtArtistSongPlaying"
@@ -144,10 +153,16 @@
                     android:gravity="center"
                     android:text="Tên ca sĩ tại đây"
                     android:textColor="@color/colorTitleWhiteSecondary"
-                    android:textSize="@dimen/text_size_large"
+                    android:textSize="@dimen/text_size_large" />
 
-                    />
-
+                <ImageButton
+                    android:id="@+id/btnToggleVideo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/margin_size_snormal"
+                    android:background="@drawable/shape_circle"
+                    android:padding="@dimen/margin_size_small"
+                    android:src="@drawable/ic_music_note_black_24dp" />
             </LinearLayout>
 
 

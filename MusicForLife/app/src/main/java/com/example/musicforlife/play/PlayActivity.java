@@ -27,6 +27,9 @@ import com.example.musicforlife.TimerSongService;
 import com.example.musicforlife.db.DatabaseManager;
 import com.example.musicforlife.listsong.SongModel;
 import com.example.musicforlife.utilitys.Utility;
+import com.google.android.youtube.player.YouTubeBaseActivity;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
 
 import java.util.ArrayList;
 
@@ -57,7 +60,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
     private Toolbar mToolbar;
     private Menu mMenuPlay;
     private TimerReceiver mTimerReceiver;
-
+    private  YouTubePlayer.OnInitializedListener mListenerYoutubePlayer;
     public static PlayActivity getActivity() {
         return mPlayActivity;
     }

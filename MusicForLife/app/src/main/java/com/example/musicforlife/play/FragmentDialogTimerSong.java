@@ -65,7 +65,7 @@ public class FragmentDialogTimerSong extends DialogFragment {
         mSbTimer.setMin(MIN_TIMER);
         mSbTimer.setProgress(0);
         mSbTimer.setMax(MAX_TIMER);
-        mTimerSongService = new TimerSongService();
+        mTimerSongService = TimerSongService.newIntance();
 //        mSbTimer.incrementProgressBy(STEP_TIMER);
 
         mSbTimer.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

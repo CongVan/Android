@@ -18,8 +18,15 @@ public class TimerSongService extends Service {
     public static final String ACTION_START_TIMER = "START_TIMER_SONG";
     public static final String ACTION_FINISH_TIMER = "FINISH_TIMER_SONG";
 
+    private static TimerSongService mTimerSongService;
     private static final String TAG = "TimerSongService";
 
+    public static TimerSongService newIntance(){
+        if (mTimerSongService==null){
+            mTimerSongService=new TimerSongService();
+        }
+        return mTimerSongService;
+    }
     @Override
     public IBinder onBind(Intent intent) {
         return null;

@@ -6,9 +6,11 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -23,16 +26,28 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.example.musicforlife.MainActivity;
+import com.example.musicforlife.YoutubeHelper;
 import com.example.musicforlife.utilitys.ImageHelper;
 import com.example.musicforlife.R;
 import com.example.musicforlife.listsong.SongModel;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerFragment;
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import com.google.android.youtube.player.YouTubePlayerView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 
-public class FragmentPlaying extends Fragment implements FragmentPlayInterface, View.OnClickListener {
+public class FragmentPlaying extends Fragment implements FragmentPlayInterface, View.OnClickListener, YouTubePlayer.OnInitializedListener {
 
     private TableRow mTableLayoutControlPlaying;
     private ViewGroup mViewGroupMain;
@@ -52,9 +67,13 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
     private ImageView mImageBgPlaying;
     private CardView mCvImagePlaying;
     private Animation mAnimationPlay;
-    private PlayService mPlayService;
+    private YouTubePlayerSupportFragment mYoutubePlayer;
+    private ImageButton mBtnToggleVideo;
+    private CardView mCvYoutubePlayer;
 
-    private SongModel mSongPlaying;
+    private boolean isShowVideo;
+    private PlayService mPlayService;
+    private static SongModel mSongPlaying;
 
     public static final String SENDER = "FRAGMENT_PLAYING";
     private static final String TAG = "FragmentPlaying";
@@ -67,6 +86,10 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
             R.drawable.ic_repeat_black_32dp,
             R.drawable.ic_repeat_one_black_32dp));
 
+    private static final String DEVELOPER_API_KEY = "AIzaSyACtzmdHydUC5STYTFynjzVmVtMvrGAhtI";
+    private static final String VIDEO_ID = "SgaQ0m3Sbqc";
+    private static String mCurrentVideoId = "";
+    private YouTubePlayer mCurrentYoutubePlayer;
 
     public FragmentPlaying() {
 
@@ -93,7 +116,10 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         mViewGroupMain = (ViewGroup) inflater.inflate(R.layout.fragment_playing, container, false);
+
+
         mPlayActivity.updateToolbarTitle();
+
         return mViewGroupMain;
     }
 
@@ -109,7 +135,9 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
 //        mImageDvd=mViewGroupMain.findViewById(R.id.imgDvd);
         mCvImagePlaying = mViewGroupMain.findViewById(R.id.cvImagePlaying);
         mImageBgPlaying = mViewGroupMain.findViewById(R.id.imgBgPlaying);
-
+        mBtnToggleVideo = mViewGroupMain.findViewById(R.id.btnToggleVideo);
+        mYoutubePlayer = (YouTubePlayerSupportFragment) getChildFragmentManager().findFragmentById(R.id.youtubePlayer);
+//        mCvYoutubePlayer = mCvYoutubePlayer.findViewById(R.id.cvYoutubePlayer);
         mTxtTitleSongPlaying = mViewGroupMain.findViewById(R.id.txtTitleSongPlaying);
         mTxtArtistSongPlaying = mViewGroupMain.findViewById(R.id.txtArtistSongPlaying);
         mTxtDurationSongPlaying = mViewGroupMain.findViewById(R.id.txtDurationSongPlaying);
@@ -121,6 +149,7 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
         mImageButtonPrevSong.setOnClickListener(this);
         mImageButtonNextSong.setOnClickListener(this);
         mImageButtonLoopType.setOnClickListener(this);
+        mBtnToggleVideo.setOnClickListener(this);
         mImageButtonLoopType.setImageDrawable(
                 mPlayActivity.getDrawable(
                         arrLoopTypeImage.get(
@@ -138,7 +167,6 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
                         //mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_pause_black_70dp));
 
                     }
-
                 }
             }
 
@@ -152,8 +180,47 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
 
             }
         });
+//        if (mYoutubePlayer!=null){
+//            mYoutubePlayer.initialize(DEVELOPER_API_KEY, this);
+//        }
+        isShowVideo = false;
         setResourceImagePlaying();
         updateControlPlaying(mSongPlaying);
+        if (!isShowVideo && mYoutubePlayer.getView() != null) {
+            mYoutubePlayer.getView().setVisibility(View.GONE);
+        }
+    }
+
+    private void loadVideoLyric() {
+        YoutubeHelper.getInstance(mPlayActivity).searchVideoLyric(mSongPlaying.getTitle(), new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d(TAG, "onResponse: " + mSongPlaying.getTitle());
+                try {
+                    JSONArray items = response.getJSONArray("items");
+                    Log.d(TAG, "onResponse: " + items.length());
+                    JSONObject info = (JSONObject) items.get(0);
+                    JSONObject infoId = info.getJSONObject("id");
+                    mCurrentVideoId = infoId.get("videoId").toString();
+//                    Log.d(TAG, "onResponse: " + );+
+//                    mYoutubePlayer = null;
+//                    mYoutubePlayer = (YouTubePlayerSupportFragment) getChildFragmentManager().findFragmentById(R.id.youtubePlayer);
+                    Log.d(TAG, "onCreateView: YOUTUBE " + mYoutubePlayer);
+                    if (mYoutubePlayer != null) {
+                        mYoutubePlayer.initialize(DEVELOPER_API_KEY, FragmentPlaying.this);
+                        mYoutubePlayer.setRetainInstance(true);
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse: " + error.toString());
+            }
+        });
     }
 
     private void setResourceImagePlaying() {
@@ -239,6 +306,8 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
         mTxtDurationSongPlaying.setText(SongModel.formateMilliSeccond(songModel.getDuration()));
         mSebDurationSongPlaying.setMax(mSongPlaying.getDuration().intValue() / 1000);
         setResourceImagePlaying();
+        hideVideoLyric();
+
         //
     }
 
@@ -285,12 +354,14 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
                     mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_PAUSE);
                     mCvImagePlaying.clearAnimation();
                     setButtonPlay();
+
 //                    MainActivity.getMainActivity().refreshNotificationPlaying(PlayService.ACTION_PAUSE);
 //                    mPlayService.pause();
                 } else if (PlayService.isPause()) { //resume
                     mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_RESUME);
                     mCvImagePlaying.startAnimation(mAnimationPlay);
                     setButtonPause();
+                   // hideVideoLyric();
 //                    MainActivity.getMainActivity().refreshNotificationPlaying(PlayService.ACTION_RESUME);
 //                    mPlayService.resurme();
 //                    mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_pause_circle_outline_black_64dp));
@@ -298,17 +369,21 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
                     mPlayActivity.controlSong(SENDER, PlayService.getCurrentSongPlaying(), PlayService.ACTION_PLAY);
                     mCvImagePlaying.startAnimation(mAnimationPlay);
                     setButtonPause();
+                    //hideVideoLyric();
 //                    MainActivity.getMainActivity().refreshNotificationPlaying(PlayService.ACTION_PLAY);
 //                    mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_pause_circle_outline_black_64dp));
                 }
+
                 break;
             case R.id.btnPrevSong:
                 mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_PREV);
+                hideVideoLyric();
 //                mPlayService.prev(PlayService.ACTION_FROM_USER);
                 break;
             case R.id.btnNextSong:
 //                mPlayService.next(PlayService.ACTION_FROM_USER);
                 mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_NEXT);
+                hideVideoLyric();
                 break;
             case R.id.btnLoopType:
                 int currentLoopType = PlayService.getLoopType();
@@ -323,9 +398,89 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
                                 arrLoopTypeImage.get(indexLoopType)));
 
                 break;
+            case R.id.btnToggleVideo:
+                if (!isShowVideo) {
+
+                    loadVideoLyric();
+                    showVideoLyric();
+
+                } else {
+
+                    hideVideoLyric();
+                }
+
             default:
                 break;
         }
     }
 
+    private void hideVideoLyric() {
+        isShowVideo = false;
+        if (mYoutubePlayer.getView() != null) {
+            Log.d(TAG, "hideVideoLyric: ");
+            mYoutubePlayer.getView().setVisibility(View.GONE);
+            mCvImagePlaying.setVisibility(View.VISIBLE);
+            mBtnToggleVideo.setImageResource(R.drawable.ic_music_note_black_24dp);
+            if (PlayService.isPause()) { //resume
+                mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_RESUME);
+                setButtonPause();
+            }
+            if (PlayService.isPlaying()) {
+                mCvImagePlaying.startAnimation(mAnimationPlay);
+            }
+
+            if (mCurrentYoutubePlayer != null) {
+                mCurrentYoutubePlayer.pause();
+            }
+
+
+        }
+    }
+
+    private void showVideoLyric() {
+        isShowVideo = true;
+        if (mYoutubePlayer.getView() != null) {
+            Log.d(TAG, "showVideoLyric: ");
+            mYoutubePlayer.getView().setVisibility(View.VISIBLE);
+            mCvImagePlaying.setVisibility(View.GONE);
+            mCvImagePlaying.clearAnimation();
+            mBtnToggleVideo.setImageResource(R.drawable.ic_video_label_black_24dp);
+
+            mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_PAUSE);
+
+            setButtonPlay();
+
+            if (mCurrentYoutubePlayer != null) {
+                mCurrentYoutubePlayer.loadVideo(mCurrentVideoId);
+            }
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+    }
+
+    @Override
+    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
+        if (null == youTubePlayer) {
+            return;
+        }
+        Log.d(TAG, "onInitializationSuccess: " + mCurrentVideoId);
+        if (!b && !mCurrentVideoId.equals("")) {
+            mCurrentYoutubePlayer = youTubePlayer;
+            mCurrentYoutubePlayer.setFullscreen(false);
+            mCurrentYoutubePlayer.setShowFullscreenButton(false);
+            mCurrentYoutubePlayer.cueVideo(mCurrentVideoId);
+
+            showVideoLyric();
+
+        }
+    }
+
+    @Override
+    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+        Toast.makeText(mContext, "Không thể phát Video.", Toast.LENGTH_LONG).show();
+    }
 }
