@@ -85,6 +85,34 @@ public class PlaylistModel {
         return playlistModels;
     }
 
+
+    public static ArrayList<PlaylistModel> getAllPlaylist(String value) {
+        ArrayList<PlaylistModel> playlistModels = new ArrayList<PlaylistModel>();
+        SQLiteDatabase db = DatabaseManager.getInstance().getReadableDatabase();
+
+        String whereClause =  "WHERE ? = '' OR " + COLUMN_PLAYLIST_TITLE +" LIKE ?";
+        String[] whereArgs = new String[]{value ,"%" + value + "%"};
+        String query = "SELECT P." + COLUMN_ID + ",P." + COLUMN_PLAYLIST_TITLE + ",P." + COLUMN_PATH_IMAGE + ",COUNT(PS." + PlaylistSongModel.COLUMN_ID + ") " + COLUMN_NUMBER_OF_SONG + " from " + TABLE_NAME + " P" +
+                " LEFT JOIN " + PlaylistSongModel.TABLE_NAME + " PS ON P." + COLUMN_ID + "=PS." + PlaylistSongModel.COLUMN_PLAYLIST_ID + " "
+                + whereClause +
+                " group by P." + COLUMN_ID + ",P." + COLUMN_PLAYLIST_TITLE + ",P." + COLUMN_PATH_IMAGE;
+
+        Cursor cursor = db.rawQuery(query, whereArgs);
+        if (cursor.moveToFirst()) {
+            do {
+                PlaylistModel playlist = new PlaylistModel();
+                playlist.setId(cursor.getInt(cursor.getColumnIndex(COLUMN_ID)));
+                playlist.setTitle(cursor.getString(cursor.getColumnIndex(COLUMN_PLAYLIST_TITLE)));
+                playlist.setNumberOfSongs(cursor.getInt(cursor.getColumnIndex(COLUMN_NUMBER_OF_SONG)));
+                playlist.setPathImage(cursor.getString(cursor.getColumnIndex(COLUMN_PATH_IMAGE)));
+                playlistModels.add(playlist);
+            } while (cursor.moveToNext());
+        }
+
+        return playlistModels;
+    }
+
+
     public static ArrayList<PlaylistModel> getAllPlaylist(int skip, int take) {
         ArrayList<PlaylistModel> playlistModels = new ArrayList<PlaylistModel>();
         SQLiteDatabase db = DatabaseManager.getInstance().getReadableDatabase();

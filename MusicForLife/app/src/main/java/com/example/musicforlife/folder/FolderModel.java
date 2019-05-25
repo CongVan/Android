@@ -50,6 +50,28 @@ public class FolderModel implements Serializable {
         return folderModels;
     }
 
+    public static ArrayList<FolderModel> getAllFolders(String value) {
+        ArrayList<FolderModel> folderModels = new ArrayList<>();
+        SQLiteDatabase db = mDatabaseManager.getReadableDatabase();
+        String[] tableColumns = new String[] {
+                SongModel.COLUMN_FOLDER,
+                "COUNT(" + SongModel.COLUMN_FOLDER + ") as songCount"
+        };
+        String whereClause =  "? = '' OR " + SongModel.COLUMN_FOLDER +" LIKE ?";
+        String[] whereArgs = new String[]{value ,"%" + value + "%"};
+        String groupBy = SongModel.COLUMN_FOLDER;
+        Cursor cursor = db.query(SongModel.TABLE_NAME,tableColumns,whereClause,whereArgs,groupBy,null,null);
+        if (cursor.moveToFirst()) {
+            do {
+                FolderModel folderModel = new FolderModel();
+                folderModel.setName(cursor.getString(0));
+                folderModel.setNumberOfSong(cursor.getInt(1));
+                folderModels.add(folderModel);
+            } while (cursor.moveToNext());
+        }
+        return folderModels;
+    }
+
     public static ArrayList<SongModel> getSongsFromFolderName(String folderName, int skip, int take) {
         Log.d(TAG, "getSongsFromFolderName: NAME FOLDER " + folderName);
         SQLiteDatabase db = mDatabaseManager.getReadableDatabase();

@@ -33,6 +33,10 @@ public class FragmentFolder extends Fragment {
 
     private Context mContext;
 
+    String searchValue = "";
+    static boolean mIsLoading;
+
+
     public FragmentFolder() {
         mContext = getActivity();
     }
@@ -80,5 +84,16 @@ public class FragmentFolder extends Fragment {
         intent.putExtras(bundle);
         startActivity(intent);
 
+    }
+
+    public void UpdateSearch(String s){
+        if(s == searchValue) return;
+        searchValue = s;
+        mIsLoading = true;
+        ArrayList<FolderModel> tempFolderList = FolderModel.getAllFolders(searchValue);
+        mListFolder.clear();
+        mListFolder.addAll(tempFolderList);
+        mFolderAdapter.notifyDataSetChanged();
+        mIsLoading = false;
     }
 }

@@ -45,6 +45,9 @@ public class FragmentPlaylist extends Fragment {
     private static boolean mIsLoading;
     private static ArrayList<PlaylistModel> mPlaylist;
 
+    String searchValue = "";
+
+
     public FragmentPlaylist() {
 
     }
@@ -186,11 +189,17 @@ public class FragmentPlaylist extends Fragment {
 //                mPlaylistAdapter.notifyDataSetChanged();
 //                mPlaylistAdapter.notifyAll();
                 mPlaylistAdapter.notifyDataSetChanged();
-
             }
         });
-
-
     }
-
+    public void UpdateSearch(String s){
+        if(s == searchValue) return;
+        searchValue = s;
+        mIsLoading = true;
+        ArrayList<PlaylistModel> tempPlayList = PlaylistModel.getAllPlaylist(searchValue);
+        mPlaylist.clear();
+        mPlaylist.addAll(tempPlayList);
+        mPlaylistAdapter.notifyDataSetChanged();
+        mIsLoading = false;
+    }
 }

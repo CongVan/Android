@@ -50,6 +50,7 @@ import com.example.musicforlife.artist.ArtistProvider;
 import com.example.musicforlife.artist.FragmentArtist;
 import com.example.musicforlife.callbacks.MainCallbacks;
 import com.example.musicforlife.db.DatabaseManager;
+import com.example.musicforlife.folder.FragmentFolder;
 import com.example.musicforlife.listsong.FragmentListSong;
 import com.example.musicforlife.listsong.SongModel;
 import com.example.musicforlife.play.PlayActivity;
@@ -464,6 +465,12 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
 
     public void SearchByFragment(int fragmentIndex) {
         switch (fragmentIndex) {
+            case 2:
+                FragmentPlaylist fragmentPlaylist = (FragmentPlaylist) ((PagerMainAdapter) mPagerAdapter).getFragmentAtIndex(fragmentIndex);
+                if (fragmentPlaylist != null) {
+                    fragmentPlaylist.UpdateSearch(mSearchValue);
+                }
+                break;
             case 3:
                 FragmentArtist fragmentArtist = (FragmentArtist) ((PagerMainAdapter) mPagerAdapter).getFragmentAtIndex(fragmentIndex);
                 if (fragmentArtist != null) {
@@ -474,6 +481,12 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
                 FragmentAlbum fragmentAlbum = (FragmentAlbum) ((PagerMainAdapter) mPagerAdapter).getFragmentAtIndex(fragmentIndex);
                 if (fragmentAlbum != null) {
                     fragmentAlbum.UpdateSearch(mSearchValue);
+                }
+                break;
+            case 5:
+                FragmentFolder fragmentFolder = (FragmentFolder) ((PagerMainAdapter) mPagerAdapter).getFragmentAtIndex(fragmentIndex);
+                if (fragmentFolder != null) {
+                    fragmentFolder.UpdateSearch(mSearchValue);
                 }
                 break;
             default:
