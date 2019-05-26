@@ -32,7 +32,7 @@ public class FragmentAlbum extends Fragment {
     SwipeRefreshLayout mSwpListAlbum;
     static boolean mIsLoading;
     static int take = 10;
-    String searchValue = "";
+    static String searchValue = "";
 
     @Nullable
     @Override
@@ -97,7 +97,7 @@ public class FragmentAlbum extends Fragment {
     private void refreshListAlbum() {
         arrAlbum.clear();
         albumListAdapter.notifyDataSetChanged();
-        ArrayList<AlbumViewModel> temp = AlbumProvider.getAlbumModelPaging(context, "", 0, 20);
+        ArrayList<AlbumViewModel> temp = AlbumProvider.getAlbumModelPaging(context, searchValue, 0, 20);
         arrAlbum.addAll(temp);
         albumListAdapter.notifyDataSetChanged();
         mSwpListAlbum.setRefreshing(false);

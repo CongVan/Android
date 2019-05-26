@@ -45,7 +45,7 @@ public class FragmentPlaylist extends Fragment {
     private static boolean mIsLoading;
     private static ArrayList<PlaylistModel> mPlaylist;
 
-    String searchValue = "";
+    static String searchValue = "";
 
 
     public FragmentPlaylist() {
@@ -82,7 +82,7 @@ public class FragmentPlaylist extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                mPlaylist = PlaylistModel.getAllPlaylist();
+                mPlaylist = PlaylistModel.getAllPlaylist(searchValue);
                 mPlaylistAdapter = new PlaylistAdapter(mContext, mPlaylist);
                 mRecyclerViewPlaylist.setLayoutManager(new LinearLayoutManager(mContext));
                 mRecyclerViewPlaylist.setAdapter(mPlaylistAdapter);
@@ -116,7 +116,7 @@ public class FragmentPlaylist extends Fragment {
             public void onRefresh() {
                 mPlaylist.clear();
                 mPlaylistAdapter.notifyDataSetChanged();
-                ArrayList<PlaylistModel> temp = PlaylistModel.getAllPlaylist();
+                ArrayList<PlaylistModel> temp = PlaylistModel.getAllPlaylist(searchValue);
                 Log.d(TAG, "onRefresh: "+temp.size());
                 if (temp.size()>0){
                     Log.d(TAG, "onRefresh: "+temp.get(temp.size()-1).getNumberOfSongs());
@@ -179,7 +179,7 @@ public class FragmentPlaylist extends Fragment {
             public void run() {
                 mPlaylist.clear();
                 mPlaylistAdapter.notifyDataSetChanged();
-                ArrayList<PlaylistModel> playlistModels = PlaylistModel.getAllPlaylist();
+                ArrayList<PlaylistModel> playlistModels = PlaylistModel.getAllPlaylist(searchValue);
                 if (playlistModels.size() > 0) {
                     Log.d(TAG, "run: REFRESH PLAYLIST SIZE " + playlistModels.get(playlistModels.size() - 1).getNumberOfSongs());
                 }

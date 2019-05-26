@@ -66,6 +66,7 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Mul
     private static PlayService mPlayService;
     private MultiClickAdapterListener myAdapterListener;
     private static Thread mThreadInitListPlaying;
+    static String searchValue = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -124,7 +125,7 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Mul
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-                _listSong = SongModel.getSongsWithThreshold(MainActivity.mDatabaseManager, 0, mThreshHold);
+                _listSong = SongModel.getSongsWithThreshold(MainActivity.mDatabaseManager,searchValue, 0, 20);
                 _listSongAdapter = new ListSongRecyclerAdaper(_context, _listSong, FragmentListSong.this);
                 _listViewSong.setLayoutManager(new LinearLayoutManager(_context));
                 _listViewSong.setAdapter(_listSongAdapter);
@@ -158,7 +159,7 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Mul
         mSwpListSong.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                ArrayList<SongModel> tempSongs = SongModel.getSongsWithThreshold(MainActivity.mDatabaseManager, 0, mThreshHold);
+                ArrayList<SongModel> tempSongs = SongModel.getSongsWithThreshold(MainActivity.mDatabaseManager,searchValue, 0, mThreshHold);
                 _listSong.clear();
                 _listSongAdapter.notifyDataSetChanged();
                 _listSong.addAll(tempSongs);
@@ -178,18 +179,18 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Mul
 
     private void loadMore() {
 //        _skeletonScreen = Skeleton.bind(_listViewSong).adapter(_listSongAdapter).load(R.layout.layout_item_song).show();
-        _listSong.add(null);
-        _listSongAdapter.notifyItemInserted(_listSong.size());
+//        _listSong.add(null);
+//        _listSongAdapter.notifyItemInserted(_listSong.size());
 //        Handler handler = new Handler();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
 
-                ArrayList<SongModel> tempAudioList = SongModel.getSongsWithThreshold(MainActivity.mDatabaseManager, _listSong.size(), mThreshHold);
-                _listSong.remove(_listSong.size() - 1);
-                _listSongAdapter.notifyItemRemoved(_listSong.size());
+                ArrayList<SongModel> tempAudioList = SongModel.getSongsWithThreshold(MainActivity.mDatabaseManager,searchValue, _listSong.size(), mThreshHold);
+//                _listSong.remove(_listSong.size() - 1);
+//                _listSongAdapter.notifyItemRemoved(_listSong.size());
                 _listSong.addAll(tempAudioList);
-
+                _listSongAdapter.notifyItemInserted(_listSong.size());
 //                _listSongAdapter.notifyDataSetChanged();
                 mIsLoading = false;
             }
@@ -278,12 +279,25 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Mul
         public ArrayList<SongModel> doInBackground(Void... voids) {
             _listSong.add(null);
             _listSongAdapter.notifyItemInserted(_listSong.size());
-            ArrayList<SongModel> tempAudioList = SongModel.getSongsWithThreshold(MainActivity.mDatabaseManager, _listSong.size(), mThreshHold);
+            ArrayList<SongModel> tempAudioList = SongModel.getSongsWithThreshold(MainActivity.mDatabaseManager,searchValue, _listSong.size(), mThreshHold);
 
             return tempAudioList;
         }
 
 
     }
+
+    public void UpdateSearch(String s){
+        if(s == searchValue) return;
+        searchValue = s;
+        mIsLoading = true;
+        ArrayList<SongModel> tempAudioList = SongModel.getSongsWithThreshold(MainActivity.mDatabaseManager,searchValue, 0, mThreshHold);
+        _listSong.clear();
+        _listSongAdapter.notifyDataSetChanged();
+        _listSong.addAll(tempAudioList);
+        _listSongAdapter.notifyDataSetChanged();
+        mIsLoading = false;
+    }
+
 
 }

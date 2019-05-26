@@ -465,6 +465,12 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
 
     public void SearchByFragment(int fragmentIndex) {
         switch (fragmentIndex) {
+            case 1:
+                FragmentListSong fragmentListSong = (FragmentListSong) ((PagerMainAdapter) mPagerAdapter).getFragmentAtIndex(fragmentIndex);
+                if (fragmentListSong != null) {
+                    fragmentListSong.UpdateSearch(mSearchValue);
+                }
+                break;
             case 2:
                 FragmentPlaylist fragmentPlaylist = (FragmentPlaylist) ((PagerMainAdapter) mPagerAdapter).getFragmentAtIndex(fragmentIndex);
                 if (fragmentPlaylist != null) {

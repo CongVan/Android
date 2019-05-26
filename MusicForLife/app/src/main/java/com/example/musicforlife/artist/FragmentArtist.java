@@ -35,7 +35,7 @@ public class FragmentArtist extends Fragment {
     SwipeRefreshLayout mSwpListArtist;
     static boolean mIsLoading;
     static int take = 10;
-    String searchValue = "";
+    static String searchValue = "";
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -100,7 +100,7 @@ public class FragmentArtist extends Fragment {
 
         arrArtist.clear();
         listArtistAdapter.notifyDataSetChanged();
-        ArrayList<ArtistViewModel> temp= ArtistProvider.getArtistModelPaging(context,"",0,20);
+        ArrayList<ArtistViewModel> temp= ArtistProvider.getArtistModelPaging(context,searchValue,0,20);
         arrArtist.addAll(temp);
         listArtistAdapter.notifyDataSetChanged();
         mSwpListArtist.setRefreshing(false);
