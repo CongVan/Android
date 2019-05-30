@@ -6,8 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_bg"
-
     android:fitsSystemWindows="true"
+    android:focusable="false"
+    android:focusableInTouchMode="false"
     android:gravity="center"
     android:orientation="vertical"
     android:paddingTop="@dimen/margin_size_small"
@@ -22,6 +23,7 @@
         android:background="@color/colorTranparent"
         android:gravity="top"
         app:elevation="0dp"
+
         >
         <!--app:contentScrim="@android:color/transparent"-->
         <android.support.v7.widget.Toolbar
@@ -29,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorTranparent"
-            android:outlineProvider="bounds"
+
             android:theme="@style/AppTheme.Toolbar"
 
             app:title="Music For Life">
@@ -100,10 +102,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_margin="@dimen/margin_size_small"
+        android:layout_margin="@dimen/margin_size_snormal"
 
-        android:background="@color/colorTranparent"
-        android:visibility="gone">
+
+        >
 
     </include>
 

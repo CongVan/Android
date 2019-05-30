@@ -18,7 +18,7 @@
 
     <color name="colorBgPrimary">#1E1F26</color>
     <!--70%-->
-    <color name="colorBgPrimaryOverlay">#961E1F26</color>
+    <color name="colorBgPrimaryOverlay">#201E1F26</color>
     <!--95%-->
     <color name="colorBgPrimaryTranslucent">#F21D1E22</color>
     <color name="colorBgSecondary">#1E3C72</color>

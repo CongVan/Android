@@ -8,9 +8,12 @@
     android:layout_height="wrap_content"
     android:background="@color/colorTranparent"
     android:clickable="true"
-    android:focusable="true"
-    android:foreground="?android:attr/selectableItemBackground">
-
+    android:focusable="false"
+    android:focusableInTouchMode="false"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:focusedByDefault="false"
+    >
+    <!--android:id="@+id/bottomSheetPlay"-->
     <!--app:behavior_peekHeight="80dp"-->
     <!--app:layout_behavior="android.support.design.widget.BottomSheetBehavior"-->
     <android.support.v7.widget.CardView
@@ -18,21 +21,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         app:cardBackgroundColor="@color/colorTranparent"
         app:cardCornerRadius="@dimen/border_radius_xnormal"
         app:cardElevation="0dp"
-        app:cardPreventCornerOverlap="false"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:focusableInTouchMode="true"
-        >
-
+        app:cardPreventCornerOverlap="false">
+        <!--android:clickable="true"-->
+        <!--android:focusable="true"-->
+        <!--android:foreground="?android:attr/selectableItemBackground"-->
+        <!--android:focusableInTouchMode="true"-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
-            android:background="@color/colorPrimary">
+            android:background="@color/colorBgPrimary">
 
 
             <android.support.v7.widget.CardView
@@ -40,12 +43,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_size_small"
-
                 app:cardCornerRadius="@dimen/border_radius_small"
                 app:cardUseCompatPadding="true"
-                card_view:cardBackgroundColor="@color/colorWhiteLight"
+                card_view:cardBackgroundColor="@color/colorBlackGlassLight"
                 card_view:cardElevation="0dp"
-
                 card_view:contentPadding="0dp">
 
                 <ImageView
@@ -80,7 +81,8 @@
                     android:text="Tiêu đề bài hát"
                     android:textColor="@color/colorTitleWhitePrimary"
                     android:textSize="@dimen/text_size_normal"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:ignore="RtlHardcoded" />
 
                 <TextView
                     android:id="@+id/txtArtistMinimize"
@@ -121,21 +123,20 @@
                     android:foreground="?android:attr/selectableItemBackground"
                     android:padding="@dimen/margin_size_snormal"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/ic_skip_previous_black_24dp" />
+                    android:src="@drawable/ic_skip_previous_black_24dp"
+                    tools:ignore="RtlHardcoded" />
 
                 <ImageButton
                     android:id="@+id/btnPlaySong"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:background="@android:color/transparent"
-                    android:clickable="true"
                     android:foreground="?android:attr/selectableItemBackground"
                     android:padding="@dimen/margin_size_snormal"
+                    android:clickable="true"
+                    android:focusable="false"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/ic_play_circle_outline_black_32dp"
-
-                    />
+                    android:src="@drawable/ic_play_circle_outline_black_32dp" />
 
 
                 <ImageButton

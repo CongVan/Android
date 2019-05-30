@@ -228,7 +228,7 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
             Bitmap bitmapPlaying = ImageHelper.getBitmapFromPath(mSongPlaying.getPath());
 //        Bitmap bitmapBgPlaying = ImageHelper.getBitmapFromPath(mSongPlaying.getPath(), R.drawable.background_1);
             if (bitmapPlaying == null) {
-                bitmapPlaying = ImageHelper.drawableToBitmap(R.mipmap.dvd);
+                bitmapPlaying = ImageHelper.drawableToBitmap(R.mipmap.dvd_256);
                 mImagePlaying.setScaleType(ImageView.ScaleType.CENTER);
             } else {
                 mImagePlaying.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -273,10 +273,10 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
 //            updateControlPlaying(mSongPlaying);
 ////            mPlayActivity.updateControlPlaying(SENDER, mSongPlaying);
 //        }
-
-
+//
+//
 //        Log.d(TAG, "onResume: " + PlayService.getCurrentDuration());
-//        mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_RESUME);
+////        mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_RESUME);
 //        if (mSongPlaying != null && PlayService.getCurrentSongPlaying() != null) {
 //            if (mSongPlaying.getSongId() == PlayService.getCurrentSongPlaying().getSongId()) {
 //                updateControlPlaying(mSongPlaying);

@@ -30,6 +30,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 
 import android.view.animation.Animation;
@@ -63,7 +64,7 @@ import com.example.musicforlife.utilitys.Utility;
 import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity implements MainCallbacks, View.OnClickListener {//AudioManager.OnAudioFocusChangeListener
+public class MainActivity extends AppCompatActivity implements MainCallbacks, View.OnClickListener, View.OnFocusChangeListener {//AudioManager.OnAudioFocusChangeListener
 
 
     private LinearLayout mLayoutPlayingMinimizie;
@@ -155,7 +156,6 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         initMinimizePlaying();
         initReceiver();
         initTabLayoutIcon();
-
 
 
         mViewPager.setOnScrollChangeListener(new View.OnScrollChangeListener() {
@@ -257,18 +257,31 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         mCardViewPlayingMinimize = findViewById(R.id.cardViewPlayingMinimize);
         mLayoutMainContent = findViewById(R.id.mainContent);
         mTabLayout = findViewById(R.id.tablayout_main);
-        mlayoutAppbarMain=findViewById(R.id.layoutAppbarMain);
+        mlayoutAppbarMain = findViewById(R.id.layoutAppbarMain);
 
         mButtonPlayMinimize = findViewById(R.id.btnPlaySong);
         mButtonNextMinimize = findViewById(R.id.btnNextSong);
         mButtonPrevMinimize = findViewById(R.id.btnPrevSong);
 
+//        ((CoordinatorLayout.LayoutParams) mlayoutAppbarMain.getLayoutParams()).setBehavior(new FixAppBarLayoutBehavior());
 
         mButtonPlayMinimize.setOnClickListener(this);
         mButtonNextMinimize.setOnClickListener(this);
         mButtonPrevMinimize.setOnClickListener(this);
         mLayoutPlayingMinimizie.setOnClickListener(this);
-        mCardViewPlayingMinimize.setOnClickListener(this);
+        mLayoutPlayingMinimizie.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus){
+                    v.performClick();
+                }
+            }
+        });
+//        v.setFocusableInTouchMode(true);
+//        v.requestFocus();
+//        mLayoutPlayingMinimizie.setFocusableInTouchMode(false);
+//        mCardViewPlayingMinimize.setOnClickListener(this);
+//        mCardViewPlayingMinimize.setOnFocusChangeListener(this);
 
     }
 
@@ -563,7 +576,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
      */
     @Override
     public void togglePlayingMinimize(String sender) {
-        if(isHideMinimize){
+        if (isHideMinimize) {
             isHideMinimize = !isHideMinimize;
             hideMinimizePlaying();
             return;
@@ -766,9 +779,9 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
      */
     @Override
     public void onClick(View v) {
+
         switch (v.getId()) {
             case R.id.bottomSheetPlay:
-            case R.id.cardViewPlayingMinimize:
                 handleShowPlayActivityWithSongList();
                 break;
             case R.id.btnPlaySong:
@@ -814,6 +827,11 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        Toast.makeText(this, v.getId(), Toast.LENGTH_SHORT).show();
     }
 
 //    @Override

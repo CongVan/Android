@@ -3,10 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
     android:orientation="vertical">
     <!--android:clickable="true"-->
     <!--android:foreground="?android:attr/selectableItemBackground"-->
@@ -17,8 +15,6 @@
         android:layout_gravity="center"
         android:layout_marginBottom="@dimen/margin_size_xsmall"
         android:clickable="true"
-        android:focusable="false"
-
         android:foreground="?android:attr/selectableItemBackground"
         app:cardCornerRadius="@dimen/border_radius_small"
         app:cardElevation="0dp"
