@@ -9,6 +9,7 @@ import android.app.Service;
 import android.app.TaskStackBuilder;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -54,6 +55,7 @@ import com.example.musicforlife.db.DatabaseManager;
 import com.example.musicforlife.folder.FragmentFolder;
 import com.example.musicforlife.listsong.FragmentListSong;
 import com.example.musicforlife.listsong.SongModel;
+import com.example.musicforlife.minimizeSong.MinimizeSongFragment;
 import com.example.musicforlife.play.PlayActivity;
 import com.example.musicforlife.play.PlayService;
 import com.example.musicforlife.play.StopedReceiver;
@@ -64,10 +66,10 @@ import com.example.musicforlife.utilitys.Utility;
 import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity implements MainCallbacks, View.OnClickListener, View.OnFocusChangeListener {//AudioManager.OnAudioFocusChangeListener
+public class MainActivity extends AppCompatActivity implements MainCallbacks, View.OnClickListener, MinimizeSongFragment.OnFragmentInteractionListener {//AudioManager.OnAudioFocusChangeListener
 
 
-    private LinearLayout mLayoutPlayingMinimizie;
+    private CardView mLayoutPlayingMinimizie;
     private TextView mTextViewTitleSongMinimize;
     private TextView mTextViewArtistMinimize;
     private ImageView mImageViewSongMinimize;
@@ -89,10 +91,14 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     private AudioManager mAudioManager;
     private String mSearchValue = "";
     private int mCurrentFragmentActive;
+    private MinimizeSongFragment mMinimizeSongFragment;
+
     public static Boolean isHideMinimize = false;
     public static final Integer PLAY_CHANEL_ID = 103;
     public static final Integer PLAY_NOTIFICATION_ID = 103;
     private static RemoteViews mNotificationlayoutPlaying;
+
+
     private Intent mIntentPlayService;
     private final int mIconsTabDefault[] = {
             R.mipmap.tab_recent_default,
@@ -117,14 +123,6 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         return mMainActivity;
     }
 
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-
-    }
 
     private static final String TAG = "MainActivity";
 
@@ -187,6 +185,12 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
 
             }
         });
+//        mViewPager.setCurrentItem(0);
+//        mViewPager.setSelected(true);
+//        mViewPager.setFocusable(true);
+//        mViewPager.setFocusableInTouchMode(true);
+//        mViewPager.requestFocus();
+//        mViewPager.setCurrentItem(0);
 //        startService(mIntentPlayService);
 //        initNotificationPlay();
     }
@@ -250,33 +254,26 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     private void initFindView() {
         mToolBar = findViewById(R.id.tool_bar_main);
         mViewPager = findViewById(R.id.pagerMainContent);
-        mLayoutPlayingMinimizie = findViewById(R.id.bottomSheetPlay);
-        mTextViewTitleSongMinimize = findViewById(R.id.txtTitleMinimize);
-        mTextViewArtistMinimize = findViewById(R.id.txtArtistMinimize);
-        mImageViewSongMinimize = findViewById(R.id.imgSongMinimize);
-        mCardViewPlayingMinimize = findViewById(R.id.cardViewPlayingMinimize);
+//        mLayoutPlayingMinimizie = findViewById(R.id.cardViewPlayingMinimize);
+//        mTextViewTitleSongMinimize = findViewById(R.id.txtTitleMinimize);
+//        mTextViewArtistMinimize = findViewById(R.id.txtArtistMinimize);
+//        mImageViewSongMinimize = findViewById(R.id.imgSongMinimize);
+//        mCardViewPlayingMinimize = findViewById(R.id.cardViewPlayingMinimize);
         mLayoutMainContent = findViewById(R.id.mainContent);
         mTabLayout = findViewById(R.id.tablayout_main);
         mlayoutAppbarMain = findViewById(R.id.layoutAppbarMain);
 
-        mButtonPlayMinimize = findViewById(R.id.btnPlaySong);
-        mButtonNextMinimize = findViewById(R.id.btnNextSong);
-        mButtonPrevMinimize = findViewById(R.id.btnPrevSong);
+//        mButtonPlayMinimize = findViewById(R.id.btnPlaySong);
+//        mButtonNextMinimize = findViewById(R.id.btnNextSong);
+//        mButtonPrevMinimize = findViewById(R.id.btnPrevSong);
 
 //        ((CoordinatorLayout.LayoutParams) mlayoutAppbarMain.getLayoutParams()).setBehavior(new FixAppBarLayoutBehavior());
 
-        mButtonPlayMinimize.setOnClickListener(this);
-        mButtonNextMinimize.setOnClickListener(this);
-        mButtonPrevMinimize.setOnClickListener(this);
-        mLayoutPlayingMinimizie.setOnClickListener(this);
-        mLayoutPlayingMinimizie.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus){
-                    v.performClick();
-                }
-            }
-        });
+//        mButtonPlayMinimize.setOnClickListener(this);
+//        mButtonNextMinimize.setOnClickListener(this);
+//        mButtonPrevMinimize.setOnClickListener(this);
+//        mLayoutPlayingMinimizie.setOnClickListener(this);
+
 //        v.setFocusableInTouchMode(true);
 //        v.requestFocus();
 //        mLayoutPlayingMinimizie.setFocusableInTouchMode(false);
@@ -296,6 +293,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
 
     private void initMinimizePlaying() {
         Log.d(TAG, "initMinimizePlaying: ");
+
         new Handler(Looper.getMainLooper()).post(
                 new Runnable() {
                     @Override
@@ -305,15 +303,16 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
                         if (songPlay == null) {
                             songPlay = PlayService.getSongIsPlaying();
                         }
-
                         if (songPlay != null) {
                             Log.d(TAG, "initMinimizePlaying: " + songPlay.getTitle());
-                            showMinimizePlaying(songPlay);
+//                            showMinimizePlaying(songPlay);
                             PlayService.revertListSongPlaying();
                             initNotificationPlay();
+                            mMinimizeSongFragment = MinimizeSongFragment.newInstance();
+                            getSupportFragmentManager().beginTransaction().add(R.id.frgMinimizeSong, mMinimizeSongFragment).commit();
 
                         } else {
-                            hideMinimizePlaying();
+//                            hideMinimizePlaying();
                         }
                         Log.d(TAG, "initMinimizePlaying: " + songPlay);
                     }
@@ -458,6 +457,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
             public void onTabSelected(TabLayout.Tab tab) {
                 getSupportActionBar().setTitle(mTabMainTitle[tab.getPosition()]);
                 tab.setIcon(mIconsTabActive[tab.getPosition()]);
+
             }
 
             @Override
@@ -470,6 +470,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
 
             }
         });
+
     }
 
     /*
@@ -576,18 +577,22 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
      */
     @Override
     public void togglePlayingMinimize(String sender) {
-        if (isHideMinimize) {
-            isHideMinimize = !isHideMinimize;
-            hideMinimizePlaying();
-            return;
+        if (mMinimizeSongFragment != null) {
+            mMinimizeSongFragment.refreshControls();
         }
-        SongModel songPlay = PlayService.getCurrentSongPlaying();
-        if (songPlay != null) {
-            showMinimizePlaying(songPlay);
 
-        } else {
-            hideMinimizePlaying();
-        }
+//        if (isHideMinimize) {
+//            isHideMinimize = !isHideMinimize;
+//            hideMinimizePlaying();
+//            return;
+//        }
+//        SongModel songPlay = PlayService.getCurrentSongPlaying();
+//        if (songPlay != null) {
+//            showMinimizePlaying(songPlay);
+//
+//        } else {
+//            hideMinimizePlaying();
+//        }
 
     }
 
@@ -676,57 +681,57 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     }
 
     private void refreshMinimizePlaying(int action) {
-        SongModel songPlay = PlayService.getCurrentSongPlaying();
-        if (songPlay != null) {
-            mTextViewTitleSongMinimize.setText(songPlay.getTitle());
-            mTextViewArtistMinimize.setText(songPlay.getArtist());
-            Bitmap bitmap = ImageHelper.getBitmapFromPath(songPlay.getPath(), R.mipmap.music_128);
-            mImageViewSongMinimize.setImageBitmap(bitmap);
-
-            //update controls play
-            if (action != PlayService.ACTION_PAUSE) {
-                mButtonPlayMinimize.setImageDrawable(MainActivity.this.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
-            } else {
-                mButtonPlayMinimize.setImageDrawable(MainActivity.this.getDrawable(R.drawable.ic_play_circle_outline_black_32dp));
-            }
-            //\ update controls play
-            mLayoutPlayingMinimizie.post(new Runnable() {
-                @Override
-                public void run() {
-                    mLayoutPlayingMinimizie.measure(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-                    Log.d(TAG, "run: SET PADDING MINIMIZE " + mLayoutPlayingMinimizie.getMeasuredHeight());
-                    mViewPager.setPadding(0, 0, 0, mLayoutPlayingMinimizie.getMeasuredHeight() + 16);
-                    mLayoutPlayingMinimizie.setVisibility(View.VISIBLE);
-                }
-            });
-        }
+//        SongModel songPlay = PlayService.getCurrentSongPlaying();
+//        if (songPlay != null) {
+//            mTextViewTitleSongMinimize.setText(songPlay.getTitle());
+//            mTextViewArtistMinimize.setText(songPlay.getArtist());
+//            Bitmap bitmap = ImageHelper.getBitmapFromPath(songPlay.getPath(), R.mipmap.music_128);
+//            mImageViewSongMinimize.setImageBitmap(bitmap);
+//
+//            //update controls play
+//            if (action != PlayService.ACTION_PAUSE) {
+//                mButtonPlayMinimize.setImageDrawable(MainActivity.this.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
+//            } else {
+//                mButtonPlayMinimize.setImageDrawable(MainActivity.this.getDrawable(R.drawable.ic_play_circle_outline_black_32dp));
+//            }
+//            //\ update controls play
+//            mLayoutPlayingMinimizie.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    mLayoutPlayingMinimizie.measure(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+//                    Log.d(TAG, "run: SET PADDING MINIMIZE " + mLayoutPlayingMinimizie.getMeasuredHeight());
+//                    mViewPager.setPadding(0, 0, 0, mLayoutPlayingMinimizie.getMeasuredHeight() + 16);
+//                    mLayoutPlayingMinimizie.setVisibility(View.VISIBLE);
+//                }
+//            });
+//        }
 
     }
 
     private void showMinimizePlaying(SongModel songPlaying) {
-        Log.d(TAG, "togglePlayingMinimize:  SONG PLAYING " + songPlaying.getTitle());
-
-        mTextViewTitleSongMinimize.setText(songPlaying.getTitle());
-        mTextViewArtistMinimize.setText(songPlaying.getArtist());
-        Bitmap bitmap = ImageHelper.getBitmapFromPath(songPlaying.getPath(), R.mipmap.music_128);
-        mImageViewSongMinimize.setImageBitmap(bitmap);
-
-        //update controls play
-        if (PlayService.isPlaying()) {
-            mButtonPlayMinimize.setImageDrawable(MainActivity.this.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
-        } else {
-            mButtonPlayMinimize.setImageDrawable(MainActivity.this.getDrawable(R.drawable.ic_play_circle_outline_black_32dp));
-        }
-        //\ update controls play
-        mLayoutPlayingMinimizie.post(new Runnable() {
-            @Override
-            public void run() {
-                mLayoutPlayingMinimizie.measure(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-                Log.d(TAG, "run: SET PADDING MINIMIZE " + mLayoutPlayingMinimizie.getMeasuredHeight());
-                mViewPager.setPadding(0, 0, 0, mLayoutPlayingMinimizie.getMeasuredHeight() + 16);
-                mLayoutPlayingMinimizie.setVisibility(View.VISIBLE);
-            }
-        });
+//        Log.d(TAG, "togglePlayingMinimize:  SONG PLAYING " + songPlaying.getTitle());
+//
+//        mTextViewTitleSongMinimize.setText(songPlaying.getTitle());
+//        mTextViewArtistMinimize.setText(songPlaying.getArtist());
+//        Bitmap bitmap = ImageHelper.getBitmapFromPath(songPlaying.getPath(), R.mipmap.music_128);
+//        mImageViewSongMinimize.setImageBitmap(bitmap);
+//
+//        //update controls play
+//        if (PlayService.isPlaying()) {
+//            mButtonPlayMinimize.setImageDrawable(MainActivity.this.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
+//        } else {
+//            mButtonPlayMinimize.setImageDrawable(MainActivity.this.getDrawable(R.drawable.ic_play_circle_outline_black_32dp));
+//        }
+//        //\ update controls play
+//        mLayoutPlayingMinimizie.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                mLayoutPlayingMinimizie.measure(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+//                Log.d(TAG, "run: SET PADDING MINIMIZE " + mLayoutPlayingMinimizie.getMeasuredHeight());
+//                mViewPager.setPadding(0, 0, 0, mLayoutPlayingMinimizie.getMeasuredHeight() + 16);
+//                mLayoutPlayingMinimizie.setVisibility(View.VISIBLE);
+//            }
+//        });
 //        Animation animation= AnimationUtils.loadAnimation(this,R.anim.title_minimize_slide);
 //        mTextViewTitleSongMinimize.startAnimation(animation);
 //        mLayoutPlayingMinimizie.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -743,14 +748,14 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
 
 
     private void hideMinimizePlaying() {
-        mLayoutPlayingMinimizie.post(new Runnable() {
-            @Override
-            public void run() {
-                mViewPager.setPadding(0, 0, 0, 0);
-                mLayoutPlayingMinimizie.setVisibility(View.GONE);
-                Log.d(TAG, "togglePlayingMinimize: HEIGHT" + mLayoutPlayingMinimizie.getMeasuredHeight());
-            }
-        });
+//        mLayoutPlayingMinimizie.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                mViewPager.setPadding(0, 0, 0, 0);
+//                mLayoutPlayingMinimizie.setVisibility(View.GONE);
+//                Log.d(TAG, "togglePlayingMinimize: HEIGHT" + mLayoutPlayingMinimizie.getMeasuredHeight());
+//            }
+//        });
     }
 
     /**
@@ -779,150 +784,74 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
      */
     @Override
     public void onClick(View v) {
-
-        switch (v.getId()) {
-            case R.id.bottomSheetPlay:
-                handleShowPlayActivityWithSongList();
-                break;
-            case R.id.btnPlaySong:
-                SongModel songPlay = null;
-                songPlay = PlayService.getCurrentSongPlaying();
-                if (songPlay == null) {
-                    songPlay = PlayService.getSongIsPlaying();
-                }
-                if (songPlay == null) {
-                    Toast.makeText(MainActivity.this, "Không tìm thấy bài hát.", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                if (PlayService.isPlaying()) {
-                    refreshNotificationPlaying(PlayService.ACTION_PAUSE);
-//                    mIntentPlayService.setAction(String.valueOf(PlayService.ACTION_PAUSE));
-//                    startService(mIntentPlayService);
-                    mPlayService.pause();
-                    mButtonPlayMinimize.setImageDrawable(MainActivity.this.getDrawable(R.drawable.ic_play_circle_outline_black_32dp));
-                } else if (PlayService.isPause()) {
-                    refreshNotificationPlaying(PlayService.ACTION_RESUME);
-                    mPlayService.resurme();
-//                    mIntentPlayService.setAction(String.valueOf(PlayService.ACTION_RESUME));
-//                    startService(mIntentPlayService);
-                    mButtonPlayMinimize.setImageDrawable(MainActivity.this.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
-                } else {
-                    refreshNotificationPlaying(PlayService.ACTION_PLAY);
-                    mPlayService.play(songPlay);
-//                    mIntentPlayService.setAction(String.valueOf(PlayService.ACTION_PLAY));
-//                    Bundle bundle = new Bundle();
-//                    bundle.putSerializable(SongModel.class.toString(), songPlay);
-//                    mIntentPlayService.putExtras(bundle);
-//                    startService(mIntentPlayService);
-
-                    mButtonPlayMinimize.setImageDrawable(MainActivity.this.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
-                }
-                break;
-            case R.id.btnNextSong:
-                mPlayService.next(PlayService.ACTION_FROM_USER);
-                break;
-            case R.id.btnPrevSong:
-                mPlayService.prev(PlayService.ACTION_FROM_USER);
-                break;
-            default:
-                break;
-        }
-    }
-
-    @Override
-    public void onFocusChange(View v, boolean hasFocus) {
-        Toast.makeText(this, v.getId(), Toast.LENGTH_SHORT).show();
-    }
-
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        mAudioManager.abandonAudioFocus(this);
-//    }
-//
-//    @Override
-//    public void onAudioFocusChange(int focusChange) {
-//        if(focusChange<=0) {
-//            if (PlayService.isPlaying()){
-//                mPlayService.pause();
-//            }
-//            //LOSS -> PAUSE
-//        } else {
-//            if (!PlayService.isPlaying()){
-//                mPlayService.resurme();
-//            }
-//            //GAIN -> PLAY
-//        }
-//    }
-
-    //    private class FragmentThread extends Thread {
-//        @Override
-//        public void run() {
-//
-//
-//            Handler threadHandle = new Handler(Looper.getMainLooper());
-//            threadHandle.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
-//                    fragmentListSong = FragmentListSong.newInstance();
-//                    transaction.replace(R.id.frame_container, fragmentListSong);
-//                    transaction.commit();
+//        switch (v.getId()) {
+//            case R.id.cardViewPlayingMinimize:
+//                handleShowPlayActivityWithSongList();
+//                break;
+//            case R.id.btnPlaySong:
+//                SongModel songPlay = null;
+//                songPlay = PlayService.getCurrentSongPlaying();
+//                if (songPlay == null) {
+//                    songPlay = PlayService.getSongIsPlaying();
 //                }
-//            });
+//                if (songPlay == null) {
+//                    Toast.makeText(MainActivity.this, "Không tìm thấy bài hát.", Toast.LENGTH_LONG).show();
+//                    return;
+//                }
+//                if (PlayService.isPlaying()) {
+//                    refreshNotificationPlaying(PlayService.ACTION_PAUSE);
+//
+//                    mPlayService.pause();
+//                    mButtonPlayMinimize.setImageDrawable(MainActivity.this.getDrawable(R.drawable.ic_play_circle_outline_black_32dp));
+//                } else if (PlayService.isPause()) {
+//                    refreshNotificationPlaying(PlayService.ACTION_RESUME);
+//                    mPlayService.resurme();
+//
+//                    mButtonPlayMinimize.setImageDrawable(MainActivity.this.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
+//                } else {
+//                    refreshNotificationPlaying(PlayService.ACTION_PLAY);
+//                    mPlayService.play(songPlay);
+//
+//
+//                    mButtonPlayMinimize.setImageDrawable(MainActivity.this.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
+//                }
+//                break;
+//            case R.id.btnNextSong:
+//                mPlayService.next(PlayService.ACTION_FROM_USER);
+//                break;
+//            case R.id.btnPrevSong:
+//                mPlayService.prev(PlayService.ACTION_FROM_USER);
+//                break;
+//            default:
+//                break;
 //        }
-//    }
-    private class intitSongFromDevice extends AsyncTask<Void, Integer, ArrayList<SongModel>> {
-
-        @Override
-        protected void onPostExecute(ArrayList<SongModel> songModels) {
-//            super.onPostExecute(songModels);
-//            for (SongModel song : songModels) {
-//                long id = SongModel.insertSong(mDatabaseManager, song);
-//                Log.d(TAG, "onPostExecute: INSERT SONG FROM MAIN : " + id);
-//            }
-            FragmentListSong fragmentListSong = (FragmentListSong) ((PagerMainAdapter) mPagerAdapter).getFragmentAtIndex(1);
-            if (fragmentListSong != null) {
-                fragmentListSong.updateSizeOfListSong();
-            }
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
-        }
-
-        @Override
-        public ArrayList<SongModel> doInBackground(Void... voids) {
-//            SongModel.deleteAllSong(mDatabaseManager);
-            Log.d(TAG, "doInBackground: SIZE AUDIOS " + SongModel.getRowsSong(mDatabaseManager));
-            ArrayList<SongModel> tempAudioList = SongModel.getAllAudioFromDevice(getApplicationContext());
-            Log.d(TAG, "doInBackground: AUDIO " + tempAudioList.size());
-            if (SongModel.getRowsSong(mDatabaseManager) != tempAudioList.size()) {
-                for (SongModel song : tempAudioList) {
-                    long id = SongModel.insertSong(mDatabaseManager, song);
-                    Log.d(TAG, "onPostExecute: INSERT SONG FROM MAIN : " + id);
-                }
-            }
-
-            return tempAudioList;
-        }
-
-
     }
+
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        if (PlayService.isPlaying()) {
-//            Intent broadcastIntent = new Intent(this, StopedReceiver.class);
-//            Bundle bundle = new Bundle();
-//            bundle.putSerializable(SongModel.class.toString(), PlayService.getCurrentSongPlaying());
-//            broadcastIntent.putExtras(bundle);
-//            Log.d(TAG, "onDestroy: ");
-//            sendBroadcast(broadcastIntent);
-//        }
+    }
 
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onFragmentRefreshNotification(int action) {
+        refreshNotificationPlaying(action);
+    }
+
+    @Override
+    public void onFragmentShowPlayActivity() {
+        handleShowPlayActivityWithSongList();
+    }
+
+    @Override
+    public void onFragmentLoaded(int heightLayout) {
+        Log.d(TAG, "onFragmentLoaded: "+heightLayout);
+        mViewPager.setPadding(0, 0, 0, heightLayout);
 
     }
 }

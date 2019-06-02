@@ -14,4 +14,4 @@
     android:layout_gravity="center_horizontal"
     android:paddingVertical="@dimen/margin_size_small"
     />
-</LinearLayout>
+</LinearLayout  >

@@ -34,7 +34,7 @@ public class PagerMainAdapter extends FragmentStatePagerAdapter {
         Fragment fragment = null;
         switch (i) {
             case 0:
-                fragment = mFragmentRecent == null ? mFragmentRecent = new FragmentRecent() : mFragmentRecent;
+                fragment = mFragmentRecent == null ? mFragmentRecent = FragmentRecent.newIntance() : mFragmentRecent;
                 break;
             case 1:
 

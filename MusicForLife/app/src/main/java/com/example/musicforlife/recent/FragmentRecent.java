@@ -49,16 +49,21 @@ public class FragmentRecent extends Fragment implements MultiClickAdapterListene
     private ArrayList<PlaylistModel> mListPlaylistRecent;
     private ArrayList<ArtistViewModel> mListArtistRecent;
 
-    private Context mContext;
-    private MainActivity mMainActivity;
-    private PlayService mPlayService;
-
+    private static Context mContext;
+    private static MainActivity mMainActivity;
+    private static PlayService mPlayService;
+    private static FragmentRecent mFragmentRecent;
     private boolean isLoadedSong, isLoadedPlaylist, isLoadedArtist;
 
     public FragmentRecent() {
 
     }
-
+    public static FragmentRecent newIntance(){
+        if(mFragmentRecent==null){
+            mFragmentRecent=new FragmentRecent();
+        }
+        return mFragmentRecent;
+    }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,10 +79,10 @@ public class FragmentRecent extends Fragment implements MultiClickAdapterListene
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_recent, container, false);
-        mRcvSongRecent = viewGroup.findViewById(R.id.rcvSongRecent);
-        mRcvPlaylistRecent = viewGroup.findViewById(R.id.rcvPlaylistRecent);
-        mRcvArtistRecent = viewGroup.findViewById(R.id.rcvArtistRecent);
+        ViewGroup view = (ViewGroup) inflater.inflate(R.layout.fragment_recent, container, false);
+        mRcvSongRecent = view.findViewById(R.id.rcvSongRecent);
+        mRcvPlaylistRecent = view.findViewById(R.id.rcvPlaylistRecent);
+        mRcvArtistRecent = view.findViewById(R.id.rcvArtistRecent);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -138,12 +143,19 @@ public class FragmentRecent extends Fragment implements MultiClickAdapterListene
 
             }
         }));
-        return viewGroup;
+
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
     }
 
     private void showPlaylistSongActivity(int playlistId) {
         Intent intent = new Intent(MainActivity.getMainActivity(), PlaylistSongActivity.class);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
         Bundle bundle = new Bundle();
         bundle.putInt("playlistId", playlistId);
         intent.putExtras(bundle);
@@ -153,6 +165,8 @@ public class FragmentRecent extends Fragment implements MultiClickAdapterListene
 
     @Override
     public void onResume() {
+        super.onResume();
+
         new Handler().post(new Runnable() {
             @Override
             public void run() {
@@ -204,7 +218,7 @@ public class FragmentRecent extends Fragment implements MultiClickAdapterListene
 
             }
         });
-        super.onResume();
+
     }
 
     @Override
