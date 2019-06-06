@@ -5,21 +5,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/width_artist_recent_hoz"
     android:layout_height="wrap_content"
+    android:layout_marginRight="@dimen/margin_size_small"
+
     android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground"
     android:orientation="vertical">
 
     <android.support.v7.widget.CardView
 
-        android:layout_width="@dimen/width_artist_recent_hoz"
+        android:layout_width="148dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginRight="@dimen/margin_size_xsmall"
-        app:cardCornerRadius="@dimen/border_radius_small"
+        android:paddingVertical="0dp"
+        app:cardCornerRadius="@dimen/border_radius_large"
         app:cardElevation="0dp"
         app:contentPaddingRight="@dimen/border_radius_small"
         card_view:cardBackgroundColor="@color/colorBlackGlassDark"
-        card_view:cardPreventCornerOverlap="false">
+        card_view:cardPreventCornerOverlap="true">
 
         <TableLayout
             android:layout_width="match_parent"

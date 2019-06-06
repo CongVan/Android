@@ -84,8 +84,8 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent mainIntent = new Intent(SplashActivity.this, MainActivity.class);
-                mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
+//                mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(mainIntent);
                 finish();
             }

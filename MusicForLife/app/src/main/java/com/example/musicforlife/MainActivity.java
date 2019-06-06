@@ -1,6 +1,7 @@
 package com.example.musicforlife;
 
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -58,37 +59,27 @@ import com.example.musicforlife.listsong.SongModel;
 import com.example.musicforlife.minimizeSong.MinimizeSongFragment;
 import com.example.musicforlife.play.PlayActivity;
 import com.example.musicforlife.play.PlayService;
-import com.example.musicforlife.play.StopedReceiver;
 import com.example.musicforlife.playlist.FragmentPlaylist;
 import com.example.musicforlife.utilitys.ImageHelper;
 import com.example.musicforlife.utilitys.Utility;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 
-public class MainActivity extends AppCompatActivity implements MainCallbacks, View.OnClickListener, MinimizeSongFragment.OnFragmentInteractionListener {//AudioManager.OnAudioFocusChangeListener
+public class MainActivity extends AppCompatActivity implements MainCallbacks, MinimizeSongFragment.OnFragmentInteractionListener {//AudioManager.OnAudioFocusChangeListener
 
-
-    private CardView mLayoutPlayingMinimizie;
-    private TextView mTextViewTitleSongMinimize;
-    private TextView mTextViewArtistMinimize;
-    private ImageView mImageViewSongMinimize;
-    private CardView mCardViewPlayingMinimize;
     private CoordinatorLayout mLayoutMainContent;
     private ViewPager mViewPager;
     private PagerAdapter mPagerAdapter;
     private TabLayout mTabLayout;
     private Toolbar mToolBar;
-    private ImageButton mButtonPlayMinimize;
-    private ImageButton mButtonNextMinimize;
-    private ImageButton mButtonPrevMinimize;
-    private AppBarLayout mlayoutAppbarMain;
 
     private static MainActivity mMainActivity;
     private Intent mIntentPlayActivity;
     private PlayService mPlayService;
     public static DatabaseManager mDatabaseManager;
-    private AudioManager mAudioManager;
+
     private String mSearchValue = "";
     private int mCurrentFragmentActive;
     private MinimizeSongFragment mMinimizeSongFragment;
@@ -99,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     private static RemoteViews mNotificationlayoutPlaying;
 
 
-    private Intent mIntentPlayService;
+
     private final int mIconsTabDefault[] = {
             R.mipmap.tab_recent_default,
             R.mipmap.tab_song_default,
@@ -126,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
 
     private static final String TAG = "MainActivity";
 
+    @SuppressLint("ClickableViewAccessibility")
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,35 +131,20 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
 //        togglePlayingMinimize("MAIN");
         mPagerAdapter = new PagerMainAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mPagerAdapter);
-        mViewPager.setPageTransformer(true, null);
         mViewPager.setOffscreenPageLimit(mPagerAdapter.getCount());
         mTabLayout.setupWithViewPager(mViewPager);
+
         mPlayService = PlayService.newInstance();
-        mIntentPlayService = new Intent(this, PlayService.class);
+
         mDatabaseManager = DatabaseManager.newInstance(getApplicationContext());
 
-//        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-//        mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
         setSupportActionBar(mToolBar);
         setupLayoutTransparent();
-        initDataBaseFromDevice();
         initMinimizePlaying();
-        initReceiver();
+
         initTabLayoutIcon();
 
 
-        mViewPager.setOnScrollChangeListener(new View.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                Log.d(TAG, "onScrollChange: " + scrollY);
-                if (scrollY > 54) {
-                    mToolBar.setElevation(3.0f);
-                } else {
-                    mToolBar.setElevation(0.0f);
-                }
-
-            }
-        });
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
@@ -185,14 +162,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
 
             }
         });
-//        mViewPager.setCurrentItem(0);
-//        mViewPager.setSelected(true);
-//        mViewPager.setFocusable(true);
-//        mViewPager.setFocusableInTouchMode(true);
-//        mViewPager.requestFocus();
-//        mViewPager.setCurrentItem(0);
-//        startService(mIntentPlayService);
-//        initNotificationPlay();
+
     }
 
 
@@ -232,10 +202,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     private void setupLayoutTransparent() {
         Utility.setTransparentStatusBar(MainActivity.this);
         mLayoutMainContent.setPadding(0, Utility.getStatusbarHeight(this), 0, 0);
-        View decorView = getWindow().getDecorView();
-        int uiOption = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-        decorView.setSystemUiVisibility(uiOption);
-//        mLayoutMainContent.setBackground(ImageHelper.getMainBackgroundDrawable());
+
     }
 
     @Override
@@ -254,42 +221,12 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     private void initFindView() {
         mToolBar = findViewById(R.id.tool_bar_main);
         mViewPager = findViewById(R.id.pagerMainContent);
-//        mLayoutPlayingMinimizie = findViewById(R.id.cardViewPlayingMinimize);
-//        mTextViewTitleSongMinimize = findViewById(R.id.txtTitleMinimize);
-//        mTextViewArtistMinimize = findViewById(R.id.txtArtistMinimize);
-//        mImageViewSongMinimize = findViewById(R.id.imgSongMinimize);
-//        mCardViewPlayingMinimize = findViewById(R.id.cardViewPlayingMinimize);
+
         mLayoutMainContent = findViewById(R.id.mainContent);
         mTabLayout = findViewById(R.id.tablayout_main);
-        mlayoutAppbarMain = findViewById(R.id.layoutAppbarMain);
-
-//        mButtonPlayMinimize = findViewById(R.id.btnPlaySong);
-//        mButtonNextMinimize = findViewById(R.id.btnNextSong);
-//        mButtonPrevMinimize = findViewById(R.id.btnPrevSong);
-
-//        ((CoordinatorLayout.LayoutParams) mlayoutAppbarMain.getLayoutParams()).setBehavior(new FixAppBarLayoutBehavior());
-
-//        mButtonPlayMinimize.setOnClickListener(this);
-//        mButtonNextMinimize.setOnClickListener(this);
-//        mButtonPrevMinimize.setOnClickListener(this);
-//        mLayoutPlayingMinimizie.setOnClickListener(this);
-
-//        v.setFocusableInTouchMode(true);
-//        v.requestFocus();
-//        mLayoutPlayingMinimizie.setFocusableInTouchMode(false);
-//        mCardViewPlayingMinimize.setOnClickListener(this);
-//        mCardViewPlayingMinimize.setOnFocusChangeListener(this);
 
     }
 
-    /**
-     * Khởi tạo data đọc từ bộ nhớ
-     */
-    private void initDataBaseFromDevice() {
-
-//        mDatabaseManager.resetDB();
-//        new intitSongFromDevice().execute();
-    }
 
     private void initMinimizePlaying() {
         Log.d(TAG, "initMinimizePlaying: ");
@@ -298,7 +235,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
                 new Runnable() {
                     @Override
                     public void run() {
-                        SongModel songPlay = null;
+                        SongModel songPlay;
                         songPlay = PlayService.getCurrentSongPlaying();
                         if (songPlay == null) {
                             songPlay = PlayService.getSongIsPlaying();
@@ -311,44 +248,14 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
                             mMinimizeSongFragment = MinimizeSongFragment.newInstance();
                             getSupportFragmentManager().beginTransaction().add(R.id.frgMinimizeSong, mMinimizeSongFragment).commit();
 
-                        } else {
-//                            hideMinimizePlaying();
                         }
+
                         Log.d(TAG, "initMinimizePlaying: " + songPlay);
                     }
                 }
         );
     }
 
-    private void initReceiver() {
-//        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-//        int result = audioManager.requestAudioFocus(, AudioManager.STREAM_MUSIC,
-//                AudioManager.AUDIOFOCUS_GAIN);
-//
-//        if (result != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-//            // could not get audio focus.
-//        }
-
-//        IntentFilter mainFilter = new IntentFilter("android.media.AUDIO_BECOMING_NOISY");
-//        BroadcastReceiver receiver = new BecomingNoisyReceiver();
-//        registerReceiver(receiver, mainFilter);
-//
-//        sendBroadcast(new Intent("OKOK"));
-//
-//        MediaSessionCompat.Callback callback = new
-//                MediaSessionCompat.Callback() {
-//                    @Override
-//                    public void onPlay() {
-//                        registerReceiver(mBecomingNoisyReceiver, mIntentFilterNoisy);
-//                    }
-//
-//                    @Override
-//                    public void onStop() {
-//                        unregisterReceiver(mBecomingNoisyReceiver);
-//                    }
-//                };
-
-    }
 
     private void initNotificationPlay() {
         SongModel songPlaying = PlayService.getCurrentSongPlaying();
@@ -361,10 +268,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         mNotificationlayoutPlaying = new RemoteViews(getPackageName(), R.layout.layout_notificatoin_play);
 
         //set content notification
-//        Bitmap bitmapBg = ImageHelper.getBitmapFromPath(songPlaying.getPath(), R.mipmap.music_file_128);
-//        Bitmap bitmapBgBlur = ImageHelper.blurBitmap(bitmapBg, 2.0f, 4);
-//        Bitmap bitmapOverlay = ImageHelper.createImage(bitmapBgBlur.getWidth(), bitmapBgBlur.getHeight(), getResources().getColor(R.color.colorBgPrimaryOverlay));
-//        Bitmap bitmapBgOverlay = ImageHelper.overlayBitmapToCenter(bitmapBgBlur, bitmapOverlay);
+
         mNotificationlayoutPlaying.setImageViewBitmap(R.id.imgSongMinimize, ImageHelper.getBitmapFromPath(songPlaying.getPath(), R.mipmap.music_128));
         mNotificationlayoutPlaying.setTextViewText(R.id.txtTitleMinimize, songPlaying.getTitle());
         mNotificationlayoutPlaying.setTextViewText(R.id.txtArtistMinimize, songPlaying.getArtist());
@@ -448,14 +352,14 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     private void initTabLayoutIcon() {
 
         for (int i = 0; i < mTabLayout.getTabCount(); i++) {
-            mTabLayout.getTabAt(i).setIcon(mIconsTabDefault[i]);
+            Objects.requireNonNull(mTabLayout.getTabAt(i)).setIcon(mIconsTabDefault[i]);
         }
-        mTabLayout.getTabAt(0).setIcon(mIconsTabActive[0]);
-        getSupportActionBar().setTitle(mTabMainTitle[0]);
+        Objects.requireNonNull(mTabLayout.getTabAt(0)).setIcon(mIconsTabActive[0]);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(mTabMainTitle[0]);
         mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                getSupportActionBar().setTitle(mTabMainTitle[tab.getPosition()]);
+                Objects.requireNonNull(getSupportActionBar()).setTitle(mTabMainTitle[tab.getPosition()]);
                 tab.setIcon(mIconsTabActive[tab.getPosition()]);
 
             }
@@ -517,13 +421,10 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        SongModel songModelFromArtist = null;
-//        if (resultCode == ArtistModel.RequestCode) { // == 2
-//            songModelFromArtist = (SongModel) data.getSerializableExtra(ArtistModel.RequestCodeString);
-//            playSongFromFragmentListToMain(FragmentPlaylist.SENDER, songModelFromArtist);
-//        }
+        SongModel songModelFromArtist;
+
         if (resultCode == ArtistModel.RequestCode) { // == 2
-            songModelFromArtist = (SongModel) data.getSerializableExtra(ArtistModel.RequestCodeString);
+            songModelFromArtist = (SongModel) Objects.requireNonNull(data).getSerializableExtra(ArtistModel.RequestCodeString);
             ArrayList<SongModel> listSongFromArtist = ArtistProvider.getArtistSongs(MainActivity.this, songModelFromArtist.getArtist());
             playSongsFromFragmentListToMain(FragmentPlaylist.SENDER);
             Log.d(TAG, "onActivityResult: PLAY FROM ARTIST: " + songModelFromArtist.getTitle() + "_" + listSongFromArtist.size());
@@ -534,7 +435,6 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     protected void onResume() {
         super.onResume();
         togglePlayingMinimize("MAIN");
-//        initMinimizePlaying();
     }
 
     /**
@@ -553,10 +453,6 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         }
 
     }
-
-//    public void showPlayActivity(View view) {
-//        handleShowPlayActivity();
-//    }
 
     /**
      * Hiện PlayActivity
@@ -581,19 +477,6 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
             mMinimizeSongFragment.refreshControls();
         }
 
-//        if (isHideMinimize) {
-//            isHideMinimize = !isHideMinimize;
-//            hideMinimizePlaying();
-//            return;
-//        }
-//        SongModel songPlay = PlayService.getCurrentSongPlaying();
-//        if (songPlay != null) {
-//            showMinimizePlaying(songPlay);
-//
-//        } else {
-//            hideMinimizePlaying();
-//        }
-
     }
 
     @Override
@@ -608,10 +491,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         mNotificationlayoutPlaying = new RemoteViews(getPackageName(), R.layout.layout_notificatoin_play);
 
 //        //set content notification
-//        Bitmap bitmapBg = ImageHelper.getBitmapFromPath(songPlaying.getPath(), R.mipmap.music_file_128);
-//        Bitmap bitmapBgBlur = ImageHelper.blurBitmap(bitmapBg, 1.0f, 20);
-//        Bitmap bitmapOverlay = ImageHelper.drawableToBitmap(R.drawable.gradient_minimize);
-//        Bitmap bitmapBgOverlay = ImageHelper.overlayBitmapToCenter(bitmapBgBlur, bitmapOverlay);
+
         mNotificationlayoutPlaying.setImageViewBitmap(R.id.imgSongMinimize, ImageHelper.getBitmapFromPath(songPlaying.getPath(), R.mipmap.music_128));
         mNotificationlayoutPlaying.setTextViewText(R.id.txtTitleMinimize, songPlaying.getTitle());
         mNotificationlayoutPlaying.setTextViewText(R.id.txtArtistMinimize, songPlaying.getArtist());
@@ -659,15 +539,12 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, PLAY_CHANEL_ID.toString())
                 .setSmallIcon(R.drawable.ic_album_black_24dp)
                 .setDefaults(0)
-//                .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
                 .setContentIntent(pendingIntentPlay)//mới change
                 .setContentIntent(playButtonPending)
                 .setContentIntent(nextButtonPending)
                 .setContentIntent(prevButtonPending)
-//                .setOngoing(true)
                 .setCustomContentView(mNotificationlayoutPlaying);//mới change
-//                .setOngoing(true);
-//                .setCustomBigContentView(notifcationlayoutExpand);//mới change
+
 
         if (action != PlayService.ACTION_PAUSE) {
             builder.setOngoing(true);
@@ -681,81 +558,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     }
 
     private void refreshMinimizePlaying(int action) {
-//        SongModel songPlay = PlayService.getCurrentSongPlaying();
-//        if (songPlay != null) {
-//            mTextViewTitleSongMinimize.setText(songPlay.getTitle());
-//            mTextViewArtistMinimize.setText(songPlay.getArtist());
-//            Bitmap bitmap = ImageHelper.getBitmapFromPath(songPlay.getPath(), R.mipmap.music_128);
-//            mImageViewSongMinimize.setImageBitmap(bitmap);
-//
-//            //update controls play
-//            if (action != PlayService.ACTION_PAUSE) {
-//                mButtonPlayMinimize.setImageDrawable(MainActivity.this.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
-//            } else {
-//                mButtonPlayMinimize.setImageDrawable(MainActivity.this.getDrawable(R.drawable.ic_play_circle_outline_black_32dp));
-//            }
-//            //\ update controls play
-//            mLayoutPlayingMinimizie.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    mLayoutPlayingMinimizie.measure(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-//                    Log.d(TAG, "run: SET PADDING MINIMIZE " + mLayoutPlayingMinimizie.getMeasuredHeight());
-//                    mViewPager.setPadding(0, 0, 0, mLayoutPlayingMinimizie.getMeasuredHeight() + 16);
-//                    mLayoutPlayingMinimizie.setVisibility(View.VISIBLE);
-//                }
-//            });
-//        }
-
-    }
-
-    private void showMinimizePlaying(SongModel songPlaying) {
-//        Log.d(TAG, "togglePlayingMinimize:  SONG PLAYING " + songPlaying.getTitle());
-//
-//        mTextViewTitleSongMinimize.setText(songPlaying.getTitle());
-//        mTextViewArtistMinimize.setText(songPlaying.getArtist());
-//        Bitmap bitmap = ImageHelper.getBitmapFromPath(songPlaying.getPath(), R.mipmap.music_128);
-//        mImageViewSongMinimize.setImageBitmap(bitmap);
-//
-//        //update controls play
-//        if (PlayService.isPlaying()) {
-//            mButtonPlayMinimize.setImageDrawable(MainActivity.this.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
-//        } else {
-//            mButtonPlayMinimize.setImageDrawable(MainActivity.this.getDrawable(R.drawable.ic_play_circle_outline_black_32dp));
-//        }
-//        //\ update controls play
-//        mLayoutPlayingMinimizie.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                mLayoutPlayingMinimizie.measure(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-//                Log.d(TAG, "run: SET PADDING MINIMIZE " + mLayoutPlayingMinimizie.getMeasuredHeight());
-//                mViewPager.setPadding(0, 0, 0, mLayoutPlayingMinimizie.getMeasuredHeight() + 16);
-//                mLayoutPlayingMinimizie.setVisibility(View.VISIBLE);
-//            }
-//        });
-//        Animation animation= AnimationUtils.loadAnimation(this,R.anim.title_minimize_slide);
-//        mTextViewTitleSongMinimize.startAnimation(animation);
-//        mLayoutPlayingMinimizie.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//
-//            @Override
-//            public void onGlobalLayout() {
-////                mLayoutPlayingMinimizie.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-//
-//
-//            }
-//        });
-
-    }
-
-
-    private void hideMinimizePlaying() {
-//        mLayoutPlayingMinimizie.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                mViewPager.setPadding(0, 0, 0, 0);
-//                mLayoutPlayingMinimizie.setVisibility(View.GONE);
-//                Log.d(TAG, "togglePlayingMinimize: HEIGHT" + mLayoutPlayingMinimizie.getMeasuredHeight());
-//            }
-//        });
+        mMinimizeSongFragment.refreshControls();
     }
 
     /**
@@ -766,65 +569,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
             mIntentPlayActivity = new Intent(MainActivity.this, PlayActivity.class);
             mIntentPlayActivity.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         }
-//        Intent intent=new Intent(MainActivity.this,PlayActivity.class);
-//        Bundle bundle = new Bundle();
-////        bundle.putSerializable("PLAY_LIST", songList);
-////        bundle.putSerializable("PLAY_SONG", songPlay);
-////        bundle.putInt("TYPE_SHOW", typeShow);
-////
-////        mIntentPlayActivity.putExtras(bundle);
         startActivity(mIntentPlayActivity);
-    }
-
-
-    /**
-     * Sự kiện khi nhấn vào minimize play
-     *
-     * @param v
-     */
-    @Override
-    public void onClick(View v) {
-//        switch (v.getId()) {
-//            case R.id.cardViewPlayingMinimize:
-//                handleShowPlayActivityWithSongList();
-//                break;
-//            case R.id.btnPlaySong:
-//                SongModel songPlay = null;
-//                songPlay = PlayService.getCurrentSongPlaying();
-//                if (songPlay == null) {
-//                    songPlay = PlayService.getSongIsPlaying();
-//                }
-//                if (songPlay == null) {
-//                    Toast.makeText(MainActivity.this, "Không tìm thấy bài hát.", Toast.LENGTH_LONG).show();
-//                    return;
-//                }
-//                if (PlayService.isPlaying()) {
-//                    refreshNotificationPlaying(PlayService.ACTION_PAUSE);
-//
-//                    mPlayService.pause();
-//                    mButtonPlayMinimize.setImageDrawable(MainActivity.this.getDrawable(R.drawable.ic_play_circle_outline_black_32dp));
-//                } else if (PlayService.isPause()) {
-//                    refreshNotificationPlaying(PlayService.ACTION_RESUME);
-//                    mPlayService.resurme();
-//
-//                    mButtonPlayMinimize.setImageDrawable(MainActivity.this.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
-//                } else {
-//                    refreshNotificationPlaying(PlayService.ACTION_PLAY);
-//                    mPlayService.play(songPlay);
-//
-//
-//                    mButtonPlayMinimize.setImageDrawable(MainActivity.this.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
-//                }
-//                break;
-//            case R.id.btnNextSong:
-//                mPlayService.next(PlayService.ACTION_FROM_USER);
-//                break;
-//            case R.id.btnPrevSong:
-//                mPlayService.prev(PlayService.ACTION_FROM_USER);
-//                break;
-//            default:
-//                break;
-//        }
     }
 
 
@@ -849,9 +594,17 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Vi
     }
 
     @Override
-    public void onFragmentLoaded(int heightLayout) {
-        Log.d(TAG, "onFragmentLoaded: "+heightLayout);
-        mViewPager.setPadding(0, 0, 0, heightLayout);
+    public void onFragmentLoaded(final int heightLayout) {
+        Log.d(TAG, "onFragmentLoaded: " + heightLayout);
+        mViewPager.post(new Runnable() {
+            @Override
+            public void run() {
+                mViewPager.requestFocus();
+                mViewPager.requestLayout();
+                mViewPager.setPadding(0, 0, 0, heightLayout);
+            }
+        });
+
 
     }
 }

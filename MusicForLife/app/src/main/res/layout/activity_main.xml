@@ -19,10 +19,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorTranparent"
-        android:gravity="top"
-        app:elevation="0dp"
 
-        >
+        android:gravity="top"
+        app:elevation="0dp">
         <!--app:contentScrim="@android:color/transparent"-->
         <android.support.v7.widget.Toolbar
             android:id="@+id/tool_bar_main"

@@ -306,7 +306,7 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
         mTxtDurationSongPlaying.setText(SongModel.formateMilliSeccond(songModel.getDuration()));
         mSebDurationSongPlaying.setMax(mSongPlaying.getDuration().intValue() / 1000);
         setResourceImagePlaying();
-        hideVideoLyric();
+        hideVideoLyric(0);
 
         //
     }
@@ -377,13 +377,13 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
                 break;
             case R.id.btnPrevSong:
                 mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_PREV);
-                hideVideoLyric();
+                hideVideoLyric(0);
 //                mPlayService.prev(PlayService.ACTION_FROM_USER);
                 break;
             case R.id.btnNextSong:
 //                mPlayService.next(PlayService.ACTION_FROM_USER);
                 mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_NEXT);
-                hideVideoLyric();
+                hideVideoLyric(0);
                 break;
             case R.id.btnLoopType:
                 int currentLoopType = PlayService.getLoopType();
@@ -406,7 +406,7 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
 
                 } else {
 
-                    hideVideoLyric();
+                    hideVideoLyric(R.id.btnToggleVideo);
                 }
 
             default:
@@ -414,14 +414,14 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
         }
     }
 
-    private void hideVideoLyric() {
+    private void hideVideoLyric(int fromAction) {
         isShowVideo = false;
         if (mYoutubePlayer.getView() != null) {
             Log.d(TAG, "hideVideoLyric: ");
             mYoutubePlayer.getView().setVisibility(View.GONE);
             mCvImagePlaying.setVisibility(View.VISIBLE);
             mBtnToggleVideo.setImageResource(R.drawable.ic_music_note_black_24dp);
-            if (PlayService.isPause()) { //resume
+            if (PlayService.isPause() && fromAction==R.id.btnToggleVideo) { //resume
                 mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_RESUME);
                 setButtonPause();
             }
