@@ -62,7 +62,7 @@ public class NotifyBroadcastReceiver extends BroadcastReceiver {
             case ACTION_NEXT_NOTIFY:
 //                bundlePlay.putInt("actionFrom", PlayService.ACTION_FROM_USER);
 //                intentPlay.setAction(String.valueOf(PlayService.ACTION_NEXT));
-
+                Log.d(TAG, "onReceive: ");
                 mPlayService.next(PlayService.ACTION_FROM_USER);
                 if (mainActivity != null) {
                     mainActivity.refreshNotificationPlaying(PlayService.ACTION_PLAY);

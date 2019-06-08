@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -26,9 +27,11 @@ import android.support.v7.widget.Toolbar;
 import com.example.musicforlife.MainActivity;
 import com.example.musicforlife.listsong.RecyclerItemClickListener;
 import com.example.musicforlife.listsong.SongModel;
+import com.example.musicforlife.minimizeSong.MinimizeSongFragment;
 import com.example.musicforlife.play.PlayActivity;
 import com.example.musicforlife.play.PlayService;
 import com.example.musicforlife.playlist.FragmentPlaylist;
+import com.example.musicforlife.playlist.PlaylistSongActivity;
 import com.example.musicforlife.recent.RecentModel;
 import com.example.musicforlife.utilitys.ImageHelper;
 import com.example.musicforlife.R;
@@ -38,7 +41,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-public class ArtistSongsActivity extends AppCompatActivity {
+public class ArtistSongsActivity extends AppCompatActivity implements MinimizeSongFragment.OnFragmentInteractionListener {
     RecyclerView RVListArtist;
     ImageView ImgProfile;
     TextView TVNameArtist;
@@ -48,6 +51,7 @@ public class ArtistSongsActivity extends AppCompatActivity {
     CoordinatorLayout layoutContentArtistSong;
     PlayService mPlayService;
     AppBarLayout mAppbarLayoutArtist;
+    private MinimizeSongFragment mMinimizeSongFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +63,7 @@ public class ArtistSongsActivity extends AppCompatActivity {
         InitControl();
         BindData();
         setupLayoutTransparent();
-
+        initMimimizeSong();
     }
 
     private void InitControl() {
@@ -75,9 +79,9 @@ public class ArtistSongsActivity extends AppCompatActivity {
 
     private void setupLayoutTransparent() {
         Utility.setTransparentStatusBar(ArtistSongsActivity.this);
-        Bitmap bitmapBg = ImageHelper.getBitmapFromPath(artistModel.getPath(), R.drawable.highcompress_background_test);
+        Bitmap bitmapBg = ImageHelper.getBitmapFromPath(artistModel.getPath(), R.drawable.gradient_bg);
         Bitmap bitmapBgBlur = ImageHelper.blurBitmap(bitmapBg, 1.0f, 30);
-        Bitmap bitmapOverlay = ImageHelper.createImage(bitmapBgBlur.getWidth(), bitmapBgBlur.getHeight(), getResources().getColor(R.color.colorBgPrimaryOverlay));
+        Bitmap bitmapOverlay = ImageHelper.createImage(bitmapBgBlur.getWidth(), bitmapBgBlur.getHeight(), getResources().getColor(R.color.colorBgPrimary));
         Bitmap bitmapBgOverlay = ImageHelper.overlayBitmapToCenter(bitmapBgBlur, bitmapOverlay);
         layoutContentArtistSong.setPadding(0, Utility.getStatusbarHeight(this), 0, 0);
         layoutContentArtistSong.setBackground(ImageHelper.getMainBackgroundDrawableFromBitmap(bitmapBgOverlay));
@@ -145,5 +149,36 @@ public class ArtistSongsActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void initMimimizeSong() {
+        mMinimizeSongFragment = MinimizeSongFragment.newInstance();
+        getSupportFragmentManager().beginTransaction().add(R.id.frgMinimizeSong, mMinimizeSongFragment).commit();
+
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onFragmentRefreshNotification(int action) {
+        if (MainActivity.getMainActivity() != null) {
+            MainActivity.getMainActivity().refreshNotificationPlaying(action);
+        }
+    }
+
+    @Override
+    public void onFragmentShowPlayActivity() {
+        Intent mIntentPlayActivity = new Intent(ArtistSongsActivity.this, PlayActivity.class);
+        mIntentPlayActivity.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+        startActivity(mIntentPlayActivity);
+    }
+
+    @Override
+    public void onFragmentLoaded(int heightLayout) {
+
     }
 }

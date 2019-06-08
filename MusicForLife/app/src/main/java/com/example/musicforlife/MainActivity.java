@@ -90,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Mi
     private static RemoteViews mNotificationlayoutPlaying;
 
 
-
     private final int mIconsTabDefault[] = {
             R.mipmap.tab_recent_default,
             R.mipmap.tab_song_default,
@@ -482,7 +481,9 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Mi
     @Override
     public void refreshNotificationPlaying(int action) {
         SongModel songPlaying = PlayService.getCurrentSongPlaying();
-        Log.d(TAG, "initNotificationPlay: " + songPlaying);
+        if (songPlaying != null) {
+            Log.d(TAG, "initNotificationPlay: " + songPlaying.getTitle());
+        }
         if (songPlaying == null) {
             return;
         }

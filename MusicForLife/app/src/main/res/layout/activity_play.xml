@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:background="@color/colorTranparent"
             android:outlineProvider="bounds"
-            android:theme="@style/AppTheme.Toolbar"
+
             app:titleEnabled="false">
 
 

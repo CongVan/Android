@@ -201,10 +201,12 @@ public class MinimizeSongFragment extends Fragment implements View.OnClickListen
             case R.id.btnNextSong:
                 mPlayService.next(PlayService.ACTION_FROM_USER);
                 mButtonPlayMinimize.setImageDrawable(mContext.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
+                refreshControls();
                 break;
             case R.id.btnPrevSong:
                 mPlayService.prev(PlayService.ACTION_FROM_USER);
                 mButtonPlayMinimize.setImageDrawable(mContext.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
+                refreshControls();
                 break;
             default:
                 break;

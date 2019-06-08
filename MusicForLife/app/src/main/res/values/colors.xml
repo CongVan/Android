@@ -38,7 +38,7 @@
     <color name="colorBlackGlassLight">#26000000</color>
     <color name="colorBlackGlassDark">#4D000000</color>
 
-    <color name="colorTranparent">@android:color/transparent</color>
+    <color name="colorTranparent">#00FFFFFF</color>
     <color name="colorTitlePrimary">#212121</color>
     <color name="colorTitleSecondary">#616161</color>
 

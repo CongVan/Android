@@ -361,7 +361,7 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
                     mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_RESUME);
                     mCvImagePlaying.startAnimation(mAnimationPlay);
                     setButtonPause();
-                   // hideVideoLyric();
+                    // hideVideoLyric();
 //                    MainActivity.getMainActivity().refreshNotificationPlaying(PlayService.ACTION_RESUME);
 //                    mPlayService.resurme();
 //                    mImageButtonPlaySong.setImageDrawable(mPlayActivity.getDrawable(R.drawable.ic_pause_circle_outline_black_64dp));
@@ -421,7 +421,7 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
             mYoutubePlayer.getView().setVisibility(View.GONE);
             mCvImagePlaying.setVisibility(View.VISIBLE);
             mBtnToggleVideo.setImageResource(R.drawable.ic_music_note_black_24dp);
-            if (PlayService.isPause() && fromAction==R.id.btnToggleVideo) { //resume
+            if (PlayService.isPause() && fromAction == R.id.btnToggleVideo) { //resume
                 mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_RESUME);
                 setButtonPause();
             }
@@ -447,7 +447,6 @@ public class FragmentPlaying extends Fragment implements FragmentPlayInterface, 
             mBtnToggleVideo.setImageResource(R.drawable.ic_video_label_black_24dp);
 
             mPlayActivity.controlSong(SENDER, null, PlayService.ACTION_PAUSE);
-
             setButtonPlay();
 
             if (mCurrentYoutubePlayer != null) {

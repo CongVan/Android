@@ -70,7 +70,8 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
         }
         return mPlayService;
     }
-    public static MediaPlayer getMediaPlayer(){
+
+    public static MediaPlayer getMediaPlayer() {
         return mMediaPlayer;
     }
 
@@ -168,7 +169,10 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
 
         mCurrentSongPlaying = mSongPlayingList.get(mCurrentIndexSong); //SongModel.getSongFromSongId(mDatabaseManager, mPlayingList.get(mCurrentIndexSong).getSongId());
         play(mCurrentSongPlaying);
-        MainActivity.getMainActivity().togglePlayingMinimize(SENDER);
+        if (MainActivity.getMainActivity() != null) {
+            MainActivity.getMainActivity().togglePlayingMinimize(SENDER);
+        }
+
         if (PlayActivity.getActivity() != null) {
             PlayActivity.getActivity().updateControlPlaying(SENDER, mCurrentSongPlaying);
         }
