@@ -52,6 +52,7 @@ public class ArtistSongsActivity extends AppCompatActivity implements MinimizeSo
     PlayService mPlayService;
     AppBarLayout mAppbarLayoutArtist;
     private MinimizeSongFragment mMinimizeSongFragment;
+    private static final String TAG = "ArtistSongsActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,13 +80,19 @@ public class ArtistSongsActivity extends AppCompatActivity implements MinimizeSo
 
     private void setupLayoutTransparent() {
         Utility.setTransparentStatusBar(ArtistSongsActivity.this);
-        Bitmap bitmapBg = ImageHelper.getBitmapFromPath(artistModel.getPath(), R.drawable.gradient_bg);
-        Bitmap bitmapBgBlur = ImageHelper.blurBitmap(bitmapBg, 1.0f, 30);
-        Bitmap bitmapOverlay = ImageHelper.createImage(bitmapBgBlur.getWidth(), bitmapBgBlur.getHeight(), getResources().getColor(R.color.colorBgPrimary));
-        Bitmap bitmapBgOverlay = ImageHelper.overlayBitmapToCenter(bitmapBgBlur, bitmapOverlay);
-        layoutContentArtistSong.setPadding(0, Utility.getStatusbarHeight(this), 0, 0);
-        layoutContentArtistSong.setBackground(ImageHelper.getMainBackgroundDrawableFromBitmap(bitmapBgOverlay));
+        Bitmap bitmapBg = null;
+        Log.d(TAG, "setupLayoutTransparent: PATH " + artistModel.getPath());
+        bitmapBg = ImageHelper.getBitmapFromPath(artistModel.getPath(), R.drawable.gradient_bg);
+        if (bitmapBg != null) {
+            Bitmap bitmapBgBlur = ImageHelper.blurBitmap(bitmapBg, 1.0f, 50);
+            Bitmap bitmapOverlay = ImageHelper.createImage(bitmapBgBlur.getWidth(), bitmapBgBlur.getHeight(), getResources().getColor(R.color.colorBgPrimaryOverlay));
+            Bitmap bitmapBgOverlay = ImageHelper.overlayBitmapToCenter(bitmapBgBlur, bitmapOverlay);
+            layoutContentArtistSong.setBackground(ImageHelper.getMainBackgroundDrawableFromBitmap(bitmapBgOverlay));
+        }
+        //Log.d(TAG, "setupLayoutTransparent: W=" + bitmapBg.getWidth() + ", H=" + bitmapBg.getHeight());
 
+
+        layoutContentArtistSong.setPadding(0, Utility.getStatusbarHeight(this), 0, 0);
         setSupportActionBar(mToolbarArtistSong);
         getSupportActionBar().setTitle(" ");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -155,6 +162,12 @@ public class ArtistSongsActivity extends AppCompatActivity implements MinimizeSo
         mMinimizeSongFragment = MinimizeSongFragment.newInstance();
         getSupportFragmentManager().beginTransaction().add(R.id.frgMinimizeSong, mMinimizeSongFragment).commit();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mMinimizeSongFragment.refreshControls(-1);
     }
 
     @Override

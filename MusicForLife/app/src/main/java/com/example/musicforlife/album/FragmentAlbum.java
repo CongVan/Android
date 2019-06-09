@@ -79,7 +79,7 @@ public class FragmentAlbum extends Fragment {
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                if (!mIsLoading && linearLayoutManager != null && linearLayoutManager.getItemCount() - 1 <= linearLayoutManager.findLastVisibleItemPosition()) {
+                if (!mIsLoading && linearLayoutManager != null && linearLayoutManager.getItemCount() - 1 == linearLayoutManager.findLastVisibleItemPosition()) {
                     loadMore();
                     mIsLoading = true;
                 }
@@ -104,10 +104,14 @@ public class FragmentAlbum extends Fragment {
     }
 
     private void loadMore() {
+        arrAlbum.add(null);
+        albumListAdapter.notifyItemInserted(arrAlbum.size());
         new Handler().post(new Runnable() {
             @Override
             public void run() {
                 ArrayList<AlbumViewModel> tempAudioList = AlbumProvider.getAlbumModelPaging(context, searchValue, arrAlbum.size(), take);
+                arrAlbum.remove(arrAlbum.size() - 1);
+                albumListAdapter.notifyItemRemoved(arrAlbum.size());
                 arrAlbum.addAll(tempAudioList);
                 albumListAdapter.notifyItemInserted(arrAlbum.size());
                 mIsLoading = false;

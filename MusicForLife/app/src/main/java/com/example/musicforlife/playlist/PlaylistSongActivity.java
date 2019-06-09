@@ -127,8 +127,8 @@ public class PlaylistSongActivity extends AppCompatActivity implements MultiClic
         super.onResume();
         try {
             getSupportActionBar().setTitle(mCurrentPlaylist.getTitle());
-            mMinimizeSongFragment.refreshControls();
-        }catch (Exception ex){
+            mMinimizeSongFragment.refreshControls(-1);
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
 

@@ -473,7 +473,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Mi
     @Override
     public void togglePlayingMinimize(String sender) {
         if (mMinimizeSongFragment != null) {
-            mMinimizeSongFragment.refreshControls();
+            mMinimizeSongFragment.refreshControls(-1);
         }
 
     }
@@ -559,7 +559,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Mi
     }
 
     private void refreshMinimizePlaying(int action) {
-        mMinimizeSongFragment.refreshControls();
+        mMinimizeSongFragment.refreshControls(action);
     }
 
     /**

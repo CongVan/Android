@@ -52,6 +52,7 @@ public class FragmentFolder extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_folder, container, false);
         mRcvFolder = viewGroup.findViewById(R.id.rcvFolder);
+        //get data
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
@@ -80,7 +81,7 @@ public class FragmentFolder extends Fragment {
         Intent intent = new Intent(MainActivity.getMainActivity(), FolderActivity.class);
 //        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("folderModel", (Serializable) folderChose);
+        bundle.putSerializable("folderModel", (Serializable) folderChose); //folder model
         intent.putExtras(bundle);
         startActivity(intent);
 

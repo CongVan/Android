@@ -26,8 +26,8 @@
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
             android:theme="@style/AppTheme.Toolbar"
-            app:contentScrim="@color/colorBgPrimaryTranslucent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:contentScrim="@color/colorBgPrimaryOverlay"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|enterAlways"
             app:titleEnabled="false">
 
             <RelativeLayout
@@ -74,6 +74,7 @@
                             android:textAlignment="center"
                             android:textColor="@color/colorTitleWhitePrimary"
                             android:textSize="16dp"
+
                             android:textStyle="bold" />
 
                         <TextView
@@ -85,6 +86,7 @@
                             android:textAlignment="center"
                             android:textColor="@color/colorWhite"
                             android:textSize="12dp"
+
                             android:textStyle="bold" />
                     </LinearLayout>
                 </RelativeLayout>

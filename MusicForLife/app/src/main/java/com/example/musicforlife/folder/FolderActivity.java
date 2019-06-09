@@ -1,6 +1,8 @@
 package com.example.musicforlife.folder;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -18,9 +20,12 @@ import android.widget.Toast;
 
 import com.example.musicforlife.MainActivity;
 import com.example.musicforlife.R;
+import com.example.musicforlife.album.AlbumSongsActivity;
 import com.example.musicforlife.db.DatabaseManager;
 import com.example.musicforlife.listsong.MultiClickAdapterListener;
 import com.example.musicforlife.listsong.SongModel;
+import com.example.musicforlife.minimizeSong.MinimizeSongFragment;
+import com.example.musicforlife.play.PlayActivity;
 import com.example.musicforlife.play.PlayService;
 import com.example.musicforlife.playlist.BottomSheetOptionSong;
 import com.example.musicforlife.playlist.FragmentPlaylist;
@@ -29,7 +34,7 @@ import com.example.musicforlife.utilitys.Utility;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class FolderActivity extends AppCompatActivity implements MultiClickAdapterListener {
+public class FolderActivity extends AppCompatActivity implements MultiClickAdapterListener, MinimizeSongFragment.OnFragmentInteractionListener {
 
     private Toolbar mToolbar;
     private CoordinatorLayout mLayoutSongFolder;
@@ -41,6 +46,7 @@ public class FolderActivity extends AppCompatActivity implements MultiClickAdapt
     private SongFolderAdapter mSongFolderAdapter;
     private FolderModel mCurrentFolder;
     private static PlayService mPlayService;
+    private MinimizeSongFragment mMinimizeSongFragment;
 
     private final int thresholdLoad = 10;
     private static final String TAG = "FolderActivity";
@@ -61,6 +67,7 @@ public class FolderActivity extends AppCompatActivity implements MultiClickAdapt
             finish();
         }
         initFindViewId();
+        initMimimizeSong();
     }
 
     @SuppressLint("SetTextI18n")
@@ -70,6 +77,7 @@ public class FolderActivity extends AppCompatActivity implements MultiClickAdapt
         mTxtSongName = findViewById(R.id.txtFolderName);
         mTxtNumberOfSong = findViewById(R.id.txtNumberOfSongFolder);
         mAppbarLayoutFolder = findViewById(R.id.htab_appbar);
+        mLayoutSongFolder = findViewById(R.id.layoutContentAlbumSong);
         mPlayService = PlayService.newInstance();
         setSupportActionBar(mToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -126,12 +134,18 @@ public class FolderActivity extends AppCompatActivity implements MultiClickAdapt
 //                   Log.d(TAG, "onScrolled: " + dx + "_" + dy + "___" + linearLayoutManager.getItemCount() + "_" + linearLayoutManager.findLastVisibleItemPosition());
 //               }
 
-                if (!mIsLoading && linearLayoutManager != null && linearLayoutManager.getItemCount() - 1 <= linearLayoutManager.findLastVisibleItemPosition()) {
+                if (!mIsLoading && linearLayoutManager != null && linearLayoutManager.getItemCount() - 1 == linearLayoutManager.findLastVisibleItemPosition()) {
                     loadMore();
                     mIsLoading = true;
                 }
             }
         });
+    }
+
+    private void initMimimizeSong() {
+        mMinimizeSongFragment = MinimizeSongFragment.newInstance();
+        getSupportFragmentManager().beginTransaction().add(R.id.frgMinimizeSong, mMinimizeSongFragment).commit();
+
     }
 
     private void loadMore() {
@@ -140,9 +154,10 @@ public class FolderActivity extends AppCompatActivity implements MultiClickAdapt
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
+                //
+                ArrayList<SongModel> tempSongs = FolderModel.getSongsFromFolderName(mCurrentFolder.getName(), mSongFolderList.size(), thresholdLoad);
                 mSongFolderList.remove(mSongFolderList.size() - 1);
                 mSongFolderAdapter.notifyItemRemoved(mSongFolderList.size());
-                ArrayList<SongModel> tempSongs = FolderModel.getSongsFromFolderName(mCurrentFolder.getName(), mSongFolderList.size(), thresholdLoad);
                 mSongFolderList.addAll(tempSongs);
                 mIsLoading = false;
             }
@@ -167,10 +182,12 @@ public class FolderActivity extends AppCompatActivity implements MultiClickAdapt
     }
 
     private void playSong(SongModel songPlay) {
+        //gọi play
         mPlayService.play(songPlay);
         new Thread(new Runnable() {
             @Override
             public void run() {
+                //tạo ds phát
                 mPlayService.initListPlaying(FolderModel.getAllSongsFromFolderName(mCurrentFolder.getName()));
             }
         }).start();
@@ -188,5 +205,36 @@ public class FolderActivity extends AppCompatActivity implements MultiClickAdapt
 
         BottomSheetOptionSong bottomSheetDialogFragment = new BottomSheetOptionSong(song);
         bottomSheetDialogFragment.show(getSupportFragmentManager(), "Bottom Sheet Dialog Fragment");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mMinimizeSongFragment.refreshControls(-1);
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onFragmentRefreshNotification(int action) {
+        if (MainActivity.getMainActivity() != null) {
+            MainActivity.getMainActivity().refreshNotificationPlaying(action);
+        }
+    }
+
+    @Override
+    public void onFragmentShowPlayActivity() {
+        Intent mIntentPlayActivity = new Intent(FolderActivity.this, PlayActivity.class);
+        mIntentPlayActivity.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+        startActivity(mIntentPlayActivity);
+    }
+
+    @Override
+    public void onFragmentLoaded(final int heightLayout) {
+        mRcvSongFolder.setPadding(0,0,0,heightLayout);
     }
 }

@@ -132,12 +132,12 @@ public class MinimizeSongFragment extends Fragment implements View.OnClickListen
         }
     }
 
-    public void refreshControls() {
+    public void refreshControls(int action) {
         mCurrentSongPlaying = PlayService.getCurrentSongPlaying();
         if (mCurrentSongPlaying == null) {
             mLayoutPlayingMinimizie.setVisibility(View.GONE);
         } else {
-            if (PlayService.isPlaying()) {
+            if (PlayService.isPlaying() || action == PlayService.ACTION_PLAY) {
                 mButtonPlayMinimize.setImageDrawable(mContext.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
             } else {
                 mButtonPlayMinimize.setImageDrawable(mContext.getDrawable(R.drawable.ic_play_circle_outline_black_32dp));
@@ -201,12 +201,15 @@ public class MinimizeSongFragment extends Fragment implements View.OnClickListen
             case R.id.btnNextSong:
                 mPlayService.next(PlayService.ACTION_FROM_USER);
                 mButtonPlayMinimize.setImageDrawable(mContext.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
-                refreshControls();
+                refreshControls(PlayService.ACTION_PLAY);
+                mListener.onFragmentRefreshNotification(PlayService.ACTION_PLAY);
                 break;
             case R.id.btnPrevSong:
                 mPlayService.prev(PlayService.ACTION_FROM_USER);
                 mButtonPlayMinimize.setImageDrawable(mContext.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
-                refreshControls();
+                refreshControls(PlayService.ACTION_PLAY);
+                mListener.onFragmentRefreshNotification(PlayService.ACTION_PLAY);
+
                 break;
             default:
                 break;

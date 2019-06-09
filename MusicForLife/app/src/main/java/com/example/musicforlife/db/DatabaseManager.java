@@ -27,7 +27,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     // Database Name
     public static final String DATABASE_NAME = "music_of_life_db.db";
-
+    //singleton
     public static DatabaseManager newInstance(Context context) {
         if (mDatabaseInstance == null) {
             mDatabaseInstance = new DatabaseManager(context.getApplicationContext());

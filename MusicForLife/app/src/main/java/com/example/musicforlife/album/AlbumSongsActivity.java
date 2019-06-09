@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -23,8 +24,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.musicforlife.MainActivity;
+import com.example.musicforlife.artist.ArtistSongsActivity;
 import com.example.musicforlife.listsong.RecyclerItemClickListener;
 import com.example.musicforlife.listsong.SongModel;
+import com.example.musicforlife.minimizeSong.MinimizeSongFragment;
+import com.example.musicforlife.play.PlayActivity;
 import com.example.musicforlife.play.PlayService;
 import com.example.musicforlife.playlist.FragmentPlaylist;
 import com.example.musicforlife.utilitys.ImageHelper;
@@ -35,7 +39,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-public class AlbumSongsActivity extends AppCompatActivity {
+public class AlbumSongsActivity extends AppCompatActivity implements MinimizeSongFragment.OnFragmentInteractionListener {
     ImageButton ImgBtnBack;
     ImageView ImgProfile;
     TextView TVNameArtist;
@@ -47,6 +51,9 @@ public class AlbumSongsActivity extends AppCompatActivity {
     RecyclerView RVAlbumsong;
     PlayService mPlayService;
     AppBarLayout mAppbarLayoutalbum;
+
+    private MinimizeSongFragment mMinimizeSongFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +63,7 @@ public class AlbumSongsActivity extends AppCompatActivity {
         InitControl();
         BindData();
         setupLayoutTransparent();
+        initMimimizeSong();
     }
 
     private void InitControl() {
@@ -65,19 +73,22 @@ public class AlbumSongsActivity extends AppCompatActivity {
         TVSongcount = (TextView) findViewById(R.id.albumSongcount);
         layoutContentAlbumtSong = (CoordinatorLayout) findViewById(R.id.layoutContentAlbumSong);
         mToolbarAlbumSong = findViewById(R.id.albumhtab_toolbar);
-        RVAlbumsong = (RecyclerView)findViewById(R.id.rcvalbumSong);
-        mAppbarLayoutalbum = (AppBarLayout)findViewById(R.id.albumhtab_appbar);
+        RVAlbumsong = (RecyclerView) findViewById(R.id.rcvalbumSong);
+        mAppbarLayoutalbum = (AppBarLayout) findViewById(R.id.albumhtab_appbar);
         mPlayService = PlayService.newInstance();
     }
 
     private void setupLayoutTransparent() {
         Utility.setTransparentStatusBar(AlbumSongsActivity.this);
-        Bitmap bitmapBg = ImageHelper.getBitmapFromPath(albumModel.getPath(), R.drawable.highcompress_background_test);
-        Bitmap bitmapBgBlur = ImageHelper.blurBitmap(bitmapBg, 1.0f, 30);
-        Bitmap bitmapOverlay = ImageHelper.createImage(bitmapBgBlur.getWidth(), bitmapBgBlur.getHeight(), getResources().getColor(R.color.colorBgPrimaryOverlay));
-        Bitmap bitmapBgOverlay = ImageHelper.overlayBitmapToCenter(bitmapBgBlur, bitmapOverlay);
+        Bitmap bitmapBg = ImageHelper.getBitmapFromPath(albumModel.getPath(), R.drawable.gradient_bg);
+        if (bitmapBg != null) {
+            Bitmap bitmapBgBlur = ImageHelper.blurBitmap(bitmapBg, 1.0f, 30);
+            Bitmap bitmapOverlay = ImageHelper.createImage(bitmapBgBlur.getWidth(), bitmapBgBlur.getHeight(), getResources().getColor(R.color.colorBgPrimaryOverlay));
+            Bitmap bitmapBgOverlay = ImageHelper.overlayBitmapToCenter(bitmapBgBlur, bitmapOverlay);
+
+            layoutContentAlbumtSong.setBackground(ImageHelper.getMainBackgroundDrawableFromBitmap(bitmapBgOverlay));
+        }
         layoutContentAlbumtSong.setPadding(0, Utility.getStatusbarHeight(this), 0, 0);
-        layoutContentAlbumtSong.setBackground(ImageHelper.getMainBackgroundDrawableFromBitmap(bitmapBgOverlay));
 
         setSupportActionBar(mToolbarAlbumSong);
         getSupportActionBar().setTitle(" ");
@@ -90,6 +101,12 @@ public class AlbumSongsActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+    }
+
+    private void initMimimizeSong() {
+        mMinimizeSongFragment = MinimizeSongFragment.newInstance();
+        getSupportFragmentManager().beginTransaction().add(R.id.frgMinimizeSong, mMinimizeSongFragment).commit();
+
     }
 
     private void BindData() {
@@ -135,5 +152,36 @@ public class AlbumSongsActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mMinimizeSongFragment.refreshControls(-1);
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onFragmentRefreshNotification(int action) {
+        if (MainActivity.getMainActivity() != null) {
+            MainActivity.getMainActivity().refreshNotificationPlaying(action);
+        }
+    }
+
+    @Override
+    public void onFragmentShowPlayActivity() {
+        Intent mIntentPlayActivity = new Intent(AlbumSongsActivity.this, PlayActivity.class);
+        mIntentPlayActivity.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+        startActivity(mIntentPlayActivity);
+    }
+
+    @Override
+    public void onFragmentLoaded(int heightLayout) {
+
     }
 }
