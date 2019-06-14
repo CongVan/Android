@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
+import com.example.musicforlife.DismissBroadcastReceiver;
 import com.example.musicforlife.MainActivity;
 import com.example.musicforlife.R;
 import com.example.musicforlife.TimerSongService;
@@ -51,7 +52,9 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
     private static final String TAG = "PlayActivity";
     public static final String EXTRA_PLAYING_LIST = "EXTRA_PLAYING_LIST";
     public static final String SENDER = "PLAY_ACTIVITY";
-
+    private DialogTimerReceiver mReceiverDialogTimer;
+    private long mTimes;
+    private long mCurrentTimes;
     public static final int TYPE_SHOW_NEW = 1;
     public static final int TYPE_SHOW_RESUME = 2;
 
@@ -59,8 +62,9 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
     private static PlayActivity mPlayActivity;
     private Toolbar mToolbar;
     private Menu mMenuPlay;
-    private TimerReceiver mTimerReceiver;
-    private  YouTubePlayer.OnInitializedListener mListenerYoutubePlayer;
+    //    private TimerReceiver mTimerReceiver;
+    private YouTubePlayer.OnInitializedListener mListenerYoutubePlayer;
+
     public static PlayActivity getActivity() {
         return mPlayActivity;
     }
@@ -105,9 +109,13 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
         mPagerAdapter = new FragmentPlayAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.setCurrentItem(1);
-        mTimerReceiver = new TimerReceiver();
-        IntentFilter intentFilter = new IntentFilter(TimerSongService.ACTION_FINISH_TIMER);
-        registerReceiver(mTimerReceiver, intentFilter);
+//        mTimerReceiver = new TimerReceiver();
+//        IntentFilter intentFilter = new IntentFilter(TimerSongService.ACTION_FINISH_TIMER);
+//        registerReceiver(mTimerReceiver, intentFilter);
+        //register reciver for timer dialog
+        mReceiverDialogTimer = new DialogTimerReceiver();
+        IntentFilter intentFilter = new IntentFilter(FragmentDialogTimerSong.ACTION_DIAGLOG_TIMER_RECEIVER);
+        registerReceiver(mReceiverDialogTimer, intentFilter);
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
@@ -266,7 +274,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.actionSetTimerSong: {
-                DialogFragment dialogCreatePlaylist = new FragmentDialogTimerSong(PlayActivity.this);
+                DialogFragment dialogCreatePlaylist = new FragmentDialogTimerSong(PlayActivity.this, mTimes, mCurrentTimes);
                 dialogCreatePlaylist.show(getSupportFragmentManager(), "SetTimerSong");
             }
         }
@@ -283,6 +291,10 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
 
     }
 
+    public Context getApplicationContext() {
+        return getBaseContext();
+    }
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -290,19 +302,25 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
         //unregisterReceiver(mTimerReceiver);
     }
 
-    public class TimerReceiver extends BroadcastReceiver {
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mReceiverDialogTimer);
+    }
+
+    public class DialogTimerReceiver extends BroadcastReceiver {
+        private static final String TAG = "TimerReceiver";
+
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "onReceive: Timer Song " + intent.getAction());
-            if (intent.getAction() == TimerSongService.ACTION_FINISH_TIMER) {
-                if (PlayService.isPlaying()) {
-                    mPlayService.pause();
-                    mMainActivity.refreshNotificationPlaying(PlayService.ACTION_PAUSE);
-                    updateButtonPlay(SENDER);
-                }
+
+            if (intent.getAction() == FragmentDialogTimerSong.ACTION_DIAGLOG_TIMER_RECEIVER) {
+                mTimes = intent.getLongExtra("times", 0);
+                mCurrentTimes = intent.getLongExtra("currentTimes", 0);
 
             }
         }
     }
+
 }

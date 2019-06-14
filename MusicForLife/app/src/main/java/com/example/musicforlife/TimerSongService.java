@@ -16,12 +16,14 @@ public class TimerSongService extends Service {
     private boolean isRuning;
     private CountDownTimer mCoutTimer;
     public static final String ACTION_START_TIMER = "START_TIMER_SONG";
+    public static final String ACTION_TICK_TIMER = "TICK_TIMER_SONG";
     public static final String ACTION_FINISH_TIMER = "FINISH_TIMER_SONG";
 
     private static TimerSongService mTimerSongService;
     private static final String TAG = "TimerSongService";
 
     public static TimerSongService newIntance(){
+
         if (mTimerSongService==null){
             mTimerSongService=new TimerSongService();
         }
@@ -39,13 +41,14 @@ public class TimerSongService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "onStartCommand: TIMER ");
+//        Log.d(TAG, "onStartCommand: TIMER ");
         String action = intent.getAction();
         if (!action.equals(ACTION_START_TIMER)) {
             return START_NOT_STICKY;
         }
         Bundle bundle = intent.getExtras();
         mTimes = bundle.getInt("Times") * 60000;
+        Log.d(TAG, "onStartCommand: TIMES="+mTimes);
         mCurrentTime = 0;
         isRuning = true;
 
@@ -53,13 +56,18 @@ public class TimerSongService extends Service {
         mCoutTimer = new CountDownTimer(mTimes, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                Log.d(TAG, "onTick: TIMES " + mTimes + ", CURRENT TIME " + mCurrentTime);
+//                Log.d(TAG, "onTick: TIMES " + mTimes + ", CURRENT TIME " + mCurrentTime);
                 if (isRuning) {
                     mCurrentTime += 1000;
                 } else {
                     mCoutTimer.cancel();
                     stopSelf();
                 }
+                Intent intentTick = new Intent();
+                intentTick.setAction(ACTION_TICK_TIMER);
+                intentTick.putExtra("times",mTimes);
+                intentTick.putExtra("currentTimes",mCurrentTime);
+                sendBroadcast(intentTick);
             }
 
             @Override
@@ -70,7 +78,9 @@ public class TimerSongService extends Service {
                 stopSelf();
             }
         }.start();
-
+        Intent intentStart = new Intent();
+        intentStart.setAction(ACTION_START_TIMER);
+        sendBroadcast(intentStart);
 
         return super.onStartCommand(intent, flags, startId);
     }

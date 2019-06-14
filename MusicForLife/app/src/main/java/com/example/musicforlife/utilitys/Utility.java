@@ -1,12 +1,15 @@
 package com.example.musicforlife.utilitys;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.view.Display;
 import android.view.Window;
 import android.view.WindowManager;
+
+import com.example.musicforlife.MainActivity;
 
 public class Utility {
     //    private static  Activity  mActivity;
@@ -52,5 +55,14 @@ public class Utility {
         int height = display.getHeight();
 
         return height;
+    }
+    public static boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) MainActivity.getMainActivity().getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

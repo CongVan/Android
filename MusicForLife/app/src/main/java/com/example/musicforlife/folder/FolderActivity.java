@@ -77,11 +77,12 @@ public class FolderActivity extends AppCompatActivity implements MultiClickAdapt
         mTxtSongName = findViewById(R.id.txtFolderName);
         mTxtNumberOfSong = findViewById(R.id.txtNumberOfSongFolder);
         mAppbarLayoutFolder = findViewById(R.id.htab_appbar);
-        mLayoutSongFolder = findViewById(R.id.layoutContentAlbumSong);
+        mLayoutSongFolder = findViewById(R.id.layoutContentFolderSong);
         mPlayService = PlayService.newInstance();
         setSupportActionBar(mToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        Utility.setTranslucentStatusBar(this);
+        Utility.setTransparentStatusBar(this);
+        mLayoutSongFolder.setPadding(0, Utility.getStatusbarHeight(this), 0, 0);
 //        getSupportActionBar().setTitle("Thư mục " + mCurrentFolder.getName());
         mTxtSongName.setText(mCurrentFolder.getName());
         mTxtNumberOfSong.setText(mCurrentFolder.getNumberOfSong() + " bài hát");

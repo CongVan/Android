@@ -31,11 +31,11 @@ import android.widget.Toast;
 
 //import com.ethanhua.skeleton.Skeleton;
 //import com.ethanhua.skeleton.SkeletonScreen;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.GlideBuilder;
-import com.bumptech.glide.load.engine.bitmap_recycle.LruBitmapPool;
-import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory;
-import com.bumptech.glide.load.engine.cache.LruResourceCache;
+//import com.bumptech.glide.Glide;
+//import com.bumptech.glide.GlideBuilder;
+//import com.bumptech.glide.load.engine.bitmap_recycle.LruBitmapPool;
+//import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory;
+//import com.bumptech.glide.load.engine.cache.LruResourceCache;
 import com.example.musicforlife.callbacks.FragmentCallbacks;
 import com.example.musicforlife.db.DatabaseManager;
 import com.example.musicforlife.play.PlayService;
@@ -194,7 +194,7 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Mul
 //                _listSongAdapter.notifyDataSetChanged();
                 mIsLoading = false;
             }
-        }, 1000);
+        }, 0);
 
     }
 

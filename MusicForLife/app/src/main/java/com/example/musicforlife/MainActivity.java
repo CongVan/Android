@@ -8,6 +8,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.app.TaskStackBuilder;
+import android.content.Context;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.net.Uri;
@@ -88,8 +90,8 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Mi
     public static final Integer PLAY_CHANEL_ID = 103;
     public static final Integer PLAY_NOTIFICATION_ID = 103;
     private static RemoteViews mNotificationlayoutPlaying;
-
-
+    private TimerReceiver mTimerReceiver;
+    private TimerSongService mTimerSongService;
     private final int mIconsTabDefault[] = {
             R.mipmap.tab_recent_default,
             R.mipmap.tab_song_default,
@@ -161,7 +163,11 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Mi
 
             }
         });
-
+        try {
+            registerService();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
 
@@ -226,6 +232,13 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Mi
 
     }
 
+    private void registerService() {
+        mTimerReceiver = new TimerReceiver();
+        IntentFilter intentFilter = new IntentFilter(TimerSongService.ACTION_FINISH_TIMER);
+        intentFilter.addAction(TimerSongService.ACTION_START_TIMER);
+        intentFilter.addAction(TimerSongService.ACTION_TICK_TIMER);
+        registerReceiver(mTimerReceiver, intentFilter);
+    }
 
     private void initMinimizePlaying() {
         Log.d(TAG, "initMinimizePlaying: ");
