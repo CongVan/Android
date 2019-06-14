@@ -204,15 +204,15 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Mi
 
     }
 
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-
-        View decorView = getWindow().getDecorView();
-        int uiOption = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-        decorView.setSystemUiVisibility(uiOption);
-
-    }
+//    @Override
+//    public void onWindowFocusChanged(boolean hasFocus) {
+//        super.onWindowFocusChanged(hasFocus);
+//
+//        View decorView = getWindow().getDecorView();
+//        int uiOption = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+//        decorView.setSystemUiVisibility(uiOption);
+//
+//    }
 
     /**
      * Khởi tạo View
