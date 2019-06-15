@@ -99,6 +99,7 @@ public class MinimizeSongFragment extends Fragment implements View.OnClickListen
         mTextViewArtistMinimize = view.findViewById(R.id.txtArtistMinimize);
         mAnimationPlay = AnimationUtils.loadAnimation(mContext, R.anim.playing_image);
         if (mCurrentSongPlaying != null) {
+            mLayoutPlayingMinimizie.setVisibility(View.VISIBLE);
             mTextViewArtistMinimize.setText(mCurrentSongPlaying.getArtist());
             mTextViewTitleSongMinimize.setText(mCurrentSongPlaying.getTitle());
             Bitmap bitmap = ImageHelper.getBitmapFromPath(mCurrentSongPlaying.getPath(), R.mipmap.music_128);
@@ -120,7 +121,7 @@ public class MinimizeSongFragment extends Fragment implements View.OnClickListen
             //                @Override
             public void run() {
                 mLayoutPlayingMinimizie.measure(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                mLayoutPlayingMinimizie.setVisibility(View.VISIBLE);
+
                 mHeightLayout = mLayoutPlayingMinimizie.getMeasuredHeight() + 16;
                 mListener.onFragmentLoaded(mHeightLayout);
 

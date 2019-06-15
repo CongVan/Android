@@ -257,11 +257,9 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Mi
 //                            showMinimizePlaying(songPlay);
                             PlayService.revertListSongPlaying();
                             initNotificationPlay();
-                            mMinimizeSongFragment = MinimizeSongFragment.newInstance();
-                            getSupportFragmentManager().beginTransaction().add(R.id.frgMinimizeSong, mMinimizeSongFragment).commit();
-
                         }
-
+                        mMinimizeSongFragment = MinimizeSongFragment.newInstance();
+                        getSupportFragmentManager().beginTransaction().add(R.id.frgMinimizeSong, mMinimizeSongFragment).commit();
                         Log.d(TAG, "initMinimizePlaying: " + songPlay);
                     }
                 }
@@ -446,7 +444,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Mi
     @Override
     protected void onResume() {
         super.onResume();
-        togglePlayingMinimize("MAIN",-1);
+        togglePlayingMinimize("MAIN", -1);
     }
 
     /**
@@ -484,10 +482,10 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Mi
      * @param sender
      */
     @Override
-    public void togglePlayingMinimize(String sender,int action) {
-        Log.d(TAG, "togglePlayingMinimize: RUNNING SERVICE="+PlayService.isPlaying());
+    public void togglePlayingMinimize(String sender, int action) {
+        Log.d(TAG, "togglePlayingMinimize: RUNNING SERVICE=" + PlayService.isPlaying());
         if (mMinimizeSongFragment != null) {
-            if (PlayService.isPlaying() || action==PlayService.ACTION_PLAY) {
+            if (PlayService.isPlaying() || action == PlayService.ACTION_PLAY) {
                 mMinimizeSongFragment.refreshControls(PlayService.ACTION_PLAY);
             } else {
                 mMinimizeSongFragment.refreshControls(-1);
@@ -578,7 +576,10 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Mi
     }
 
     private void refreshMinimizePlaying(int action) {
-        mMinimizeSongFragment.refreshControls(action);
+        if (mMinimizeSongFragment != null) {
+            mMinimizeSongFragment.refreshControls(action);
+        }
+
     }
 
     /**
