@@ -133,6 +133,7 @@ public class BottomSheetOptionSong extends BottomSheetDialogFragment implements 
 
                 break;
             case R.id.btnDeleteSong:
+                Toast.makeText(getContext(),"Chức năng chưa thực hiện!",Toast.LENGTH_LONG).show();
                 break;
 
 

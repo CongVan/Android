@@ -211,7 +211,7 @@ public class MinimizeSongFragment extends Fragment implements View.OnClickListen
                     mListener.onFragmentRefreshNotification(PlayService.ACTION_RESUME);
                     mPlayService.resurme();
 //                    mButtonPlayMinimize.setImageDrawable(mContext.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
-                    setPauseControls();
+                    setPlayControls();
                 } else {
                     mListener.onFragmentRefreshNotification(PlayService.ACTION_PLAY);
                     mPlayService.play(songPlay);
