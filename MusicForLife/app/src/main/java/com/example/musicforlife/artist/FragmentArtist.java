@@ -107,16 +107,17 @@ public class FragmentArtist extends Fragment {
     }
 
     private void loadMore() {
-        arrArtist.add(null);
-        listArtistAdapter.notifyItemInserted(arrArtist.size());
+//        arrArtist.add(null);
+//        listArtistAdapter.notifyItemInserted(arrArtist.size());
         new Handler().post(new Runnable() {
             @Override
             public void run() {
                 ArrayList<ArtistViewModel> tempAudioList = ArtistProvider.getArtistModelPaging(context,searchValue, arrArtist.size(), take);
-                arrArtist.remove(arrArtist.size() - 1);
-                listArtistAdapter.notifyItemRemoved(arrArtist.size());
+//                arrArtist.remove(arrArtist.size() - 1);
+//                listArtistAdapter.notifyItemRemoved(arrArtist.size());
                 arrArtist.addAll(tempAudioList);
-                listArtistAdapter.notifyItemInserted(arrArtist.size());
+                listArtistAdapter.notifyDataSetChanged();
+//                listArtistAdapter.notifyItemInserted(arrArtist.size());
                 mIsLoading = false;
             }
         });

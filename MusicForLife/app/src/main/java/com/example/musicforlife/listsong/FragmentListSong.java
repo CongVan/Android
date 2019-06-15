@@ -195,7 +195,7 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Mul
 //                _listSongAdapter.notifyDataSetChanged();
                 mIsLoading = false;
             }
-        }, 0);
+        }, 1000);
 
     }
 

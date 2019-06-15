@@ -104,16 +104,17 @@ public class FragmentAlbum extends Fragment {
     }
 
     private void loadMore() {
-        arrAlbum.add(null);
-        albumListAdapter.notifyItemInserted(arrAlbum.size());
+//        arrAlbum.add(null);
+//        albumListAdapter.notifyItemInserted(arrAlbum.size());
         new Handler().post(new Runnable() {
             @Override
             public void run() {
                 ArrayList<AlbumViewModel> tempAudioList = AlbumProvider.getAlbumModelPaging(context, searchValue, arrAlbum.size(), take);
-                arrAlbum.remove(arrAlbum.size() - 1);
-                albumListAdapter.notifyItemRemoved(arrAlbum.size());
+//                arrAlbum.remove(arrAlbum.size() - 1);
+//                albumListAdapter.notifyItemRemoved(arrAlbum.size());
                 arrAlbum.addAll(tempAudioList);
-                albumListAdapter.notifyItemInserted(arrAlbum.size());
+                albumListAdapter.notifyDataSetChanged();
+//                albumListAdapter.notifyItemInserted(arrAlbum.size());
                 mIsLoading = false;
             }
         });
