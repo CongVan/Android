@@ -37,6 +37,8 @@ public class SplashActivity extends AppCompatActivity {
 
     private String[] appPermission = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.READ_PHONE_STATE
+
     };
     private static final int PERMISSION_REQUEST_CODE = 1240;
     private static final String TAG = "SplashActivity";
@@ -48,18 +50,18 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         Utility.setTransparentStatusBar(this);
-        boolean canWrite = Settings.System.canWrite(getApplicationContext());
-        Log.d(TAG, "onCreate: CAN WRITE " + canWrite);
-        if (canWrite) {
-            if (checkAndRequestPermission()) {
-                initApp();
-            }
-        } else {
-            Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, Uri.fromParts("package", getPackageName(), null));
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            finish();
+//        boolean canWrite = Settings.System.canWrite(getApplicationContext());
+//        Log.d(TAG, "onCreate: CAN WRITE " + canWrite);
+
+        if (checkAndRequestPermission()) {
+            initApp();
         }
+//        } else {
+//            Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, Uri.fromParts("package", getPackageName(), null));
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            startActivity(intent);
+//            finish();
+//        }
 
 //        initApp();
 

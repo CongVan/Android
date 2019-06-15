@@ -485,8 +485,14 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks, Mi
      */
     @Override
     public void togglePlayingMinimize(String sender) {
+        Log.d(TAG, "togglePlayingMinimize: RUNNING SERVICE="+PlayService.isPlaying());
         if (mMinimizeSongFragment != null) {
-            mMinimizeSongFragment.refreshControls(-1);
+            if (PlayService.isPlaying()) {
+                mMinimizeSongFragment.refreshControls(PlayService.ACTION_PLAY);
+            } else {
+                mMinimizeSongFragment.refreshControls(-1);
+            }
+
         }
 
     }

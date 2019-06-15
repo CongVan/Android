@@ -4,11 +4,13 @@ package com.example.musicforlife.playlist;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.util.Log;
 import android.view.View;
@@ -97,6 +99,16 @@ public class BottomSheetOptionSong extends BottomSheetDialogFragment implements 
                 BottomSheetOptionSong.this.dismiss();
                 break;
             case R.id.btnMakeRingTone:
+                //check permission write ringtone
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                    boolean canWrite = Settings.System.canWrite(getActivity().getApplicationContext());
+                    if (!canWrite){
+                        Toast.makeText(getActivity(), "Xin cấp quyền ghi hệ thống để thực hiện thao tác này", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, Uri.fromParts("package", getActivity().getPackageName(), null));
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+                }
                 try {
                     Uri uri = MediaStore.Audio.Media.getContentUriForPath(mCurrentSong.getPath());
                     getContext().getContentResolver().delete(uri, MediaStore.MediaColumns.DATA + "=\"" + mCurrentSong.getPath() + "\"", null);

@@ -18,10 +18,10 @@ public class BecomingNoisyReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         this.context = context;
-        Log.d(TAG, "onReceive: " + intent.getAction());
+//        Log.d(TAG, "onReceive: " + intent.getAction());
         telManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         telManager.listen(phoneListener, PhoneStateListener.LISTEN_CALL_STATE);
-        Log.d(TAG, "onReceive: " + intent.getAction());
+//        Log.d(TAG, "onReceive: " + intent.getAction());
         if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intent.getAction())) {
             // Pause the playback
             PlayService.newInstance().pause();
@@ -32,11 +32,15 @@ public class BecomingNoisyReceiver extends BroadcastReceiver {
     private final PhoneStateListener phoneListener = new PhoneStateListener() {
         @Override
         public void onCallStateChanged(int state, String incomingNumber) {
+            Log.d(TAG, "onCallStateChanged: STATE ="+state);
             try {
                 switch (state) {
                     case TelephonyManager.CALL_STATE_RINGING: {
                         //PAUSE
-                        PlayService.newInstance().pause();
+                        if (PlayService.isPlaying()){
+                            PlayService.newInstance().pause();
+                        }
+
                         break;
                     }
                     case TelephonyManager.CALL_STATE_OFFHOOK: {

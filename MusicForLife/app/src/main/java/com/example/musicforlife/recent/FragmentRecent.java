@@ -59,9 +59,9 @@ public class FragmentRecent extends Fragment implements MultiClickAdapterListene
 
     }
     public static FragmentRecent newIntance(){
-        if(mFragmentRecent==null){
+//        if(mFragmentRecent==null){
             mFragmentRecent=new FragmentRecent();
-        }
+//        }
         return mFragmentRecent;
     }
     @Override
