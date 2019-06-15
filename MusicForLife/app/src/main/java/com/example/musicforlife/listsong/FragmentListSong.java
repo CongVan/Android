@@ -179,18 +179,19 @@ public class FragmentListSong extends Fragment implements FragmentCallbacks, Mul
 
     private void loadMore() {
 //        _skeletonScreen = Skeleton.bind(_listViewSong).adapter(_listSongAdapter).load(R.layout.layout_item_song).show();
-        _listSong.add(null);
-        _listSongAdapter.notifyItemInserted(_listSong.size());
+//        _listSong.add(null);
+//        _listSongAdapter.notifyItemInserted(_listSong.size());
 //        Handler handler = new Handler();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
 
                 ArrayList<SongModel> tempAudioList = SongModel.getSongsWithThreshold(MainActivity.mDatabaseManager,searchValue, _listSong.size(), mThreshHold);
-                _listSong.remove(_listSong.size() - 1);
-                _listSongAdapter.notifyItemRemoved(_listSong.size());
+//                _listSong.remove(_listSong.size() - 1);
+//                _listSongAdapter.notifyItemRemoved(_listSong.size());
                 _listSong.addAll(tempAudioList);
-                _listSongAdapter.notifyItemInserted(_listSong.size());
+                _listSongAdapter.notifyDataSetChanged();
+//                _listSongAdapter.notifyItemInserted(_listSong.size());
 //                _listSongAdapter.notifyDataSetChanged();
                 mIsLoading = false;
             }
