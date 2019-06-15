@@ -98,12 +98,13 @@
         android:layout_gravity="top"
         android:layout_marginLeft="@dimen/margin_size_snormal"
         android:orientation="horizontal"
+
         android:paddingVertical="@dimen/margin_size_small"
        >
 
         <android.support.v7.widget.AppCompatCheckBox
             android:id="@+id/selectedAllSongPlaying"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left|center_vertical"
             android:layout_marginLeft="@dimen/margin_size_snormal"

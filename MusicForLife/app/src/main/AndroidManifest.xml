@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
 
     <uses-permission
@@ -46,7 +47,7 @@
 
         <receiver android:name=".BecomingNoisyReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.SCREEN_ON" />
+
                 <action android:name="android.media.AUDIO_BECOMING_NOISY" />
                 <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
@@ -68,13 +69,12 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".play.PlayActivity$TimerReceiver"
-            android:enabled="true"
-            android:label="timerSong
-">
+            android:name=".TimerReceiver">
             <intent-filter>
                 <action android:name="START_TIMER_SONG" />
+                <action android:name="TICK_TIMER_SONG" />
                 <action android:name="FINISH_TIMER_SONG" />
+
             </intent-filter>
         </receiver>
 

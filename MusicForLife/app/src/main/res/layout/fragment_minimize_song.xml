@@ -27,9 +27,9 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_size_small"
                 app:cardBackgroundColor="@color/colorBlackGlassLight"
-                app:cardCornerRadius="@dimen/border_radius_small"
+                app:cardCornerRadius="24dp"
                 app:cardElevation="0dp"
-                app:cardUseCompatPadding="true"
+
                 app:contentPadding="0dp">
 
                 <ImageView

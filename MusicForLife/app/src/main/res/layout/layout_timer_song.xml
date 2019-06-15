@@ -31,11 +31,18 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginHorizontal="@dimen/margin_size_small"
-
             />
 
-    </RelativeLayout>
 
+    </RelativeLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtTimes"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"
+        android:textColor="@color/colorTitleWhiteSecondary"
+        android:textSize="@dimen/text_size_small" />
     <SeekBar
         android:id="@+id/sbTimer"
         android:layout_width="match_parent"
