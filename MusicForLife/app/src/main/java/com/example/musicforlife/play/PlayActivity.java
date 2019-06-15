@@ -171,6 +171,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
                 mPager.setCurrentItem(1);
                 mPlayService.play(songModel);
                 mMainActivity.refreshNotificationPlaying(PlayService.ACTION_PLAY);
+                mMainActivity.togglePlayingMinimize(sender,PlayService.ACTION_PLAY);
                 Log.d(TAG, "controlSong: ");
 
                 break;
@@ -185,6 +186,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
             case PlayService.ACTION_PREV:
                 mPlayService.prev(PlayService.ACTION_FROM_USER);
                 mMainActivity.refreshNotificationPlaying(PlayService.ACTION_PREV);
+
                 refreshListPlaying();
                 break;
             case PlayService.ACTION_NEXT:
@@ -195,7 +197,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
             default:
                 break;
         }
-        MainActivity.getMainActivity().togglePlayingMinimize("PlayActivity");
+//        MainActivity.getMainActivity().togglePlayingMinimize("PlayActivity");
     }
 
     public void refreshListPlaying() {
@@ -213,7 +215,7 @@ public class PlayActivity extends AppCompatActivity implements PlayInterface {
             fragmentPlaying.updateControlPlaying(songModel);
         }
 //        ((FragmentPlayAdapter) mPagerAdapter).getFragmentPlaying().updateControlPlaying(songModel);
-        MainActivity.getMainActivity().togglePlayingMinimize(sender);
+        MainActivity.getMainActivity().togglePlayingMinimize(sender,-1);
     }
 
     @Override

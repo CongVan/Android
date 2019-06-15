@@ -170,7 +170,8 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
         mCurrentSongPlaying = mSongPlayingList.get(mCurrentIndexSong); //SongModel.getSongFromSongId(mDatabaseManager, mPlayingList.get(mCurrentIndexSong).getSongId());
         play(mCurrentSongPlaying);
         if (MainActivity.getMainActivity() != null) {
-            MainActivity.getMainActivity().togglePlayingMinimize(SENDER);
+            MainActivity.getMainActivity().togglePlayingMinimize(SENDER, ACTION_PLAY);
+            MainActivity.getMainActivity().refreshNotificationPlaying(ACTION_PLAY);
         }
 
         if (PlayActivity.getActivity() != null) {
@@ -208,7 +209,11 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
         }
         mCurrentSongPlaying = mSongPlayingList.get(mCurrentIndexSong);//SongModel.getSongFromSongId(mDatabaseManager, mPlayingList.get(mCurrentIndexSong).getSongId());
         play(mCurrentSongPlaying);
-        MainActivity.getMainActivity().togglePlayingMinimize(SENDER);
+        if (MainActivity.getMainActivity() != null) {
+            MainActivity.getMainActivity().togglePlayingMinimize(SENDER, ACTION_PLAY);
+            MainActivity.getMainActivity().refreshNotificationPlaying(ACTION_PLAY);
+
+        }
         if (PlayActivity.getActivity() != null) {
             PlayActivity.getActivity().updateControlPlaying(SENDER, mCurrentSongPlaying);
         }
@@ -372,6 +377,10 @@ public class PlayService implements PlayInterface, MediaPlayer.OnPreparedListene
                 Log.d(TAG, "run: INSERT RECENT SONG " + retSong + "_ARTIST " + retArtist);
             }
         }).start();
+        if (MainActivity.getMainActivity()!=null){
+            MainActivity.getMainActivity().togglePlayingMinimize(SENDER, ACTION_PLAY);
+            MainActivity.getMainActivity().refreshNotificationPlaying(ACTION_PLAY);
+        }
         if (PlayActivity.getActivity() != null) {
             PlayActivity.getActivity().updateButtonPlay(SENDER);
         }

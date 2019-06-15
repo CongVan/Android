@@ -145,8 +145,8 @@ public class PlaylistSongActivity extends AppCompatActivity implements MultiClic
         setSupportActionBar(mToolbar);
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        Utility.setTransparentStatusBar(this);
-        mLayoutSongPlaylist.setPadding(0, Utility.getStatusbarHeight(this), 0, 0);
+        Utility.setTranslucentStatusBar(this);
+//        mLayoutSongPlaylist.setPadding(0, Utility.getStatusbarHeight(this), 0, 0);
 
 //        mAppbarLayoutPlaylist.setPadding(0,Utility.getStatusbarHeight(this),0,0);
 //        mToolbar.setPadding(0, Utility.getStatusbarHeight(this), 0, Utility.getStatusbarHeight(this));

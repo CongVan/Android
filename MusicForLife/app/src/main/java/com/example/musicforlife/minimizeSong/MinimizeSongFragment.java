@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -45,6 +47,7 @@ public class MinimizeSongFragment extends Fragment implements View.OnClickListen
     private ImageView mImageViewSongMinimize;
     private PlayService mPlayService;
     private static Context mContext;
+    private Animation mAnimationPlay;
     private int mHeightLayout;
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -94,6 +97,7 @@ public class MinimizeSongFragment extends Fragment implements View.OnClickListen
         mImageViewSongMinimize = view.findViewById(R.id.imgSongMinimize);
         mTextViewTitleSongMinimize = view.findViewById(R.id.txtTitleMinimize);
         mTextViewArtistMinimize = view.findViewById(R.id.txtArtistMinimize);
+        mAnimationPlay = AnimationUtils.loadAnimation(mContext, R.anim.playing_image);
         if (mCurrentSongPlaying != null) {
             mTextViewArtistMinimize.setText(mCurrentSongPlaying.getArtist());
             mTextViewTitleSongMinimize.setText(mCurrentSongPlaying.getTitle());
@@ -138,9 +142,13 @@ public class MinimizeSongFragment extends Fragment implements View.OnClickListen
             mLayoutPlayingMinimizie.setVisibility(View.GONE);
         } else {
             if (PlayService.isPlaying() || action == PlayService.ACTION_PLAY) {
-                mButtonPlayMinimize.setImageDrawable(mContext.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
+//                mImageViewSongMinimize.startAnimation(mAnimationPlay);
+//                mButtonPlayMinimize.setImageDrawable(mContext.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
+                setPlayControls();
             } else {
-                mButtonPlayMinimize.setImageDrawable(mContext.getDrawable(R.drawable.ic_play_circle_outline_black_32dp));
+                setPauseControls();
+//                mImageViewSongMinimize.clearAnimation();
+//                mButtonPlayMinimize.setImageDrawable(mContext.getDrawable(R.drawable.ic_play_circle_outline_black_32dp));
             }
             mTextViewArtistMinimize.setText(mCurrentSongPlaying.getArtist());
             mTextViewTitleSongMinimize.setText(mCurrentSongPlaying.getTitle());
@@ -149,6 +157,16 @@ public class MinimizeSongFragment extends Fragment implements View.OnClickListen
             mLayoutPlayingMinimizie.setVisibility(View.VISIBLE);
         }
         mListener.onFragmentLoaded(mHeightLayout);
+    }
+
+    private void setPlayControls() {
+        mImageViewSongMinimize.startAnimation(mAnimationPlay);
+        mButtonPlayMinimize.setImageDrawable(mContext.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
+    }
+
+    private void setPauseControls() {
+        mImageViewSongMinimize.clearAnimation();
+        mButtonPlayMinimize.setImageDrawable(mContext.getDrawable(R.drawable.ic_play_circle_outline_black_32dp));
     }
 
     @Override
@@ -187,26 +205,29 @@ public class MinimizeSongFragment extends Fragment implements View.OnClickListen
                 if (PlayService.isPlaying()) {
                     mListener.onFragmentRefreshNotification(PlayService.ACTION_PAUSE);
                     mPlayService.pause();
-                    mButtonPlayMinimize.setImageDrawable(mContext.getDrawable(R.drawable.ic_play_circle_outline_black_32dp));
+//                    mButtonPlayMinimize.setImageDrawable(mContext.getDrawable(R.drawable.ic_play_circle_outline_black_32dp));
+                    setPauseControls();
                 } else if (PlayService.isPause()) {
                     mListener.onFragmentRefreshNotification(PlayService.ACTION_RESUME);
                     mPlayService.resurme();
-                    mButtonPlayMinimize.setImageDrawable(mContext.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
+//                    mButtonPlayMinimize.setImageDrawable(mContext.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
+                    setPauseControls();
                 } else {
                     mListener.onFragmentRefreshNotification(PlayService.ACTION_PLAY);
                     mPlayService.play(songPlay);
-                    mButtonPlayMinimize.setImageDrawable(mContext.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
+//                    mButtonPlayMinimize.setImageDrawable(mContext.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
+                    setPlayControls();
                 }
                 break;
             case R.id.btnNextSong:
                 mPlayService.next(PlayService.ACTION_FROM_USER);
-                mButtonPlayMinimize.setImageDrawable(mContext.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
+//                mButtonPlayMinimize.setImageDrawable(mContext.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
                 refreshControls(PlayService.ACTION_PLAY);
                 mListener.onFragmentRefreshNotification(PlayService.ACTION_PLAY);
                 break;
             case R.id.btnPrevSong:
                 mPlayService.prev(PlayService.ACTION_FROM_USER);
-                mButtonPlayMinimize.setImageDrawable(mContext.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
+//                mButtonPlayMinimize.setImageDrawable(mContext.getDrawable(R.drawable.ic_pause_circle_outline_black_32dp));
                 refreshControls(PlayService.ACTION_PLAY);
                 mListener.onFragmentRefreshNotification(PlayService.ACTION_PLAY);
 
